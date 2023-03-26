@@ -1,14 +1,16 @@
-<script setup lang="ts">import { computed, type ComputedRef } from 'vue';
-
+<script setup lang="ts">
+import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
+import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
+import { computed, type ComputedRef } from 'vue';
 
 const props = defineProps<{
   headline?: string
   subline?: string
   intro?: string
-  text?: string
-  links?: string
-  list?: string
-  variant?: string
+  text?: string[]
+  links?: LinkListWithTitle
+  list?: ListWithTitle
+  variant?: string[]
 }>();
 const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
 

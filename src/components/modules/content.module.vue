@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ChildData, ContentWithPositions } from '@lilaquadrat/studio/lib/interfaces';
+import { provide } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   content: ContentWithPositions
   inline?: boolean
   routeBase?: string
@@ -10,6 +11,9 @@ defineProps<{
   linkMode?: string
   contentChildData?: ChildData
 }>();
+
+provide('linkMode', props.linkMode);
+provide('linkBase', props.linkBase);
 
 </script>
 

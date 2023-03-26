@@ -14,7 +14,7 @@ const content: Content = {
     modules: [
     {
             uuid: 'de7dde11-e48b-49fc-adf2-6b25b1445645',
-            id: 'Für Agenturen, Freelancer ',
+            id: 'Für Agenturen, Freelancer',
             variant: [
                 'center'
             ],
@@ -23,7 +23,31 @@ const content: Content = {
             subline: 'Für Agenturen, Freelancer und alle anderen Ambitionierten.',
             text: [
                 'Unser Enterprise CMS ist als SaaS ein innovatives und vielseitiges System. Wir bieten unseren Partnern besten Support und ein lukratives Vertriebsmodell.'
-            ]
+            ],
+            list: {
+                value: [
+                    '1',
+                    '2',
+                    '2'
+                ],
+                title: 'Liste Titel'
+            },
+            links: {
+                title: 'Some link',
+                value: [
+                    {
+                        text: 'link1',
+                        link: '/link1',
+                        icon: 'arrow-right',
+                        classes: [],
+                        attributes: [
+                            'static'
+                        ],
+                        variant: [],
+                        external: false,
+                    }
+                ]
+            },
         },
     ]
 };
@@ -38,7 +62,7 @@ console.log('hello', this);
 
         content screen
         <router-link :to="{name: 'second'}">second</router-link>
-        <lila-content-module :content="contentMerged"></lila-content-module>
+        <lila-content-module linkMode="event" linkBase="/baseurl" :content="contentMerged"></lila-content-module>
 
     </article>
 </template>
