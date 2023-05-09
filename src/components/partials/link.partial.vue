@@ -31,7 +31,6 @@ if (props.attributes?.includes('event') || linkMode === 'event') {
 
   } else {
 
-
     emit(props.link.slice(1), props.text);
     instance?.emit(props.link.slice(1), props.text);
 
