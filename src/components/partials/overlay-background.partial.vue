@@ -4,7 +4,6 @@
     </section>
 </template>
 <script setup lang="ts">
-import { Prop } from '@libs/lila-component';
 import  { computed, nextTick, onDeactivated, onMounted } from 'vue';
 
 const props = defineProps < {
@@ -19,7 +18,7 @@ const backgroundMode= computed(()=> {
 
 });
 
-  function checkClose($e) {
+  function checkClose($e: { target: any; }) {
 
     if (this.$refs.background !== $e.target) return;
 

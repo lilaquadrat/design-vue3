@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" class="lila-highlight" :class="[variant]" v-if="notEmpty">
+  <section ref="$el" class="lila-highlight" :class="[variant]" v-if="notEmpty">
     <pre :key="keyhelper">
         <div class="codeContainer">
           <lila-button-partial class="copyCode transparent" @confirmed="copyCode()">
@@ -11,7 +11,7 @@
 
   </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
@@ -24,15 +24,13 @@ import json from 'highlight.js/lib/languages/json';
 import scss from 'highlight.js/lib/languages/scss';
 import yaml from 'highlight.js/lib/languages/yaml';
 
-import {
-  Component, ExtPartial, Prop, Watch,
-} from '../libs/lila-partial';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
   text: string[];
   code: string;
   headline: string;
+  variant?: string[];
 }>();
 let keyhelper: string = Date.now().toString();
 let copyElement: boolean = false;
@@ -41,7 +39,7 @@ const notEmpty = computed((): boolean => {
   return !!props.code;
 
 });
-const el = ref();
+let $el = ref(null);
 
 //wasn't sure how to correct this
 watch(props, (state, prevstate) => {
@@ -50,7 +48,7 @@ watch(props, (state, prevstate) => {
     keyhelper = Date.now().toString();
     nextTick().then(() => {
 
-      hljs.highlightElement(this.$el.querySelector('pre code'));
+      hljs.highlightElement($el.value.querySelector('pre code'));
 
     });
 
@@ -75,7 +73,7 @@ onMounted(() => {
 
   if (notEmpty.value) {
 
-    hljs.highlightElement(this.$el.querySelector('pre code'));
+    hljs.highlightElement($el.value.querySelector('pre code'));
 
   }
 

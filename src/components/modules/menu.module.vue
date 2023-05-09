@@ -1,5 +1,5 @@
 <template>
-  <nav :id="id" :class="[view, variant, { open: open }]" class="lila-menu-module lila-module">
+  <nav ref="el" :id="id" :class="[view, variant, { open: open }]" class="lila-menu-module lila-module">
     <section class="placeholder"></section>
 
     <section class="overflow-container">
@@ -26,7 +26,7 @@
               <lila-link-partial :key="`link-${index}`" class="main" v-if="!element.links" v-bind="element" />
 
               <section :key="`group-${index}`" v-if="element.links" class="link-group main">
-                <button :class="{hasIcon: element.icon}" @click="toggleElement(element)">
+                <button :class="{ hasIcon: element.icon }" @click="toggleElement(element)">
                   <lila-icons-partial v-if="element.icon" :type="element.icon" size="small" />
                   {{ element.text }}
                 </button>
@@ -50,8 +50,9 @@
           <template v-for="(element, index) in elementsArray">
             <lila-link-partial :key="`link-${index}`" class="main" v-if="!element.links" v-bind="element" />
             <section :key="`group-${index}`" v-if="element.links" class="link-group main">
-              <button :class="{hasIcon: element.icon}" @click="toggleElement(element)">
-                <lila-icons-partial v-if="element.icon" colorScheme="white" :type="element.icon" size="small" /> {{ element.text }}
+              <button :class="{ hasIcon: element.icon }" @click="toggleElement(element)">
+                <lila-icons-partial v-if="element.icon" colorScheme="white" :type="element.icon" size="small" /> {{
+                  element.text }}
               </button>
               <transition mode="out-in" name="menu">
                 <ul class="link-list" v-if="element.links && element.active">
@@ -69,131 +70,135 @@
     </section>
   </nav>
 </template>
-<script lang="ts">
-import Picture from '@interfaces/picture.interface';
-import LinkGroupElement from '@interfaces/LinkGroupElement.interface';
-import {
-  ExtComponent, Component, Prop, Watch,
-} from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Picture from '@interfaces/picture.interface';
+import type LinkGroupElement from '@interfaces/LinkGroupElement.interface';
+import type Dom from 'src/libs/lila-dom';
 
-@Component
-export default class MenuModule extends ExtComponent {
+import { computed, onMounted, ref, watch } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-  @Prop(String) name: string;
+const props = defineProps<{
+  name: string;
+  picture: Picture;
+  elements: (LinkGroupElement & { active: boolean })[];
+  id?: string;
+  view?: string;
+  variant: string[];
+  DOM: Dom;
 
-  @Prop(Object) picture: Picture;
+}>();let elementsArray: (LinkGroupElement & { active: boolean })[] = [];let open: boolean = false;
 
-  @Prop(Array) elements: (LinkGroupElement & {active: boolean})[];
+watch(() => props.elements, watchFunc);
 
-  elementsArray: (LinkGroupElement & {active: boolean})[] = [];
+function watchFunc(this: any): void {
 
-  open: boolean = false;
-
-  @Watch('elements')
-  watchFunc(): void {
-
-    this.updateElements();
-
-  }
-
-  @Watch('media')
-  watchMediafunction(): void {
-
-    this.closeAll();
-    this.open = false;
-
-  }
-
-  get media(): string {
-
-    return this.$store.state.media;
-
-  }
-
-  get isLeft(): boolean {
-
-    return this.variant?.includes('left');
-
-  }
-
-  created(): void {
-
-    this.updateElements();
-
-  }
-
-  mounted(): void {
-
-    this.checkInview();
-
-    this.DOM.on('click', '', ($e) => {
-
-      if (!this.$el.contains($e.target as HTMLElement)) {
-
-        this.closeAll();
-
-      }
-
-    });
-
-    this.updateElements();
-
-  }
-
-  updateElements(): void {
-
-    this.elementsArray = [];
-
-    this.elements?.forEach((element) => {
-
-      const newElement = { ...element, active: false };
-
-      if (newElement.links) {
-
-        if (!newElement.links[0]?.text?.length) {
-
-          delete newElement.links;
-
-        }
-
-      }
-
-      this.elementsArray.push(newElement);
-
-    });
-
-  }
-
-  type(element): 'router-link' | 'button' {
-
-    if (element.link.text) return 'router-link';
-    return 'button';
-
-  }
-
-  toggle(): void {
-
-    this.open = !this.open;
-
-  }
-
-  toggleElement(element): void {
-
-    element.active = !element.active;
-
-  }
-
-  closeAll() {
-
-    this.elements?.forEach((element) => {
-
-      element.active = false;
-
-    });
-
-  }
+  this.updateElements();
 
 }
+
+let el = ref(null);
+
+watch('media', watchMediafunction);
+
+function watchMediafunction(): void {
+
+  closeAll();
+  open = false;
+
+}
+
+  const media=computed((): string =>{
+
+  return this.$store.state.media;
+
+});  const isLeft=computed((): boolean=> {
+
+  return props.variant?.includes('left');
+
+});
+
+
+function created(): void {
+
+  updateElements();
+
+}
+
+onMounted((): void =>{
+
+  checkInview(el);
+
+   props.DOM.on('click', '', ($e: { target: HTMLElement; }) => {
+
+    if (!el.contains?($e.target as HTMLElement)) {
+
+      closeAll();
+
+    }
+
+  });
+
+  updateElements();
+
+});
+
+
+function updateElements(): void {
+
+  elementsArray = [];
+
+  props.elements?.forEach((element) => {
+
+    const newElement = { ...element, active: false };
+
+    if (newElement.links) {
+
+      if (!newElement.links[0]?.text?.length) {
+
+        delete newElement.links;
+
+      }
+
+    }
+
+    elementsArray.push(newElement);
+
+  });
+
+}
+
+function type(element: { link: { text: any; }; }): 'router-link' | 'button' {
+
+  if (element.link.text) return 'router-link';
+  return 'button';
+
+}
+
+function  toggle(): void {
+
+  open = !open;
+
+}
+
+function toggleElement(element: { active: boolean; }): void {
+
+  element.active = !element.active;
+
+}
+
+function closeAll() {
+
+  props.elements?.forEach((element) => {
+
+    element.active = false;
+
+  });
+
+}
+
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";
@@ -222,7 +227,8 @@ export default class MenuModule extends ExtComponent {
   .container-menu {
     width: 100%;
 
-    @media only screen and (min-width: 520px), print and (min-width: 520px) {
+    @media only screen and (min-width: 520px),
+    print and (min-width: 520px) {
       width: 250px;
 
       transform: translateX(0);
@@ -381,7 +387,8 @@ export default class MenuModule extends ExtComponent {
 
   }
 
-  a::v-deep, button {
+  a::v-deep,
+  button {
     .font-head;
 
     .multi(padding, 0, 8);
@@ -584,7 +591,8 @@ export default class MenuModule extends ExtComponent {
       max-height: 40px;
       mix-blend-mode: normal;
 
-      @media @tablet, @desktop {
+      @media @tablet,
+      @desktop {
         max-width: 250px;
       }
 
@@ -655,7 +663,7 @@ export default class MenuModule extends ExtComponent {
         }
 
         &:last-child {
-          transform: rotate(-45deg)  translateY(-4.5px);
+          transform: rotate(-45deg) translateY(-4.5px);
         }
       }
     }
@@ -760,7 +768,8 @@ export default class MenuModule extends ExtComponent {
         grid-row-start: 2;
       }
 
-      a, button {
+      a,
+      button {
 
         display: grid;
         align-content: center;
@@ -782,7 +791,8 @@ export default class MenuModule extends ExtComponent {
 
         background-color: @color1;
 
-        a::v-deep, button::v-deep {
+        a::v-deep,
+        button::v-deep {
 
           border-bottom: solid 1px @color3;
           color: @white;
@@ -848,6 +858,4 @@ export default class MenuModule extends ExtComponent {
 
   }
 
-}
-
-</style>
+}</style>

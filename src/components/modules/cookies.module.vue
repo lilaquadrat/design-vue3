@@ -1,23 +1,27 @@
 <template>
-  <section :id="id" v-if="visible && isOverlay || !isOverlay" :class="[{'lila-module': !isOverlay, isOverlay,}, overlayPosition]" class="lila-cookies-module">
+  <section :id="id" v-if="visible && isOverlay || !isOverlay"
+    :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition]" class="lila-cookies-module">
 
     <lila-overlay-background-partial v-if="visible && isOverlay && overlayPosition === 'overlayFull'" background="mobile">
-      <lila-dialog-partial class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">
+      <lila-dialog-partial class="lila-cookies-module-dialog" type="check" @confirm="consent('all')"
+        @cancel="consent('selection')" :translations="translations">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" />
         <section class="checkbox-container">
-            <lila-checkbox-partial disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
-            <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
+          <lila-checkbox-partial disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
+          <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
         </section>
       </lila-dialog-partial>
     </lila-overlay-background-partial>
 
-      <lila-dialog-partial v-if="visible && isOverlay && overlayPosition === 'overlayRight'" class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">
-        <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-        <section class="checkbox-container">
-            <lila-checkbox-partial disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
-            <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
-        </section>
-      </lila-dialog-partial>
+    <lila-dialog-partial v-if="visible && isOverlay && overlayPosition === 'overlayRight'"
+      class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')"
+      :translations="translations">
+      <lila-textblock-partial v-if="textblock" v-bind="textblock" />
+      <section class="checkbox-container">
+        <lila-checkbox-partial disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
+        <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
+      </section>
+    </lila-dialog-partial>
     </lila-overlay-background-partial>
 
     <template v-if="!isOverlay">
@@ -31,187 +35,118 @@
         <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
       </section>
       <lila-button-group-partial gap>
-        <lila-button-partial @confirmed="consent('all')" colorScheme="colorScheme1">{{translations.confirm}}</lila-button-partial>
-        <lila-button-partial @confirmed="consent('selection')" colorScheme="transparent">{{translations.cancel}}</lila-button-partial>
+        <lila-button-partial @confirmed="consent('all')" colorScheme="colorScheme1">{{ translations.confirm
+        }}</lila-button-partial>
+        <lila-button-partial @confirmed="consent('selection')" colorScheme="transparent">{{ translations.cancel
+        }}</lila-button-partial>
       </lila-button-group-partial>
     </template>
 
   </section>
 </template>
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import Textblock from '@interfaces/textblock.interface';
-import {
-  ExtComponent, Component, Prop,
-} from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Link from '@interfaces/link.interface';
+import type Textblock from '@interfaces/textblock.interface';
+
 import dayjs from 'dayjs';
+import { computed, onMounted } from 'vue';
 
-@Component
-export default class CookiesModule extends ExtComponent {
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  links: Link[];
 
-  @Prop(Object) links: Link[];
+  list: string[];
+  id?:string
+  variant?: string[];
 
-  @Prop(Object) list: string[];
+}>();
+let technical = true;
+let visible = false;
+let cookies:any | {analytics:any}= {
+  analytics: false ,    // change cokie type def
+};
+let translations = {
+  confirm: 'Alle akzeptieren',
+  cancel: 'Auswahl bestätigen',
+};
+const gtag = computed(() => {
 
-  technical = true;
+  const useWindow: any = window;
 
-  visible = false;
+  return useWindow.gtag || function gtag() { return true; };
 
-  cookies = {
-    analytics: false,
-  };
+});
+const isOverlay = computed(() => {
 
-  translations = {
-    confirm: 'Alle akzeptieren',
-    cancel: 'Auswahl bestätigen',
-  };
+  return props.variant?.includes('overlay');
 
+});
+const overlayPosition = computed(() => {
 
-  get gtag() {
+  if (props.variant?.includes('overlayRight')) return 'overlayRight';
+  return 'overlayFull';
 
-    const useWindow: any = window;
+});
 
-    return useWindow.gtag || function gtag() { return true; };
+onMounted(() => {
+
+  calcVisibilty();
+
+  if (isOverlay.value) {
+
+    updateSelection();
 
   }
 
-  get isOverlay() {
+  console.log(this.$store);
 
-    return this.variant.includes('overlay');
+});
 
-  }
 
-  get overlayPosition() {
+function calcVisibilty() {
 
-    if (this.variant.includes('overlayRight')) return 'overlayRight';
-    return 'overlayFull';
+  const cookies = getCookies();
 
-  }
+  console.log(cookies, props.variant?.includes('overlay'), cookies.find((single) => single.name === 'lila-cookies'));
 
-  mounted() {
+  if (props.variant?.includes('overlay')) {
 
-    this.calcVisibilty();
+    visible = !cookies.find((single) => single.name === 'lila-cookies');
 
-    if (!this.isOverlay) {
+    if (overlayPosition.value === 'overlayFull') {
 
-      this.updateSelection();
+      this.$store.dispatch('fullscreen', visible);
 
     }
 
-    console.log(this.$store);
+  } else {
+
+    visible = true;
 
   }
 
-  calcVisibilty() {
 
-    const cookies = this.getCookies();
+}
 
-    console.log(cookies, this.variant.includes('overlay'), cookies.find((single) => single.name === 'lila-cookies'));
 
-    if (this.variant.includes('overlay')) {
+function updateSelection() {
 
-      this.visible = !cookies.find((single) => single.name === 'lila-cookies');
+  const currCookies = getCookies();
+  const acceptedCookie = currCookies.find((single) => single.name === 'lila-cookies-accepted');
+  let accepted: string[] = [];
 
-      if (this.overlayPosition === 'overlayFull') {
+  if (acceptedCookie) {
 
-        this.$store.dispatch('fullscreen', this.visible);
+    accepted = acceptedCookie.value.split(',');
+    accepted.forEach((single) => {
+
+      if (cookies[single] !== undefined) {
+
+        cookies[single] = true;
 
       }
-
-    } else {
-
-      this.visible = true;
-
-    }
-
-
-  }
-
-
-  updateSelection() {
-
-    const cookies = this.getCookies();
-    const acceptedCookie = cookies.find((single) => single.name === 'lila-cookies-accepted');
-    let accepted: string[] = [];
-
-    if (acceptedCookie) {
-
-      accepted = acceptedCookie.value.split(',');
-      accepted.forEach((single) => {
-
-        if (this.cookies[single] !== undefined) {
-
-          this.cookies[single] = true;
-
-        }
-
-      });
-
-    }
-
-  }
-
-
-  consent(type: 'all' | 'selection') {
-
-    const cookies = this.getCookies();
-
-    if (type === 'all') {
-
-      Object.keys(this.cookies).forEach((single) => { this.cookies[single] = true; });
-
-    }
-
-    if (this.cookies.analytics) {
-
-      this.gtag('consent', 'update', {
-        ad_storage: 'granted',
-        analytics_storage: 'granted',
-      });
-
-    } else {
-
-      this.gtag('consent', 'update', {
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-      });
-
-      cookies.forEach((single) => {
-
-        if (single.name.match(/^_ga*/)) {
-
-          document.cookie = `${single.name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None;`;
-
-        }
-
-      });
-
-    }
-
-    const cookieKeys = Object.keys(this.cookies).filter((single) => (this.cookies[single] ? single : null));
-
-    cookieKeys.push('technical');
-
-    console.log(cookieKeys);
-
-    document.cookie = `lila-cookies=1; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
-    document.cookie = `lila-cookies-accepted=${cookieKeys.join(',')}; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
-
-    this.calcVisibilty();
-
-  }
-
-  getCookies() {
-
-    const cookies = document.cookie.split(';').filter((single) => single);
-
-    return cookies.map((single) => {
-
-      const name = single.split('=');
-
-      return { name: name[0].trim(), value: name[1] };
 
     });
 
@@ -219,11 +154,76 @@ export default class CookiesModule extends ExtComponent {
 
 }
 
+
+function consent(type: 'all' | 'selection') {
+
+  const currCookies = getCookies();
+
+  if (type === 'all') {
+
+    Object.keys(currCookies).forEach((single) => { cookies[single] = true; });
+
+  }
+
+  if (cookies.analytics) {
+
+    gtag.value('consent', 'update', {
+      ad_storage: 'granted',
+      analytics_storage: 'granted',
+    });
+
+  } else {
+
+    gtag.value('consent', 'update', {
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+    });
+
+    currCookies.forEach((single) => {
+
+      if (single.name.match(/^_ga*/)) {
+
+        document.cookie = `${single.name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None;`;
+
+      }
+
+    });
+
+  }
+
+  const cookieKeys = Object.keys(cookies).filter((single) => (cookies[single] ? single : null));
+
+  cookieKeys.push('technical');
+
+  console.log(cookieKeys);
+
+  document.cookie = `lila-cookies=1; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
+  document.cookie = `lila-cookies-accepted=${cookieKeys.join(',')}; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
+
+  calcVisibilty();
+
+}
+
+function getCookies() {
+
+  const cookies = document.cookie.split(';').filter((single) => single);
+
+  return cookies.map((single) => {
+
+    const name = single.split('=');
+
+    return { name: name[0].trim(), value: name[1] };
+
+  });
+
+}
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";
 
-.lila-cookies-module-dialog, .lila-cookies-module.lila-module {
+.lila-cookies-module-dialog,
+.lila-cookies-module.lila-module {
 
   .checkbox-container {
 
@@ -253,7 +253,8 @@ export default class CookiesModule extends ExtComponent {
       left: 20px;
       display: grid;
 
-      @media @tablet, @desktop {
+      @media @tablet,
+      @desktop {
         top: inherit;
         right: 20px;
         bottom: 20px;
@@ -282,5 +283,4 @@ export default class CookiesModule extends ExtComponent {
   }
 
 }
-
 </style>

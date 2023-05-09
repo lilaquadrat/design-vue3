@@ -1,31 +1,29 @@
 <template>
-  <section :id="id" :class="[variant, view]" class="lila-prices-module lila-module">
+  <section ref="el" :id="id" :class="[variant, view]" class="lila-prices-module lila-module">
 
     <lila-textblock-partial v-bind="textblock"></lila-textblock-partial>
 
     <div class="prices-container">
 
-      <section class="single-price"
-      v-for="(element, elementIndex) in elements"
-      :class="[variant, element.variant]"
-      :key="`price-${elementIndex}`" >
+      <section class="single-price" v-for="(element, elementIndex) in elements" :class="[variant, element.variant]"
+        :key="`price-${elementIndex}`">
 
         <header>
-          <h1 v-if="element.textblock.headline">{{element.textblock.headline}}</h1>
-          <h2 v-if="element.textblock.subline">{{element.textblock.subline}}</h2>
+          <h1 v-if="element.textblock.headline">{{ element.textblock.headline }}</h1>
+          <h2 v-if="element.textblock.subline">{{ element.textblock.subline }}</h2>
 
-          <h3 v-if="element.textblock.intro">{{element.textblock.intro}}</h3>
+          <h3 v-if="element.textblock.intro">{{ element.textblock.intro }}</h3>
         </header>
 
         <section class="content">
 
           <div class="price-container">
-            <h2 class="price" v-if="element.price">{{element.price}}</h2>
-            <h3 class="interval" v-if="element.interval">{{element.interval}}</h3>
+            <h2 class="price" v-if="element.price">{{ element.price }}</h2>
+            <h3 class="interval" v-if="element.interval">{{ element.interval }}</h3>
           </div>
 
           <p v-for="(singleText, index) in element.textblock.text" :key="`text-${index}-${elementIndex}`">
-            {{singleText}}
+            {{ singleText }}
           </p>
 
           <li v-for="(single, index) in element.facts" :key="`list-element-${elementIndex}-${index}`">
@@ -36,8 +34,9 @@
 
         <footer>
 
-          <lila-link-partial class="button base callToAction" :class="{colorScheme1: highlight(element), colorScheme2: !highlight(element)}"
-          v-if="element.callToAction" v-bind="element.callToAction" />
+          <lila-link-partial class="button base callToAction"
+            :class="{ colorScheme1: highlight(element), colorScheme2: !highlight(element) }" v-if="element.callToAction"
+            v-bind="element.callToAction" />
           <lila-link-partial v-if="element.more" v-bind="element.more" />
 
         </footer>
@@ -47,32 +46,40 @@
     </div>
   </section>
 </template>
-<script lang="ts">
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
-import PricesElementModel from '@interfaces/PricesElement.interface';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Textblock from '@interfaces/textblock.interface';
+import type PricesElementModel from '@interfaces/PricesElement.interface';
+import { onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class PricesModule extends ExtComponent {
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  elements: PricesElementModel[];
+  id?:string;
+  view?: string;
+  variant: string[];
 
-  @Prop(Array) elements: PricesElementModel[];
+}>();
 
-  // eslint-disable-next-line class-methods-use-this
-  highlight(element) {
 
-    return element.variant?.includes('highlight');
+// eslint-disable-next-line class-methods-use-this
+function highlight(element: { variant: string | string[]; }) {
 
-  }
-
-  mounted() {
-
-    this.checkInview();
-
-  }
+  return element.variant?.includes('highlight');
 
 }
+
+let el = ref(null);
+
+onMounted(() => {
+
+  checkInview(el);
+
+}
+);
+
 
 </script>
 <style lang="less" scoped>
@@ -105,7 +112,7 @@ export default class PricesModule extends ExtComponent {
     max-width: @moduleWidth_M;
 
     @media @tablet,
-      @desktop {
+    @desktop {
       grid-template-columns: 1fr 1fr 1fr;
       gap: 40px;
     }
@@ -169,7 +176,7 @@ export default class PricesModule extends ExtComponent {
         grid-row-start: 1;
 
         @media @tablet,
-          @desktop {
+        @desktop {
           grid-row-start: auto;
         }
 

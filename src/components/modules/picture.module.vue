@@ -1,62 +1,67 @@
 <template>
-<section :id="id" :class="[variant, view, {fullscreenOverlay, fullscreenOverlayEnabled}]" class="lila-picture-module lila-module">
-  <lila-picture-partial v-bind="picture" />
+  <section :id="id" ref="el" :class="[variant, view, { fullscreenOverlay, fullscreenOverlayEnabled }]"
+    class="lila-picture-module lila-module">
+    <lila-picture-partial v-bind="picture" />
 
-  <div v-if="showText" class="position-container">
-    <lila-textblock-partial v-bind="textblock" />
-  </div>
+    <div v-if="showText" class="position-container">
+      <lila-textblock-partial v-bind="textblock" />
+    </div>
 
-  <section v-if="fullscreenOverlayEnabled" class="controls-container">
-    <lila-button-partial colorScheme="colorScheme2" :icon="true" @click="toggleFullscreenOverlay">
-      <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
-    </lila-button-partial>
+    <section v-if="fullscreenOverlayEnabled" class="controls-container">
+      <lila-button-partial colorScheme="colorScheme2" :icon="true" @click="toggleFullscreenOverlay">
+        <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
+      </lila-button-partial>
+    </section>
+
   </section>
-
-</section>
-
 </template>
-<script lang="ts">
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+import { checkInview } from '@/mixins/checkin';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import { computed, onMounted, ref } from 'vue';
 
-@Component
-export default class PictureModule extends ExtComponent {
+const props = defineProps<{
+  picture: Picture;
 
-  @Prop(Object) picture: Picture;
+  textblock: Textblock;
+  id?:string;
+  view?: string;
+  variant: string[];
+}>();
+let fullscreenOverlay: boolean = false;
+let el = ref(null);
 
-  @Prop(Object) textblock: Textblock;
+onMounted((): void => {
 
-  fullscreenOverlay: boolean = false;
+  checkInview(el);
 
-  mounted(): void {
+});
 
-    this.checkInview();
+let emit = defineEmits<{
+    (e: string, i:boolean): void
+}>();
+const showText = computed((): boolean => {
 
-  }
+  if (!props.textblock) return false;
 
-  get showText(): boolean {
+  return Object.keys(props.textblock).some((single) => props.textblock[single].length);
 
-    if (!this.textblock) return false;
+});
+const fullscreenOverlayEnabled = computed(() => {
 
-    return Object.keys(this.textblock).some((single) => this.textblock[single].length);
+  return props.variant.includes('fullscreenOverlayEnabled');
 
-  }
+});
 
-  get fullscreenOverlayEnabled() {
 
-    return this.variant.includes('fullscreenOverlayEnabled');
+function toggleFullscreenOverlay() {
 
-  }
-
-  toggleFullscreenOverlay() {
-
-    this.fullscreenOverlay = !this.fullscreenOverlay;
-    this.$root.$emit('fullscreen', this.fullscreenOverlay);
-
-  }
+  fullscreenOverlay = !fullscreenOverlay;
+  emit('fullscreen', fullscreenOverlay);
 
 }
+
 
 </script>
 <style lang="less" scoped>
@@ -189,7 +194,8 @@ export default class PictureModule extends ExtComponent {
 
     .position-container {
 
-      @media @tablet,  @desktop {
+      @media @tablet,
+      @desktop {
 
         position: absolute;
         top: 0;
@@ -208,7 +214,8 @@ export default class PictureModule extends ExtComponent {
 
   }
 
-  &.textPictureVertical, &.pictureTextVertical  {
+  &.textPictureVertical,
+  &.pictureTextVertical {
 
     gap: 60px;
     text-align: center;
@@ -246,5 +253,4 @@ export default class PictureModule extends ExtComponent {
   }
 
 }
-
 </style>

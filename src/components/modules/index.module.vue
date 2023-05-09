@@ -1,63 +1,70 @@
 <template>
-<section :id="id" :class="[view, position, variant]" class="lila-index-module lila-module">
-  <section class="index-container">
-    <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
+  <section ref="el" :id="id" :class="[view, position, variant]" class="lila-index-module lila-module">
+    <section class="index-container">
+      <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
+    </section>
   </section>
-</section>
-
 </template>
-<script lang="ts">
-import LinkListWithTitle from '@interfaces/LinkListWithTitle.interface';
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type LinkListWithTitle from '@interfaces/LinkListWithTitle.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import { computed, onMounted, ref } from 'vue';
+import type { AdditionalContentInformation } from '@lilaquadrat/studio/lib/interfaces';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class IndexModule extends ExtComponent {
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  links: LinkListWithTitle;
 
-  @Prop(Object) links: LinkListWithTitle;
+  legend: string[];
+  variant: string[];
+  date: string;
+  id?: string;
+  view?: string;
+  position: string;
+  additional: AdditionalContentInformation;
+}>();
+let el = ref(null);
 
-  @Prop(Object) legend: string[];
+onMounted((): void => {
 
-  mounted() {
+  checkInview(el);
 
-    this.checkInview();
-
-  }
-
-  get useLinks() {
-
-    if (this.variant.includes('auto')) {
-
-      return {
-        title: this.links?.title,
-        value: this.additional.index.map((single) => ({
-          text: single?.title,
-          link: `#${single.anchor}`,
-          attributes: ['static'],
-        })),
-      };
+});
 
 
-    }
+const useLinks = computed(() => {
 
-    return this.links;
+  if (props.variant.includes('auto')) {
 
-  }
+    return {
+      title: props.links?.title,
+      value: props.additional.index?.map((single) => ({
+        text: single?.title,
+        link: `#${single.anchor}`,
+        attributes: ['static'],
+      })),
+    };
 
-  get listVariant() {
-
-    const variants = [];
-
-    if (this.variant.includes('backgroundColor1') || this.variant.includes('backgroundColor3')) variants.push('white');
-    if (this.variant.includes('numbered')) variants.push('numbered');
-
-    return variants;
 
   }
 
-}
+  return props.links;
+
+});
+const listVariant = computed(() => {
+
+  const variants = [];
+
+  if (props.variant.includes('backgroundColor1') || props.variant.includes('backgroundColor3')) variants.push('white');
+  if (props.variant.includes('numbered')) variants.push('numbered');
+
+  return variants;
+
+});
+
 
 </script>
 <style lang="less" scoped>

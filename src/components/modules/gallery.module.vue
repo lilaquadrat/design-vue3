@@ -1,35 +1,48 @@
 <template>
-  <section :id="id" class="gallery-module lila-module" :class="[variant, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
+  <section :id="id" class="gallery-module lila-module"
+    :class="[variant, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
     <section class="elements">
-      <div :style="cssElementsLength" ref='scrollContainer' :class="{ transition: !dragging }" v-if="elements.length > 0" class="scroll-container">
+      <div :style="cssElementsLength" ref='scrollContainer' :class="{ transition: !dragging }" v-if="elements.length > 0"
+        class="scroll-container">
         <template v-for="(element, elementIndex) in elements">
-          <div class="element" :key="`gallery-element-${elementIndex}`" :style="cssWidth" :class="{hasImage: element.picture || element.pictures, hasDescription: element.textblock}" @click="set($event, element)" @keyup="set($event, element)">
+          <div class="element" :key="`gallery-element-${elementIndex}`" :style="cssWidth"
+            :class="{ hasImage: element.picture || element.pictures, hasDescription: element.textblock }"
+            @click="set($event, element)" @keyup="set($event, element)">
             <div class="picture-container" v-if="element && element.picture">
-              <lila-picture-partial :key="`gallery-placeholder-${elementIndex}`" class="placeholder" v-bind="element.picture" />
-              <lila-picture-partial :key="`gallery-picture-${elementIndex}`" @loaded="pictureLoaded" class="active picture" v-bind="element.picture" />
+              <lila-picture-partial :key="`gallery-placeholder-${elementIndex}`" class="placeholder"
+                v-bind="element.picture" />
+              <lila-picture-partial :key="`gallery-picture-${elementIndex}`" @loaded="pictureLoaded"
+                class="active picture" v-bind="element.picture" />
             </div>
 
             <template v-if="element.pictures">
               <template v-for="(picture, index) in element.pictures">
-                <div v-if="(imageIndex === index && currentOptionIndex === elementIndex) || (currentOptionIndex !== elementIndex && index === 0)" :key="`singlePicture-${index}`" class="picture-container">
-                  <lila-picture-partial :key="`gallery-placeholder-${index}`" class="placeholder" v-bind="element.pictures[0]"/>
-                  <lila-picture-partial :key="`gallery-picture-${index}`" observerroot="$refs.scrollContainer" class="picture active" noLoadAnimation @loaded="pictureLoaded" v-bind="picture"/>
+                <div
+                  v-if="(imageIndex === index && currentOptionIndex === elementIndex) || (currentOptionIndex !== elementIndex && index === 0)"
+                  :key="`singlePicture-${index}`" class="picture-container">
+                  <lila-picture-partial :key="`gallery-placeholder-${index}`" class="placeholder"
+                    v-bind="element.pictures[0]" />
+                  <lila-picture-partial :key="`gallery-picture-${index}`" observerroot="$refs.scrollContainer"
+                    class="picture active" noLoadAnimation @loaded="pictureLoaded" v-bind="picture" />
                 </div>
               </template>
             </template>
 
             <div v-if="element.pictures && firstLoad" :style="indicatorsTop" class="picture-indicators">
-              <span class="indicator" v-for="(picture, index) in element.pictures" :class="{ active: imageIndex === index }" :key="`picture-indicator-${index}`"></span>
+              <span class="indicator" v-for="(picture, index) in element.pictures"
+                :class="{ active: imageIndex === index }" :key="`picture-indicator-${index}`"></span>
             </div>
 
-            <lila-textblock-partial v-if="element.textblock && !variant2" v-bind="element.textblock" class="picture-description"> </lila-textblock-partial>
+            <lila-textblock-partial v-if="element.textblock && !variant2" v-bind="element.textblock"
+              class="picture-description"> </lila-textblock-partial>
           </div>
         </template>
       </div>
     </section>
 
     <div v-if="!variant2" class="indexIndicator">
-      <lila-button-partial class="toggleFullscreen" v-if="fullscreenOverlayEnabled" colorScheme="transparent" :icon="true" @click="toggleFullscreenOverlay">
+      <lila-button-partial class="toggleFullscreen" v-if="fullscreenOverlayEnabled" colorScheme="transparent" :icon="true"
+        @click="toggleFullscreenOverlay">
         <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
       </lila-button-partial>
       <span class="currentIndex">{{ (currentOptionIndex + 1) | leadingZero(2) }}</span>
@@ -49,353 +62,329 @@
 
     <div v-if="variant2" class="container gallery-controls">
       <div class="row-container">
-        <lila-button-partial class="one-left control" icon :class="{ active: currentOptionIndex > 0 }" @click="change('less')">
+        <lila-button-partial class="one-left control" icon :class="{ active: currentOptionIndex > 0 }"
+          @click="change('less')">
           <lila-icons-partial colorScheme="colorScheme1" size="small" type="arrow-left" />
         </lila-button-partial>
 
         <h4>{{ currentHeadline }}</h4>
 
-        <lila-button-partial class="one-right control" icon :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')">
+        <lila-button-partial class="one-right control" icon :class="{ active: currentOptionIndex + 1 < elements.length }"
+          @click="change('more')">
           <lila-icons-partial colorScheme="colorScheme1" size="small" type="arrow-right" />
         </lila-button-partial>
       </div>
 
       <div class="carousel-indicators carousel-indicators-numbers">
-        <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
+        <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`"
+          :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
       </div>
     </div>
   </section>
 </template>
-<script lang="ts">
-import { GalleryElement } from '@interfaces/galleryElement.interface';
-import Textblock from '@interfaces/textblock.interface';
-import {
-  ExtComponent, Component, Prop, Watch,
-} from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type { GalleryElement } from '@interfaces/galleryElement.interface';
+import type Textblock from '@interfaces/textblock.interface';
 
-@Component
-export default class galleryModule extends ExtComponent {
+import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 
-  @Prop(Object) textblock: Textblock;
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Array) elements: GalleryElement[];
+  elements: GalleryElement[];
+  variant: string[];
+  id?:string;
+}>();
+let currentOptionIndex: Ref<number> = ref(0); let swipeX: number = 0; let tempSwipe: number = 0; let dragging: boolean = false; let elementsWidth: number = 0; let imageIndex: number = 0;/**
+ * * in case of multipe pictures per slide, this disables switching through the pictures.
+ * So that you are not able to switch to fast between pictures
+ */
+let nextImageBlocked: boolean = false; let currentHeadline: string = ''; let controlsOffset: number = 0; let firstLoad: boolean = false; let fullscreenOverlay: boolean = false;
+let emit = defineEmits<{
+  (e: string, element: any): void
+}>();
 
-  currentOptionIndex: number = 0;
+watch(currentOptionIndex, indexChange);
 
-  swipeX: number = 0;
+function indexChange(): void {
 
-  tempSwipe: number = 0;
+  setControlsTop();
+  updateText();
 
-  dragging: boolean = false;
+}
 
-  elementsWidth: number = 0;
+const cssElementsLength = computed((): { [key: string]: string | number } => {
 
-  imageIndex: number = 0;
+  return {
+    '--n': props.elements.length,
+    '--i': currentOptionIndex.value,
+    '--ts': `${tempSwipe}px`,
+  };
 
-  /**
-   * * in case of multipe pictures per slide, this disables switching through the pictures.
-   * So that you are not able to switch to fast between pictures
-   */
-  nextImageBlocked: boolean = false;
+}); const cssWidth = computed((): { [key: string]: string } => {
 
-  currentHeadline: string = '';
+  return {
+    '--width': `${100 / props.elements.length}%`,
+  };
 
-  controlsOffset: number = 0;
+}); const controlsTop = computed((): { [key: string]: string } => {
 
-  firstLoad: boolean = false;
+  return {
+    '--top': `${controlsOffset / 2}px`,
+  };
 
-  fullscreenOverlay: boolean = false;
+}); const indicatorsTop = computed((): { [key: string]: string } => {
 
-  @Watch('currentOptionIndex')
-  indexChange(): void {
+  return {
+    '--top': `${controlsOffset}px`,
+  };
 
-    this.setControlsTop();
-    this.updateText();
+});  /** checks if any elements has a description */
+const elementDescription = computed((): boolean => {
 
-  }
+  return !!props.elements.find((single:  any) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length);
 
-  get cssElementsLength(): { [key: string]: string | number } {
+}); const variant2 = computed((): boolean => {
 
-    return {
-      '--n': this.elements.length,
-      '--i': this.currentOptionIndex,
-      '--ts': `${this.tempSwipe}px`,
-    };
+  return props.variant.includes('variant2');
 
-  }
+}); const fullscreenOverlayEnabled = computed(() => {
 
-  get cssWidth(): { [key: string]: string } {
+  return !props.variant?.includes('disableOverlay');
 
-    return {
-      '--width': `${100 / this.elements.length}%`,
-    };
+});
 
-  }
 
-  get controlsTop(): { [key: string]: string } {
+function toggleFullscreenOverlay() {
 
-    return {
-      '--top': `${this.controlsOffset / 2}px`,
-    };
+  fullscreenOverlay = !fullscreenOverlay;
+  emit('fullscreen', fullscreenOverlay); //  was this.$root.$emit
+  nextTick()
+    .then(() => {
 
-  }
-
-  get indicatorsTop(): { [key: string]: string } {
-
-    return {
-      '--top': `${this.controlsOffset}px`,
-    };
-
-  }
-
-  /** checks if any elements has a description */
-  get elementDescription(): boolean {
-
-    return !!this.elements.find((single) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length);
-
-  }
-
-  get variant2(): boolean {
-
-    return this.variant.includes('variant2');
-
-  }
-
-  get fullscreenOverlayEnabled() {
-
-    return !this.variant.includes('disableOverlay');
-
-  }
-
-  toggleFullscreenOverlay() {
-
-    this.fullscreenOverlay = !this.fullscreenOverlay;
-    this.$root.$emit('fullscreen', this.fullscreenOverlay);
-    this.$nextTick()
-      .then(() => {
-
-        this.setControlsTop();
-
-      });
-
-  }
-
-
-  pictureLoaded(): void {
-
-    this.firstLoad = true;
-    this.setControlsTop();
-
-  }
-
-  setControlsTop(): void {
-
-    // if (this.fullscreenOverlay) {
-
-    //   this.controlsOffset = window.innerHeight;
-
-    // } else {
-
-    const elements = this.$el?.querySelectorAll('.scroll-container .element');
-    const single = elements.item(this.currentOptionIndex).querySelector('.picture-container');
-
-    this.controlsOffset = single?.scrollHeight;
-
-    // }
-
-
-  }
-
-  /** gets the correct event type */
-  // eslint-disable-next-line class-methods-use-this
-  getEvent(event: MouseEvent | TouchEvent): Touch | MouseEvent {
-
-    if (!event) return null;
-
-    return 'changedTouches' in event ? event.changedTouches[0] : event;
-
-  }
-
-  touchstart(event: TouchEvent): void {
-
-    const unifiedEvent = this.getEvent(event);
-    const target = unifiedEvent.target as HTMLElement;
-
-    if (target.tagName === 'A') return;
-
-    this.swipeX = unifiedEvent.clientX;
-    this.dragging = true;
-
-  }
-
-  swipe(event: TouchEvent): void {
-
-    const length = this.elements.length - 1;
-    const swipeX = this.getEvent(event).clientX - this.swipeX;
-    const unifiedEvent = this.getEvent(event);
-    const target = unifiedEvent.target as HTMLElement;
-
-    if (target.tagName === 'A') return;
-
-    event.preventDefault();
-
-    this.dragging = false;
-    this.tempSwipe = 0;
-
-    if (swipeX === 0) {
-
-      this.set(event, this.elements[this.currentOptionIndex]);
-      this.nextImage();
-
-      return;
-
-    }
-
-    if (+((Math.sign(swipeX) * swipeX) / this.elementsWidth).toFixed(2) < 0.2) return;
-
-    this.currentOptionIndex -= Math.sign(swipeX);
-
-    if (this.currentOptionIndex < 0) this.currentOptionIndex = 0;
-    if (this.currentOptionIndex > length) this.currentOptionIndex = length;
-
-    this.imageIndex = 0;
-    this.set(null, this.elements[this.currentOptionIndex]);
-    this.$emit('change', this.elements[this.currentOptionIndex]);
-
-  }
-
-  change(direction: string): void {
-
-    const length = this.elements.length - 1;
-    const tempIndex = this.currentOptionIndex;
-
-    if (direction === 'more') {
-
-      this.currentOptionIndex += 1;
-
-    } else {
-
-      this.currentOptionIndex -= 1;
-
-    }
-
-    if (this.currentOptionIndex < 0) this.currentOptionIndex = 0;
-    if (this.currentOptionIndex > length) this.currentOptionIndex = length;
-
-    if (tempIndex !== this.currentOptionIndex) {
-
-      this.imageIndex = 0;
-      this.set(null, this.elements[this.currentOptionIndex]);
-
-    }
-
-  }
-
-  nextImage(): void {
-
-    if (this.nextImageBlocked) return;
-    if (!this.elements[this.currentOptionIndex]?.pictures) return;
-
-    this.imageIndex += 1;
-
-    if (this.imageIndex > this.elements[this.currentOptionIndex].pictures.length - 1) {
-
-      this.imageIndex = 0;
-
-    }
-
-    this.nextImageBlocked = true;
-
-    setTimeout(() => {
-
-      this.nextImageBlocked = false;
-
-    }, 500);
-
-  }
-
-  drag(event: TouchEvent): void {
-
-    if (!this.dragging) return;
-
-    const unifiedEvent = this.getEvent(event);
-    const target = unifiedEvent.target as HTMLElement;
-
-    if (target.tagName === 'A') return;
-
-    this.tempSwipe = Math.round(unifiedEvent.clientX - this.swipeX);
-
-  }
-
-  touchmove(event: TouchEvent): void {
-
-    const unifiedEvent = this.getEvent(event);
-    const target = unifiedEvent.target as HTMLElement;
-
-    if (target.tagName === 'A') return;
-
-    event.preventDefault();
-
-  }
-
-  mounted(): void {
-
-    this.gallery();
-    this.updateText();
-    this.setControlsTop();
-
-  }
-
-  gallery(): void {
-
-    const scollContainer = this.$el.querySelector('.scroll-container');
-
-    window.addEventListener('resized', () => {
-
-      this.elementsWidth = this.$el.querySelector('.elements').getBoundingClientRect().width;
-
-      this.setControlsTop();
+      setControlsTop();
 
     });
 
-    this.elementsWidth = this.$el.querySelector('.elements').getBoundingClientRect().width;
+}
 
-    this.DOM.onElement('touchstart mousedown', scollContainer, this.touchstart);
-    this.DOM.onElement('touchend mouseup', scollContainer, this.swipe);
-    this.DOM.onElement('touchmove mousemove', scollContainer, this.drag);
 
-    this.DOM.onElement('touchmove', this.$el, this.touchmove);
+function pictureLoaded(): void {
+
+  firstLoad = true;
+  setControlsTop();
+
+}
+
+function setControlsTop(this: any): void {
+
+  // if (this.fullscreenOverlay) {
+
+  //   this.controlsOffset = window.innerHeight;
+
+  // } else {
+
+  const elements = this.$el?.querySelectorAll('.scroll-container .element');
+  const single = elements.item(currentOptionIndex).querySelector('.picture-container');
+
+  controlsOffset = single?.scrollHeight;
+
+  // }
+
+
+}
+
+/** gets the correct event type */
+// eslint-disable-next-line class-methods-use-this
+function getEvent(event: MouseEvent | TouchEvent): Touch | MouseEvent {
+
+  // if (!event) return null;
+
+  return 'changedTouches' in event ? event.changedTouches[0] : event;
+
+}
+
+function touchstart(event: TouchEvent): void {
+
+  const unifiedEvent = getEvent(event);
+  const target = unifiedEvent.target as HTMLElement;
+
+  if (target.tagName === 'A') return;
+
+  swipeX = unifiedEvent.clientX;
+  dragging = true;
+
+}
+
+function swipe(this: any, event: TouchEvent): void {
+
+  const length = this.elements.length - 1;
+  const currentSwipeX = getEvent(event).clientX - swipeX;
+  const unifiedEvent = getEvent(event);
+  const target = unifiedEvent.target as HTMLElement;
+
+  if (target.tagName === 'A') return;
+
+  event.preventDefault();
+
+  dragging = false;
+  tempSwipe = 0;
+
+  if (currentSwipeX === 0) {
+
+    set(event, this.elements[this.currentOptionIndex]);
+    nextImage();
+
+    return;
 
   }
 
-  set(event: TouchEvent | MouseEvent, option: GalleryElement): void {
+  if (+((Math.sign(currentSwipeX) * currentSwipeX) / this.elementsWidth).toFixed(2) < 0.2) return;
 
-    const unifiedEvent = this.getEvent(event);
-    const target = unifiedEvent?.target as HTMLElement;
+  currentOptionIndex.value -= Math.sign(swipeX);
 
-    if (!unifiedEvent) return;
-    if (target.tagName === 'A') return;
+  if (currentOptionIndex.value < 0) currentOptionIndex.value = 0;
+  if (currentOptionIndex.value > length) currentOptionIndex.value = length;
 
-    if (event) event.preventDefault();
+  imageIndex = 0;
+  set(null, this.elements[this.currentOptionIndex]);
+  emit('change', this.elements[this.currentOptionIndex]);
 
-    this.$emit('change', option);
+}
+
+function change( direction: string): void {
+
+  const length = props.elements.length - 1;
+  const tempIndex = currentOptionIndex;
+
+  if (direction === 'more') {
+
+    currentOptionIndex.value += 1;
+
+  } else {
+
+    currentOptionIndex.value -= 1;
 
   }
 
-  /** updates the current headline for variant2 */
-  updateText(): void {
+  if (currentOptionIndex.value < 0) currentOptionIndex.value = 0;
+  if (currentOptionIndex.value > length) currentOptionIndex.value = length;
 
-    this.currentHeadline = this.elements[this.currentOptionIndex].textblock?.headline;
+  if (tempIndex.value !== currentOptionIndex.value) {
 
-  }
-
-  indicatorchange(index: number): void {
-
-    this.currentOptionIndex = index;
+    imageIndex = 0;
+    set(null, props.elements[currentOptionIndex.value]);
 
   }
 
 }
+
+function nextImage(this: any): void {
+
+  if (this.nextImageBlocked) return;
+  if (!this.elements[this.currentOptionIndex]?.pictures) return;
+
+  this.imageIndex += 1;
+
+  if (this.imageIndex > this.elements[this.currentOptionIndex].pictures.length - 1) {
+
+    this.imageIndex = 0;
+
+  }
+
+  this.nextImageBlocked = true;
+
+  setTimeout(() => {
+
+    this.nextImageBlocked = false;
+
+  }, 500);
+
+}
+
+function drag(this: any, event: TouchEvent): void {
+
+  if (!this.dragging) return;
+
+  const unifiedEvent = this.getEvent(event);
+  const target = unifiedEvent.target as HTMLElement;
+
+  if (target.tagName === 'A') return;
+
+  this.tempSwipe = Math.round(unifiedEvent.clientX - this.swipeX);
+
+}
+
+function touchmove(this: any, event: TouchEvent): void {
+
+  const unifiedEvent = this.getEvent(event);
+  const target = unifiedEvent.target as HTMLElement;
+
+  if (target.tagName === 'A') return;
+
+  event.preventDefault();
+
+}
+
+onMounted(() => {
+
+  gallery();
+  updateText();
+  setControlsTop();
+
+});
+
+
+function gallery(this: any): void {
+
+  const scollContainer = this.$el.querySelector('.scroll-container');
+
+  window.addEventListener('resized', () => {
+
+    this.elementsWidth = this.$el.querySelector('.elements').getBoundingClientRect().width;
+
+    this.setControlsTop();
+
+  });
+
+  this.elementsWidth = this.$el.querySelector('.elements').getBoundingClientRect().width;
+
+  this.DOM.onElement('touchstart mousedown', scollContainer, this.touchstart);
+  this.DOM.onElement('touchend mouseup', scollContainer, this.swipe);
+  this.DOM.onElement('touchmove mousemove', scollContainer, this.drag);
+
+  this.DOM.onElement('touchmove', this.$el, this.touchmove);
+
+}
+
+function set( event: TouchEvent | MouseEvent |null, option: GalleryElement): void {
+
+  const unifiedEvent = getEvent(event as TouchEvent | MouseEvent);
+  const target = unifiedEvent?.target as HTMLElement;
+
+  if (!unifiedEvent) return;
+  if (target.tagName === 'A') return;
+
+  if (event) event.preventDefault();
+
+  emit('change', option);
+
+}
+
+/** updates the current headline for variant2 */
+function updateText(this: any): void {
+
+  currentHeadline = this.elements[this.currentOptionIndex].textblock?.headline;
+
+}
+
+function indicatorchange(index: number): void {
+
+  currentOptionIndex = ref(index);
+
+}
+
 </script>
 <style lang="less" scoped>
 @import (reference) '@{projectPath}/source/less/shared.less';

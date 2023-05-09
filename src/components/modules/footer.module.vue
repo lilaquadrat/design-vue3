@@ -24,7 +24,8 @@
         <h3>{{ social.title }}</h3>
 
         <div class="icon-container">
-          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`" :link="element.link.link">
+          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
+            :link="element.link.link">
             <lila-picture-partial v-bind="element.picture" />
           </lila-link-partial>
         </div>
@@ -34,26 +35,29 @@
     <section class="legal">{{ legal }}</section>
   </footer>
 </template>
-<script lang="ts">
-import Sitemap from '@interfaces/Sitemap.interface';
-import FooterContact from '@interfaces/FooterContact.interface';
-import FooterSocial from '@interfaces/FooterSocial.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Sitemap from '@interfaces/Sitemap.interface';
+import type FooterContact from '@interfaces/FooterContact.interface';
+import type FooterSocial from '@interfaces/FooterSocial.interface';
 
-@Component
-export default class FooterModule extends ExtComponent {
+const props = defineProps<{
+  fontVariant: string[];
 
-  @Prop(Array) fontVariant: string[];
+  contact: FooterContact;
 
-  @Prop(Object) contact: FooterContact;
+  social: FooterSocial;
 
-  @Prop(Object) social: FooterSocial;
+  legal: string;
 
-  @Prop(String) legal: string;
+  sitemap: Sitemap;
+  variant?: string[];
+  id?: string;
+  view?:string;
 
-  @Prop(Array) sitemap: Sitemap;
+}>();
 
-}
+
 </script>
 <style lang="less" scoped>
 @import (reference) '@{projectPath}/source/less/shared.less';
@@ -90,7 +94,8 @@ export default class FooterModule extends ExtComponent {
     gap: 20px;
     align-items: center;
 
-    @media @tablet, @desktop {
+    @media @tablet,
+    @desktop {
       grid-template-rows: auto;
       grid-template-columns: max-content 1fr;
     }
@@ -110,7 +115,8 @@ export default class FooterModule extends ExtComponent {
     gap: 15px;
     align-items: center;
 
-    @media @tablet, @desktop {
+    @media @tablet,
+    @desktop {
       grid-template-columns: 1fr auto;
       justify-items: end;
     }
@@ -142,7 +148,8 @@ export default class FooterModule extends ExtComponent {
 
     align-items: center;
 
-    @media @tablet, @desktop {
+    @media @tablet,
+    @desktop {
       grid-template-columns: 1fr auto;
       justify-items: start;
     }

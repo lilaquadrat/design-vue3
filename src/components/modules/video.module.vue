@@ -1,82 +1,82 @@
 <template>
-  <section :id="id" @click="trigger" @keypress="trigger"
-  :class="[variant, view, {started, controls}]" class="lila-video-module lila-module">
+  <section ref="el" :id="id" @click="trigger" @keypress="trigger" :class="[variant, view, { started, controls }]"
+    class="lila-video-module lila-module">
 
     <section class="video-container">
 
       <lila-video-partial :trigger="clickEvent" v-bind="video" @playing="toggle" @ended="ended" />
 
-      <section class="position-container" :class="{visible: !playing}">
+      <section class="position-container" :class="{ visible: !playing }">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
       </section>
 
-      <lila-picture-partial class="posterExt" v-if="hasPoster" :class="{visible: !playing}" v-bind="poster" />
+      <lila-picture-partial class="posterExt" v-if="hasPoster" :class="{ visible: !playing }" v-bind="poster" />
 
     </section>
 
   </section>
 </template>
-<script lang="ts">
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import Video from '@interfaces/video.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+import { checkInview } from '@/mixins/checkin';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import type Video from '@interfaces/video.interface';
+import { computed, onMounted, ref } from 'vue';
 
-@Component
-export default class VideoModule extends ExtComponent {
+const props = defineProps<{
+  poster: Picture;
 
-  @Prop(Object) poster: Picture;
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  video: Video;
 
-  @Prop(Object) video: Video;
+  js: boolean;
+  id?:string;
+  view?: string;
+  variant: string[];
+}>();
+let clickEvent: boolean = false;
+let playing: boolean = false;
+let started: boolean = false;
+let el = ref(null);
 
-  @Prop(Boolean) js: boolean;
+onMounted((): void =>{
 
-  clickEvent: boolean = false;
+  checkInview(el);
 
-  playing: boolean = false;
+});
 
-  started: boolean = false;
 
-  mounted(): void {
+function trigger(): void {
 
-    this.checkInview();
-
-  }
-
-  trigger(): void {
-
-    this.clickEvent = !this.clickEvent;
-
-  }
-
-  toggle(event: boolean): void {
-
-    this.started = true;
-    this.playing = event;
-
-  }
-
-  ended(): void {
-
-    this.started = false;
-
-  }
-
-  get hasPoster() {
-
-    return !!this.poster?.src;
-
-  }
-
-  get controls(): boolean {
-
-    return this.video?.attributes?.includes('controls');
-
-  }
+  clickEvent = !clickEvent;
 
 }
+
+function toggle(event: boolean): void {
+
+  started = true;
+  playing = event;
+
+}
+
+function ended(): void {
+
+  started = false;
+
+}
+
+  const hasPoster=computed(()=>{
+
+  return !!props.poster?.src;
+
+});
+  const controls=computed((): boolean|undefined =>{
+
+  return props.video?.attributes?.includes('controls');
+
+});
+
 
 </script>
 <style lang="less" scoped>
@@ -93,7 +93,8 @@ export default class VideoModule extends ExtComponent {
 
     .video-container {
 
-      h1, h2 {
+      h1,
+      h2 {
         color: @white;
       }
     }
@@ -103,7 +104,8 @@ export default class VideoModule extends ExtComponent {
 
     &.started {
 
-      .posterExt, .position-container {
+      .posterExt,
+      .position-container {
         display: none;
       }
     }
@@ -135,7 +137,8 @@ export default class VideoModule extends ExtComponent {
       width: 100%;
       height: 100vh;
 
-      video, iframe {
+      video,
+      iframe {
         position: absolute;
         top: 0;
         left: 0;
@@ -182,7 +185,8 @@ export default class VideoModule extends ExtComponent {
       }
     }
 
-    h1, h2 {
+    h1,
+    h2 {
       cursor: pointer;
     }
 
@@ -192,7 +196,8 @@ export default class VideoModule extends ExtComponent {
       text-transform: uppercase;
     }
 
-    .posterExt, .position-container {
+    .posterExt,
+    .position-container {
       opacity: 0;
 
       cursor: pointer;
@@ -225,5 +230,4 @@ export default class VideoModule extends ExtComponent {
     }
 
   }
-}
-</style>
+}</style>

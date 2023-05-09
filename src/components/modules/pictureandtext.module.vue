@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" :class="[view, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
+  <section ref="el" :id="id" :class="[view, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
     <lila-picture-partial :fit="fitVariant" v-bind="picture" />
 
     <section class="grid-container">
@@ -15,39 +15,42 @@
 
   </section>
 </template>
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+import { checkInview } from '@/mixins/checkin';
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import { computed, onMounted, ref } from 'vue';
 
-@Component
-export default class PictureAndTextModule extends ExtComponent {
+const props = defineProps<{
+  picture: Picture;
 
-  @Prop(Object) picture: Picture;
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  legend: string[];
 
-  @Prop(Object) legend: string[];
+  links: Link[];
 
-  @Prop(Object) links: Link[];
+  list: string[];
+  id?:string;
+  view?: string;
+  variant: string[];
+}>();
+let el = ref(null);
 
-  @Prop(Object) list: string[];
+onMounted((): void => {
 
-  mounted(): void {
+  checkInview(el);
 
-    this.checkInview();
-
-  }
+});
 
 
-  get fitVariant() {
+const fitVariant = computed(() => {
 
-    return this.variant.includes('fit');
+  return props.variant.includes('fit');
 
-  }
+});
 
-}
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

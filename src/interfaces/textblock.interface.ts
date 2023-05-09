@@ -7,6 +7,4 @@ export default interface Textblock {
 
     text?: string[];
 
-}
-
-;
+};

@@ -1,26 +1,26 @@
 <template>
-  <section :class="[variant, view]" class="lila-module lila-quellcode-module"  >
+  <section :class="[variant, view]" class="lila-module lila-quellcode-module">
     <lila-textblock-partial v-bind="$props" />
     <lila-highlight-partial v-bind="$props" />
   </section>
 </template>
-<script lang="ts">
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
 
-@Component
-export default class QuellcodeModule extends ExtComponent {
+const props = defineProps<{
 
-  @Prop(Array) text: string[];
+  text: string[];
 
-  @Prop(String) code: string;
+  code: string;
 
-  @Prop(String) headline: string;
+  headline: string;
 
-  @Prop(String) subline: string;
+  subline: string;
 
-  @Prop(String) intro: string;
+  intro: string;
+  view?: string;
+  variant: string[];
 
-}
+}>();
 </script>
 
 <style lang="less" scoped>
@@ -38,6 +38,7 @@ export default class QuellcodeModule extends ExtComponent {
   .lila-textblock {
     .modulePadding();
     max-width: @desktopWidth;
+
     &.center {
       text-align: center;
     }

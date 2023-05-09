@@ -1,85 +1,87 @@
 <template>
-<section :id="id" :class="[variant, view]" class="lila-picturegroup-module lila-module">
+  <section ref="el" :id="id" :class="[variant, view]" class="lila-picturegroup-module lila-module">
 
-  <section class="content-container">
-    <lila-textblock-partial :variant="[brightText]" v-if="textblock" v-bind="textblock" />
+    <section class="content-container">
+      <lila-textblock-partial :variant="[brightText]" v-if="textblock" v-bind="textblock" />
 
-    <section class="elements-container">
+      <section class="elements-container">
 
-      <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link">
-        <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
-        <lila-textblock-partial :variant="[brightText]" v-if="element.textblock" v-bind="element.textblock" />
-        <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
-        <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
-      </component>
+        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element"
+          :is="componentType(element.link)" v-bind="element.link">
+          <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
+          <lila-textblock-partial :variant="[brightText]" v-if="element.textblock" v-bind="element.textblock" />
+          <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
+          <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
+        </component>
+
+      </section>
 
     </section>
-
   </section>
-</section>
-
 </template>
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import PictureGroupElement from '@interfaces/PictureGroupElement.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import type PictureGroupElement from '@interfaces/PictureGroupElement.interface';
+import { computed, onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class PicturegroupModule extends ExtComponent {
+const props = defineProps<{
+  elements: PictureGroupElement[];
 
-  @Prop(Array) elements: PictureGroupElement[];
+  picture: Picture;
 
-  @Prop(Object) picture: Picture;
+  textblock: Textblock;
+  id?:string;
+  view?: string;
+  variant: string[];
+}>();
+let el = ref(null);
 
-  @Prop(Object) textblock: Textblock;
+onMounted((): void => {
 
-  mounted(): void {
+  checkInview(el);
 
-    this.checkInview();
+});
 
-  }
+// eslint-disable-next-line class-methods-use-this
+function componentType(link: Link): 'lila-link-partial' | 'section' {
 
-  // eslint-disable-next-line class-methods-use-this
-  componentType(link: Link): 'lila-link-partial' | 'section' {
-
-    return link?.link?.length
-      ? 'lila-link-partial'
-      : 'section';
-
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  getLink(link: Link): string {
-
-    return link?.link?.length
-      ? link.link
-      : 'section';
-
-  }
-
-  get linkVariant() {
-
-    if (this.variant.includes('product')) return ['actions', 'center'];
-
-    return ['noStyle'];
-
-  }
-
-  get fitVariant() {
-
-    return this.variant.includes('fit');
-
-  }
-
-  get brightText() {
-
-    return this.variant.includes('color1') || this.variant.includes('color3') ? 'bright' : undefined;
-
-  }
+  return link?.link?.length
+    ? 'lila-link-partial'
+    : 'section';
 
 }
+
+// eslint-disable-next-line class-methods-use-this
+function getLink(link: Link): string {
+
+  return link?.link?.length
+    ? link.link
+    : 'section';
+
+}
+
+const linkVariant = computed(() => {
+
+  if (props.variant.includes('product')) return ['actions', 'center'];
+
+  return ['noStyle'];
+
+});
+const fitVariant = computed(() => {
+
+  return props.variant.includes('fit');
+
+});
+const brightText = computed(() => {
+
+  return props.variant.includes('color1') || props.variant.includes('color3') ? 'bright' : undefined;
+
+});
+
 
 </script>
 <style lang="less" scoped>
@@ -130,7 +132,9 @@ export default class PicturegroupModule extends ExtComponent {
 
     color: @white;
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
       color: @white;
     }
 
@@ -177,7 +181,7 @@ export default class PicturegroupModule extends ExtComponent {
         gap: 40px;
 
         @media @tablet,
-          @desktop {
+        @desktop {
           grid-template-rows: max-content max-content;
           grid-template-columns: 1fr 1fr 1fr;
           gap: 40px 2%;
@@ -252,7 +256,8 @@ export default class PicturegroupModule extends ExtComponent {
 
   }
 
-  &.variant2, &.variant5 {
+  &.variant2,
+  &.variant5 {
 
     .content-container {
       display: grid;
@@ -268,7 +273,7 @@ export default class PicturegroupModule extends ExtComponent {
         gap: 40px;
 
         @media @tablet,
-          @desktop {
+        @desktop {
           grid-template-rows: max-content max-content;
           grid-template-columns: 1fr 1fr 1fr;
         }
@@ -283,7 +288,7 @@ export default class PicturegroupModule extends ExtComponent {
         display: grid;
 
         @media @tablet,
-          @desktop {
+        @desktop {
 
           &:first-child {
             grid-column-start: 1;
@@ -312,7 +317,7 @@ export default class PicturegroupModule extends ExtComponent {
         gap: 40px;
 
         @media @tablet,
-          @desktop {
+        @desktop {
           grid-template-rows: max-content max-content;
           grid-template-columns: 1fr 1fr 1fr 1fr;
         }
@@ -325,7 +330,7 @@ export default class PicturegroupModule extends ExtComponent {
       .element {
 
         @media @tablet,
-          @desktop {
+        @desktop {
 
           &:first-child {
             grid-column-start: 1;
@@ -357,7 +362,7 @@ export default class PicturegroupModule extends ExtComponent {
         gap: 40px;
 
         @media @tablet,
-          @desktop {
+        @desktop {
           grid-template-columns: 2fr 1fr;
         }
       }
@@ -367,7 +372,7 @@ export default class PicturegroupModule extends ExtComponent {
         display: grid;
 
         @media @tablet,
-          @desktop {
+        @desktop {
 
           grid-column-start: 2;
 
@@ -411,7 +416,8 @@ export default class PicturegroupModule extends ExtComponent {
           justify-content: start;
           text-align: left;
 
-          .lila-list-links, .lila-textblock {
+          .lila-list-links,
+          .lila-textblock {
             .multi(padding, 0, 4)
           }
 
@@ -423,7 +429,7 @@ export default class PicturegroupModule extends ExtComponent {
               font-size: @headline_S;
 
               @media @tablet,
-                @desktop {
+              @desktop {
                 font-size: @headline_S;
               }
             }
@@ -471,7 +477,8 @@ export default class PicturegroupModule extends ExtComponent {
           justify-content: center;
           justify-self: center;
 
-          .lila-list-links, .lila-textblock {
+          .lila-list-links,
+          .lila-textblock {
             .multi(padding, 0, 4)
           }
 
@@ -484,7 +491,7 @@ export default class PicturegroupModule extends ExtComponent {
               font-size: @headline_S;
 
               @media @tablet,
-                @desktop {
+              @desktop {
                 font-size: @headline_S;
               }
             }

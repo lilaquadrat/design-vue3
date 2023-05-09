@@ -1,135 +1,134 @@
 <template>
-    <section :id="id" :class="[view, fontVariant, variant, {hasImage: background}]" class="lila-module emotion-module fullscreen">
+  <section ref="el" :id="id" :class="[view, fontVariant, variant, { hasImage: background }]"
+    class="lila-module emotion-module fullscreen">
 
-        <lila-picture-partial class="background" v-if="background" v-bind="background" />
-        <lila-video-partial class="background" v-if="video" v-bind="video" />
+    <lila-picture-partial class="background" v-if="background" v-bind="background" />
+    <lila-video-partial class="background" v-if="video" v-bind="video" />
 
-        <div class="position-container">
+    <div class="position-container">
 
-            <lila-picture-partial class="picture" v-if="picture" v-bind="picture" />
-            <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
+      <lila-picture-partial class="picture" v-if="picture" v-bind="picture" />
+      <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
 
-            <ul v-if="filteredLinks" class="list-links">
-                <li v-for="(single, index) in filteredLinks" :key="`emotion-link-${index}`">
+      <ul v-if="filteredLinks" class="list-links">
+        <li v-for="(single, index) in filteredLinks" :key="`emotion-link-${index}`">
 
-                    <lila-button-partial class="more" @click="scrollToNext" v-if="single.link === '#more'">{{single.text}}</lila-button-partial>
-                    <lila-link-partial v-if="single.link !== '#more'" v-bind="single"></lila-link-partial>
+          <lila-button-partial class="more" @click="scrollToNext" v-if="single.link === '#more'">{{ single.text
+          }}</lila-button-partial>
+          <lila-link-partial v-if="single.link !== '#more'" v-bind="single"></lila-link-partial>
 
-                </li>
-            </ul>
+        </li>
+      </ul>
 
-            <slot></slot>
+      <slot></slot>
 
-        </div>
+    </div>
 
-        <lila-button-partial @click="scrollToNext" v-if="scrollNotice" class="scrollButton">
-            <lila-icons-partial colorScheme="white" size="large" type="mouse"></lila-icons-partial>
-        </lila-button-partial>
+    <lila-button-partial @click="scrollToNext" v-if="scrollNotice" class="scrollButton">
+      <lila-icons-partial colorScheme="white" size="large" type="mouse"></lila-icons-partial>
+    </lila-button-partial>
 
-    </section>
-
+  </section>
 </template>
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import Video from '@interfaces/video.interface';
-import {
-  ExtComponent, Component, Prop, Watch,
-} from '@libs/lila-component';
+<script setupb lang="ts">
+import { checkInview } from '@/mixins/checkin';
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import type Video from '@interfaces/video.interface';
+import { computed, onMounted, ref, watch } from 'vue';
 
-@Component
-export default class EmotionModule extends ExtComponent {
+const props = defineProps<{
+  fontVariant: string[];
 
-  @Prop(Array) fontVariant: string[];
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  video: Video;
 
-  @Prop(Object) video: Video;
+  background: Video;
 
-  @Prop(Object) background: Video;
+  picture: Picture;
 
-  @Prop(Object) picture: Picture;
+  links: Link[];
+  variant: string[];
+}>();
+let el = ref(null);
+let fullscreen: boolean = false;
 
-  @Prop(Array) links: Link[];
+watch('content', contentFunction);
 
-  @Watch('content')
-  contentFunction(): void {
+function contentFunction(): void {
 
-    if (this.variant?.includes('align')) {
+  if (props.variant?.includes('align')) {
 
-      this.fullscreen = true;
-
-    }
-
-    this.checkInview();
+    fullscreen = true;
 
   }
 
-  mounted(): void {
+  checkInview(el);
 
-    if (this.variant?.includes('align')) {
+}
 
-      this.fullscreen = true;
+onMounted(() => {
 
-    }
+  if (props.variant?.includes('align')) {
 
-    this.checkInview();
-
-  }
-
-  scrollToNext(): void {
-
-    const next = this.$el.nextSibling as Element;
-
-    next.scrollIntoView({
-      behavior: 'smooth',
-    });
+    fullscreen = true;
 
   }
 
-  get scrollNotice(): boolean {
 
-    return this.variant?.includes('scrollNotice');
+  checkInview(el);
 
-  }
+});
 
-  get backgroundStyle(): string {
+function scrollToNext(): void {
 
-    let style: string;
+  const next = el.value.nextSibling as Element;
 
-    if (this.background) {
+  next.scrollIntoView({
+    behavior: 'smooth',
+  });
 
-      style = `background-image: url(${this.background?.src});`;
-      Object.keys(this.background).forEach((key) => {
+}
 
-        const single = this.background.source[key];
+const scrollNotice = computed((): boolean => {
 
-        style += `
+  return props.variant?.includes('scrollNotice');
+
+}); const backgroundStyle = computed((): string => {
+
+  let style: string = '';
+
+  if (props.background) {
+
+    style = `background-image: url(${props.background?.src});`;
+    Object.keys(props.background).forEach((key) => {
+
+      const single = props.background.source[key];
+
+      style += `
         @media (${single.media}) {
           background-image: url(${single.source});
         }`;
 
-      });
-
-    }
-
-    return style;
+    });
 
   }
 
-  get filteredLinks() {
+  return style;
 
-    let filteredLinks = this.links?.filter((link) => !!link.text);
+}); const filteredLinks = computed(() => {
 
-    if (!Array.isArray(filteredLinks)) filteredLinks = null;
-    if (!filteredLinks?.length) filteredLinks = null;
+  let filteredLinks: Link[] | null = props.links?.filter((link) => !!link.text);
 
-    return filteredLinks;
+  if (!Array.isArray(filteredLinks)) filteredLinks = null;
+  if (!filteredLinks?.length) filteredLinks = null;
 
-  }
+  return filteredLinks;
 
-}
+});
+
 
 </script>
 <style lang="less" scoped>
@@ -148,7 +147,8 @@ export default class EmotionModule extends ExtComponent {
 
   .modulePadding('full');
 
-  @media @tablet, @desktop {
+  @media @tablet,
+  @desktop {
     padding: 40px @modulePaddingExt;
   }
 
@@ -208,7 +208,8 @@ export default class EmotionModule extends ExtComponent {
     color: @white;
   }
 
-  a, .more {
+  a,
+  .more {
     line-height: @buttonLineHeight;
 
     &.callToAction {
@@ -241,7 +242,8 @@ export default class EmotionModule extends ExtComponent {
       }
     }
 
-    a:not(.callToAction), .more {
+    a:not(.callToAction),
+    .more {
       .trans(color);
       color: @white;
 
@@ -254,7 +256,8 @@ export default class EmotionModule extends ExtComponent {
 
   &.dark::v-deep {
 
-    a:not(.callToAction), .more {
+    a:not(.callToAction),
+    .more {
       .trans(color);
       color: @color1;
 
@@ -321,12 +324,18 @@ export default class EmotionModule extends ExtComponent {
 
       @media @desktop {
 
-        h1, h2, h3, p {
+        h1,
+        h2,
+        h3,
+        p {
           max-width: 60%;
         }
       }
 
-      h1, h2, h3, p {
+      h1,
+      h2,
+      h3,
+      p {
         max-width: 70%;
       }
 
@@ -351,7 +360,10 @@ export default class EmotionModule extends ExtComponent {
 
         justify-self: center;
 
-        h1, h2, h3, p {
+        h1,
+        h2,
+        h3,
+        p {
           max-width: 100%;
         }
 
@@ -386,7 +398,9 @@ export default class EmotionModule extends ExtComponent {
 
           justify-items: center;
 
-          h1, h2, h3 {
+          h1,
+          h2,
+          h3 {
             display: grid;
           }
 

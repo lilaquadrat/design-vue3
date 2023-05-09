@@ -1,26 +1,26 @@
 <template>
-<section :id="id" :class="[variant, view]" class="lila-faq-module lila-module">
+  <section :id="id" :class="[variant, view]" class="lila-faq-module lila-module">
 
     <lila-textblock-partial v-if="textblock" v-bind="textblock" />
     <lila-accordion-partial v-if="accordion" v-bind="accordion" />
 
-</section>
-
+  </section>
 </template>
-<script lang="ts">
-import Textblock from '@interfaces/textblock.interface';
-import Accordion from '@interfaces/Accordion.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Textblock from '@interfaces/textblock.interface';
+import type Accordion from '@interfaces/Accordion.interface';
 
-@Component
-export default class FaqModule extends ExtComponent {
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  accordion: Accordion;
+  variant?: string[];
+  id?: string;
+  view?:string;
 
-  @Prop(Object) accordion: Accordion;
+}>();
 
-
-}
 
 </script>
 <style lang="less" scoped>
@@ -39,5 +39,4 @@ export default class FaqModule extends ExtComponent {
   }
 
 }
-
 </style>

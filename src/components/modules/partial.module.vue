@@ -1,34 +1,32 @@
 <template>
-<section class="lila-partial-container lila-module" v-if="modules">
+  <section  ref="el" class="lila-partial-container lila-module" v-if="modules">
 
-  <component
-  v-for="(single, i) in modules" :class="single.classes" :is="single.type" v-bind:key="`module-${i}`" v-bind="single"></component>
+    <component v-for="(single, i) in modules" :class="single.classes" :is="single.type" v-bind:key="`module-${i}`"
+      v-bind="single"></component>
 
-</section>
-
+  </section>
 </template>
-<script lang="ts">
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
-import { ModuleGeneric } from '@lilaquadrat/studio/lib/interfaces';
+<script setup lang="ts">
+import type { ModuleGeneric } from '@lilaquadrat/studio/lib/interfaces';
+import { onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class partialModule extends ExtComponent {
+const props = defineProps<{
+  modules: ModuleGeneric[];
 
-  @Prop(Array) modules: ModuleGeneric[];
+}>();
+let el = ref(null);
 
-  mounted() {
+onMounted(() => {
 
-    this.checkInview();
+  checkInview(el);
 
-  }
+});
 
-}
 
 </script>
 <style lang="less" scoped>
-
-  .lila-partial-container {
-    display: grid;
-  }
-
+.lila-partial-container {
+  display: grid;
+}
 </style>

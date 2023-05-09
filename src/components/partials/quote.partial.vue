@@ -14,11 +14,10 @@
 </template>
 
 <script lang="ts">
-import Link from '@interfaces/link.interface';
-import {
-  Component, ExtPartial, Prop, Watch,
-} from '../libs/lila-partial';
-import { computed, nextTick, watch, onMounted } from "vue";
+/* __vue_virtual_code_placeholder__ */
+import type Link from '@interfaces/link.interface';
+
+import { computed, nextTick, watch, onMounted } from 'vue';
 
 const props = defineProps<{
   quote: string;
@@ -28,21 +27,20 @@ const props = defineProps<{
   citation: string;
 
 }>();
-
 let textSize: string = '';
 
 watch(props, (): void => {
 
   setTextSize();
 
-})
+});
 
 
 watch('variant', function (): void {
 
   setTextSize();
 
-})
+});
 
 
 const notEmpty = computed((): boolean => {
@@ -57,11 +55,12 @@ function setTextSize(): void {
   nextTick().then(() => {
 
     const element = this.$refs.checkPartialSize as HTMLInputElement;
+
     // need ref element  here
     // Small Sized Partial
     if (props.quote.length && element.classList.contains('small')) {
 
-      if (props.quote.length <= 20) .textSize = 'headline_XL';
+      if (props.quote.length <= 20) textSize = 'headline_XL';
 
       else if (props.quote.length <= 65) textSize = 'headline_L';
 
@@ -103,7 +102,7 @@ const linkExists = computed(() => {
 
   return props.link?.text && props.link?.link;
 
-}
+});
 
 </script>
 <style lang="less" scoped>

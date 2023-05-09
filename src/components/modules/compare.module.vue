@@ -1,149 +1,148 @@
 <template>
-<section :id="id" class="lila-compare-module lila-module">
+  <section :id="id" class="lila-compare-module lila-module">
 
-  <lila-textblock-partial v-bind="textblock" />
+    <lila-textblock-partial v-bind="textblock" />
 
-  <section v-if="modifiedElements" class="compare-container">
+    <section v-if="modifiedElements" class="compare-container">
 
-    <ul class="legend">
-      <li v-for="(head, index) in legend" :key="`headline-${index}`">
-        <h3>{{index+1}}*</h3><h3>{{head.headline}}</h3>
-      </li>
-    </ul>
+      <ul class="legend">
+        <li v-for="(head, index) in legend" :key="`headline-${index}`">
+          <h3>{{ index + 1 }}*</h3>
+          <h3>{{ head.headline }}</h3>
+        </li>
+      </ul>
 
-    <table>
+      <table>
 
-      <tbody>
+        <tbody>
 
-        <tr :class="{head: lineIndex === 0, group: line.length === 1}" :style="amountStyle"
-        v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
+          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle"
+            v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
 
-          <td :class="{structure: singleIndex === 0}" :colspan="elementsLength(line.length === 1)" v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`">
+            <td :class="{ structure: singleIndex === 0 }" :colspan="elementsLength(line.length === 1)"
+              v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`">
 
-            <template v-if="single.headline || single.description">
-              <h3 :title="single.headline" v-if="single.headline">{{single.headline}}</h3>
-              <p v-if="single.description">{{single.description}}</p>
-              <h4 class="index">{{singleIndex}}*</h4>
-            </template>
-            <template v-else>
-              <lila-icons-partial type="checked" size="small" v-if="single === 'yes'" class="icon checkbox-checked_color1">yes</lila-icons-partial>
-              <lila-icons-partial type="close" size="small" v-else-if="single === 'no'" class="icon cancel_color1">no</lila-icons-partial>
-              <template v-else><abbr :title="single">{{single}}</abbr></template>
-            </template>
+              <template v-if="single.headline || single.description">
+                <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
+                <p v-if="single.description">{{ single.description }}</p>
+                <h4 class="index">{{ singleIndex }}*</h4>
+              </template>
+              <template v-else>
+                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'"
+                  class="icon checkbox-checked_color1">yes</lila-icons-partial>
+                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'"
+                  class="icon cancel_color1">no</lila-icons-partial>
+                <template v-else><abbr :title="single">{{ single }}</abbr></template>
+              </template>
 
-          </td>
+            </td>
 
-        </tr>
+          </tr>
 
-      </tbody>
+        </tbody>
 
-    </table>
+      </table>
+
+    </section>
 
   </section>
-
-</section>
 </template>
-<script lang="ts">
-import Textblock from '@interfaces/textblock.interface';
-import CompareElement from '@interfaces/CompareElement.interface';
-import CompareStructure from '@interfaces/CompareStructure.interface';
-import CompareModified, { CompareHeadline } from '@interfaces/CompareModified.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Textblock from '@interfaces/textblock.interface';
+import type CompareElement from '@interfaces/CompareElement.interface';
+import type CompareStructure from '@interfaces/CompareStructure.interface';
+import type CompareModified from '@interfaces/CompareModified.interface';
+import type { CompareHeadline } from '@interfaces/CompareModified.interface';
+import { computed } from 'vue';
 
-@Component
-export default class CompareModule extends ExtComponent {
 
-  @Prop(Object) textblock: Textblock;
+const props = defineProps<{
+  textblock: Textblock;
 
-  @Prop(Array) elements: CompareElement[];
+  elements: CompareElement[];
 
-  @Prop(Array) structure: CompareStructure[];
+  structure: CompareStructure[];
+  id?: string;
+}>();
+const modifiedElements=computed(() =>{
 
-  get modifiedElements() {
+  const data: CompareModified[] = [];
+  const headline: (CompareHeadline | string)[] = [''];
 
-    const data: CompareModified[] = [];
-    const headline: (CompareHeadline|string)[] = [''];
+  props.elements?.forEach((element) => {
 
-    this.elements?.forEach((element) => {
+    headline.push({ headline: element.headline, description: element.description } as CompareHeadline);
 
-      headline.push({ headline: element.headline, description: element.description } as CompareHeadline);
+  });
 
-    });
+  data.push(headline);
+  props.structure?.forEach((structure, index) => {
 
-    data.push(headline);
-    this.structure?.forEach((structure, index) => {
+    data.push([{ headline: structure.headline, description: structure.description, structure: true }]);
+    structure.list?.forEach((list: any, listIndex: string | number) => {
 
-      data.push([{ headline: structure.headline, description: structure.description, structure: true }]);
-      structure.list?.forEach((list, listIndex) => {
+      const newLine = [];
 
-        const newLine = [];
+      newLine.push(list);
 
-        newLine.push(list);
+      props.elements?.forEach((element) => {
 
-        this.elements?.forEach((element) => {
+        let value: string | { [key: string]: string } = '';
 
-          let value: string | {[key: string]: string} = '';
+        if (element.elements?.[index]) {
 
-          if (element.elements?.[index]) {
+          if (element.elements[index][listIndex]) {
 
-            if (element.elements[index][listIndex]) {
+            const newValue = element.elements[index][listIndex];
 
-              const newValue = element.elements[index][listIndex];
-
-              value = newValue;
-
-            }
+            value = newValue;
 
           }
 
-          newLine.push(value);
+        }
 
-        });
-
-        data.push(newLine);
+        newLine.push(value);
 
       });
 
+      data.push(newLine);
+
     });
 
-    return data;
+  });
 
-  }
+  return data;
 
-  get legend() {
+});
+const legend=computed(() => {
 
-    return this.modifiedElements[0].slice(1);
+  return modifiedElements.value[0].slice(1);
 
-  }
+});
+const amountStyle=computed(() =>{
 
-  get amountStyle() {
+  return {
+    '--amount': props.elements.length,
+  };
 
-    return {
-      '--amount': this.elements.length,
-    };
+});
 
-  }
+function elementsLength(getLength: boolean) {
 
-  elementsLength(getLength: boolean) {
-
-    return getLength ? this.elements.length + 1 : false;
-
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  componentType(lineIndex: number) {
-
-    if (lineIndex === 0) return 'h3';
-
-    return 'td';
-
-  }
+  return getLength ? props.elements.length + 1 : false;
 
 }
 
-export {
-  CompareModule,
-};
+// eslint-disable-next-line class-methods-use-this
+function componentType(lineIndex: number) {
+
+  if (lineIndex === 0) return 'h3';
+
+  return 'td';
+
+}
+
 
 </script>
 <style lang="less" scoped>
@@ -181,7 +180,8 @@ export {
         }
       }
 
-      @media @tablet, @desktop {
+      @media @tablet,
+      @desktop {
         display: none;
       }
     }
@@ -275,6 +275,7 @@ export {
 
             width: 25%;
             text-align: left;
+
             h4 {
               display: none;
             }
@@ -315,6 +316,4 @@ export {
 
   }
 
-}
-
-</style>
+}</style>

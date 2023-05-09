@@ -1,159 +1,163 @@
 <template>
-  <section :id="id" :class="[view, variant, {mobileIndex: forceMobileIndex}]" class="lila-training-module lila-module fullscreen">
+  <section :id="id" ref="el" :class="[view, variant, { mobileIndex: forceMobileIndex }]"
+    class="lila-training-module lila-module fullscreen">
     <section v-if="textblock" class="module generic-module">
       <lila-textblock-partial v-bind="textblock" />
     </section>
 
     <article ref="mainGridContainer" class="main-grid-container">
-      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer" v-if="currentContent">
+      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer"
+        v-if="currentContent">
         <section class="content-head">
           <div class="grid-container">
-            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }}</lila-button-partial>
+            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{
+              currentContent.settings.title }}</lila-button-partial>
             <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
           </div>
 
           <div :class="{ open: headIndexOpen }" class="headIndex">
             <ul>
               <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`">
-                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings.title }}</lila-button-partial>
+                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton"
+                  @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
               </li>
             </ul>
           </div>
         </section>
-        <lila-content-module ref="currentContent" class="currentContent" :key="currentContent.id" :routeBase="linkBase" :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
+        <lila-content-module ref="currentContent" class="currentContent" :key="currentContent.id" :routeBase="linkBase"
+          :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
       </section>
       <section class="current-content-container" v-if="!currentContent">
         <section class="content-module"></section>
       </section>
 
       <section class="index-container">
-        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`">
+        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser"
+          :key="`teaser-index-${index}`">
           <div class="index-indicator">{{ index + 1 }}.</div>
 
           <button @click="setIndex(index)">
-            <h2>{{ teaser.settings.title }}</h2>
-            <p>{{ teaser.settings.description }}</p>
+            <h2>{{ teaser.settings?.title }}</h2>
+            <p>{{ teaser.settings?.description }}</p>
           </button>
         </div>
       </section>
     </article>
   </section>
 </template>
-<script lang="ts">
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
-import { ChildData, Editor } from '@lilaquadrat/studio/lib/interfaces';
+<script setup lang="ts">
+import type Textblock from '@interfaces/textblock.interface';
+import type { ChildData, Editor } from '@lilaquadrat/studio/lib/interfaces';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
-import { InjectReactive } from 'vue-property-decorator';
+import { computed, inject, onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class TrainingModule extends ExtComponent {
+const props = defineProps<{
 
-  @Prop(Object) textblock: Textblock;
+  textblock: Textblock;
 
-  @Prop(Object) childData: ChildData;
+  childData: ChildData;
+  id?:string;
+  view?: string;
+  variant: string[];
 
-  @InjectReactive('linkBase') private linkBase!: string;
-
-  @InjectReactive('linkMode') private linkMode?: string;
-
-  $refs: {
+}>();
+const linkMode: 'event' | 'link' | undefined = inject('linkMode');
+const linkBase = inject('linkBase');
+let $refs:
+  {
     currentContent: HTMLElement;
     mainGridContainer: HTMLElement;
   };
+let currentIndex: number = 0;
+let headIndexOpen: boolean = false;
+let forceMobileIndex: boolean = false;
+let el = ref(null);
 
-  currentIndex: number = 0;
+onMounted((): void => {
 
-  headIndexOpen: boolean = false;
+  checkInview(el);
+  checkRealWidth();
 
-  forceMobileIndex: boolean = false;
+  window.addEventListener('resized', () => {
 
-  mounted(): void {
+    checkRealWidth();
 
-    this.checkInview();
-    this.checkRealWidth();
+  });
 
-    window.addEventListener('resized', () => {
+});
 
-      this.checkRealWidth();
+function checkRealWidth() {
 
-    });
+  const element = $refs.mainGridContainer;
 
-  }
+  forceMobileIndex = element.clientWidth < 700;
 
-  checkRealWidth() {
+}
 
-    const element = this.$refs.mainGridContainer;
+const indexTeaser = computed(() => {
 
-    this.forceMobileIndex = element.clientWidth < 700;
+  if (!props.childData?.data) return [];
 
-  }
+  const mapped = props.childData?.index.map((index) => {
 
-  get indexTeaser() {
+    const singleData: Partial<Editor> = props.childData?.data[index] ?? {};
 
-    if (!this.childData?.data) return [];
+    if (!singleData.settings) {
 
-    const mapped = this.childData?.index.map((index) => {
-
-      const singleData: Partial<Editor> = this.childData?.data[index] ?? {};
-
-      if (!singleData.settings) {
-
-        singleData.settings = {
-          title: 'No Title',
-          description: '',
-        };
-
-      }
-
-      return singleData;
-
-    });
-
-    return mapped.filter((single) => single) ?? [];
-
-  }
-
-  get contentCount() {
-
-    return this.childData?.index.length;
-
-  }
-
-  get currentContent() {
-
-    if (!this.childData?.data) return null;
-
-    const currentContent = this.childData.data[this.childData.index[this.currentIndex]] ?? null;
-
-    if (!currentContent) return null;
-
-    return prepareContent(currentContent);
-
-  }
-
-  setIndex(index: number) {
-
-    this.currentIndex = index;
-    this.toggleIndex(null, false);
-
-  }
-
-  toggleIndex(event: MouseEvent, hint?: boolean) {
-
-    if (hint !== undefined) {
-
-      this.headIndexOpen = hint;
-
-    } else {
-
-      this.headIndexOpen = !this.headIndexOpen;
+      singleData.settings = {
+        title: 'No Title',
+        description: '',
+      };
 
     }
+
+    return singleData;
+
+  });
+
+  return mapped.filter((single) => single) ?? [];
+
+});
+const contentCount = computed(() => {
+
+  return props.childData?.index.length;
+
+});
+const currentContent = computed(() => {
+
+  if (!props.childData?.data) return null;
+
+  const currentContent = props.childData.data[props.childData.index[currentIndex]] ?? null;
+
+  if (!currentContent) return null;
+
+  return prepareContent(currentContent);
+
+});
+
+
+function setIndex(index: number) {
+
+  currentIndex = index;
+  toggleIndex(null, false);
+
+}
+
+function toggleIndex(event: MouseEvent | null, hint?: boolean) {
+
+  if (hint !== undefined) {
+
+    headIndexOpen = hint;
+
+  } else {
+
+    headIndexOpen = !headIndexOpen;
 
   }
 
 }
+
 </script>
 <style lang="less" scoped>
 @import (reference) '@{projectPath}/source/less/shared.less';
@@ -378,6 +382,7 @@ export default class TrainingModule extends ExtComponent {
 
       .current-content-container {
         grid-column-start: 1;
+
         .content-head {
 
           display: grid;

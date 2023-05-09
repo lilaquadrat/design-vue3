@@ -4,20 +4,22 @@
   </section>
 </template>
 
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
+/* __vue_virtual_code_placeholder__ */
+import type Link from '@interfaces/link.interface';
 
-@Component
-export default class QuoteModule extends ExtComponent {
+const props = defineProps<{
 
-  @Prop(String) quote: string;
+  quote: string;
 
-  @Prop(Object) link: Link;
+  link: Link;
 
-  @Prop(String) citation: string;
+  citation: string;
+  view?: string;
+  variant: string[];
+}>();
 
-}
+
 </script>
 
 <style lang="less" scoped>

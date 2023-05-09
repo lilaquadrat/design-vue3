@@ -35,21 +35,23 @@
 <script setup lang="ts">
 
 // neef fix this.$ref
-import { ref, onMounted } from 'vue'
-import AccordionElement from '@interfaces/AccordionElement.interface';
+import { ref, onMounted, type Ref, nextTick } from 'vue';
+import type AccordionElement from '@interfaces/AccordionElement.interface';
 import hardCopy from '@mixins/hardCopy';
 
-const itemRefs = ref([])
-
+const itemRefs: Ref<HTMLElement[]> = ref([]);
 const props = defineProps<{
   multiOpen: boolean;
   disableControls: boolean;
   openOnStart: 'first' | 'all';
   elements: AccordionElement[];
+  variant: string[];
+  listVariant:(type:string)=>string[];
+  renderTarget: 'pdf'| 'web'
 }>();
 let useElements: (AccordionElement & { visible: boolean, height: string, headline: string })[] = [];
 
-onMounted(() => { 
+onMounted(() => {
   setElements(props.elements, true);
 
   window.addEventListener('resized', () => {
@@ -58,49 +60,49 @@ onMounted(() => {
   });
 });
 
-function toggle(element: AccordionElement & {visible: boolean, height: number, headline: string}, index: number) {
+function toggle(element: AccordionElement & { visible: boolean, height: number, headline: string }, index: number) {
 
-let newVisible;
+  let newVisible;
 
-if (props.disableControls) return;
+  if (props.disableControls) return;
 
-if (!props.multiOpen) {
+  if (!props.multiOpen) {
 
-  if (element.visible) {
+    if (element.visible) {
 
-    element.visible = false;
+      element.visible = false;
+
+    } else {
+
+      useElements.forEach((single) => {
+
+        single.visible = false;
+
+      });
+
+      newVisible = true;
+
+    }
+
 
   } else {
 
-    useElements.forEach((single) => {
-
-      single.visible = false;
-
-    });
-
-    newVisible = true;
+    newVisible = !element.visible;
 
   }
 
 
-} else {
+  const refElement = itemRefs.value[`accordion${index}`][0] as HTMLElement;
+  const placeholder = refElement.querySelector('.accordion-content-placeholder');
 
-  newVisible = !element.visible;
+  useElements[index].height = `${placeholder?.clientHeight}px`;
 
-}
-
-
-const refElement = itemRefs[`accordion${index}`][0] as HTMLElement;
-const placeholder = refElement.querySelector('.accordion-content-placeholder');
-
-useElements[index].height = `${placeholder?.clientHeight}px`;
-
-element.visible = newVisible;
+  element.visible = newVisible;
 
 
 }
 
-function setElements(this: any, elements: AccordionElement[], resetVisible = false) {
+function setElements(this, elements: AccordionElement[], resetVisible = false) {
 
   const newElements: any[] = [];
 
@@ -136,9 +138,9 @@ function setElements(this: any, elements: AccordionElement[], resetVisible = fal
 
   useElements = newElements;
 
-  this.$nextTick(() => {
+  nextTick(() => {
 
-    Object.values(ref.).forEach((single: [HTMLElement], index: number) => {
+    Object.values(this.$refs as HTMLElement).forEach((single: [HTMLElement], index: number) => {
 
       const placeholder = single[0]?.querySelector('.accordion-content-placeholder');
       const useElement = useElements[index];
@@ -150,6 +152,27 @@ function setElements(this: any, elements: AccordionElement[], resetVisible = fal
     });
 
   });
+
+  function listVariant(type: string):string[]{
+
+    const base = props.variant || [];
+
+    if ( props.variant.includes('center')) {
+
+      base.push('noStyle');
+      base.push('center');
+
+    }
+
+    if ( props.variant.includes('actions') && type !== 'list') {
+
+      base.push('actions');
+
+    }
+
+    return base;
+
+  }
 
 }
 </script>

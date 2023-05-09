@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" :class="[view, variant]" class="lila-facts-module lila-module">
+  <section :id="id" ref="el" :class="[view, variant]" class="lila-facts-module lila-module">
     <lila-textblock-partial class="intro-textblock" v-bind="textblock" />
 
     <section class="complete-container">
@@ -7,7 +7,7 @@
         <ul>
           <li v-for="(element, index) in elements" :key="`elements-${index}`">
             <lila-icons-partial size="small" type="arrow-right"></lila-icons-partial>
-            <lila-button-partial noPadding :class="{ active: index === active }"  @click="setActive(index)">
+            <lila-button-partial noPadding :class="{ active: index === active }" @click="setActive(index)">
               {{ element.textblock.subline }}
             </lila-button-partial>
           </li>
@@ -18,7 +18,7 @@
         <ul>
           <li v-for="(element, index) in elements" :key="`elements-${index}`">
             <lila-icons-partial size="small" type="arrow-right"></lila-icons-partial>
-            <h2 :class="{ active: index === active }" @keypress="setActive(index)"  @click="setActive(index)">
+            <h2 :class="{ active: index === active }" @keypress="setActive(index)" @click="setActive(index)">
               {{ element.textblock.subline }}
             </h2>
           </li>
@@ -30,55 +30,63 @@
       </div>
 
       <div v-if="!isVariant1 && !isVariant3" class="facts-container">
-        <lila-fact-partial v-for="(element, index) in elements" :variant="variant" :key="`fact-index-${index}`" v-bind="element"/>
+        <lila-fact-partial v-for="(element, index) in elements" :variant="variant" :key="`fact-index-${index}`"
+          v-bind="element" />
       </div>
 
       <slot></slot>
     </section>
   </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import Textblock from '@interfaces/textblock.interface';
-import Fact from '@interfaces/Fact.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+/* __vue_virtual_code_placeholder__ */
+import type Textblock from '@interfaces/textblock.interface';
+import type Fact from '@interfaces/Fact.interface';
+import { computed, onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-@Component
-export default class FactsModule extends ExtComponent {
+const props = defineProps<{
+  content: any;
 
-  @Prop(Object) content;
+  textblock: Textblock;
 
-  @Prop(Object) textblock: Textblock;
+  elements: Fact[];
+  variant?: string[];
+  id?: string;
+  view?:string;
 
-  @Prop(Array) elements: Fact[];
+}>();
+let active: number = 0;
+  const isVariant1=computed(()=>
+{
 
-  active: number = 0;
+  return props.variant?.includes('variant1');
 
-  get isVariant1() {
+});
+  const isVariant3=computed(()=>
+ {
 
-    return this.variant?.includes('variant1');
+  return props.variant?.includes('variant3');
 
-  }
+});
+let el = ref(null);
 
-  get isVariant3() {
 
-    return this.variant?.includes('variant3');
+onMounted(()=>{
 
-  }
+  checkInview(el);
 
-  mounted() {
+});
 
-    this.checkInview();
 
-  }
+function setActive(index: number) {
 
-  setActive(index: number) {
-
-    this.active = index;
-
-  }
+  active = index;
 
 }
+
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

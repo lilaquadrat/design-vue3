@@ -10,13 +10,16 @@
 </section>
 </template>
 <script setup lang="ts">
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
+/* __vue_virtual_code_placeholder__ */
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
 import { computed } from 'vue';
 
 const props = defineProps < {
   textblock: Textblock;
   picture: Picture;
+  variant?: string[]
+
 }> ();
 const hasPicture = computed(() =>{
 

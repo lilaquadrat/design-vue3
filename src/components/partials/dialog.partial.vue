@@ -20,7 +20,7 @@
 
   </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { type ComputedRef, computed } from 'vue';
 
 const props = defineProps < {

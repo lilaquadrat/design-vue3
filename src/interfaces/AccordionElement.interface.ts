@@ -10,4 +10,5 @@ export default interface AccordionElement {
 
     links?: LinkListWithTitle
 
-};
+}
+

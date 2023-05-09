@@ -1,82 +1,84 @@
 <template>
-<article :id="id" :class="[view,{hasImage: picture}]" class="lila-blog-intro-module lila-module">
+  <article ref="el" :id="id" :class="[view, { hasImage: picture }]" class="lila-blog-intro-module lila-module">
 
-  <header>
-    <template v-if="!linkExists">
-      <time v-if="date">{{date}}</time>
-      <lila-textblock-partial class="top" v-bind="textTop" />
-    </template>
+    <header>
+      <template v-if="!linkExists">
+        <time v-if="date">{{ date }}</time>
+        <lila-textblock-partial class="top" v-bind="textTop" />
+      </template>
 
-    <lila-link-partial v-if="linkExists" v-bind="link">
-      <time v-if="date">{{date}}</time>
-      <lila-textblock-partial class="top" v-bind="textTop" />
+      <lila-link-partial v-if="linkExists" v-bind="link">
+        <time v-if="date">{{ date }}</time>
+        <lila-textblock-partial class="top" v-bind="textTop" />
+      </lila-link-partial>
+    </header>
+
+    <lila-link-partial v-bind="link" v-if="linkExists">
+      <lila-picture-partial v-if="picture" v-bind="picture" />
     </lila-link-partial>
-  </header>
+    <lila-picture-partial v-else-if="picture" v-bind="picture" />
 
-  <lila-link-partial v-bind="link" v-if="linkExists">
-    <lila-picture-partial v-if="picture" v-bind="picture" />
-  </lila-link-partial>
-  <lila-picture-partial v-else-if="picture" v-bind="picture" />
+    <lila-textblock-partial class="bottom" v-bind="textBottom" />
 
-  <lila-textblock-partial class="bottom" v-bind="textBottom" />
+    <address v-if="author">Von {{ author }}</address>
 
-  <address v-if="author">Von {{author}}</address>
+    <slot></slot>
 
-  <slot></slot>
-
-</article>
-
+  </article>
 </template>
-<script lang="ts">
-import Link from '@interfaces/link.interface';
-import Picture from '@interfaces/picture.interface';
-import Textblock from '@interfaces/textblock.interface';
-import { ExtComponent, Component, Prop } from '@libs/lila-component';
+<script setup lang="ts">
 
-@Component
-export default class BlogIntroModule extends ExtComponent {
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import { computed, onMounted, ref } from 'vue';
+import { checkInview } from '@/mixins/checkin';
 
-  @Prop(Object) textblock: Textblock;
+const props = defineProps<{
 
-  @Prop(Object) picture: Picture;
+  textblock: Textblock;
 
-  @Prop(Object) link: Link;
+  picture: Picture;
 
-  @Prop(String) author: string;
+  link: Link;
 
-  @Prop(String) date: string;
+  author: string;
 
-  mounted() {
+  date: string;
+  id?: string;
+  view?: string;
 
-    this.checkInview();
+}>();
+ let el = ref(null);
 
-  }
+onMounted(()=>{
 
-  get textTop() {
+  checkInview(el);
 
-    return {
-      headline: this.textblock?.headline,
-      subline: this.textblock?.subline,
-    };
+});
 
-  }
+  const textTop=computed(()=>{
 
-  get textBottom() {
+  return {
+    headline: props.textblock?.headline,
+    subline: props.textblock?.subline,
+  };
 
-    return {
-      intro: this.textblock?.intro,
-      text: this.textblock?.text,
-    };
+});
+  const textBottom=computed(()=>{
 
-  }
+  return {
+    intro: props.textblock?.intro,
+    text: props.textblock?.text,
+  };
 
-  get linkExists() {
+});
+  const linkExists=computed(()=> {
 
-    return !!this.link?.link;
+  return !!props.link?.link;
 
-  }
+});
 
-}
 
 </script>
 <style lang="less" scoped>
@@ -140,7 +142,8 @@ export default class BlogIntroModule extends ExtComponent {
 
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     margin-left: -2px;
   }
 
@@ -163,7 +166,8 @@ export default class BlogIntroModule extends ExtComponent {
 
   }
 
-  time, address {
+  time,
+  address {
 
     display: grid;
 
@@ -178,5 +182,4 @@ export default class BlogIntroModule extends ExtComponent {
   }
 
 }
-
 </style>

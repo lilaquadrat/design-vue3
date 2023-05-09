@@ -21,8 +21,8 @@
 </template>
 <script setup lang="ts">
 
-import Picture, { PictureMedia } from '@interfaces/picture.interface';
-import inview from '@libs/lila-inview';
+import type Picture from '@interfaces/picture.interface';
+import type { PictureMedia } from '@interfaces/picture.interface';
 import { computed, onMounted, ref, watch, type Ref } from 'vue';
 import { useCounterStore } from '@/stores/counter';
 
@@ -90,7 +90,7 @@ onMounted((): void => {
 
         if (single.isIntersecting) {
 
-          loading = true;
+          loading.value = true;
           imageObserver.unobserve(image);
 
         }
@@ -107,15 +107,6 @@ onMounted((): void => {
 
 });
 
-function checkInview(): void {
-
-  window.addEventListener('scrolled', () => {
-
-    if (!loading) inview.checkImage(this);
-
-  });
-
-}
 
 const sourceMedia = computed((): PictureMedia[] => {
 

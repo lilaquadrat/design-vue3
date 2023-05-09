@@ -38,8 +38,8 @@
     </div>
   </section>
 </template>
-<script lang="ts">
-import { onMounted, onBeforeUpdate } from 'vue';
+<script setup lang="ts">
+import { onMounted, onBeforeUpdate, Slots, useSlots } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -56,6 +56,7 @@ const props = withDefaults(
 
   }
 );
+let slotsProp = useSlots();
 let emit = defineEmits<{
     (e: string, i:boolean): void
 }>();
@@ -63,7 +64,7 @@ let   textType: string = 'word';
 
 function setTextType(): void {
 
-const useText = props.text ? props.text :slots.default[0].text; //Tis.$slots
+const useText = props.text ? props.text :slotsProp.default[0].text; //Tis.$slots
 
 if (useText) {
 
