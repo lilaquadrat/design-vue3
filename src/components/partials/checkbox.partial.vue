@@ -39,70 +39,66 @@
   </section>
 </template>
 <script lang="ts">
-import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+import { onMounted, onBeforeUpdate } from 'vue';
 
-@Component
-export default class checkboxPartial extends ExtPartial {
-
-  @Prop(String) name: string;
-
-  @Prop(Boolean) value: boolean;
-
-  @Prop(String) error: string;
-
-  @Prop(Boolean) required: boolean;
-
-  @Prop(String) description: string;
-
-  @Prop(Boolean) disabled: boolean;
-
-  @Prop(Boolean) noIndicator: boolean;
-
-  @Prop(String) text: string;
-
-  textType: string = 'word';
-
-  changeHandler($event: Event): void {
-
-    const target = $event.target as HTMLInputElement;
-
-    this.$emit('input', target.checked);
+const props = withDefaults(
+  defineProps<{
+    name: string;
+    value: boolean;
+    error: string;
+    required: boolean;
+    description: string;
+    disabled: boolean;
+    noIndicator: boolean;
+    text: string;
+  }>(),
+  {
 
   }
+);
+let emit = defineEmits<{
+    (e: string, i:boolean): void
+}>();
+let   textType: string = 'word';
 
-  beforeUpdate(): void {
+function setTextType(): void {
 
-    this.setTextType();
+const useText = props.text ? props.text :slots.default[0].text; //Tis.$slots
 
-  }
+if (useText) {
 
-  mounted(): void {
+  if (useText.length >= 30) textType = 'text';
 
-    this.setTextType();
+  if (useText.length < 30) textType = 'word';
 
-  }
+  if (useText.length === 0) textType = 'noText';
 
-  setTextType(): void {
+} else {
 
-    const useText = this.text ? this.text : this.$slots.default[0].text;
-
-    if (useText) {
-
-      if (useText.length >= 30) this.textType = 'text';
-
-      if (useText.length < 30) this.textType = 'word';
-
-      if (useText.length === 0) this.textType = 'noText';
-
-    } else {
-
-      this.textType = 'noText';
-
-    }
-
-  }
+  textType = 'noText';
 
 }
+
+}
+
+function changeHandler($event: Event): void {
+
+const target = $event.target as HTMLInputElement;
+
+emit('input', target.checked);
+
+}
+
+
+onMounted(()=>{
+  setTextType();
+
+
+});
+onBeforeUpdate(()=>{
+  setTextType();
+
+});
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

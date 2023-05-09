@@ -1,6 +1,6 @@
 <template>
-  <section class="lila-highlight" :class="[variant]" v-if="notEmpty">
-      <pre :key="keyhelper">
+  <section ref="el" class="lila-highlight" :class="[variant]" v-if="notEmpty">
+    <pre :key="keyhelper">
         <div class="codeContainer">
           <lila-button-partial class="copyCode transparent" @confirmed="copyCode()">
             Copy
@@ -27,66 +27,67 @@ import yaml from 'highlight.js/lib/languages/yaml';
 import {
   Component, ExtPartial, Prop, Watch,
 } from '../libs/lila-partial';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
-@Component
-export default class highlightPartial extends ExtPartial {
+const props = defineProps<{
+  text: string[];
+  code: string;
+  headline: string;
+}>();
+let keyhelper: string = Date.now().toString();
+let copyElement: boolean = false;
+const notEmpty = computed((): boolean => {
 
-  @Prop(Array) text: string[];
+  return !!props.code;
 
-  @Prop(String) code: string;
+});
+const el = ref();
 
-  @Prop(String) headline: string;
+//wasn't sure how to correct this
+watch(props, (state, prevstate) => {
 
-  keyhelper: string = Date.now().toString();
-
-  copyElement: boolean = false;
-
-  get notEmpty(): boolean {
-
-    return !!this.code;
-
-  }
-
-  @Watch('code')
-  contentFunction(): void {
-
-    this.keyhelper = Date.now().toString();
-    this.$nextTick().then(() => {
+  if (state.code != prevstate.code) {
+    keyhelper = Date.now().toString();
+    nextTick().then(() => {
 
       hljs.highlightElement(this.$el.querySelector('pre code'));
 
     });
 
-  }
-
-  mounted() {
-
-    hljs.registerLanguage('javascript', javascript);
-    hljs.registerLanguage('typescript', typescript);
-    hljs.registerLanguage('css', css);
-    hljs.registerLanguage('less', less);
-    hljs.registerLanguage('xml', xml);
-    hljs.registerLanguage('bash', bash);
-    hljs.registerLanguage('markdown', markdown);
-    hljs.registerLanguage('json', json);
-    hljs.registerLanguage('scss', scss);
-    hljs.registerLanguage('yaml', yaml);
-
-    if (this.notEmpty) {
-
-      hljs.highlightElement(this.$el.querySelector('pre code'));
-
-    }
 
   }
 
-  copyCode() {
 
-    navigator.clipboard.writeText(this.code);
+});
+
+onMounted(() => {
+
+  hljs.registerLanguage('javascript', javascript);
+  hljs.registerLanguage('typescript', typescript);
+  hljs.registerLanguage('css', css);
+  hljs.registerLanguage('less', less);
+  hljs.registerLanguage('xml', xml);
+  hljs.registerLanguage('bash', bash);
+  hljs.registerLanguage('markdown', markdown);
+  hljs.registerLanguage('json', json);
+  hljs.registerLanguage('scss', scss);
+  hljs.registerLanguage('yaml', yaml);
+
+  if (notEmpty.value) {
+
+    hljs.highlightElement(this.$el.querySelector('pre code'));
 
   }
+
+});
+
+function copyCode(this: any) {
+
+  navigator.clipboard.writeText(this.code);
 
 }
+
+
 </script>
 
 <style lang="less">
@@ -96,11 +97,11 @@ export default class highlightPartial extends ExtPartial {
   overflow: hidden;
   width: 100%;
 
-    .copy-element {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-    }
+  .copy-element {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
 
   &.darkmode .copyCode {
 
@@ -111,11 +112,11 @@ export default class highlightPartial extends ExtPartial {
   pre {
     white-space: nowrap;
 
-    .codeContainer{
+    .codeContainer {
 
       position: relative;
 
-      .copyCode{
+      .copyCode {
 
         position: absolute;
         right: 15px;

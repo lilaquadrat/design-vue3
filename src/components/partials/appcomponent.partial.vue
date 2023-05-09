@@ -3,11 +3,6 @@
     <router-view />
   </div>
 </template>
-<script lang="ts">
-import {
-  ExtComponent, Component,
-} from '@libs/lila-component';
+<script setup lang="ts">
 
-@Component
-export default class appComponentPartial extends ExtComponent {}
 </script>

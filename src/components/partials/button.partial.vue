@@ -44,7 +44,7 @@ const check = (): void => {
 
         showCheck = false;
         confirmed = true;
-        clearTimeout(timeout);
+        clearTimeout(timeout as number);
         timeout = window.setTimeout(() => {
 
             confirmed = false;
@@ -58,7 +58,7 @@ const check = (): void => {
 };
 const confirm = (): void => {
 
-    if (doublecheck) {
+    if (props.doublecheck) {
 
         check();
 

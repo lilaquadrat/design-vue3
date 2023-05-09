@@ -1,26 +1,31 @@
 <template>
   <section class="lila-description-partial" :class="[type, { padding: padding, margin: margin, background: background }]">
     <h4 v-if="label">{{ label | translate }}</h4>
-    <p><slot></slot></p>
+    <p>
+      <slot></slot>
+    </p>
   </section>
 </template>
-<script lang="ts">
-import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
 
-@Component
-export default class DescriptionPartial extends ExtPartial {
+    label: string;
 
-  @Prop(String) label: string;
+    padding: boolean;
 
-  @Prop(Boolean) padding: boolean;
+    margin: boolean;
 
-  @Prop(Boolean) margin: boolean;
+    type: string;
 
-  @Prop(String) type: string;
+    background: boolean;
 
-  @Prop({ type: Boolean, default: true }) background: boolean;
 
-}
+  }>(),
+  {
+    background: true,
+  });
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

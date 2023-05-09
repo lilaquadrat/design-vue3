@@ -21,64 +21,50 @@
   </section>
 </template>
 <script lang="ts">
-import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+import { type ComputedRef, computed } from 'vue';
 
-@Component
-export default class DialogPartial extends ExtPartial {
+const props = defineProps < {
+  doublecheck: boolean;
+  type: 'confirm' | 'check';
+  message: string;
+  description: string;
+  variant: string[];
+  translations?: {confirm?: string, cancel?: string, acknowledge?: string};
+  callback?: (confirm: boolean) => void;
+}> ();
+let emit = defineEmits<{
+    (e: string): void
+}>();
+const colorScheme: ComputedRef<string|undefined> = computed(() =>  {
+   
+  return props.variant?.some((single) => ['error', 'success', 'color1', 'color3'].includes(single)) ? 'transparent' : 'colorScheme1';
+}); 
+ const confirm =()=>{
+  emit('confirm');
+  if (props.callback) props.callback(true);
+  return;
+ }; 
+ const cancel=()=>{
+  emit('cancel');
+    if (props.callback) props.callback(false);
+  return;
 
-  @Prop(Boolean) doublecheck: boolean;
+ };
+  const CONFIRM= computed((): string=> {
 
-  @Prop(String) type: 'confirm' | 'check';
+    return props.translations?.confirm ?? 'confirm';
 
-  @Prop(String) message: string;
+  });
+  const CANCEL= computed((): string =>{
 
-  @Prop(String) description: string;
+    return props.translations?.cancel ?? 'cancel';
 
-  @Prop(Array) variant: string[];
+  });
+  const ACKNOWLEDGE= computed((): string =>{
 
-  @Prop(Object) translations?: {confirm?: string, cancel?: string, acknowledge?: string};
+    return props.translations?.acknowledge ?? 'acknowledge';
 
-  @Prop(Function) callback?: (confirm: boolean) => void;
-
-  get colorScheme() {
-
-    return this.variant?.some((single) => ['error', 'success', 'color1', 'color3'].includes(single)) ? 'transparent' : 'colorScheme1';
-
-  }
-
-  confirm(): void {
-
-    this.$emit('confirm');
-    if (this.callback) this.callback(true);
-
-  }
-
-  cancel(): void {
-
-    this.$emit('cancel');
-    if (this.callback) this.callback(false);
-
-  }
-
-  get CONFIRM(): string {
-
-    return this.translations?.confirm ?? 'confirm';
-
-  }
-
-  get CANCEL(): string {
-
-    return this.translations?.cancel ?? 'cancel';
-
-  }
-
-  get ACKNOWLEDGE(): string {
-
-    return this.translations?.acknowledge ?? 'acknowledge';
-
-  }
-
-}
+  });
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

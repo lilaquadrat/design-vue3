@@ -3,49 +3,47 @@
       <slot></slot>
     </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { Prop } from '@libs/lila-component';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import  { computed, nextTick, onDeactivated, onMounted } from 'vue';
 
-@Component
-export default class overlayBackgroundPartial extends Vue {
+const props = defineProps < {
+  background: 'none' | 'mobile' | 'tablet' | 'desktop';
+}> ();
+let emit = defineEmits<{
+    (e: string): void
+}>();
+const backgroundMode= computed(()=> {
 
-  // defines in which media mode the background will be visible
-  @Prop(String) background: 'none' | 'mobile' | 'tablet' | 'desktop';
+  return props.background || 'mobile';
 
-  get backgroundMode() {
+});
 
-    return this.background || 'mobile';
-
-  }
-
-  checkClose($e) {
+  function checkClose($e) {
 
     if (this.$refs.background !== $e.target) return;
 
-    this.$emit('close');
+    emit('close');
 
   }
 
-  mounted() {
+  onMounted(() =>{
 
-    this.$nextTick(() => {
+    nextTick(() => {
 
       if (this.$store) this.$store.dispatch('fullscreen', true);
-      this.$emit('mounted');
+      emit('mounted');
 
     });
 
-  }
+  });
 
-  destroyed() {
+  onDeactivated(()=> {
 
     if (this.$store) this.$store.dispatch('fullscreen', false);
 
-  }
-
-}
+  });
+// not sure sbout this.$store
 </script>
 <style lang="less">
 @import (reference) "@{projectPath}/source/less/shared.less";

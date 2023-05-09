@@ -9,26 +9,20 @@
 
 </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import Picture from '@interfaces/picture.interface';
 import Textblock from '@interfaces/textblock.interface';
-import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+import { computed } from 'vue';
 
-@Component
-export default class FactPartial extends ExtPartial {
+const props = defineProps < {
+  textblock: Textblock;
+  picture: Picture;
+}> ();
+const hasPicture = computed(() =>{
 
-  @Prop(Object) textblock: Textblock;
+return !!props.picture?.src?.length;
 
-  @Prop(Object) picture: Picture;
-
-  get hasPicture() {
-
-    return !!this.picture?.src?.length;
-
-  }
-
-}
-
+});
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

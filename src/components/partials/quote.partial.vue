@@ -5,9 +5,9 @@
     </blockquote>
     <figcaption ref='checkPartialSize' :class="variant">
       <span v-if="citation || linkExists">{{ citation }}</span><span v-if="citation && linkExists">,</span>
-        <cite v-if="linkExists">
-          <lila-link-partial v-bind="link"></lila-link-partial>
-        </cite>
+      <cite v-if="linkExists">
+        <lila-link-partial v-bind="link"></lila-link-partial>
+      </cite>
 
     </figcaption>
   </figure>
@@ -18,94 +18,93 @@ import Link from '@interfaces/link.interface';
 import {
   Component, ExtPartial, Prop, Watch,
 } from '../libs/lila-partial';
+import { computed, nextTick, watch, onMounted } from "vue";
+
+const props = defineProps<{
+  quote: string;
+
+  link?: Link;
+
+  citation: string;
+
+}>();
+
+let textSize: string = '';
+
+watch(props, (): void => {
+
+  setTextSize();
+
+})
 
 
-@Component
-export default class quotePartial extends ExtPartial {
+watch('variant', function (): void {
 
-  @Prop(String) quote: string;
+  setTextSize();
 
-  @Prop(Object) link?: Link;
-
-  @Prop(String) citation: string;
-
-  textSize: string = '';
-
-  @Watch('quote')
-  contentFunction(): void {
-
-    this.setTextSize();
-
-  }
-
-  @Watch('variant')
-  function(): void {
-
-    this.setTextSize();
-
-  }
-
-  get notEmpty(): boolean {
-
-    return !!this.quote;
-
-  }
-
-  setTextSize(): void {
+})
 
 
-    this.$nextTick().then(() => {
+const notEmpty = computed((): boolean => {
 
-      const element = this.$refs.checkPartialSize as HTMLInputElement;
+  return !!props.quote;
 
-      // Small Sized Partial
-      if (this.quote.length && element.classList.contains('small')) {
+});
 
-        if (this.quote.length <= 20) this.textSize = 'headline_XL';
-
-        else if (this.quote.length <= 65) this.textSize = 'headline_L';
-
-        else if (this.quote.length <= 125) this.textSize = 'headline_M';
-
-        else if (this.quote.length <= 170) this.textSize = 'headline_S';
-
-        else this.textSize = 'headline_XS';
-
-      }
-
-      // Normal Sized Partial
-      else if (this.quote.length) {
+function setTextSize(): void {
 
 
-        if (this.quote.length <= 45) this.textSize = 'headline_XL';
+  nextTick().then(() => {
 
-        else if (this.quote.length <= 100) this.textSize = 'headline_L';
+    const element = this.$refs.checkPartialSize as HTMLInputElement;
+    // need ref element  here
+    // Small Sized Partial
+    if (props.quote.length && element.classList.contains('small')) {
 
-        else if (this.quote.length <= 150) this.textSize = 'headline_M';
+      if (props.quote.length <= 20) .textSize = 'headline_XL';
 
-        else if (this.quote.length <= 390) this.textSize = 'headline_S';
+      else if (props.quote.length <= 65) textSize = 'headline_L';
 
-        else this.textSize = 'headline_XS';
+      else if (props.quote.length <= 125) textSize = 'headline_M';
 
-      }
+      else if (props.quote.length <= 170) textSize = 'headline_S';
 
-    });
+      else textSize = 'headline_XS';
 
-  }
+    }
 
-  mounted() {
+    // Normal Sized Partial
+    else if (props.quote.length) {
 
-    this.setTextSize();
 
-  }
+      if (props.quote.length <= 45) textSize = 'headline_XL';
 
-  get linkExists() {
+      else if (props.quote.length <= 100) textSize = 'headline_L';
 
-    return this.link?.text && this.link?.link;
+      else if (props.quote.length <= 150) textSize = 'headline_M';
 
-  }
+      else if (props.quote.length <= 390) textSize = 'headline_S';
+
+      else textSize = 'headline_XS';
+
+    }
+
+  });
 
 }
+
+onMounted(() => {
+
+  setTextSize();
+
+});
+
+const linkExists = computed(() => {
+
+  return props.link?.text && props.link?.link;
+
+}
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";
@@ -149,11 +148,11 @@ export default class quotePartial extends ExtPartial {
       line-height: @headlineLineHeight_S;
     }
 
-    &.quoteRight{
+    &.quoteRight {
       text-align: right;
     }
 
-    &.quoteCenter{
+    &.quoteCenter {
       text-align: center;
     }
 
@@ -162,10 +161,12 @@ export default class quotePartial extends ExtPartial {
   figcaption {
 
     font-size: @fontTextSmaller;
-    &.authCenter{
+
+    &.authCenter {
       text-align: center;
     }
-    &.authRight{
+
+    &.authRight {
       text-align: right;
     }
   }

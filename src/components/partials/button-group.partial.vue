@@ -1,17 +1,14 @@
 <template>
-  <section :class="{gap: gap}" class="lila-button-group">
+  <section :class="{gap:gap}" class="lila-button-group">
     <slot></slot>
   </section>
 </template>
-<script lang="ts">
-import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+<script setup lang="ts">
+// import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+const props = defineProps<{
+  gap: boolean;
+}>();
 
-@Component
-export default class ButtonGroupPartial extends ExtPartial {
-
-  @Prop(Boolean) gap: boolean;
-
-}
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";

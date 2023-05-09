@@ -1,22 +1,13 @@
 <template>
-  <figure
-    :class="[
-      loadImage,
-      { notLoaded: !loading },
-      { noLoadAnimation: noLoadAnimation },
-      { fit, center },
-    ]"
-
-    class="lila-figure"
-  >
+  <figure :class="[
+    loadImage,
+    { notLoaded: !loading },
+    { noLoadAnimation: noLoadAnimation },
+    { fit, center },
+  ]" class="lila-figure" ref="root">
     <picture>
       <template v-if="loadImage">
-        <source
-          v-for="(source, i) in sourceMedia"
-          :key="`p-${i}`"
-          :media="`${source.media}`"
-          :srcset="source.src"
-        />
+        <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
         <img :src="src" :alt="alt" />
       </template>
 
@@ -28,152 +19,146 @@
     <figcaption v-if="copyright">{{ copyright }}</figcaption>
   </figure>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
 import Picture, { PictureMedia } from '@interfaces/picture.interface';
 import inview from '@libs/lila-inview';
-import {
-  ExtPartial, Component, Prop, Watch,
-} from '../libs/lila-partial';
+import { computed, onMounted, ref, watch, type Ref } from 'vue';
+import { useCounterStore } from '@/stores/counter';
 
-@Component
-export default class PicturePartial extends ExtPartial {
+const props = defineProps<{
+  alt: string;
 
-  @Prop(String) alt: string;
+  src: string;
 
-  @Prop(String) src: string;
+  copyright: string;
+  source: Picture['source'];
 
-  @Prop(String) copyright: string;
+  noLoadAnimation: boolean;
 
-  @Prop(Array) source: Picture['source'];
+  fit: boolean;
 
-  @Prop(Boolean) noLoadAnimation: boolean;
+  center: boolean;
 
-  @Prop(Boolean) fit: boolean;
 
-  @Prop(Boolean) center: boolean;
+}>();
+let emit = defineEmits<{
+    (e: string): void
+}>();
+const root = ref(null);
+let loading: Ref<boolean> = ref(false);
+let loadImage: boolean = false;
+let view: string;
+// const store = useCounterStore();
 
-  loading: boolean = false;
+watch(loading, (state, prevState) => {
 
-  loadImage: boolean = false;
+  if (!loadImage) loadImage = true;
+});
 
-  view: string;
 
-  @Watch('loading')
-  watchLoading(): void {
+const settings = computed(() => {
 
-    if (!this.loadImage) this.loadImage = true;
+  return JSON.stringify(this.$store?.state?.settings);
 
-  }
+});
 
-  get settings() {
 
-    return JSON.stringify(this.$store?.state?.settings);
+if (this.$store?.state?.settings?.preloadImages) {
 
-  }
+  loading = ref(true);
+  loadImage = true;
 
-  constructor() {
+}
 
-    super();
+onMounted((): void => {
 
-    if (this.$store?.state?.settings?.preloadImages) {
+  if (!(root.value as unknown as HTMLBaseElement).querySelector) return;
 
-      this.loading = true;
-      this.loadImage = true;
+  const image = root.value.querySelector('picture img') as HTMLImageElement;
 
-    }
+  image.onload = () => {
 
-  }
+    emit('loaded');
 
-  mounted(): void {
+  };
 
-    if (!this.$el.querySelector) return;
+  const imageObserver = new IntersectionObserver(
+    (entries) => {
 
-    const image = this.$el.querySelector('picture img') as HTMLImageElement;
+      entries.forEach((single) => {
 
-    image.onload = () => {
+        if (single.isIntersecting) {
 
-      this.$emit('loaded');
-
-    };
-
-    const imageObserver = new IntersectionObserver(
-      (entries) => {
-
-        entries.forEach((single) => {
-
-          if (single.isIntersecting) {
-
-            this.loading = true;
-            imageObserver.unobserve(image);
-
-          }
-
-        });
-
-      },
-      {
-        rootMargin: '250px 0px',
-      },
-    );
-
-    imageObserver.observe(image);
-
-  }
-
-  checkInview(): void {
-
-    window.addEventListener('scrolled', () => {
-
-      if (!this.loading) inview.checkImage(this);
-
-    });
-
-  }
-
-  get sourceMedia(): PictureMedia[] {
-
-    const source = [];
-    const settings = this.$store?.state?.settings;
-
-    this.source?.forEach((single, index) => {
-
-      let media: string;
-
-      if (!single.media) {
-
-        if (settings) {
-
-          if (index === 0 && settings?.breakpointTablet?.length) media = settings.breakpointTablet;
-          if (index === 1 && settings?.breakpointDesktop?.length) media = settings.breakpointDesktop;
-          if (index === 2 && settings?.breakpointWide?.length) media = settings.breakpointWide;
+          loading = true;
+          imageObserver.unobserve(image);
 
         }
 
-      } else {
+      });
 
-        media = single.media;
+    },
+    {
+      rootMargin: '250px 0px',
+    },
+  );
 
-      }
+  imageObserver.observe(image);
 
-      if (media && single.src) {
+});
 
-        source.push({ media, src: single.src });
+function checkInview(): void {
 
-      }
+  window.addEventListener('scrolled', () => {
 
-    });
+    if (!loading) inview.checkImage(this);
 
-    return source.reverse();
-
-  }
+  });
 
 }
+
+const sourceMedia = computed((): PictureMedia[] => {
+
+  const source: { media: string; src: any; }[] = [];
+  const settings = this.$store?.state?.settings;
+
+  props.source?.forEach((single: { media: string; src: any; }, index: number) => {
+
+    let media: string = '';
+
+    if (!single.media) {
+
+      if (settings) {
+
+        if (index === 0 && settings?.breakpointTablet?.length) media = settings.breakpointTablet;
+        if (index === 1 && settings?.breakpointDesktop?.length) media = settings.breakpointDesktop;
+        if (index === 2 && settings?.breakpointWide?.length) media = settings.breakpointWide;
+
+      }
+
+    } else {
+
+      media = single.media;
+
+    }
+
+    if (media && single.src) {
+
+      source.push({ media, src: single.src });
+
+    }
+
+  });
+
+  return source.reverse();
+
+});
+
 </script>
 <style lang="less" scoped>
 @import (reference) "@{projectPath}/source/less/shared.less";
 
-.lila-link.logo > .lila-figure {
+.lila-link.logo>.lila-figure {
 
   picture {
     mix-blend-mode: normal;

@@ -1,12 +1,15 @@
 <template>
-  <section class="lila-accordion" :class="{noControls: disableControls || renderTarget === 'pdf'}">
+  <section class="lila-accordion" :class="{ noControls: disableControls || renderTarget === 'pdf' }">
     <slot></slot>
 
-    <section v-for="(single, index) in useElements" :ref="`accordion${index}`" class="single-accordion" :class="{visible: single.visible}" :key="`accordion-${index}`">
+    <section v-for="(single, index) in useElements" :ref="`accordion${index}`" class="single-accordion"
+      :class="{ visible: single.visible }" :key="`accordion-${index}`">
 
-      <component class="headline" :is="disableControls || renderTarget === 'pdf' ? 'h3' : 'button'" @click="toggle(single, index)">
-        <span>{{single.headline}}</span>
-        <lila-icons-partial v-if="!disableControls && renderTarget !== 'pdf'" :animate="true" :rotate="single.visible ? 90 : 0" type="arrow-right"/>
+      <component class="headline" :is="disableControls || renderTarget === 'pdf' ? 'h3' : 'button'"
+        @click="toggle(single, index)">
+        <span>{{ single.headline }}</span>
+        <lila-icons-partial v-if="!disableControls && renderTarget !== 'pdf'" :animate="true"
+          :rotate="single.visible ? 90 : 0" type="arrow-right" />
       </component>
 
       <section :style="`height: ${single.visible ? single.height : '0px'}`" class="accordion-content-container">
@@ -29,169 +32,124 @@
 
   </section>
 </template>
+<script setup lang="ts">
 
+// neef fix this.$ref
+import { ref, onMounted } from 'vue'
+import AccordionElement from '@interfaces/AccordionElement.interface';
+import hardCopy from '@mixins/hardCopy';
 
-<script lang="ts">
-import AccordionElement from '../interfaces/AccordionElement.interface';
-import hardCopy from '../mixins/hardCopy';
-import {
-  ExtPartial, Component, Prop, Watch,
-} from '../libs/lila-partial';
+const itemRefs = ref([])
 
-@Component
-export default class AccordionPartial extends ExtPartial {
+const props = defineProps<{
+  multiOpen: boolean;
+  disableControls: boolean;
+  openOnStart: 'first' | 'all';
+  elements: AccordionElement[];
+}>();
+let useElements: (AccordionElement & { visible: boolean, height: string, headline: string })[] = [];
 
-  @Prop(Boolean) multiOpen: boolean;
+onMounted(() => { 
+  setElements(props.elements, true);
 
-  @Prop(Boolean) disableControls: boolean;
+  window.addEventListener('resized', () => {
+    setElements(props.elements);
 
-  @Prop(String) openOnStart: 'first' | 'all';
+  });
+});
 
-  @Prop(Array) elements: AccordionElement[];
+function toggle(element: AccordionElement & {visible: boolean, height: number, headline: string}, index: number) {
 
-  useElements: (AccordionElement & {visible: boolean, height: string, headline: string})[] = [];
+let newVisible;
 
-  @Watch('elements')
-  elementsWatcher(pre: AccordionElement[], post: AccordionElement[]) {
+if (props.disableControls) return;
 
-    this.setElements(this.elements, pre.length !== post.length);
+if (!props.multiOpen) {
 
-  }
+  if (element.visible) {
 
-  created() {
+    element.visible = false;
 
-    this.setElements(this.elements, true);
+  } else {
 
-  }
+    useElements.forEach((single) => {
 
-  mounted() {
-
-    this.setElements(this.elements, true);
-
-    window.addEventListener('resized', () => {
-
-      this.setElements(this.elements);
-
-    });
-
-  }
-
-  toggle(element: AccordionElement & {visible: boolean, height: number, headline: string}, index: number) {
-
-    let newVisible;
-
-    if (this.disableControls) return;
-
-    if (!this.multiOpen) {
-
-      if (element.visible) {
-
-        element.visible = false;
-
-      } else {
-
-        this.useElements.forEach((single) => {
-
-          single.visible = false;
-
-        });
-
-        newVisible = true;
-
-      }
-
-
-    } else {
-
-      newVisible = !element.visible;
-
-    }
-
-
-    const refElement = this.$refs[`accordion${index}`][0] as HTMLElement;
-    const placeholder = refElement.querySelector('.accordion-content-placeholder');
-
-    this.useElements[index].height = `${placeholder?.clientHeight}px`;
-
-    element.visible = newVisible;
-
-
-  }
-
-  setElements(elements: AccordionElement[], resetVisible = false) {
-
-    const newElements = [];
-
-    hardCopy(elements).forEach((single, index) => {
-
-      let visible = this.useElements[index]?.visible;
-
-      if (resetVisible) {
-
-
-        if (this.openOnStart === 'first' && index === 0) visible = true;
-        if ((this.openOnStart === 'all' && this.multiOpen)) visible = true;
-
-      }
-
-      if (this.renderTarget === 'pdf') visible = true;
-
-      const headline = single.textblock?.headline;
-
-      delete single.textblock?.headline;
-
-      if (!headline) return;
-
-      newElements.push({
-        ...single,
-        headline,
-        visible,
-        height: this.renderTarget === 'pdf' ? 'auto' : '0px',
-      });
-
+      single.visible = false;
 
     });
 
-    this.useElements = newElements;
+    newVisible = true;
 
-    this.$nextTick(() => {
+  }
 
-      Object.values(this.$refs).forEach((single: [HTMLElement], index: number) => {
 
-        const placeholder = single[0]?.querySelector('.accordion-content-placeholder');
-        const useElement = this.useElements[index];
+} else {
 
-        if (!useElement) return;
+  newVisible = !element.visible;
 
-        useElement.height = placeholder?.clientHeight;
+}
 
-      });
+
+const refElement = itemRefs[`accordion${index}`][0] as HTMLElement;
+const placeholder = refElement.querySelector('.accordion-content-placeholder');
+
+useElements[index].height = `${placeholder?.clientHeight}px`;
+
+element.visible = newVisible;
+
+
+}
+
+function setElements(this: any, elements: AccordionElement[], resetVisible = false) {
+
+  const newElements: any[] = [];
+
+  hardCopy(elements).forEach((single: { textblock: { headline: any; }; }, index: number) => {
+
+    let visible = useElements[index]?.visible;
+
+    if (resetVisible) {
+
+
+      if (props.openOnStart === 'first' && index === 0) visible = true;
+      if ((props.openOnStart === 'all' && props.multiOpen)) visible = true;
+
+    }
+
+    if (this.renderTarget === 'pdf') visible = true;
+
+    const headline = single.textblock?.headline;
+
+    delete single.textblock?.headline;
+
+    if (!headline) return;
+
+    newElements.push({
+      ...single,
+      headline,
+      visible,
+      height: this.renderTarget === 'pdf' ? 'auto' : '0px',
+    });
+
+
+  });
+
+  useElements = newElements;
+
+  this.$nextTick(() => {
+
+    Object.values(ref.).forEach((single: [HTMLElement], index: number) => {
+
+      const placeholder = single[0]?.querySelector('.accordion-content-placeholder');
+      const useElement = useElements[index];
+
+      if (!useElement) return;
+
+      useElement.height = placeholder?.clientHeight;
 
     });
 
-  }
-
-  listVariant(type: string) {
-
-    const base = this[type]?.variant || [];
-
-    if (this.variant.includes('center')) {
-
-      base.push('noStyle');
-      base.push('center');
-
-    }
-
-    if (this.variant.includes('actions') && type !== 'list') {
-
-      base.push('actions');
-
-    }
-
-    return base;
-
-  }
-
+  });
 
 }
 </script>
@@ -223,7 +181,8 @@ export default class AccordionPartial extends ExtPartial {
       text-align: left;
       cursor: pointer;
 
-      @media @tablet, @desktop {
+      @media @tablet,
+      @desktop {
         font-size: @headline_S;
         line-height: @headlineLineHeight_S;
       }
@@ -240,7 +199,8 @@ export default class AccordionPartial extends ExtPartial {
       visibility: hidden;
     }
 
-    .accordion-content-container , .accordion-content-placeholder {
+    .accordion-content-container,
+    .accordion-content-placeholder {
 
       .accordion-content {
         .multi(padding-top, 4);
