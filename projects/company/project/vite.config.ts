@@ -1,8 +1,8 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,6 +10,9 @@ export default defineConfig({
     vue(),
     tsconfigPaths()
   ],
+  build: {
+    cssCodeSplit: true
+  },
   css: {
     preprocessorOptions: {
       less: {
@@ -27,4 +30,4 @@ export default defineConfig({
       '~fonts': fileURLToPath(new URL('src/assets/fonts', import.meta.url)),
     }
   }
-})
+});

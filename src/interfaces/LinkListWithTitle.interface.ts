@@ -4,4 +4,4 @@ export default interface LinkListWithTitle {
     title?: string;
 
     value: Link[];
-};;;;;;;;;;;;
+};;;;;;;;;;;;;;;;;;;;;;

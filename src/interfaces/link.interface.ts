@@ -6,4 +6,4 @@ export default interface Link {
     query?: URLSearchParams,
     external?: boolean
 
-};;;;;;;;;;;
+};;;;;;;;;;;;;;;;;;;;;

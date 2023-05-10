@@ -1,6 +1,6 @@
-import type { RouteRecordRaw } from 'vue-router'
-import ContentView from './views/content.view.vue'
-import SecondView from './views/second.view.vue'
+import type { RouteRecordRaw } from 'vue-router';
+import ContentView from './views/content.view.vue';
+import SecondView from './views/second.view.vue';
 
 const routes: readonly RouteRecordRaw[] = [
   {
@@ -13,6 +13,6 @@ const routes: readonly RouteRecordRaw[] = [
     name: 'second',
     component: SecondView
   },
-]
+];
 
-export default routes
+export default routes;

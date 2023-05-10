@@ -2,19 +2,24 @@
   "name": "studio-design",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite projects/company/project",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
+    "build:client": "vite build projects/company/project --outDir dist/client --ssrManifest",
+    "build:server": "vite build projects/company/project --ssr src/server-entry.ts --outDir dist/server",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "server:test": "node server.js"
   },
   "dependencies": {
     "@lilaquadrat/studio": "^3.1.2",
     "pinia": "^2.0.32",
+    "ts-node": "^10.9.1",
     "vite-tsconfig-paths": "^4.0.7",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"

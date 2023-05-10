@@ -53,8 +53,6 @@ const content: Content = {
 };
 const contentMerged = computed(() => prepareContent(content)); 
 
-console.log('hello', this);
-
 </script>
 
 <template>

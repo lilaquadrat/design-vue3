@@ -1,21 +1,15 @@
-import { createApp, type Component } from 'vue';
-import { createPinia } from 'pinia';
-
+import { createSSRApp } from 'vue';
 import App from './App.vue';
-import routes from '@/routes';
 import createRouter from '@/mixins/createRouter';
-import loadComponents from '@/mixins/loadComponents';
+import routes from '@/routes';
 
-const globalModules: Record<string, Record<'default',Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
-const globalPartials: Record<string, Record<'default',Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
-const localComponents: Record<string, Record<'default',Component>> = import.meta.glob('./components/modules/*', {eager: true});
-const app = createApp(App);
+// SSR requires a fresh app instance per request, therefore we export a function
+// that creates a fresh app instance. If using Vuex, we'd also be creating a
+// fresh store here.
+export function createApp() {
+  const app = createSSRApp(App);
+  const router = createRouter(routes);
 
-loadComponents(localComponents, 'lila', app);
-loadComponents(globalModules, 'lila', app);
-loadComponents(globalPartials, 'lila', app);
-
-app.use(createPinia());
-app.use(createRouter(routes));
-
-app.mount('#app');
+  app.use(router);
+  return { app, router };
+}

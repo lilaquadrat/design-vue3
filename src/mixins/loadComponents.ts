@@ -4,8 +4,6 @@ export default (components: Record<string, Record<'default',Component>>, namespa
 
     Object.entries(components).forEach(([filename, definition]) => {
 
-        console.log(components);
-
         // Get name of component, based on filename
         // "./components/Fruits.vue" will become "Fruits"
         const matches = filename.match(/([a-z-]+)\.(module|partial).(vue|ts)$/i);
