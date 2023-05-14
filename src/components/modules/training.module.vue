@@ -50,7 +50,7 @@ import type Textblock from '@interfaces/textblock.interface';
 import type { ChildData, Editor } from '@lilaquadrat/studio/lib/interfaces';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import { computed, inject, onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
 
@@ -160,7 +160,7 @@ function toggleIndex(event: MouseEvent | null, hint?: boolean) {
 
 </script>
 <style lang="less" scoped>
-@import (reference) '@{projectPath}/source/less/shared.less';
+
 
 .lila-training-module {
   .module;

@@ -14,12 +14,12 @@
       v-bind="youtubeSettings"></youtube>
   </section>
 </template>
-<script lang="ts">
-import { VideoSource } from '@interfaces/video.interface';
-import VueYouTubeEmbed, { getIdFromURL } from 'vue-youtube-embed';
+<script setup lang="ts">
+// import VueYouTubeEmbed, { getIdFromURL } from 'vue-youtube-embed';
+import type { VideoSource } from '@/interfaces/video.interface';
 import Vue, { computed, nextTick, onMounted, watch } from 'vue';
 
-Vue.use(VueYouTubeEmbed);
+// Vue.use(VueYouTubeEmbed);
 
 const props = withDefaults(defineProps<{
 
@@ -312,7 +312,7 @@ function ended() {
 
 </script>
 <style lang="less">
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-video-partial {
   display: grid;

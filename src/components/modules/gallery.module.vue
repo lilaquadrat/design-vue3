@@ -4,8 +4,8 @@
     <section class="elements">
       <div :style="cssElementsLength" ref='scrollContainer' :class="{ transition: !dragging }" v-if="elements.length > 0"
         class="scroll-container">
-        <template v-for="(element, elementIndex) in elements">
-          <div class="element" :key="`gallery-element-${elementIndex}`" :style="cssWidth"
+        <template v-for="(element, elementIndex) in elements" :key="`gallery-element-${elementIndex}`">
+          <div class="element" :style="cssWidth"
             :class="{ hasImage: element.picture || element.pictures, hasDescription: element.textblock }"
             @click="set($event, element)" @keyup="set($event, element)">
             <div class="picture-container" v-if="element && element.picture">
@@ -45,9 +45,9 @@
         @click="toggleFullscreenOverlay">
         <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
       </lila-button-partial>
-      <span class="currentIndex">{{ (currentOptionIndex + 1) | leadingZero(2) }}</span>
+      <span class="currentIndex">{{ $filters.leadingZero(currentOptionIndex + 1, 2) }}</span>
       <span class="seperator"></span>
-      <span class="allIndex">{{ elements.length | leadingZero(2) }}</span>
+      <span class="allIndex">{{ $filters.leadingZero(elements.length, 2) }}</span>
     </div>
 
     <div v-if="!variant2 && firstLoad" :style="controlsTop" class="gallery-controls">
@@ -122,19 +122,22 @@ const cssElementsLength = computed((): { [key: string]: string | number } => {
     '--ts': `${tempSwipe}px`,
   };
 
-}); const cssWidth = computed((): { [key: string]: string } => {
+}); 
+const cssWidth = computed((): { [key: string]: string } => {
 
   return {
     '--width': `${100 / props.elements.length}%`,
   };
 
-}); const controlsTop = computed((): { [key: string]: string } => {
+}); 
+const controlsTop = computed((): { [key: string]: string } => {
 
   return {
     '--top': `${controlsOffset / 2}px`,
   };
 
-}); const indicatorsTop = computed((): { [key: string]: string } => {
+}); 
+const indicatorsTop = computed((): { [key: string]: string } => {
 
   return {
     '--top': `${controlsOffset}px`,
@@ -387,22 +390,21 @@ function indicatorchange(index: number): void {
 
 </script>
 <style lang="less" scoped>
-@import (reference) '@{projectPath}/source/less/shared.less';
 
 .lila-module.gallery-module {
   .module;
 
-  @import '../source/less/gallery/element.less';
+  // @import '../source/less/gallery/element.less';
 
-  @import '../source/less/gallery/control-button.less';
+  // @import '../source/less/gallery/control-button.less';
 
-  @import '../source/less/gallery/picture-description.less';
+  // @import '../source/less/gallery/picture-description.less';
 
-  @import '../source/less/gallery/indexIndicator.less';
+  // @import '../source/less/gallery/indexIndicator.less';
 
-  @import '../source/less/gallery/controls.less';
+  // @import '../source/less/gallery/controls.less';
 
-  @import '../source/less/gallery/elements.less';
+  // @import '../source/less/gallery/elements.less';
 
   .modulePadding('none');
 

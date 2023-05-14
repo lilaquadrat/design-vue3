@@ -1,10 +1,5 @@
 <template>
-  <figure :class="[
-    loadImage,
-    { notLoaded: !loading },
-    { noLoadAnimation: noLoadAnimation },
-    { fit, center },
-  ]" class="lila-figure" ref="root">
+  <figure :class="[loadImage,{ notLoaded: !loading },{ noLoadAnimation: noLoadAnimation },{ fit, center }]" class="lila-figure" ref="root">
     <picture>
       <template v-if="loadImage">
         <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
@@ -24,7 +19,6 @@
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
 import { computed, onMounted, ref, watch, type Ref } from 'vue';
-import { useCounterStore } from '@/stores/counter';
 
 const props = defineProps<{
   alt: string;
@@ -57,19 +51,19 @@ watch(loading, (state, prevState) => {
 });
 
 
-const settings = computed(() => {
+// const settings = computed(() => {
 
-  return JSON.stringify(this.$store?.state?.settings);
+//   return JSON.stringify(this.$store?.state?.settings);
 
-});
+// });
 
 
-if (this.$store?.state?.settings?.preloadImages) {
+// if (this.$store?.state?.settings?.preloadImages) {
 
   loading = ref(true);
   loadImage = true;
 
-}
+// }
 
 onMounted((): void => {
 
@@ -111,7 +105,8 @@ onMounted((): void => {
 const sourceMedia = computed((): PictureMedia[] => {
 
   const source: { media: string; src: any; }[] = [];
-  const settings = this.$store?.state?.settings;
+  // const settings = this.$store?.state?.settings;
+  const settings = {};
 
   props.source?.forEach((single: { media: string; src: any; }, index: number) => {
 
@@ -147,7 +142,6 @@ const sourceMedia = computed((): PictureMedia[] => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
 
 .lila-link.logo>.lila-figure {
 

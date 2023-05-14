@@ -26,7 +26,7 @@ import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import type PictureGroupElement from '@interfaces/PictureGroupElement.interface';
 import { computed, onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   elements: PictureGroupElement[];
@@ -85,7 +85,7 @@ const brightText = computed(() => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-picturegroup-module {
   .module;

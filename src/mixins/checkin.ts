@@ -1,9 +1,8 @@
-import inview from 'src/libs/lila-inview';
-export function checkInview(el: any) {
+export default (el: any) => {
 
     window?.addEventListener('scrolled', () => {
-        inview.check(el);
+        // inview.check(el);
 
     });
 
-}
+};

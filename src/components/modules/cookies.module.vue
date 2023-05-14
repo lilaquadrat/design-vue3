@@ -22,7 +22,6 @@
         <lila-checkbox-partial v-model="cookies.analytics">Analyse-Cookies </lila-checkbox-partial>
       </section>
     </lila-dialog-partial>
-    </lila-overlay-background-partial>
 
     <template v-if="!isOverlay">
 
@@ -220,7 +219,7 @@ function getCookies() {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-cookies-module-dialog,
 .lila-cookies-module.lila-module {

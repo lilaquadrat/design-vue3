@@ -67,7 +67,7 @@ const colorScheme: ComputedRef<string|undefined> = computed(() =>  {
   });
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-dialog-partial {
 

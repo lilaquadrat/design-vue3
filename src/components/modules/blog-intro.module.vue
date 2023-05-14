@@ -32,7 +32,7 @@ import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
 
@@ -82,7 +82,7 @@ onMounted(()=>{
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-blog-intro-module {
   .module;

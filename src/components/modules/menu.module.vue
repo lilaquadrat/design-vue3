@@ -74,10 +74,9 @@
 /* __vue_virtual_code_placeholder__ */
 import type Picture from '@interfaces/picture.interface';
 import type LinkGroupElement from '@interfaces/LinkGroupElement.interface';
-import type Dom from 'src/libs/lila-dom';
 
 import { computed, onMounted, ref, watch } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+// import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   name: string;
@@ -86,7 +85,6 @@ const props = defineProps<{
   id?: string;
   view?: string;
   variant: string[];
-  DOM: Dom;
 
 }>();let elementsArray: (LinkGroupElement & { active: boolean })[] = [];let open: boolean = false;
 
@@ -128,17 +126,17 @@ function created(): void {
 
 onMounted((): void =>{
 
-  checkInview(el);
+  // checkInview(el);
 
-   props.DOM.on('click', '', ($e: { target: HTMLElement; }) => {
+  //  props.DOM.on('click', '', ($e: { target: HTMLElement; }) => {
 
-    if (!el.contains?($e.target as HTMLElement)) {
+  //   if (!el.contains?($e.target as HTMLElement)) {
 
-      closeAll();
+  //     closeAll();
 
-    }
+  //   }
 
-  });
+  // });
 
   updateElements();
 
@@ -201,7 +199,7 @@ function closeAll() {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-menu-module {
   .index(8);

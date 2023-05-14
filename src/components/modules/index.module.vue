@@ -11,7 +11,7 @@ import type LinkListWithTitle from '@interfaces/LinkListWithTitle.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, onMounted, ref } from 'vue';
 import type { AdditionalContentInformation } from '@lilaquadrat/studio/lib/interfaces';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   textblock: Textblock;
@@ -68,7 +68,7 @@ const listVariant = computed(() => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-index-module {
   .module;

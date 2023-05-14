@@ -1,5 +1,5 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
     "env.d.ts", 
     "src/**/*", 
@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@mixins/*": ["./src/mixins/*"],
       "@modules/*": ["./src/components/modules/*"],
       "@partials/*": ["./src/components/partials/*"],
       "@interfaces/*":["./src/interfaces/*"]

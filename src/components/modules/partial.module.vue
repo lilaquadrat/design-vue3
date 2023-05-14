@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import type { ModuleGeneric } from '@lilaquadrat/studio/lib/interfaces';
 import { onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   modules: ModuleGeneric[];

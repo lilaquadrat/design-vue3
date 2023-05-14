@@ -37,7 +37,7 @@
 // neef fix this.$ref
 import { ref, onMounted, type Ref, nextTick } from 'vue';
 import type AccordionElement from '@interfaces/AccordionElement.interface';
-import hardCopy from '@mixins/hardCopy';
+import hardCopy from '../../mixins/hardCopy';
 
 const itemRefs: Ref<HTMLElement[]> = ref([]);
 const props = defineProps<{
@@ -177,7 +177,7 @@ function setElements(this, elements: AccordionElement[], resetVisible = false) {
 }
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-accordion {
 

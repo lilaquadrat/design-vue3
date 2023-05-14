@@ -146,7 +146,7 @@ function componentType(lineIndex: number) {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-compare-module {
   .module;

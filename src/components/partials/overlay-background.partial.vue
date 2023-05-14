@@ -45,7 +45,7 @@ const backgroundMode= computed(()=> {
 // not sure sbout this.$store
 </script>
 <style lang="less">
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-overlay-background {
   position: fixed;

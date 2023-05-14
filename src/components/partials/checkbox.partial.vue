@@ -64,7 +64,7 @@ let   textType: string = 'word';
 
 function setTextType(): void {
 
-const useText = props.text ? props.text :slotsProp.default[0].text; //Tis.$slots
+const useText = props.text ? props.text : slotsProp.default[0].text; //Tis.$slots
 
 if (useText) {
 
@@ -102,7 +102,7 @@ onBeforeUpdate(()=>{
 });
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-label-parent-container {
 

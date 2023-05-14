@@ -11,7 +11,7 @@ const props = defineProps < {
 }> ();
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-legend {
 

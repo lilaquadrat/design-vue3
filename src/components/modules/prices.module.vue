@@ -51,7 +51,7 @@
 import type Textblock from '@interfaces/textblock.interface';
 import type PricesElementModel from '@interfaces/PricesElement.interface';
 import { onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   textblock: Textblock;
@@ -83,7 +83,7 @@ onMounted(() => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-prices-module {
   .module;

@@ -13,7 +13,7 @@
   </figure>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 /* __vue_virtual_code_placeholder__ */
 import type Link from '@interfaces/link.interface';
 
@@ -106,7 +106,7 @@ const linkExists = computed(() => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-quote {
 

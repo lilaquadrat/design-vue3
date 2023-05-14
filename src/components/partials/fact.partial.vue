@@ -28,7 +28,7 @@ return !!props.picture?.src?.length;
 });
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-fact-partial {
   display: grid;

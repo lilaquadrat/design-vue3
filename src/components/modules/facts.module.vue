@@ -44,7 +44,7 @@
 import type Textblock from '@interfaces/textblock.interface';
 import type Fact from '@interfaces/Fact.interface';
 import { computed, onMounted, ref } from 'vue';
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 
 const props = defineProps<{
   content: any;
@@ -89,7 +89,7 @@ function setActive(index: number) {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-facts-module {
   .module;

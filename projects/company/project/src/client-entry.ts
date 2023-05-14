@@ -18,4 +18,11 @@ loadComponents(globalPartials, 'lila', app);
 app.use(createPinia());
 app.use(createRouter(routes));
 
+app.config.globalProperties.$filters = {
+    leadingZero(value: string, minLength: number) {
+        return value.toString().padStart(minLength, '0');
+    }
+    
+  };
+
 app.mount('#app');

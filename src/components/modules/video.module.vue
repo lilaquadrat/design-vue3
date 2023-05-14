@@ -17,7 +17,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import type Video from '@interfaces/video.interface';
@@ -80,7 +80,6 @@ function ended(): void {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
 
 .lila-video-module {
   .module;

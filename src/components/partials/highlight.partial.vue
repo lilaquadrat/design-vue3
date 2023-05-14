@@ -12,17 +12,17 @@
   </section>
 </template>
 <script setup lang="ts">
-import hljs from 'highlight.js/lib/core';
-import javascript from 'highlight.js/lib/languages/javascript';
-import typescript from 'highlight.js/lib/languages/typescript';
-import css from 'highlight.js/lib/languages/css';
-import less from 'highlight.js/lib/languages/less';
-import xml from 'highlight.js/lib/languages/xml';
-import bash from 'highlight.js/lib/languages/bash';
-import markdown from 'highlight.js/lib/languages/markdown';
-import json from 'highlight.js/lib/languages/json';
-import scss from 'highlight.js/lib/languages/scss';
-import yaml from 'highlight.js/lib/languages/yaml';
+// import hljs from 'highlight.js/lib/core';
+// import javascript from 'highlight.js/lib/languages/javascript';
+// import typescript from 'highlight.js/lib/languages/typescript';
+// import css from 'highlight.js/lib/languages/css';
+// import less from 'highlight.js/lib/languages/less';
+// import xml from 'highlight.js/lib/languages/xml';
+// import bash from 'highlight.js/lib/languages/bash';
+// import markdown from 'highlight.js/lib/languages/markdown';
+// import json from 'highlight.js/lib/languages/json';
+// import scss from 'highlight.js/lib/languages/scss';
+// import yaml from 'highlight.js/lib/languages/yaml';
 
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
@@ -89,7 +89,7 @@ function copyCode(this: any) {
 </script>
 
 <style lang="less">
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-highlight {
   overflow: hidden;

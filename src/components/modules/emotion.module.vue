@@ -30,8 +30,8 @@
 
   </section>
 </template>
-<script setupb lang="ts">
-import { checkInview } from '@/mixins/checkin';
+<script setup lang="ts">
+import checkInview from '../../mixins/checkin';
 import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
@@ -132,7 +132,7 @@ const scrollNotice = computed((): boolean => {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-module.emotion-module {
   .module;

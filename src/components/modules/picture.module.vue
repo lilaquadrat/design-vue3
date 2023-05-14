@@ -16,10 +16,12 @@
   </section>
 </template>
 <script setup lang="ts">
-import { checkInview } from '@/mixins/checkin';
+import checkInview from '../../mixins/checkin';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, onMounted, ref } from 'vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   picture: Picture;
@@ -65,7 +67,7 @@ function toggleFullscreenOverlay() {
 
 </script>
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
+
 
 .lila-picture-module {
   .module;
