@@ -18,7 +18,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@modules/*": ["./src/components/modules/*"],
-      "@partials/*": ["./src/components/partials/*"]
+      "@partials/*": ["./src/components/partials/*"],
+      "@interfaces/*":["./src/interfaces/*"]
     }
   }
 }
