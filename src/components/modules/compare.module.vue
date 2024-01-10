@@ -1,52 +1,3 @@
-<template>
-  <section :id="id" class="lila-compare-module lila-module">
-
-    <lila-textblock-partial v-bind="textblock" />
-
-    <section v-if="modifiedElements" class="compare-container">
-
-      <ul class="legend">
-        <li v-for="(head, index) in legend" :key="`headline-${index}`">
-          <h3>{{ index + 1 }}*</h3>
-          <h3>{{ head.headline }}</h3>
-        </li>
-      </ul>
-
-      <table>
-
-        <tbody>
-
-          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle"
-            v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
-
-            <td :class="{ structure: singleIndex === 0 }" :colspan="elementsLength(line.length === 1)"
-              v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`">
-
-              <template v-if="single.headline || single.description">
-                <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
-                <p v-if="single.description">{{ single.description }}</p>
-                <h4 class="index">{{ singleIndex }}*</h4>
-              </template>
-              <template v-else>
-                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'"
-                  class="icon checkbox-checked_color1">yes</lila-icons-partial>
-                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'"
-                  class="icon cancel_color1">no</lila-icons-partial>
-                <template v-else><abbr :title="single">{{ single }}</abbr></template>
-              </template>
-
-            </td>
-
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </section>
-
-  </section>
-</template>
 <script setup lang="ts">
 /* __vue_virtual_code_placeholder__ */
 import type Textblock from '@interfaces/textblock.interface';
@@ -65,7 +16,7 @@ const props = defineProps<{
   structure: CompareStructure[];
   id?: string;
 }>();
-const modifiedElements=computed(() =>{
+const modifiedElements=computed(() => {
 
   const data: CompareModified[] = [];
   const headline: (CompareHeadline | string)[] = [''];
@@ -120,7 +71,7 @@ const legend=computed(() => {
   return modifiedElements.value[0].slice(1);
 
 });
-const amountStyle=computed(() =>{
+const amountStyle=computed(() => {
 
   return {
     '--amount': props.elements.length,
@@ -128,14 +79,14 @@ const amountStyle=computed(() =>{
 
 });
 
-function elementsLength(getLength: boolean) {
+function elementsLength (getLength: boolean) {
 
   return getLength ? props.elements.length + 1 : false;
 
 }
 
 // eslint-disable-next-line class-methods-use-this
-function componentType(lineIndex: number) {
+function componentType (lineIndex: number) {
 
   if (lineIndex === 0) return 'h3';
 
@@ -145,6 +96,56 @@ function componentType(lineIndex: number) {
 
 
 </script>
+<template>
+  <section :id="id" class="lila-compare-module lila-module">
+
+    <lila-textblock-partial v-bind="textblock" />
+
+    <section v-if="modifiedElements" class="compare-container">
+
+      <ul class="legend">
+        <li v-for="(head, index) in legend" :key="`headline-${index}`">
+          <h3>{{ index + 1 }}*</h3>
+          <h3>{{ head.headline }}</h3>
+        </li>
+      </ul>
+
+      <table>
+
+        <tbody>
+
+          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle"
+            v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
+
+            <td :class="{ structure: singleIndex === 0 }" :colspan="elementsLength(line.length === 1)"
+              v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`">
+
+              <template v-if="single.headline || single.description">
+                <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
+                <p v-if="single.description">{{ single.description }}</p>
+                <h4 class="index">{{ singleIndex }}*</h4>
+              </template>
+              <template v-else>
+                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'"
+                  class="icon checkbox-checked_color1">yes</lila-icons-partial>
+                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'"
+                  class="icon cancel_color1">no</lila-icons-partial>
+                <template v-else><abbr :title="single">{{ single }}</abbr></template>
+              </template>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </section>
+
+  </section>
+</template>
+
 <style lang="less" scoped>
 
 

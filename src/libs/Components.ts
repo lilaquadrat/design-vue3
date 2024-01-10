@@ -1,4 +1,5 @@
-import Vue from 'vue';
+// import Vue from 'vue';
+import { createApp } from 'vue';
 
 
 class Components {
@@ -15,8 +16,10 @@ class Components {
   }
 
   static single (component: any, type: 'module' | 'partial', namespace?: string) {
+    const app = createApp({});
 
-    Vue.component(
+    //Vue.component(
+    app.component(
       Components.getName(component.name, type, namespace),
       component.component,
     );

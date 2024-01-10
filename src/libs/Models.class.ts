@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import type GenericModel from '@interfaces/GenericModel.interface';
+import type GenericModel from '@lilaquadrat/studio/lib/interfaces';
 import hardCopy from '../mixins/hardCopy';
 
 type DeclarationTypes = 'string' | 'number' | 'boolean' | 'object';

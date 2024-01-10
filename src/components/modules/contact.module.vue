@@ -1,10 +1,13 @@
 <script setup lang="ts">
+
+import { Agreement, GenericData, List, ListPartiticpantsDetails, Editor } from '@lilaquadrat/studio/lib/interfaces';
+import ModelsClass from '../../libs/Models.class.ts';
+import StudioSDK from '../../libs/StudioSDK.ts';
 import type Textblock from '@interfaces/textblock.interface';
 import Contact from '../../models/Contact.model.ts';
 import Address from '../../models/Address.model.ts'; 
-import ModelsClass from '../../libs/Models.class.ts';
-import StudioSDK from '../../libs/StudioSDK.ts';
-
+import { ErrorsObject } from '@libs/ActionNotice';
+import ListCategoryExtended from '@interfaces/ListCategoryExtended.interface';
 import { computed, onBeforeMount } from 'vue';
 
 
@@ -12,7 +15,8 @@ const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;
     genericData: GenericData;
-    editor:string[],
+    editor:{modes: string[]},
+    state: string
 }>();
 let model: Contact = null;
 let addressModel: Address = null;
@@ -74,6 +78,7 @@ const selectCategories = computed(() => {
 });
 const feedback = computed(() => {
   if(props.genericData?.editor && props.genericData?.data && Array.isArray(genericData?.editor)){
+    console.log('props.genericData:', props.genericData)
     return props.genericData.data[props.genericData.editor[0]]
   }
 
@@ -110,6 +115,7 @@ const mainErrors = computed(() => {
 
 
 onBeforeMount(() => {
+  
   model = ModelsClass.add({}, 'contact');
   addressModel = ModelsClass.add({}, 'address');
   // emit('contact', ModelsClass.add({}));
@@ -124,11 +130,11 @@ function resetForm () {
 //    props.addressModel = ModelsClass.add({}, 'address');
 //    props.errors = null;
 //    props.errorsObject = {};
-  emit('');// props.state = ''
-  emit('contact', ModelsClass.add({})); // this.model = ModelsClass.add({}, 'contact');
-  emit('address', ModelsClass.add({})); // this.addressModel = ModelsClass.add({}, 'address');
-  emit(null) //this.errors = null;
-  emit({}) // this.errorsObject = {};
+  state = '';
+  model = ModelsClass.add({}, 'contact');
+  addressModel = ModelsClass.add({}, 'address');
+  errors = null;
+  errorsObject = {};
    
 }
 
@@ -170,8 +176,8 @@ function updateAgreements () {
 
 const getparticipantsState = async () => {
   console.log('props:', props);
-  console.log('props.state:', props.state);
-  console.log('props.$store.state.api:', props.$store.state.api);
+  console.log('props.values', Object.values(props));
+  console.log('props.$store.state.api:', $store.state.api);
 
   const sdk = new StudioSDK('design', props.$store.state.api);
 
@@ -198,7 +204,7 @@ const getparticipantsState = async () => {
 };
 const handleForm = async (event: Event): void => {
   event.preventDefault();
-  emit('state', '');//this.state = ''
+  state = '';//this.state = ''
 
   const address = ModelsClass.save(props.addressModel, 'address');
   const customer = ModelsClass.save({...props.model, ...address}, 'contact');
