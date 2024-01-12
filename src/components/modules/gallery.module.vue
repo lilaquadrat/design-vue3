@@ -4,7 +4,9 @@ import type Textblock from '@interfaces/textblock.interface';
 import dom from '@/functions/lila-dom';
 
 import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
+import useMainStore from '@/stores/main.store';
 
+const store = useMainStore();
 const props = defineProps<{
   textblock?: Textblock;
   elements: GalleryElement[];
@@ -61,22 +63,17 @@ const indicatorsTop = computed((): { [key: string]: string } => {
   };
 });
 /** checks if any elements has a description */
-const elementDescription = computed((): boolean => {
-  return !!props.elements.find((single: any) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length);
-});
-const variant2 = computed((): boolean => {
-  return props.variant?.includes('variant2');
-});
-const fullscreenOverlayEnabled = computed(() => {
-  return !props.variant?.includes('disableOverlay');
-});
+const elementDescription = computed(() => !!props.elements.find((single) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length));
+const variant2 = computed((): boolean => !!props.variant?.includes('variant2'));
+const simpleIndicator = computed((): boolean => !!props.variant?.includes('simpleIndicator'));
+const noControls = computed((): boolean => !!props.variant?.includes('disableControls'));
+const fullscreenOverlayEnabled = computed(() => !props.variant?.includes('disableOverlay'));
 
 function toggleFullscreenOverlay () {
   fullscreenOverlay.value = !fullscreenOverlay.value;
-  emit('fullscreen', fullscreenOverlay); //  was this.$root.$emit
-  nextTick().then(() => {
-    setControlsTop();
-  });
+  store.setFullscreen(fullscreenOverlay.value);
+
+  nextTick().then(() => setControlsTop());
 }
 
 function pictureLoaded (): void {
@@ -100,7 +97,7 @@ function touchstart (event: TouchEvent): void {
   const unifiedEvent = getEvent(event);
   const target = unifiedEvent.target as HTMLElement;
 
-  if (target.tagName === 'A') return;
+  if (target.tagName === 'A' || target.closest('button')) return;
 
   swipeX.value = unifiedEvent.clientX;
   dragging.value = true;
@@ -115,7 +112,7 @@ function swipe (event: TouchEvent): void {
   const target = unifiedEvent.target as HTMLElement;
 
   // If the target is a link ('A' tag), exit the function to allow normal link behavior
-  if (target.tagName === 'A') return;
+  if (target.tagName === 'A' || target.closest('button')) return;
   event.preventDefault();
 
   // Set dragging flag to false indicating the swipe action is complete
@@ -158,7 +155,7 @@ function drag (event: TouchEvent): void {
   const unifiedEvent = getEvent(event);
   const target = unifiedEvent.target as HTMLElement;
 
-  if (target.tagName === 'A') return;
+  if (target.tagName === 'A' || target.closest('button')) return;
 
   tempSwipe.value = Math.round(unifiedEvent.clientX - swipeX.value);
 }
@@ -237,16 +234,22 @@ function indicatorchange (index: number): void {
         </div>
       </section>
 
-      <div v-if="!variant2" class="indexIndicator">
-        <lila-button-partial class="toggleFullscreen" v-if="fullscreenOverlayEnabled" colorScheme="transparent" :icon="true" @click="toggleFullscreenOverlay">
-          <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
-        </lila-button-partial>
-        <span class="currentIndex">{{ $helpers.leadingZero(currentOptionIndex + 1, 2) }}</span>
-        <span class="seperator"></span>
-        <span class="allIndex">{{ $helpers.leadingZero(elements.length, 2) }}</span>
+      <div v-if="simpleIndicator" class="carousel-indicators carousel-indicators-numbers">
+        <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
       </div>
 
-      <div v-if="!variant2 && firstLoad" :style="controlsTop" class="gallery-controls">
+      <div v-if="!variant2" class="indexIndicator">
+        <lila-button-partial v-if="fullscreenOverlayEnabled" colorScheme="transparent" icon @click="toggleFullscreenOverlay">
+          <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
+        </lila-button-partial>
+        <template v-if="!simpleIndicator">
+          <span class="currentIndex">{{ $helpers.leadingZero(currentOptionIndex + 1, 2) }}</span>
+          <span class="seperator" />
+          <span class="allIndex">{{ $helpers.leadingZero(elements.length, 2) }}</span>
+        </template>
+      </div>
+
+      <div v-if="!variant2 && firstLoad && !noControls" :style="controlsTop" class="gallery-controls">
         <lila-button-partial icon :class="{ active: currentOptionIndex > 0 }" @click="change('less')">
           <lila-icons-partial colorScheme="white" type="arrow-left" />
         </lila-button-partial>
@@ -285,9 +288,6 @@ function indicatorchange (index: number): void {
   position: relative;
   display: grid;
 
-  grid-template-rows: max-content 25px;
-  grid-template-columns: 100%;
-
   gap: 20px 0;
   justify-content: center;
   justify-items: center;
@@ -306,73 +306,129 @@ function indicatorchange (index: number): void {
     opacity 0.5s ease;
   transition-delay: 0.3s;
 
-  // @media @desktop {
-  //   grid-template-columns: auto 125px;
-  // }
+  .content-container,
+  .elements,
+  .element {
+    grid-template-columns: 1fr 120px;
+    grid-template-rows: 1fr 80px;
+
+    @media @desktop {
+      grid-template-columns: 1fr 185px;
+      grid-template-rows: 1fr 80px;
+    }
+
+    gap: 0 10px;
+  }
+
+  .elements,
+  .scroll-container {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
 
   .content-container {
     display: grid;
     overflow: hidden;
     max-width: @moduleWidth_M;
+    position: relative;
   }
 
-  // &.hasElementDescription {
+  .indexIndicator {
+    .font-normal;
+    position: absolute;
 
-  //   .elements {
+    display: flex;
 
-  //     .element {
-  //       grid-template-rows: max-content max-content;
-  //       background-color: @white;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 3;
 
-  //       @media @desktop {
-  //         grid-template-rows: max-content 90px;
-  //         grid-column-end: 2;
-  //       }
+    width: 100%;
+    height: 100%;
 
-  //       .lila-textblock::v-deep {
-  //         grid-column-start: 1;
-  //         grid-column-end: 3;
+    gap: 5px;
 
-  //         .multi(padding, 4, 8);
+    .multi(padding, 4);
 
-  //         @media @desktop {
-  //           grid-column-end: 2;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   &.variant2 {
+    background-color: @white;
 
-  //     .elements {
+    align-content: start;
+    justify-content: end;
 
-  //       .element {
-  //         grid-template-rows: max-content;
-  //         background-color: transparent;
-  //       }
-  //     }
+    span {
+      display: grid;
+      font-size: @fontText;
 
-  //   }
-  // }
+      align-content: center;
+      align-self: center;
 
-  // &.disableOverlay {
+      &.seperator {
+        display: grid;
+        width: 2px;
+        height: 20px;
+        background-color: @grey;
+      }
+    }
+  }
 
-  //   .elements {
+  .carousel-indicators {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
 
-  //     .element {
+    align-self: end;
 
-  //       @media @desktop {
-  //         grid-template-columns: auto 185px;
-  //       }
-  //     }
-  //   }
+    justify-content: end;
+    justify-self: center;
 
-  // }
+    grid-row-start: 1;
+    grid-row-end: 2;
 
+    .multi(padding, 4);
+
+    :deep(.lila-button) {
+      width: 15px;
+      height: 15px;
+      border-radius: 100%;
+
+      background-color: @grey;
+
+      &:hover {
+        background-color: @color3;
+      }
+
+      &.active {
+        background-color: @color1;
+
+        &:hover {
+          background-color: @color3;
+        }
+      }
+    }
+  }
   .elements {
-
     display: grid;
+    position: relative;
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    .scroll-container {
+      --n: 1;
+      width: 100%;
+      width: calc(var(--n) * 100%);
+
+      transform: translate(calc(var(--i, 0) / var(--n) * -100% + var(--ts, 0px)));
+
+      &.transition {
+        .trans(transform);
+      }
+    }
     .element {
-      .picture-description::v-deep {
+      :deep(.picture-description) {
         h3 {
           color: @textColor;
         }
@@ -384,22 +440,14 @@ function indicatorchange (index: number): void {
 
       display: grid;
 
-      grid-template-rows: max-content;
-      grid-template-columns: auto 95px;
-
-      gap: 0 10px;
-
       float: left;
       width: var(--width);
+
+      height: 100%;
 
       opacity: 1;
 
       pointer-events: none;
-
-      @media @desktop {
-        grid-template-rows: max-content;
-        grid-template-columns: auto 185px;
-      }
 
       &.selected {
         picture {
@@ -410,14 +458,21 @@ function indicatorchange (index: number): void {
       .picture-container {
         grid-column-start: 1;
         grid-column-end: 3;
+        position: relative;
       }
 
-      // .lila-textblock::v-deep {
-      //   grid-row-start: 2;
-      //   .multi(padding, 4, 0, 4, 4);
-      // }
+      :deep(.lila-textblock) {
+        grid-column-start: 1;
+        grid-column-end: 2;
 
-      .lila-figure::v-deep {
+        .multi(padding, 4);
+
+        @media @desktop {
+          .multi(padding, 4, 8);
+        }
+      }
+
+      :deep(.lila-figure) {
         overflow: hidden;
         min-height: 100px;
 
@@ -460,84 +515,18 @@ function indicatorchange (index: number): void {
     }
   }
 
-  // &.fullscreen {
-
-  //   max-height: var(--realHeight);
-
-  //   .elements {
-
-  //     .element {
-
-  //       .lila-figure::v-deep {
-  //         max-height: 100%;
-  //       }
-  //     }
-  //   }
-
-  // }
-
-  // &.variant2 {
-
-  //   .gallery-controls {
-
-  //     button {
-
-  //       .trans(background);
-
-  //       display: grid;
-
-  //       align-self: center;
-
-  //       width: 35px;
-  //       height: 35px;
-  //       pointer-events: inherit;
-
-  //       &.control {
-  //         background-color: transparent;
-
-  //         .icon::v-deep {
-
-  //           svg {
-  //             fill: @color1;
-  //           }
-  //         }
-
-  //         &:hover {
-  //           background-color: transparent;
-
-  //           .icon {
-
-  //             svg {
-  //               fill: @color3;
-  //             }
-  //           }
-  //         }
-  //       }
-
-  //       .icon {
-  //         width: 35px;
-  //         height: 35px;
-  //       }
-
-  //       &.active {
-  //         opacity: 1;
-  //       }
-
-  //       &:hover {
-  //         background-color: @color3;
-  //       }
-
-  //       &:last-child {
-  //         justify-self: end;
-  //       }
-  //     }
-
-  //   }
-
-  // }
-
   .gallery-controls {
     max-width: @moduleWidth_M;
+
+    position: absolute;
+
+    top: var(--top);
+
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    width: 100%;
+    transform: translateY(-50%);
 
     .lila-button {
       .trans(background);
@@ -549,10 +538,6 @@ function indicatorchange (index: number): void {
 
       background-color: @color1;
       opacity: 0.5;
-
-      .lila-icons-partial::v-deep {
-        justify-self: center;
-      }
 
       &.active {
         opacity: 1;
@@ -568,206 +553,62 @@ function indicatorchange (index: number): void {
     }
   }
 
-  &.variant2 {
+  &.simpleIndicator {
     .indexIndicator {
-      display: none;
-    }
-  }
-
-  &.hasElementDescription {
-    .indexIndicator {
-      .multi(padding, 0, 8);
-
-      grid-row-start: 3;
-
-      @media @desktop {
-        position: absolute;
-        grid-row-start: 2;
-        background-color: @white;
-        .multi(padding, 4, 7);
-      }
-    }
-  }
-
-  &.hasElementDescription {
-    .indexIndicator {
-      .multi(padding, 0, 8);
-
-      grid-row-start: 3;
-
-      @media @desktop {
-        position: absolute;
-        grid-row-start: 2;
-        background-color: @white;
-        .multi(padding, 4, 7);
-      }
-    }
-  }
-
-  &.fullscreenOverlay.fullscreenOverlayEnabled {
-    .indexIndicator {
-      .multi(padding, 4, 8);
-
-      //     // position: absolute;
-      //     grid-row-start: 2;
-      //     grid-column-start: 2;
-      //     // background-color: @white;
-      //     .multi(padding, 4, 7);
-    }
-  }
-
-  .indexIndicator {
-    .font-normal;
-
-    .multi(padding, 0, 8);
-
-    position: absolute;
-
-    display: grid;
-    grid-template-rows: min-content;
-
-    grid-template-columns: min-content auto min-content;
-    grid-row-start: 2;
-
-    grid-column-start: 1;
-
-    gap: 10px;
-
-    align-self: end;
-
-    justify-content: end;
-    justify-self: end;
-
-    width: 100%;
-
-    @media @desktop {
-      grid-column-start: 2;
-
-      height: 100%;
-      // grid-row-start: 2;
-
-      // .multi(padding, 0, 7);
-    }
-
-    span {
-      display: inline-block;
-      font-size: @fontText;
-
-      &.seperator {
-        width: 2px;
-        height: 100%;
-        background-color: @grey;
-      }
-    }
-  }
-
-  .gallery-controls {
-    position: absolute;
-
-    top: var(--top);
-
-    display: grid;
-    grid-template-columns: 50% 50%;
-
-    width: 100%;
-    transform: translateY(-50%);
-    // height: 40px;
-  }
-
-  // &.variant2 {
-  //   .gallery-controls {
-  //     position: relative;
-  //     grid-template-rows: minmax(55px, min-content) min-content;
-  //     grid-template-columns: auto;
-
-  //     grid-row-start: 2;
-  //     grid-row-end: 2;
-
-  //     gap: 10px;
-
-  //     width: 100%;
-
-  //     height: auto;
-
-  //     transform: translateY(0);
-
-  //     @media @desktop {
-  //       grid-column-start: 1;
-  //       grid-column-end: 3;
-  //     }
-
-  //     .row-container {
-  //       display: grid;
-  //       grid-template-columns: min-content minmax(50px, max-content) min-content;
-  //       gap: 10px;
-
-  //       justify-content: center;
-
-  //       text-align: center;
-
-  //       h4 {
-  //         align-self: center;
-  //         justify-self: center;
-  //       }
-  //     }
-
-  //     .carousel-indicators {
-  //       display: flex;
-  //       flex-direction: row-reverse;
-  //       flex-wrap: wrap;
-  //       grid-row-start: 2;
-  //       gap: 10px;
-
-  //       align-self: center;
-
-  //       justify-content: end;
-  //       justify-self: center;
-
-  //       &.gap {
-  //         gap: 20px;
-  //       }
-
-  //       button {
-  //         width: 10px;
-  //         height: 10px;
-  //         border-radius: 100%;
-  //       }
-  //     }
-  //   }
-  // }
-
-  &.hasElementDescription {
-    .elements {
       grid-row-start: 1;
-      grid-row-end: 3;
+      grid-row-end: 2;
+
+      height: 80px;
+      background-color: transparent;
+
+      :deep(.lila-button) {
+        background-color: @white;
+      }
+    }
+
+    &:not(.fullscreenOverlay) {
+      .elements {
+        .element {
+          .lila-textblock {
+            grid-column-end: 3;
+          }
+        }
+      }
+    }
+
+    &.fullscreenOverlay {
+
+      &.hasElementDescription {
+        .carousel-indicators {
+          background-color: @white;
+          grid-row-start: 2;
+          grid-row-end: 3;
+  
+          grid-column-start: 2;
+          grid-column-end: 3;
+  
+          width: 100%;
+          height: 100%;
+  
+          align-self: start;
+        }
+
+       }
+
     }
   }
 
-  // &.variant2 {
-  //   &.hasElementDescription {
-  //     .elements {
-  //       grid-row-end: 2;
-  //     }
-  //   }
-  // }
+  &.noControls.simpleIndicator:not(.hasElementDescription) {
+    .content-container,
+    .elements,
+    .element {
+      grid-template-columns: 1fr 120px;
+      grid-template-rows: 1fr;
 
-  .elements {
-    position: relative;
-    grid-column-start: 1;
-    grid-column-end: 3;
-
-    .scroll-container {
-      --n: 1;
-      width: 100%;
-      width: calc(var(--n) * 100%);
-
-      transform: translate(calc(var(--i, 0) / var(--n) * -100% + var(--ts, 0px)));
-
-      &.transition {
-        .trans(transform);
+      @media @desktop {
+        grid-template-columns: 1fr 185px;
+        grid-template-rows: 1fr;
       }
-
-      .clearfix;
     }
   }
 
@@ -775,160 +616,99 @@ function indicatorchange (index: number): void {
     max-width: @moduleWidth_Full;
   }
 
-  .picture-container {
-    position: relative;
-  }
+  &.fullscreenOverlay.fullscreenOverlayEnabled {
+    .index(9);
 
-  // &.variant2 {
-  //   grid-template-rows: max-content max-content;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-  //   @media @desktop {
-  //     grid-template-columns: auto;
-  //     gap: 20px;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
 
-  //     &.hasElementDescription {
-  //       background-color: transparent;
-  //     }
-  //   }
-  // }
+    background-color: @white;
 
-  &.hasElementDescription {
-    grid-template-rows: max-content 90px 20px;
+    &:first-child {
+      margin: 0;
+    }
 
-    @media @desktop {
-      grid-template-rows: max-content 90px;
-      gap: 0;
-      background-color: @white;
+    .indexIndicator {
+      @media @desktop {
+        .multi(padding, 4, 8);
+      }
+        span {
+          align-self: start;
+        }
+    }
+
+    .gallery-controls {
+      height: 40px;
+    }
+
+    .content-container,
+    .gallery-controls {
+      max-width: 100%;
+    }
+    .content-container {
+      height: 100vh;
+      grid-template-rows: calc(100% - 90px) 90px;
+    }
+
+    .elements {
+      .element {
+        grid-template-rows: 1fr;
+
+        height: 100%;
+
+        &.hasDescription {
+          grid-template-rows: 1fr 90px;
+        }
+
+        .placeholder {
+          display: none;
+        }
+
+        .picture-container {
+          overflow: hidden;
+
+          :deep(.lila-figure) {
+            grid-template-rows: 100%;
+            overflow: visible;
+            min-height: auto;
+            max-height: 100%;
+
+            &.picture {
+              position: relative;
+
+              img {
+                position: relative;
+                top: unset;
+                left: unset;
+                align-self: center;
+                justify-self: center;
+                min-width: auto;
+                max-width: 100%;
+                min-height: auto;
+                max-height: 100%;
+                transform: none;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .scroll-container {
+      @media @desktop {
+        height: 100%;
+      }
     }
   }
-
-  // .picture-indicators {
-
-  //   position: absolute;
-
-  //   top: var(--top);
-  //   left: 0;
-  //   width: 100%;
-  //   text-align: center;
-  //   transform: translateY(-150%);
-
-  //   .indicator {
-
-  //     display: inline-block;
-
-  //     width: 10px;
-  //     height: 10px;
-
-  //     border: solid 1px @white;
-  //     .multi(margin, 1);
-
-  //     &.active {
-  //       background-color: @white;
-  //     }
-  //   }
-  // }
-
-  // &.fullscreenOverlayEnabled {
-  //   grid-template-columns: auto 185px;
-
-  //   .indexIndicator {
-  //     grid-template-rows: 20px;
-  //     grid-template-columns: 35px 25px 3px 25px;
-
-  //     .currentIndex {
-  //       justify-self: end;
-  //     }
-
-  //     .toggleFullscreen {
-  //       margin-top: -6.5px;
-  //     }
-
-  //     span {
-  //       display: grid;
-  //     }
-  //   }
-
-  // }
-
-  // &.fullscreenOverlay.fullscreenOverlayEnabled {
-
-  //   .index(9);
-
-  //   position: fixed;
-  //   top: 0;
-  //   left: 0;
-
-  //   display: grid;
-  //   align-content: center;
-  //   justify-content: center;
-  //   overflow: hidden;
-  //   width: 100vw;
-  //   max-width: 100vw;
-  //   height: 100vh;
-  //   max-height: 100vh;
-
-  //   background-color: @white;
-
-  //   &:first-child {
-  //     margin: 0;
-  //   }
-
-  //   .placeholder {
-  //     display: none;
-  //   }
-
-  //   .elements {
-
-  //     .element {
-  //       grid-template-rows: 1fr;
-
-  //       height: 100%;
-
-  //       &.hasDescription {
-  //         grid-template-rows: 1fr 90px;
-  //       }
-
-  //       .picture-container {
-  //         overflow: hidden;
-
-  //         .lila-figure::v-deep {
-  //           grid-template-rows: 100%;
-  //           overflow: visible;
-  //           min-height: auto;
-  //           max-height: 100%;
-
-  //           &.picture {
-  //             position: relative;
-
-  //             img {
-  //               position: relative;
-  //               top: unset;
-  //               left: unset;
-  //               align-self: center;
-  //               justify-self: center;
-  //               min-width: auto;
-  //               max-width: 100%;
-  //               min-height: auto;
-  //               max-height: 100%;
-  //               transform: none;
-  //             }
-  //           }
-  //         }
-  //       }
-
-  //     }
-  //   }
-
-  //   grid-template-rows: calc(100% - 90px) 90px;
-
-  //   .scroll-container {
-  //     height: calc(100% - 40px);
-
-  //     @media @desktop {
-  //       height: 100%;
-  //     }
-  //   }
-
-  // }
 }
 </style>

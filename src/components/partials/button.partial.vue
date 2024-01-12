@@ -1,5 +1,5 @@
 <template>
-    <button class="lila-button base" :disabled="disabled" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }]" @click="confirm">
+    <button class="lila-button base" :disabled="disabled" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
         <slot v-if="!showCheck && !confirmed" />
         <span v-if="showCheck">Please confirm your action.</span>
         <span v-if="confirmed">confirmed</span>
@@ -8,7 +8,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-// import { ExtPartial, Component, Prop } from '../libs/lila-partial';
+defineOptions({
+  inheritAttrs: false
+})
 
 const props = withDefaults(
   defineProps<{
@@ -40,7 +42,7 @@ const check = (): void => {
     showCheck.value = false;
     confirmed.value = true;
 
-    clearTimeout(timeout);
+    clearTimeout(timeout.value);
 
     timeout.value = window.setTimeout(() => {
 
@@ -49,11 +51,14 @@ const check = (): void => {
     }, 15000);
 
     emit('confirmed');
-    emit('click');
+    // emit('click');
 
   }
 };
-const confirm = (): void => {
+const confirm = (event: MouseEvent): void => {
+
+  console.log('confirm');
+  event.preventDefault();
 
   if (props.doublecheck) {
 
@@ -61,7 +66,6 @@ const confirm = (): void => {
 
   } else {
 
-    emit('confirmed');
     emit('click');
 
   }

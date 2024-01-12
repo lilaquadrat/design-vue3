@@ -11,7 +11,7 @@ const props = withDefaults(
   }>(),
   {
     colorScheme: 'colorScheme1',
-    size: 'medium'
+    size       : 'medium'
   }
 );
 // const props = defineProps({
@@ -64,6 +64,7 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
   display: grid;
   align-self: center;
   justify-content: center;
+  pointer-events: none;
 
   svg {
     align-self: center;
@@ -241,5 +242,6 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
     }
 
   }
+
 }
 </style>

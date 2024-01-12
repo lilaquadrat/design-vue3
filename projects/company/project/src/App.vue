@@ -20,6 +20,10 @@ body {
 
   font-size: @fontText;
   .lineHeight(@fontText, 1.5);
+
+  &.fullscreen {
+    overflow: hidden;
+  }
 }
 
 @page {

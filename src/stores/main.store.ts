@@ -18,6 +18,21 @@ export const useMainStore = defineStore('main', () => {
 
     fullscreen.value = value;
 
+    if (!document) return;
+
+    const { body } = document;
+
+    if (value) {
+
+      body.classList.add('fullscreen');
+
+    } else {
+
+      body.classList.remove('fullscreen');
+
+    }
+
+
   }
 
   return { 
