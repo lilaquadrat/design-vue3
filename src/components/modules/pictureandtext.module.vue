@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" :id="id" :class="[view, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
+  <section ref="element" :id="id" :class="[view, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
     <lila-picture-partial :fit="fitVariant" v-bind="picture" />
 
     <section class="grid-container">

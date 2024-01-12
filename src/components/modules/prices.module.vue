@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" :id="id" :class="[variant, view]" class="lila-prices-module lila-module">
+  <section ref="element" :id="id" :class="[variant, view]" class="lila-prices-module lila-module">
 
     <lila-textblock-partial v-bind="textblock"></lila-textblock-partial>
 
@@ -65,7 +65,7 @@ const props = defineProps<{
 
 
 // eslint-disable-next-line class-methods-use-this
-function highlight(element: { variant: string | string[]; }) {
+function highlight (element: { variant: string | string[]; }) {
 
   return element.variant?.includes('highlight');
 

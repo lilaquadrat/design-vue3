@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
 import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
+import { useInview } from '@/plugins/inview';
+import { ref } from 'vue';
 
+defineOptions({
+  inheritAttrs: false
+})
 
+let element = ref<HTMLElement>();
+const inviewState = useInview(element);
 const props = defineProps<{
   headline?: string
   subline?: string
@@ -34,14 +41,8 @@ const listVariant = (type: 'list' | 'links') => {
 }; 
 
 </script>
-<script lang="ts">
-  export default {
-    inheritAttrs: false,
-  };
-</script>
-
 <template>
-  <article class="lila-text-module lila-module">
+  <article ref="element" class="lila-text-module lila-module" :class="[inviewState]">
 
     <lila-textblock-partial v-bind="props" />
     <lila-list-partial v-bind="list" mode="list" :variant="listVariant('list')"></lila-list-partial>

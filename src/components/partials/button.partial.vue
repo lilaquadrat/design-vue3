@@ -1,10 +1,3 @@
-<template>
-    <button class="lila-button base" :disabled="disabled" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
-        <slot v-if="!showCheck && !confirmed" />
-        <span v-if="showCheck">Please confirm your action.</span>
-        <span v-if="confirmed">confirmed</span>
-    </button>
-</template>
 <script setup lang="ts">
 import { ref } from 'vue';
 
@@ -72,11 +65,14 @@ const confirm = (event: MouseEvent): void => {
 };
 
 </script>
-
-
+<template>
+  <button class="lila-button base" :disabled="disabled" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
+      <slot v-if="!showCheck && !confirmed" />
+      <span v-if="showCheck">Please confirm your action.</span>
+      <span v-if="confirmed">confirmed</span>
+  </button>
+</template>
 <style lang="less" scoped>
-
-
 .lila-button {
 
   border: none;

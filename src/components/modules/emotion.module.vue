@@ -1,6 +1,84 @@
+<script setup lang="ts">
+import {useInview} from '@/plugins/inview';
+import checkInview from '../../mixins/checkin';
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import type Video from '@interfaces/video.interface';
+import { computed, onMounted, ref, watch } from 'vue';
+
+const props = defineProps<{
+  textblock?: Textblock;
+
+  video?: Video;
+
+  background?: Picture;
+
+  picture?: Picture;
+
+  links?: Link[];
+  variant: string[];
+}>();
+let element = ref<HTMLElement>();
+let fullscreen: boolean = false;
+const inviewState = useInview(element, props.variant?.includes('align'));
+
+// watch(() => props, contentFunction);
+
+// function contentFunction (): void {
+
+//   if (props.variant?.includes('align')) {
+
+//     fullscreen = true;
+
+//   }
+
+//   checkInview(element.value);
+
+// }
+
+// onMounted(() => {
+
+//   if (props.variant?.includes('align')) {
+
+//     fullscreen = true;
+
+//   }
+
+// });
+
+function scrollToNext (): void {
+
+  const next = element.value?.nextSibling as Element;
+
+  next.scrollIntoView({
+    behavior: 'smooth',
+  });
+
+}
+
+const scrollNotice = computed((): boolean => {
+
+  return props.variant?.includes('scrollNotice');
+
+}); 
+const filteredLinks = computed(() => {
+
+  let filteredLinks: Link[] | undefined = props.links?.filter((link) => !!link.text);
+
+  if (!Array.isArray(filteredLinks)) filteredLinks = undefined;
+  if (!filteredLinks?.length) filteredLinks = undefined;
+
+  return filteredLinks;
+
+});
+
+
+</script>
 <template>
-  <section ref="el" :id="id" :class="[view, fontVariant, variant, { hasImage: background }]"
+  <section ref="element" :class="[inviewState, props.variant, { hasImage: background }]"
     class="lila-module emotion-module fullscreen">
+
 
     <lila-picture-partial class="background" v-if="background" v-bind="background" />
     <lila-video-partial class="background" v-if="video" v-bind="video" />
@@ -13,124 +91,22 @@
       <ul v-if="filteredLinks" class="list-links">
         <li v-for="(single, index) in filteredLinks" :key="`emotion-link-${index}`">
 
-          <lila-button-partial class="more" @click="scrollToNext" v-if="single.link === '#more'">{{ single.text
-          }}</lila-button-partial>
+          <lila-button-partial class="more" @click="scrollToNext" v-if="single.link === '#more'">{{ single.text }}</lila-button-partial>
           <lila-link-partial v-if="single.link !== '#more'" v-bind="single"></lila-link-partial>
 
         </li>
       </ul>
 
-      <slot></slot>
+      <slot />
 
     </div>
 
-    <lila-button-partial @click="scrollToNext" v-if="scrollNotice" class="scrollButton">
-      <lila-icons-partial colorScheme="white" size="large" type="mouse"></lila-icons-partial>
+    <lila-button-partial @click="scrollToNext" icon v-if="scrollNotice" class="scrollButton">
+      <lila-icons-partial colorScheme="white" size="large" type="mouse" />
     </lila-button-partial>
 
   </section>
 </template>
-<script setup lang="ts">
-import checkInview from '../../mixins/checkin';
-import type Link from '@interfaces/link.interface';
-import type Picture from '@interfaces/picture.interface';
-import type Textblock from '@interfaces/textblock.interface';
-import type Video from '@interfaces/video.interface';
-import { computed, onMounted, ref, watch } from 'vue';
-
-const props = defineProps<{
-  fontVariant: string[];
-
-  textblock: Textblock;
-
-  video: Video;
-
-  background: Video;
-
-  picture: Picture;
-
-  links: Link[];
-  variant: string[];
-}>();
-let el = ref(null);
-let fullscreen: boolean = false;
-
-watch('content', contentFunction);
-
-function contentFunction(): void {
-
-  if (props.variant?.includes('align')) {
-
-    fullscreen = true;
-
-  }
-
-  checkInview(el);
-
-}
-
-onMounted(() => {
-
-  if (props.variant?.includes('align')) {
-
-    fullscreen = true;
-
-  }
-
-
-  checkInview(el);
-
-});
-
-function scrollToNext(): void {
-
-  const next = el.value.nextSibling as Element;
-
-  next.scrollIntoView({
-    behavior: 'smooth',
-  });
-
-}
-
-const scrollNotice = computed((): boolean => {
-
-  return props.variant?.includes('scrollNotice');
-
-}); const backgroundStyle = computed((): string => {
-
-  let style: string = '';
-
-  if (props.background) {
-
-    style = `background-image: url(${props.background?.src});`;
-    Object.keys(props.background).forEach((key) => {
-
-      const single = props.background.source[key];
-
-      style += `
-        @media (${single.media}) {
-          background-image: url(${single.source});
-        }`;
-
-    });
-
-  }
-
-  return style;
-
-}); const filteredLinks = computed(() => {
-
-  let filteredLinks: Link[] | null = props.links?.filter((link) => !!link.text);
-
-  if (!Array.isArray(filteredLinks)) filteredLinks = null;
-  if (!filteredLinks?.length) filteredLinks = null;
-
-  return filteredLinks;
-
-});
-
-
-</script>
 <style lang="less" scoped>
 
 
@@ -147,13 +123,21 @@ const scrollNotice = computed((): boolean => {
 
   .modulePadding('full');
 
+  ul {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    justify-content: start;
+
+  }
+
   @media @tablet,
   @desktop {
     padding: 40px @modulePaddingExt;
   }
 
-  video,
-  figure.background::v-deep {
+  :deep(figure.background), :deep(video) {
     position: absolute;
     top: 0;
     left: 0;
@@ -174,6 +158,26 @@ const scrollNotice = computed((): boolean => {
       overflow: hidden;
       width: 100%;
       height: 100%;
+    }
+
+  }
+
+  .position-container {
+    position: relative;
+
+    display: grid;
+    gap: 20px;
+    align-self: end;
+    justify-self: center;
+
+    width: 100%;
+
+    max-width: @desktopWidthExt;
+
+    picture {
+      img {
+        max-height: 30vh;
+      }
     }
 
   }
@@ -226,21 +230,7 @@ const scrollNotice = computed((): boolean => {
     max-width: @moduleWidth_S;
   }
 
-  &.bright::v-deep {
-
-    h1,
-    h2,
-    h3,
-    p {
-      color: @white;
-    }
-
-    h1 {
-
-      &:after {
-        background-color: @white;
-      }
-    }
+  &.bright {
 
     a:not(.callToAction),
     .more {
@@ -254,37 +244,16 @@ const scrollNotice = computed((): boolean => {
     }
   }
 
-  &.dark::v-deep {
+  &.dark {
 
     a:not(.callToAction),
     .more {
-      .trans(color);
-      color: @color1;
+        .trans(color);
+        color: @color1;
 
-      &:hover {
-        color: @color3;
-      }
-    }
-
-  }
-
-  .position-container {
-    position: relative;
-
-    display: grid;
-    gap: 20px;
-    align-self: end;
-    justify-self: center;
-
-    width: 100%;
-
-    max-width: @desktopWidthExt;
-
-    picture {
-
-      img {
-        max-height: 30vh;
-      }
+        &:hover {
+          color: @color3;
+        }
     }
 
   }
@@ -412,26 +381,5 @@ const scrollNotice = computed((): boolean => {
 
   }
 
-  &.textBackground {
-
-    .lila-textblock {
-
-      width: auto;
-
-      background-color: rgba(255, 255, 255, .8);
-      .multi(padding, 4);
-
-    }
-
-  }
-
-  ul {
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    justify-content: start;
-
-  }
 }
 </style>

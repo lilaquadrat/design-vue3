@@ -1,5 +1,52 @@
+<script setup lang="ts">
+
+import type Link from '@interfaces/link.interface';
+import type Picture from '@interfaces/picture.interface';
+import type Textblock from '@interfaces/textblock.interface';
+import { computed, ref } from 'vue';
+import { useInview } from '@/plugins/inview';
+
+const props = defineProps<{
+
+  textblock: Textblock;
+
+  picture: Picture;
+
+  link?: Link;
+
+  author: string;
+
+  date: string;
+  id?: string;
+}>();
+let element = ref<HTMLElement>();
+const inviewState = useInview(element);
+const textTop = computed(() => {
+
+  return {
+    headline: props.textblock?.headline,
+    subline : props.textblock?.subline,
+  };
+
+});
+const textBottom = computed(() => {
+
+  return {
+    intro: props.textblock?.intro,
+    text : props.textblock?.text,
+  };
+
+});
+const linkExists = computed(() => {
+
+  return !!props.link?.link;
+
+});
+
+
+</script>
 <template>
-  <article ref="el" :id="id" :class="[view, { hasImage: picture }]" class="lila-blog-intro-module lila-module">
+  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture }]" class="lila-blog-intro-module lila-module">
 
     <header>
       <template v-if="!linkExists">
@@ -26,61 +73,6 @@
 
   </article>
 </template>
-<script setup lang="ts">
-
-import type Link from '@interfaces/link.interface';
-import type Picture from '@interfaces/picture.interface';
-import type Textblock from '@interfaces/textblock.interface';
-import { computed, onMounted, ref } from 'vue';
-import checkInview from '../../mixins/checkin';
-
-const props = defineProps<{
-
-  textblock: Textblock;
-
-  picture: Picture;
-
-  link?: Link;
-
-  author: string;
-
-  date: string;
-  id?: string;
-  view?: string;
-
-}>();
- let el = ref(null);
-
-onMounted(()=>{
-
-  checkInview(el);
-
-});
-
-  const textTop=computed(()=>{
-
-  return {
-    headline: props.textblock?.headline,
-    subline: props.textblock?.subline,
-  };
-
-});
-  const textBottom=computed(()=>{
-
-  return {
-    intro: props.textblock?.intro,
-    text: props.textblock?.text,
-  };
-
-});
-  const linkExists=computed(()=> {
-
-  return !!props.link?.link;
-
-});
-
-
-</script>
 <style lang="less" scoped>
 
 
@@ -107,6 +99,11 @@ onMounted(()=>{
       gap: 10px;
     }
 
+  }
+
+  h1,
+  h2 {
+    margin-left: -2px;
   }
 
   .lila-textblock {
@@ -140,11 +137,6 @@ onMounted(()=>{
       max-width: 100%;
     }
 
-  }
-
-  h1,
-  h2 {
-    margin-left: -2px;
   }
 
   .lila-link {

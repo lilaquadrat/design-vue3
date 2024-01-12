@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" :id="id" @click="trigger" @keypress="trigger" :class="[variant, view, { started, controls }]"
+  <section ref="element" :id="id" @click="trigger" @keypress="trigger" :class="[variant, view, { started, controls }]"
     class="lila-video-module lila-module">
 
     <section class="video-container">
@@ -40,38 +40,38 @@ let playing: boolean = false;
 let started: boolean = false;
 let el = ref(null);
 
-onMounted((): void =>{
+onMounted((): void => {
 
   checkInview(el);
 
 });
 
 
-function trigger(): void {
+function trigger (): void {
 
   clickEvent = !clickEvent;
 
 }
 
-function toggle(event: boolean): void {
+function toggle (event: boolean): void {
 
   started = true;
   playing = event;
 
 }
 
-function ended(): void {
+function ended (): void {
 
   started = false;
 
 }
 
-  const hasPoster=computed(()=>{
+const hasPoster=computed(() => {
 
   return !!props.poster?.src;
 
 });
-  const controls=computed((): boolean|undefined =>{
+const controls=computed((): boolean|undefined => {
 
   return props.video?.attributes?.includes('controls');
 

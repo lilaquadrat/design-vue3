@@ -5,6 +5,7 @@ import dom from '@/functions/lila-dom';
 
 import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 import useMainStore from '@/stores/main.store';
+import { useInview } from '@/plugins/inview';
 
 const store = useMainStore();
 const props = defineProps<{
@@ -29,9 +30,10 @@ const swipeThreshold = ref<number>(0.2);
 const firstLoad = ref<boolean>(false);
 const fullscreenOverlay = ref<boolean>(false);
 const emit = defineEmits<{ (e: string, element: any): void }>();
-const mainElement = ref<HTMLElement>();
+const element = ref<HTMLElement>();
 const elementsContainer = ref<HTMLElement>();
 const scrollContainer = ref<HTMLElement>();
+const inviewState = useInview(element);
 
 watch(currentOptionIndex, indexChange);
 
@@ -179,17 +181,18 @@ onMounted(() => {
 
 function init (): void {
   window.addEventListener('resized', () => {
-    elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
 
+    elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
     setControlsTop();
+
   });
 
   elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
 
-  if (mainElement.value) {
-    dom.onElement('touchstart mousedown', mainElement.value, touchstart as EventListener);
-    dom.onElement('touchend mouseup', mainElement.value, swipe as EventListener);
-    dom.onElement('touchmove mousemove', mainElement.value, drag as EventListener);
+  if (element.value) {
+    dom.onElement('touchstart mousedown', element.value, touchstart as EventListener);
+    dom.onElement('touchend mouseup', element.value, swipe as EventListener);
+    dom.onElement('touchmove mousemove', element.value, drag as EventListener);
   }
 
   // if(mainElement.value) dom.onElement('touchmove', mainElement.value, touchmove as EventListener);
@@ -205,7 +208,7 @@ function indicatorchange (index: number): void {
 }
 </script>
 <template>
-  <section :id="id" ref="mainElement" class="gallery-module lila-module" :class="[variant, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
+  <section :id="id" ref="element" class="gallery-module lila-module" :class="[variant, inviewState, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
     <section ref="contentContainer" class="content-container">
       <section ref="elementsContainer" class="elements">
         <div ref="scrollContainer" :style="cssElementsLength" :class="{ transition: !dragging }" v-if="elements.length > 0" class="scroll-container">
@@ -238,7 +241,7 @@ function indicatorchange (index: number): void {
         <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
       </div>
 
-      <div v-if="!variant2" class="indexIndicator">
+      <div class="indexIndicator">
         <lila-button-partial v-if="fullscreenOverlayEnabled" colorScheme="transparent" icon @click="toggleFullscreenOverlay">
           <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
         </lila-button-partial>
@@ -249,7 +252,7 @@ function indicatorchange (index: number): void {
         </template>
       </div>
 
-      <div v-if="!variant2 && firstLoad && !noControls" :style="controlsTop" class="gallery-controls">
+      <div v-if="firstLoad && !noControls" :style="controlsTop" class="gallery-controls">
         <lila-button-partial icon :class="{ active: currentOptionIndex > 0 }" @click="change('less')">
           <lila-icons-partial colorScheme="white" type="arrow-left" />
         </lila-button-partial>
@@ -259,23 +262,6 @@ function indicatorchange (index: number): void {
         </lila-button-partial>
       </div>
 
-      <div v-if="variant2" class="container gallery-controls">
-        <div class="row-container">
-          <lila-button-partial class="one-left control" icon :class="{ active: currentOptionIndex > 0 }" @click="change('less')">
-            <lila-icons-partial colorScheme="colorScheme1" size="small" type="arrow-left" />
-          </lila-button-partial>
-
-          <h4>{{ currentHeadline }}</h4>
-
-          <lila-button-partial class="one-right control" icon :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')">
-            <lila-icons-partial colorScheme="colorScheme1" size="small" type="arrow-right" />
-          </lila-button-partial>
-        </div>
-
-        <div class="carousel-indicators carousel-indicators-numbers">
-          <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
-        </div>
-      </div>
     </section>
   </section>
 </template>
@@ -598,20 +584,6 @@ function indicatorchange (index: number): void {
     }
   }
 
-  &.noControls.simpleIndicator:not(.hasElementDescription) {
-    .content-container,
-    .elements,
-    .element {
-      grid-template-columns: 1fr 120px;
-      grid-template-rows: 1fr;
-
-      @media @desktop {
-        grid-template-columns: 1fr 185px;
-        grid-template-rows: 1fr;
-      }
-    }
-  }
-
   &.fullscreen {
     max-width: @moduleWidth_Full;
   }
@@ -651,13 +623,15 @@ function indicatorchange (index: number): void {
       height: 40px;
     }
 
-    .content-container,
-    .gallery-controls {
-      max-width: 100%;
-    }
     .content-container {
       height: 100vh;
       grid-template-rows: calc(100% - 90px) 90px;
+    }
+
+
+    .content-container,
+    .gallery-controls {
+      max-width: 100%;
     }
 
     .elements {
@@ -707,6 +681,20 @@ function indicatorchange (index: number): void {
     .scroll-container {
       @media @desktop {
         height: 100%;
+      }
+    }
+  }
+  
+  &.noControls.simpleIndicator:not(.hasElementDescription) {
+    .content-container,
+    .elements,
+    .element {
+      grid-template-columns: 1fr 120px;
+      grid-template-rows: 1fr;
+
+      @media @desktop {
+        grid-template-columns: 1fr 185px;
+        grid-template-rows: 1fr;
       }
     }
   }

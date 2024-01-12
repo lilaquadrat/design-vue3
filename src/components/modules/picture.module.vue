@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" ref="el" :class="[variant, view, { fullscreenOverlay, fullscreenOverlayEnabled }]"
+  <section :id="id" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]"
     class="lila-picture-module lila-module">
     <lila-picture-partial v-bind="picture" />
 
@@ -16,33 +16,27 @@
   </section>
 </template>
 <script setup lang="ts">
-import checkInview from '../../mixins/checkin';
+import { useInview } from '@/plugins/inview';
+import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
+const store = useMainStore();
 const props = defineProps<{
   picture: Picture;
-
   textblock: Textblock;
   id?:string;
-  view?: string;
   variant: string[];
 }>();
-let fullscreenOverlay: boolean = false;
-let el = ref(null);
-
-onMounted((): void => {
-
-  checkInview(el);
-
-});
-
+let fullscreenOverlay = ref(false);
+let element = ref<HTMLElement>();
 let emit = defineEmits<{
     (e: string, i:boolean): void
 }>();
+const inviewState = useInview(element);
 const showText = computed((): boolean => {
 
   if (!props.textblock) return false;
@@ -65,8 +59,8 @@ const fullscreenOverlayEnabled = computed(() => {
 
 function toggleFullscreenOverlay () {
 
-  fullscreenOverlay = !fullscreenOverlay;
-  emit('fullscreen', fullscreenOverlay);
+  fullscreenOverlay.value = !fullscreenOverlay.value;
+  store.setFullscreen(fullscreenOverlay.value);
 
 }
 
@@ -75,8 +69,8 @@ function toggleFullscreenOverlay () {
 <style lang="less" scoped>
 .lila-picture-module {
   .module;
-  max-width: @moduleWidth_L;
   .modulePadding('none');
+  max-width: @moduleWidth_L;
 
   picture {
 
@@ -111,7 +105,7 @@ function toggleFullscreenOverlay () {
     width: 100%;
     background-color: rgba(255, 255, 255, .9);
 
-    .lila-textblock::v-deep {
+    :deep(.lila-textblock) {
       .multi(padding, 4, 8);
 
       h3 {
@@ -160,7 +154,7 @@ function toggleFullscreenOverlay () {
       margin: 0;
     }
 
-    .lila-figure::v-deep {
+    :deep(.lila-figure) {
       overflow: hidden;
 
       picture {
@@ -169,7 +163,6 @@ function toggleFullscreenOverlay () {
         width: 100%;
         height: 100%;
 
-        .multi(padding, 2);
 
         img {
           align-self: center;
@@ -186,7 +179,7 @@ function toggleFullscreenOverlay () {
 
       position: relative;
 
-      .lila-textblock::v-deep {
+      :deep(.lila-textblock) {
         .multi(padding, 4);
         text-align: center;
       }

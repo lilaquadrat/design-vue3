@@ -1,11 +1,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Content } from '@lilaquadrat/studio/lib/interfaces';
+import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
 
 export const useMainStore = defineStore('main', () => {
 
   const data = ref<Partial<Content>>({});
   const layout = ref<Partial<Content>>({});
+  const configuration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
 
   function setData (value: Partial<Content>) {
@@ -35,12 +37,20 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
+  function setConfiguration (value: EditorConfiguration) {
+
+    configuration.value = value;
+
+  }
+
   return { 
     setData, 
     data, 
     layout, 
     fullscreen, 
-    setFullscreen 
+    setFullscreen,
+    setConfiguration,
+    configuration
   }
 
 })

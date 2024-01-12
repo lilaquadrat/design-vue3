@@ -7,26 +7,19 @@ const props = withDefaults(
     colorScheme?: 'colorScheme1' | 'colorScheme2' | 'colorScheme4' |'white' | 'grey' | 'red'
     size?: 'small' | 'smaller' | 'medium' | 'large' | 'larger' | 'big' | 'xl'
     rotate?: number
-    animate?: string
+    animate?: boolean
   }>(),
   {
     colorScheme: 'colorScheme1',
     size       : 'medium'
   }
 );
-// const props = defineProps({
-//   type: {type: String, required: true},
-//   colorScheme: {type: String, default: 'colorScheme1'},
-//   size: {type: String, default: 'medium'},
-//   animate: {type: String},
-//   rotate: {type: Number}
-// });
 const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ? `rotate${props.rotate}` : undefined); 
 
 
 </script>
 <template>
-  <span class="lila-icons-partial" :class="[type, colorScheme, size, rotateClass, {animate: animate}]">
+  <span class="lila-icons-partial" :class="[type, colorScheme, size, rotateClass, {animate}]">
   <svg v-if="type === 'arrow-right'"  xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
   </svg>

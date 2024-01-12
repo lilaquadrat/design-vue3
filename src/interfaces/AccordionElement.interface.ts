@@ -1,6 +1,6 @@
-import LinkListWithTitle from './LinkListWithTitle.interface';
-import ListWithTitle from './ListWithTitle.interface';
-import Textblock from './textblock.interface';
+import type LinkListWithTitle from './LinkListWithTitle.interface';
+import type ListWithTitle from './ListWithTitle.interface';
+import type Textblock from './textblock.interface';
 
 export default interface AccordionElement {
 
@@ -12,3 +12,8 @@ export default interface AccordionElement {
 
 }
 
+export interface AccordionElementWithSettings extends AccordionElement{
+    visible: boolean
+    height: string
+    headline: string 
+}

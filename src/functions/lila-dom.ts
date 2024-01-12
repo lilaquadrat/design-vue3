@@ -1,16 +1,10 @@
-// import useMainStore from '@/stores/main.store'
-
 export class Dom {
 
   bindings: {event: string, element: any, func: Function}[];
 
-  // store;
-
   constructor () {
 
     this.bindings = [];
-
-    // this.store = useMainStore();
 
   }
 
@@ -33,8 +27,6 @@ export class Dom {
     const splitEvents = events.split(' ');
 
     splitEvents.forEach((event) => {
-
-      console.log('bind', event)
 
       this.bindings.push({ event, element, func });
       element.addEventListener(event, func);

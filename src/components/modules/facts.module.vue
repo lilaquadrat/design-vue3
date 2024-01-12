@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" ref="el" :class="[view, variant]" class="lila-facts-module lila-module">
+  <section :id="id" ref="element" :class="[view, variant]" class="lila-facts-module lila-module">
     <lila-textblock-partial class="intro-textblock" v-bind="textblock" />
 
     <section class="complete-container">
@@ -39,8 +39,6 @@
   </section>
 </template>
 <script setup lang="ts">
-
-/* __vue_virtual_code_placeholder__ */
 import type Textblock from '@interfaces/textblock.interface';
 import type Fact from '@interfaces/Fact.interface';
 import { computed, onMounted, ref } from 'vue';
@@ -58,14 +56,12 @@ const props = defineProps<{
 
 }>();
 let active: number = 0;
-  const isVariant1=computed(()=>
-{
+const isVariant1=computed(() => {
 
   return props.variant?.includes('variant1');
 
 });
-  const isVariant3=computed(()=>
- {
+const isVariant3=computed(() => {
 
   return props.variant?.includes('variant3');
 
@@ -73,14 +69,14 @@ let active: number = 0;
 let el = ref(null);
 
 
-onMounted(()=>{
+onMounted(() => {
 
   checkInview(el);
 
 });
 
 
-function setActive(index: number) {
+function setActive (index: number) {
 
   active = index;
 

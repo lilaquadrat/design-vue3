@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" :id="id" :class="[view, position, variant]" class="lila-index-module lila-module">
+  <section ref="element" :id="id" :class="[view, position, variant]" class="lila-index-module lila-module">
     <section class="index-container">
       <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
     </section>
@@ -42,8 +42,8 @@ const useLinks = computed(() => {
     return {
       title: props.links?.title,
       value: props.additional.index?.map((single) => ({
-        text: single?.title,
-        link: `#${single.anchor}`,
+        text      : single?.title,
+        link      : `#${single.anchor}`,
         attributes: ['static'],
       })),
     };

@@ -1,16 +1,19 @@
 <template>
-  <section :id="id" :class="[variant, view]" class="lila-faq-module lila-module">
+  <section :id="id" ref="element" :class="[variant, view, inviewState]" class="lila-faq-module lila-module">
 
-    <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-    <lila-accordion-partial v-if="accordion" v-bind="accordion" />
+    <lila-textblock-partial v-if="props.textblock" v-bind="props.textblock" />
+    <lila-accordion-partial v-if="props.accordion" v-bind="props.accordion" />
 
   </section>
 </template>
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
 import type Textblock from '@interfaces/textblock.interface';
 import type Accordion from '@interfaces/Accordion.interface';
+import { useInview } from '@/plugins/inview';
+import { ref } from 'vue';
 
+let element = ref<HTMLElement>();
+const inviewState = useInview(element);
 const props = defineProps<{
   textblock: Textblock;
 

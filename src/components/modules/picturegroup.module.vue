@@ -1,5 +1,5 @@
 <template>
-  <section ref="el" :id="id" :class="[variant, view]" class="lila-picturegroup-module lila-module">
+  <section ref="element" :id="id" :class="[variant, view]" class="lila-picturegroup-module lila-module">
 
     <section class="content-container">
       <lila-textblock-partial :variant="[brightText]" v-if="textblock" v-bind="textblock" />
@@ -47,7 +47,7 @@ onMounted((): void => {
 });
 
 // eslint-disable-next-line class-methods-use-this
-function componentType(link: Link): 'lila-link-partial' | 'section' {
+function componentType (link: Link): 'lila-link-partial' | 'section' {
 
   return link?.link?.length
     ? 'lila-link-partial'
@@ -56,7 +56,7 @@ function componentType(link: Link): 'lila-link-partial' | 'section' {
 }
 
 // eslint-disable-next-line class-methods-use-this
-function getLink(link: Link): string {
+function getLink (link: Link): string {
 
   return link?.link?.length
     ? link.link

@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" ref="el" :class="[view, variant, { mobileIndex: forceMobileIndex }]"
+  <section :id="id" ref="element" :class="[view, variant, { mobileIndex: forceMobileIndex }]"
     class="lila-training-module lila-module fullscreen">
     <section v-if="textblock" class="module generic-module">
       <lila-textblock-partial v-bind="textblock" />
@@ -87,7 +87,7 @@ onMounted((): void => {
 
 });
 
-function checkRealWidth() {
+function checkRealWidth () {
 
   const element = $refs.mainGridContainer;
 
@@ -106,7 +106,7 @@ const indexTeaser = computed(() => {
     if (!singleData.settings) {
 
       singleData.settings = {
-        title: 'No Title',
+        title      : 'No Title',
         description: '',
       };
 
@@ -137,14 +137,14 @@ const currentContent = computed(() => {
 });
 
 
-function setIndex(index: number) {
+function setIndex (index: number) {
 
   currentIndex = index;
   toggleIndex(null, false);
 
 }
 
-function toggleIndex(event: MouseEvent | null, hint?: boolean) {
+function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 
   if (hint !== undefined) {
 

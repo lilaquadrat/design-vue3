@@ -10,14 +10,15 @@ const props = defineProps<{
   text?: string[]
   links?: LinkListWithTitle
   list?: ListWithTitle
-  variant?: string[]
+  variant?: string[],
+  id?: string
 }>();
 const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
 
 </script>
 
 <template >
-  <section :class="[variant]" v-if="notEmpty" class="lila-textblock">
+  <section :id="id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
     <h1 v-if="headline">{{ headline }}</h1>
     <h2 v-if="subline">{{ subline }}</h2>
 
