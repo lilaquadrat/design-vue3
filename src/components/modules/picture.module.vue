@@ -1,6 +1,5 @@
 <template>
-  <section :id="id" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]"
-    class="lila-picture-module lila-module">
+  <section :id="id" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]" class="lila-picture-module lila-module">
     <lila-picture-partial v-bind="picture" />
 
     <div v-if="showText" class="position-container">
@@ -12,7 +11,6 @@
         <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
       </lila-button-partial>
     </section>
-
   </section>
 </template>
 <script setup lang="ts">
@@ -28,43 +26,29 @@ const store = useMainStore();
 const props = defineProps<{
   picture: Picture;
   textblock: Textblock;
-  id?:string;
+  id?: string;
   variant: string[];
 }>();
 let fullscreenOverlay = ref(false);
 let element = ref<HTMLElement>();
-let emit = defineEmits<{
-    (e: string, i:boolean): void
-}>();
 const inviewState = useInview(element);
 const showText = computed((): boolean => {
-
   if (!props.textblock) return false;
 
   return Object.keys(props.textblock).some((single) => {
-
     const singleTyped = single as keyof Textblock;
 
-    return props.textblock[singleTyped]?.length
-
+    return props.textblock[singleTyped]?.length;
   });
-
 });
 const fullscreenOverlayEnabled = computed(() => {
-
   return props.variant.includes('fullscreenOverlayEnabled');
-
 });
 
-
 function toggleFullscreenOverlay () {
-
   fullscreenOverlay.value = !fullscreenOverlay.value;
   store.setFullscreen(fullscreenOverlay.value);
-
 }
-
-
 </script>
 <style lang="less" scoped>
 .lila-picture-module {
@@ -73,13 +57,11 @@ function toggleFullscreenOverlay () {
   max-width: @moduleWidth_L;
 
   picture {
-
     img {
       display: block;
       min-width: 100%;
       max-width: 100%;
     }
-
   }
 
   &.small {
@@ -91,19 +73,16 @@ function toggleFullscreenOverlay () {
   }
 
   .controls-container {
-
     position: absolute;
     display: grid;
     .multi(margin, 4);
     align-self: start;
     justify-self: end;
-
   }
 
   .position-container {
-
     width: 100%;
-    background-color: rgba(255, 255, 255, .9);
+    background-color: rgba(255, 255, 255, 0.9);
 
     :deep(.lila-textblock) {
       .multi(padding, 4, 8);
@@ -111,9 +90,7 @@ function toggleFullscreenOverlay () {
       h3 {
         color: @textColor;
       }
-
     }
-
   }
 
   &.fullscreen {
@@ -121,16 +98,60 @@ function toggleFullscreenOverlay () {
     max-width: 100%;
 
     .position-container {
-
       position: absolute;
       align-self: end;
-
     }
-
   }
 
-  &.fullscreenOverlay.fullscreenOverlayEnabled {
+  &.textOverlay {
+    position: relative;
 
+    .position-container {
+      @media @tablet, @desktop {
+        position: absolute;
+        top: 0;
+        right: 0;
+        max-width: 50%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media @desktop {
+        max-width: 30%;
+      }
+    }
+  }
+
+  &.textPictureVertical {
+    grid-template-rows: min-content 1fr;
+
+    .position-container {
+      grid-row-start: 1;
+    }
+
+    figure {
+      grid-row-start: 2;
+    }
+  }
+
+  &.textPictureVertical,
+  &.pictureTextVertical {
+    gap: 60px;
+    text-align: center;
+
+    .position-container {
+      justify-self: center;
+      max-width: @desktopWidthExt;
+      background: transparent;
+    }
+
+    .lila-textblock::v-deep {
+      .multi(padding, 0, 8);
+    }
+  }
+
+
+  &.fullscreenOverlay.fullscreenOverlayEnabled {
     .multi(padding, 8);
 
     .index(9);
@@ -163,93 +184,27 @@ function toggleFullscreenOverlay () {
         width: 100%;
         height: 100%;
 
-
         img {
           align-self: center;
           justify-self: center;
           border: solid 1px @grey;
           box-shadow: 0 0 7px @grey;
         }
-
       }
-
     }
 
     .position-container {
-
       position: relative;
 
       :deep(.lila-textblock) {
         .multi(padding, 4);
         text-align: center;
       }
-
     }
-  }
-
-  &.variant1 {
-
-    position: relative;
-
-    .position-container {
-
-      @media @tablet,
-      @desktop {
-
-        position: absolute;
-        top: 0;
-        right: 0;
-        max-width: 50%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, .9);
-
-      }
-
-      @media @desktop {
-        max-width: 30%;
-      }
-
-    }
-
-  }
-
-  &.textPictureVertical,
-  &.pictureTextVertical {
-
-    gap: 60px;
-    text-align: center;
-
-    .position-container {
-      justify-self: center;
-      max-width: @desktopWidthExt;
-      background: transparent;
-    }
-
-    .lila-textblock::v-deep {
-      .multi(padding, 0, 8);
-    }
-
-  }
-
-  &.textPictureVertical {
-
-    grid-template-rows: min-content 1fr;
-
-    .position-container {
-      grid-row-start: 1;
-    }
-
-    figure {
-      grid-row-start: 2;
-    }
-
   }
 
   &.pictureTextVertical {
-
     grid-template-rows: 1fr min-content;
-
   }
-
 }
 </style>

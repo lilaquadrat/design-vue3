@@ -1,59 +1,48 @@
-<template>
-  <section ref="element" :id="id" :class="[view, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
-    <lila-picture-partial :fit="fitVariant" v-bind="picture" />
-
-    <section class="grid-container">
-
-      <lila-textblock-partial v-bind="textblock" />
-
-      <lila-list-partial v-if="list" v-bind="list"></lila-list-partial>
-      <lila-list-partial v-if="links" v-bind="links"></lila-list-partial>
-
-      <lila-legend-partial v-if="legend" v-bind="legend"></lila-legend-partial>
-
-    </section>
-
-  </section>
-</template>
 <script setup lang="ts">
-import checkInview from '../../mixins/checkin';
+import { useInview } from '@/plugins/inview';
 import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   picture: Picture;
 
   textblock: Textblock;
 
-  legend: string[];
+  legend?: string[];
 
-  links: Link[];
+  links?: Link[];
 
-  list: string[];
+  list?: string[];
   id?:string;
-  view?: string;
   variant: string[];
 }>();
-let el = ref(null);
-
-onMounted((): void => {
-
-  checkInview(el);
-
-});
-
-
-const fitVariant = computed(() => {
-
-  return props.variant.includes('fit');
-
-});
+let element = ref<HTMLElement>();
+const inviewState = useInview(element);
+const fitVariant = computed(() => props.variant.includes('fit'));
 
 </script>
-<style lang="less" scoped>
+<template>
+  <section ref="element" :id="id" :class="[inviewState, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
+    <lila-picture-partial :fit="fitVariant" v-bind="picture" />
 
+    <section class="grid-container">
+
+      <lila-textblock-partial v-bind="textblock" />
+
+      <lila-list-partial v-if="list" v-bind="list" />
+      <lila-list-partial v-if="links" v-bind="links" />
+
+      <lila-legend-partial v-if="legend" v-bind="legend" />
+
+    </section>
+
+  </section>
+</template>
+<style lang="less" scoped>
 
 .lila-pictureandtext-module {
   .module;
@@ -108,7 +97,7 @@ const fitVariant = computed(() => {
     }
   }
 
-  &.variant1 {
+  &.switchContent {
 
     @media @desktop {
       grid-template-columns: 1fr minmax(min-content, 40%);

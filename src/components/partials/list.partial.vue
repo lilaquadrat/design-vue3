@@ -2,12 +2,12 @@
 import type Link from '@/interfaces/link.interface';
 import { computed, type ComputedRef } from 'vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   value?: (string | Link)[]
   title?: string
-  mode: 'list' | 'links'
+  mode?: 'list' | 'links'
   variant?: string[]
-}>();
+}>(), {mode: 'list'})
 const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered')); 
 const noStyle: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noStyle')); 
 const actions: ComputedRef<boolean> = computed(() => !!props.variant?.includes('actions')); 
@@ -15,8 +15,8 @@ const notEmpty: ComputedRef<boolean> = computed(() => {
   
   return !!props.value?.find((single) => {
 
-  if (typeof single === 'string') return single.length > 0;
-  return single.text?.length > 0;
+    if (typeof single === 'string') return single.length > 0;
+    return single.text?.length > 0;
 
   });
 

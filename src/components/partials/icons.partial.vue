@@ -84,7 +84,7 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
   &.animate {
 
     svg {
-      .trans(tranform);
+      .trans(transform);
     }
   }
 

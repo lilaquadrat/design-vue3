@@ -4,7 +4,7 @@ import { type Ref } from 'vue';
 
 class Inview {
 
-  timeout: NodeJS.Timeout;
+  timeout!: NodeJS.Timeout;
 
   debounceTime: number = 50;
 
@@ -13,7 +13,6 @@ class Inview {
   scrolledEvent: any;
 
   constructor () {
-
 
     this.scrolledEvent = new Event('scrolled');
     this.checkIsTop();
@@ -45,15 +44,7 @@ class Inview {
 
   checkIsTop () {
 
-    if (window.scrollY > 0) {
-
-      this.isTop = false;
-
-    } else {
-
-      this.isTop = true;
-
-    }
+    this.isTop = window.scrollY > 0
 
   }
 

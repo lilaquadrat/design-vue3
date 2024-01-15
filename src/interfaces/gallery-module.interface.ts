@@ -1,5 +1,5 @@
-import { GalleryElement } from './galleryElement.interface';
-import ModuleEditor from './ModuleEditor.interface';
+import { type GalleryElement } from './galleryElement.interface';
+import type ModuleEditor from './ModuleEditor.interface';
 
 export default interface GalleryModule extends ModuleEditor {
 
@@ -12,4 +12,4 @@ export default interface GalleryModule extends ModuleEditor {
 
    elements: GalleryElement[]
 
-};
+}

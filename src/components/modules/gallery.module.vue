@@ -214,19 +214,11 @@ function indicatorchange (index: number): void {
         <div ref="scrollContainer" :style="cssElementsLength" :class="{ transition: !dragging }" v-if="elements.length > 0" class="scroll-container">
           <template v-for="(element, elementIndex) in elements" :key="`gallery-element-${elementIndex}`">
             <div class="element" :style="cssWidth" :class="{ hasImage: element.picture || element.pictures, hasDescription: element.textblock }">
+             
               <div class="picture-container" v-if="element && element.picture">
-                <lila-picture-partial :key="`gallery-placeholder-${elementIndex}`" class="placeholder" v-bind="element.picture" />
-                <lila-picture-partial :key="`gallery-picture-${elementIndex}`" @loaded="pictureLoaded" class="active picture" v-bind="element.picture" />
+                <lila-picture-partial :key="`gallery-placeholder-${elementIndex}`" class="placeholder" fit v-bind="element.picture" />
+                <lila-picture-partial :key="`gallery-picture-${elementIndex}`" @loaded="pictureLoaded" fit class="active picture" v-bind="element.picture" />
               </div>
-
-              <template v-if="element.pictures">
-                <template v-for="(picture, index) in element.pictures">
-                  <div v-if="(imageIndex === index && currentOptionIndex === elementIndex) || (currentOptionIndex !== elementIndex && index === 0)" :key="`singlePicture-${index}`" class="picture-container">
-                    <lila-picture-partial :key="`gallery-placeholder-${index}`" class="placeholder" v-bind="element.pictures[0]" />
-                    <lila-picture-partial :key="`gallery-picture-${index}`" observerroot="$refs.scrollContainer" class="picture active" noLoadAnimation @loaded="pictureLoaded" v-bind="picture" />
-                  </div>
-                </template>
-              </template>
 
               <div v-if="element.pictures && firstLoad" :style="indicatorsTop" class="picture-indicators">
                 <span class="indicator" v-for="(picture, index) in element.pictures" :class="{ active: imageIndex === index }" :key="`picture-indicator-${index}`"></span>

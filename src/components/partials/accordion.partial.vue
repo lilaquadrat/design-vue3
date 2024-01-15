@@ -3,26 +3,31 @@ import { ref, onMounted, type Ref, nextTick } from 'vue';
 import type AccordionElement from '@interfaces/AccordionElement.interface';
 import hardCopy from '@/mixins/hardCopy';
 import type { AccordionElementWithSettings } from '@interfaces/AccordionElement.interface';
+import { useResize } from '@/plugins/resize';
+import { watch } from 'vue';
 
+const { resized } = useResize();
 const items: Ref<HTMLElement[]> = ref([]);
 const props = defineProps<{
   multiOpen?: boolean;
   disableControls?: boolean;
   openOnStart?: 'first' | 'all';
   elements: AccordionElement[];
-  listVariant?: (type: string) => string[];
   renderTarget?: 'pdf' | 'web';
+  variant?: string[]
 }>();
 const useElements = ref<AccordionElementWithSettings[]>([]);
 
 onMounted(() => {
-  setElements(props.elements, true);
 
-  window.addEventListener('resized', () => {
-    setElements(props.elements);
-  });
+  setElements(props.elements, true);
+  watch(resized, () => setElements(props.elements));
+
 });
 
+/**
+ * get the real size of the hidden placeholder to create a correct open animation
+ */
 function toggle (element: AccordionElementWithSettings, index: number) {
 
   let newVisible: boolean = false;
@@ -52,27 +57,30 @@ function toggle (element: AccordionElementWithSettings, index: number) {
   const refElement = items.value[index] as HTMLElement;
   const placeholder = refElement.querySelector('.accordion-content-placeholder');
 
-  console.log(refElement, items.value);
-
   useElements.value[index].height = `${placeholder?.clientHeight}px`;
 
   useElements.value[index].visible = newVisible;
 }
 
+/**
+ * adds the settings (e.g. headline, visible) to the elements
+ *
+ * when resetVisible is true the visible state for the elements will be reset
+ */
 function setElements (elements: AccordionElement[], resetVisible = false) {
 
   const newElements: any[] = [];
   const safeElements = hardCopy(elements);
-
-  console.log(safeElements);
 
   safeElements.forEach((single, index: number) => {
 
     let visible = useElements.value[index]?.visible;
 
     if (resetVisible) {
+
       if (props.openOnStart === 'first' && index === 0) visible = true;
       if (props.openOnStart === 'all' && props.multiOpen) visible = true;
+
     }
 
     if (props.renderTarget === 'pdf') visible = true;
@@ -87,11 +95,11 @@ function setElements (elements: AccordionElement[], resetVisible = false) {
       ...single,
       headline,
       visible,
+      // everything needs to be visible in a pdf
       height: props.renderTarget === 'pdf' ? 'auto' : '0px',
     });
   });
 
-  console.log(newElements);
 
   useElements.value = newElements;
 

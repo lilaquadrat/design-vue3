@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import {useInview} from '@/plugins/inview';
-import checkInview from '../../mixins/checkin';
 import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import type Video from '@interfaces/video.interface';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   textblock?: Textblock;
@@ -20,32 +19,7 @@ const props = defineProps<{
   variant: string[];
 }>();
 let element = ref<HTMLElement>();
-let fullscreen: boolean = false;
 const inviewState = useInview(element, props.variant?.includes('align'));
-
-// watch(() => props, contentFunction);
-
-// function contentFunction (): void {
-
-//   if (props.variant?.includes('align')) {
-
-//     fullscreen = true;
-
-//   }
-
-//   checkInview(element.value);
-
-// }
-
-// onMounted(() => {
-
-//   if (props.variant?.includes('align')) {
-
-//     fullscreen = true;
-
-//   }
-
-// });
 
 function scrollToNext (): void {
 
