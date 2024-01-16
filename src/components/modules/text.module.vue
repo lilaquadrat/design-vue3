@@ -8,8 +8,6 @@ defineOptions({
   inheritAttrs: false
 })
 
-let element = ref<HTMLElement>();
-const inviewState = useInview(element);
 const props = defineProps<{
   headline?: string
   subline?: string
@@ -19,6 +17,8 @@ const props = defineProps<{
   list?: ListWithTitle
   variant?: string[]
 }>();
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const listVariant = (type: 'list' | 'links') => {
 
   const base = [];

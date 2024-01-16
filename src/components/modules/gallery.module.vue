@@ -33,7 +33,7 @@ const emit = defineEmits<{ (e: string, element: any): void }>();
 const element = ref<HTMLElement>();
 const elementsContainer = ref<HTMLElement>();
 const scrollContainer = ref<HTMLElement>();
-const inviewState = useInview(element);
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
 watch(currentOptionIndex, indexChange);
 
@@ -161,17 +161,6 @@ function drag (event: TouchEvent): void {
 
   tempSwipe.value = Math.round(unifiedEvent.clientX - swipeX.value);
 }
-
-// function touchmove (event: TouchEvent): void {
-
-//   const unifiedEvent = getEvent(event);
-//   const target = unifiedEvent.target as HTMLElement;
-
-//   if (target.tagName === 'A') return;
-
-//   event.preventDefault();
-
-// }
 
 onMounted(() => {
   init();

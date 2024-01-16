@@ -18,8 +18,8 @@ const props = defineProps<{
   links?: Link[];
   variant: string[];
 }>();
-let element = ref<HTMLElement>();
-const inviewState = useInview(element, props.variant?.includes('align'));
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
 function scrollToNext (): void {
 

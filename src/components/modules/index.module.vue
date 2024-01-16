@@ -1,40 +1,20 @@
-<template>
-  <section ref="element" :id="id" :class="[view, position, variant]" class="lila-index-module lila-module">
-    <section class="index-container">
-      <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
-    </section>
-  </section>
-</template>
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
 import type LinkListWithTitle from '@interfaces/LinkListWithTitle.interface';
 import type Textblock from '@interfaces/textblock.interface';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { AdditionalContentInformation } from '@lilaquadrat/studio/lib/interfaces';
-import checkInview from '../../mixins/checkin';
+import { useInview } from '@/plugins/inview';
 
 const props = defineProps<{
-  textblock: Textblock;
-
+  textblock?: Textblock;
   links: LinkListWithTitle;
-
-  legend: string[];
+  legend?: string[];
   variant: string[];
-  date: string;
   id?: string;
-  view?: string;
-  position: string;
   additional: AdditionalContentInformation;
 }>();
-let el = ref(null);
-
-onMounted((): void => {
-
-  checkInview(el);
-
-});
-
-
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const useLinks = computed(() => {
 
   if (props.variant.includes('auto')) {
@@ -47,7 +27,6 @@ const useLinks = computed(() => {
         attributes: ['static'],
       })),
     };
-
 
   }
 
@@ -67,9 +46,14 @@ const listVariant = computed(() => {
 
 
 </script>
+<template>
+  <section ref="element" :id="id" :class="[inviewState, variant]" class="lila-index-module lila-module">
+    <section class="index-container">
+      <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
+    </section>
+  </section>
+</template>
 <style lang="less" scoped>
-
-
 .lila-index-module {
   .module;
 
@@ -91,7 +75,7 @@ const listVariant = computed(() => {
     }
   }
 
-  &.top {
+  &.top, &.backgroundGrey, &.backgroundColor1, &.backgroundColor3 {
     .multi(padding-top, 8);
     .multi(padding-bottom, 8);
   }

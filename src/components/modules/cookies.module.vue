@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { computed, onMounted, ref } from 'vue';
 
 import useMainStore from '@/stores/main.store';
+import { useInview } from '@/plugins/inview';
 
 const store = useMainStore();
 const props = defineProps<{
@@ -24,9 +25,11 @@ let visible = ref<boolean>(false);
 let cookies = ref<Record<string, boolean>>({
   analytics: false
 });
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const translations = ref<Record<string, string>>({
-  confirm: 'Alle akzeptieren',
-  cancel : 'Auswahl bestätigen',
+  confirm: 'cookies-module-confirm',
+  cancel : 'cookies-module-cancel',
 });
 const gtag = computed(() => {
 
@@ -35,11 +38,7 @@ const gtag = computed(() => {
   return useWindow.gtag || function gtag () { return true; };
 
 });
-const isOverlay = computed(() => {
-
-  return props.variant?.includes('overlay');
-
-});
+const isOverlay = computed(() => props.variant?.includes('overlay'));
 const overlayPosition = computed(() => {
 
   if (props.variant?.includes('overlayRight')) return 'overlayRight';
@@ -175,15 +174,14 @@ function getCookies () {
 
 </script>
 <template>
-  <section :id="id" v-if="visible && isOverlay || !isOverlay"
-    :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition]" class="lila-cookies-module">
+  <section :id="id" v-if="visible && isOverlay || !isOverlay" :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition, inviewState]" class="lila-cookies-module">
 
     <lila-overlay-background-partial v-if="visible && isOverlay && overlayPosition === 'overlayFull'" background="mobile">
       <lila-dialog-partial class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" />
         <section class="checkbox-container">
-          <lila-checkbox-partial name="technical" disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
-          <lila-checkbox-partial name="analytics" v-model="cookies.analytics">Analyse-Cookies</lila-checkbox-partial>
+          <lila-checkbox-partial name="technical" disabled v-model="technical">{{$translate('cookies-module-technical-cookies')}}technisch notwendige Cookies</lila-checkbox-partial>
+          <lila-checkbox-partial name="analytics" v-model="cookies.analytics">{{$translate('cookies-module-analytic-cookies')}}</lila-checkbox-partial>
         </section>
       </lila-dialog-partial>
     </lila-overlay-background-partial>
@@ -191,8 +189,8 @@ function getCookies () {
     <lila-dialog-partial v-if="visible && isOverlay && overlayPosition === 'overlayRight'" class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">
       <lila-textblock-partial v-if="textblock" v-bind="textblock" />
       <section class="checkbox-container">
-        <lila-checkbox-partial name="technical" disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
-        <lila-checkbox-partial name="analytics" v-model="cookies.analytics">Analyse-Cookies</lila-checkbox-partial>
+        <lila-checkbox-partial name="technical" disabled v-model="technical">{{$translate('cookies-module-technical-cookies')}}</lila-checkbox-partial>
+        <lila-checkbox-partial name="analytics" v-model="cookies.analytics">{{$translate('cookies-module-analytic-cookies')}}</lila-checkbox-partial>
       </section>
     </lila-dialog-partial>
 
@@ -203,12 +201,12 @@ function getCookies () {
       <lila-list-partial v-bind="links" mode="links" />
 
       <section class="checkbox-container">
-        <lila-checkbox-partial name="technical" disabled v-model="technical">technisch notwendige Cookies</lila-checkbox-partial>
-        <lila-checkbox-partial name="analytics" v-model="cookies.analytics">Analyse-Cookies</lila-checkbox-partial>
+        <lila-checkbox-partial name="technical" disabled v-model="technical">{{$translate('cookies-module-technical-cookies')}}</lila-checkbox-partial>
+        <lila-checkbox-partial name="analytics" v-model="cookies.analytics">{{$translate('cookies-module-analytic-cookies')}}</lila-checkbox-partial>
       </section>
       <lila-button-group-partial gap>
-        <lila-button-partial @confirmed="consent('all')" colorScheme="colorScheme1">{{ translations.confirm }}</lila-button-partial>
-        <lila-button-partial @confirmed="consent('selection')" colorScheme="transparent">{{ translations.cancel }}</lila-button-partial>
+        <lila-button-partial @confirmed="consent('all')" colorScheme="colorScheme1">{{ $translate(translations.confirm) }}</lila-button-partial>
+        <lila-button-partial @confirmed="consent('selection')" colorScheme="transparent">{{ $translate(translations.cancel) }}</lila-button-partial>
       </lila-button-group-partial>
     </template>
 

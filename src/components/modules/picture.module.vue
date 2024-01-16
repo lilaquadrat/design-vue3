@@ -30,8 +30,8 @@ const props = defineProps<{
   variant: string[];
 }>();
 let fullscreenOverlay = ref(false);
-let element = ref<HTMLElement>();
-const inviewState = useInview(element);
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const showText = computed((): boolean => {
   if (!props.textblock) return false;
 

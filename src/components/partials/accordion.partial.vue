@@ -175,6 +175,8 @@ function getListVariant (type: string): string[] {
       .font-bold;
       .multi(padding, 4, 0);
 
+      .trans(color);
+
       display: grid;
       grid-template-columns: 1fr 40px;
       gap: 10px;
@@ -191,6 +193,10 @@ function getListVariant (type: string): string[] {
       @media @tablet, @desktop {
         font-size: @headline_S;
         line-height: @headlineLineHeight_S;
+      }
+
+      &:hover {
+        color: @color3;
       }
     }
 

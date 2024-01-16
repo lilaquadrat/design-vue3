@@ -20,8 +20,8 @@ const props = defineProps<{
   id?:string;
   variant: string[];
 }>();
-let element = ref<HTMLElement>();
-const inviewState = useInview(element);
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const fitVariant = computed(() => props.variant.includes('fit'));
 
 </script>

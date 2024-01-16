@@ -1,29 +1,27 @@
 <template>
-  <section :class="[variant, view]" class="lila-module lila-quote-module">
-    <lila-quote-partial v-bind="$props"></lila-quote-partial>
+  <section ref="element" :class="[variant, inviewState]" class="lila-module lila-quote-module">
+    <lila-quote-partial v-bind="props" />
   </section>
 </template>
 
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
+import { useInview } from '@/plugins/inview';
 import type Link from '@interfaces/link.interface';
+import { ref } from 'vue';
 
 const props = defineProps<{
-
   quote: string;
-
   link: Link;
-
   citation: string;
-  view?: string;
   variant: string[];
 }>();
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
 
 </script>
 
 <style lang="less" scoped>
-
 
 .lila-quote-module {
   .module;

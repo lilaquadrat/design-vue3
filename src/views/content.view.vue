@@ -3,7 +3,9 @@ import { computed } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import type { Content } from '@lilaquadrat/studio/lib/interfaces';
 import dayjs from 'dayjs';
+import useMainStore from '@/stores/main.store';
 
+const store = useMainStore();
 const content: Content = {
   id      : 'home',
   company : 'company',
@@ -74,6 +76,19 @@ const content: Content = {
         subline : 'Der Support ist inklusive.',
         intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
       },
+      author: 'Max Mustermann',
+      date  : dayjs().format('DD.MM.YYYY'),
+      link  : {
+        link: '/test'
+      }
+    },
+    {
+      type     : 'blog-intro-module',
+      textblock: {
+        headline: 'JEDES ANLIEGEN VERDIENT GEHÖR.',
+        subline : 'Der Support ist inklusive.',
+        intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
+      },
       picture: {
         source: [],
         alt   : 'IMAGE ALT',
@@ -81,6 +96,24 @@ const content: Content = {
       },
       author: 'Max Mustermann',
       date  : dayjs().format('DD.MM.YYYY'),
+    },
+    {
+      type     : 'blog-intro-module',
+      textblock: {
+        headline: 'with Link.',
+        subline : 'Der Support ist inklusive.',
+        intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
+      },
+      picture: {
+        source: [],
+        alt   : 'IMAGE ALT',
+        src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+      },
+      author: 'Max Mustermann',
+      date  : dayjs().format('DD.MM.YYYY'),
+      link  : {
+        link: '/test'
+      }
     },
     {
       type     : 'faq-module',
@@ -1137,10 +1170,6 @@ const content: Content = {
       },
       elements: [
         { 
-          textblock: {
-            headline: 'Max Mustermann',
-            intro   : 'Abteil A',
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
@@ -1149,10 +1178,6 @@ const content: Content = {
           }
         },
         { 
-          textblock: {
-            headline: 'Max Testermann',
-            intro   : 'Abteil B',
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
@@ -1161,10 +1186,6 @@ const content: Content = {
           }
         },
         { 
-          textblock: {
-            headline: 'Max Mustermann',
-            intro   : 'Abteil C',
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
@@ -1197,7 +1218,7 @@ const content: Content = {
           }
         },
       ],
-      variant: ['small'],
+      variant: ['small', 'fit'],
     },
     {
       type  : 'footer-module',
@@ -1323,16 +1344,190 @@ const content: Content = {
       },
       variant: ['overlay', 'overlayRight'],
     },
+    {
+      type     : 'cookies-module',
+      textblock: {
+        intro: 'Some cookies for you.',
+        text : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      variant: [],
+    },
+    {
+      type    : 'quote-module',
+      quote   : 'thats some nice quote',
+      citation: 'thats some nice quote',
+      variant : [],
+      link    : {
+        link: '/test',
+        text: 'some link'
+      }
+    },
+    {
+      type    : 'quote-module',
+      quote   : 'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln.',
+      citation: 'thats some nice quote',
+      variant : ['quoteRight'],
+      link    : {
+        link: '/test',
+        text: 'some link'
+      }
+    },
+    {
+      type    : 'quote-module',
+      quote   : 'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln.',
+      citation: 'thats some nice quote',
+      variant : ['quoteCenter', 'authRight'],
+      link    : {
+        link: '/test',
+        text: 'some link'
+      }
+    },
+    {
+      type    : 'quote-module',
+      quote   : 'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln.',
+      citation: 'thats some nice quote, small',
+      variant : ['quoteCenter', 'authRight', 'small'],
+      link    : {
+        link: '/test',
+        text: 'some link'
+      }
+    },
+    {
+      type    : 'quote-module',
+      quote   : 'Yes',
+      citation: 'thats some nice quote',
+      variant : ['quoteCenter', 'captionCenter'],
+      link    : {
+        link: '/test',
+        text: 'some link'
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['backgroundGrey'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['numbered', 'medium'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['backgroundColor1'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['backgroundColor3', 'numbered'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
   ],
 };
+
+store.setConfiguration({preloadImages: true})
+
 const contentMerged = computed(() => prepareContent(content)); 
 
 </script>
 
 <template>
     <article class="content-screen screen">
-
         <lila-content-module linkMode="event" linkBase="/baseurl" :content="contentMerged" />
-
     </article>
 </template>

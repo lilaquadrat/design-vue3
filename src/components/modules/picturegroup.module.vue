@@ -12,8 +12,8 @@ const props = defineProps<{
   id?:string;
   variant: string[];
 }>();
-let element = ref<HTMLElement>();
-const inviewState = useInview(element, props.variant?.includes('align'));
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
 function componentType (link?: Link): 'lila-link-partial' | 'section' {
 

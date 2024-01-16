@@ -1,8 +1,8 @@
 <template>
-  <figure :class="[loadImage,{ notLoaded: !loading, noLoadAnimation: noLoadAnimation, fit, center }]" class="lila-figure" ref="element">
+  <figure :class="[loading,{ notLoaded: !loading, noLoadAnimation: noLoadAnimation, fit, center }]" class="lila-figure" ref="element">
     <section class="picture-container">
       <picture>
-        <template v-if="loadImage">
+        <template v-if="loading">
           <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
           <img :src="src" :alt="alt" />
         </template>
@@ -18,11 +18,13 @@
 </template>
 <script setup lang="ts">
 
+import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
-import { computed, onMounted, ref, watch, type Ref } from 'vue';
-
+import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 
 const store = useMainStore();
 const props = defineProps<{
@@ -41,67 +43,19 @@ const props = defineProps<{
 
 
 }>();
-let emit = defineEmits<{
-    (e: string): void
-}>();
 const element = ref<HTMLElement>();
+const {preload} = useInview(element, {preload: true})
 let loading: Ref<boolean> = ref(false);
-let loadImage: boolean = false;
-// const store = useCounterStore();
 
-watch(loading, () => {
-  if (!loadImage) loadImage = true;
-});
-
-
-// const settings = computed(() => {
-
-//   return JSON.stringify(this.$store?.state?.settings);
-
+// watch(preload, () => {
+//   if (!loading.value) loading.value = true;
 // });
 
+onBeforeMount(() => {
 
-// if (this.$store?.state?.settings?.preloadImages) {
-
-loading = ref(true);
-loadImage = true;
-
-// }
-
-onMounted((): void => {
-
-  const image = element.value?.querySelector('picture img') as HTMLImageElement;
-
-  image.onload = () => {
-
-    emit('loaded');
-
-  };
-
-  const imageObserver = new IntersectionObserver(
-    (entries) => {
-
-      entries.forEach((single) => {
-
-        if (single.isIntersecting) {
-
-          loading.value = true;
-          imageObserver.unobserve(image);
-
-        }
-
-      });
-
-    },
-    {
-      rootMargin: '250px 0px',
-    },
-  );
-
-  imageObserver.observe(image);
+  if(store.configuration.preloadImages) loading.value = true;
 
 });
-
 
 const sourceMedia = computed((): PictureMedia[] => {
 
@@ -216,17 +170,5 @@ const sourceMedia = computed((): PictureMedia[] => {
   }
 
 }
-
-// .lila-link.logo>.lila-figure {
-
-//   picture {
-//     mix-blend-mode: normal;
-//   }
-
-//   &:hover {
-//     background-color: transparent;
-//   }
-
-// }
 
 </style>

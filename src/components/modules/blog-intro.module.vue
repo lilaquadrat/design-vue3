@@ -10,7 +10,7 @@ const props = defineProps<{
 
   textblock: Textblock;
 
-  picture: Picture;
+  picture?: Picture;
 
   link?: Link;
 
@@ -18,9 +18,10 @@ const props = defineProps<{
 
   date: string;
   id?: string;
+  variant?: string[]
 }>();
-let element = ref<HTMLElement>();
-const inviewState = useInview(element);
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const textTop = computed(() => {
 
   return {
@@ -31,17 +32,13 @@ const textTop = computed(() => {
 });
 const textBottom = computed(() => {
 
-  return {
+  return ({
     intro: props.textblock?.intro,
     text : props.textblock?.text,
-  };
+  });
 
 });
-const linkExists = computed(() => {
-
-  return !!props.link?.link;
-
-});
+const hasLink = computed(() => !!props.link?.link);
 
 
 </script>
@@ -49,32 +46,31 @@ const linkExists = computed(() => {
   <article ref="element" :id="id" :class="[inviewState, { hasImage: picture }]" class="lila-blog-intro-module lila-module">
 
     <header>
-      <template v-if="!linkExists">
+      <template v-if="!hasLink">
         <time v-if="date">{{ date }}</time>
         <lila-textblock-partial class="top" v-bind="textTop" />
       </template>
 
-      <lila-link-partial v-if="linkExists" v-bind="link">
+      <lila-link-partial v-if="hasLink" v-bind="link">
         <time v-if="date">{{ date }}</time>
         <lila-textblock-partial class="top" v-bind="textTop" />
       </lila-link-partial>
     </header>
 
-    <lila-link-partial v-bind="link" v-if="linkExists">
+    <lila-link-partial v-bind="link" v-if="hasLink">
       <lila-picture-partial v-if="picture" v-bind="picture" />
     </lila-link-partial>
     <lila-picture-partial v-else-if="picture" v-bind="picture" />
 
     <lila-textblock-partial class="bottom" v-bind="textBottom" />
 
-    <address v-if="author">Von {{ author }}</address>
+    <address v-if="author">{{$translate('blog-intro-author', [author])}}</address>
 
-    <slot></slot>
+    <slot />
 
   </article>
 </template>
 <style lang="less" scoped>
-
 
 .lila-blog-intro-module {
   .module;
@@ -127,10 +123,9 @@ const linkExists = computed(() => {
 
   }
 
-  picture {
-
+  :deep(.lila-figure) {
     justify-self: center;
-
+    background-color: @color1;
     max-width: 100%;
 
     img {
@@ -139,7 +134,7 @@ const linkExists = computed(() => {
 
   }
 
-  .lila-link {
+  :deep(.lila-link) {
     display: grid;
     justify-items: center;
     width: 100%;
@@ -151,7 +146,11 @@ const linkExists = computed(() => {
     &:hover {
 
       h1 {
-        color: @color2;
+        color: @color3;
+      }
+
+      picture {
+        opacity: .5;
       }
 
     }
