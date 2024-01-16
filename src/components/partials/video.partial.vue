@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 // import VueYouTubeEmbed, { getIdFromURL } from 'vue-youtube-embed';
-import type { VideoSource } from '@/interfaces/video.interface';
+import type { VideoSource } from '../../interfaces/video.interface';
 import Vue, { computed, nextTick, onMounted, watch } from 'vue';
 
 // Vue.use(VueYouTubeEmbed);
@@ -60,25 +60,25 @@ watch(() => props.source, watchMediafunction);
 watch(() => props.trigger, watchTriggerfunction);
 
 
-function watchVideo() {
+function watchVideo () {
 
   start();
 
 }
 
-function watchMediafunction() {
+function watchMediafunction () {
   start();
 }
 
-function watchTriggerfunction() {
+function watchTriggerfunction () {
 
   toggle();
 
 }
 
-watch(()=>realElement.value, watchElement);
+watch(() => realElement.value, watchElement);
 
-function watchElement() {
+function watchElement () {
 
   console.log('refs changed');
 
@@ -92,7 +92,7 @@ onMounted(() => {
 
 });
 
-function bind(this: any) {
+function bind (this: any) {
 
   if (this.realElement) {
 
@@ -121,7 +121,7 @@ function bind(this: any) {
 
 }
 
-function toggle(this: any) {
+function toggle (this: any) {
 
   if (props.preload === 'none' && !loadVideo) {
 
@@ -178,7 +178,7 @@ function toggle(this: any) {
 
 }
 
-function start(this: any) {
+function start (this: any) {
 
   if (videoType.value === 'youtube') return;
 
@@ -227,7 +227,7 @@ function start(this: any) {
 
 const media = computed(() => {
 
-  return this.$store?.state.media;
+  return props.$store?.state.media;
 
 });
 const realElement = computed(() => {
@@ -252,15 +252,15 @@ const youtubeSettings = computed(() => {
   if (videoType.value !== 'youtube') return false;
 
   return {
-    'video-id': youtubeId,
-    'player-width': '100%',
+    'video-id'     : youtubeId,
+    'player-width' : '100%',
     'player-height': '100%',
-    'player-vars': {
-      autoplay: props.attributes?.includes('autoplay') ? 1 : 0,
-      controls: props.attributes?.includes('controls') ? 1 : 0,
-      loop: props.attributes?.includes('loop') ? 1 : 0,
+    'player-vars'  : {
+      autoplay      : props.attributes?.includes('autoplay') ? 1 : 0,
+      controls      : props.attributes?.includes('controls') ? 1 : 0,
+      loop          : props.attributes?.includes('loop') ? 1 : 0,
       modestbranding: 1,
-      rel: 0,
+      rel           : 0,
     },
     host: 'https://www.youtube-nocookie.com',
   };
@@ -283,27 +283,27 @@ const realSrc = computed(() => {
 
 });
 
-function ready(event: { target: any; }) {
+function ready (event: { target: any; }) {
 
   youtubeObject = event.target;
 
 }
 
-function playing() {
+function playing () {
 
   isPlaying = true;
   emit('playing', true);
 
 }
 
-function paused() {
+function paused () {
 
   isPlaying = false;
   emit('playing', false);
 
 }
 
-function ended() {
+function ended () {
 
   isPlaying = false;
   emit('ended', false);

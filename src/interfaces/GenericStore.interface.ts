@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import GenericState from './GenericState.interface';
+import type GenericState from './GenericState.interface';
 
 export default interface GenericStore<T extends GenericState> {
   namespaced: boolean;
@@ -18,4 +18,4 @@ export default interface GenericStore<T extends GenericState> {
   getters?: {
     [key: string]: (store: Store<T>, data: any) => string | number | {[key: string]: any};
   };
-};
+}

@@ -1,8 +1,8 @@
-import { Store } from 'vuex';
+import {Store} from 'vuex';
 
 export default class StoreClass {
 
-  $store: Store<any>;
+  $store?: Store<any>;
 
   constructor (store?: Store<any>) {
 

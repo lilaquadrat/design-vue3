@@ -1,4 +1,4 @@
-import translate from '@mixins/translation';
+import type translate from '@mixins/translation';
 import type { ErrorObject } from 'ajv';
 
 

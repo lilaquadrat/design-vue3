@@ -6,7 +6,7 @@ import type Textblock from '@interfaces/textblock.interface';
 import dayjs from 'dayjs';
 import { computed, onMounted, ref } from 'vue';
 
-import useMainStore from '@/stores/main.store';
+import useMainStore from '../../stores/main.store';
 
 const store = useMainStore();
 const props = defineProps<{
@@ -100,7 +100,6 @@ function updateSelection () {
       if (cookies.value[single] !== undefined) {
 
         cookies.value[single] = true;
-
       }
 
     });

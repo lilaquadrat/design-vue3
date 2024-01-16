@@ -1,4 +1,4 @@
-import Link from './link.interface';
+import type Link from './link.interface';
 
 export default interface ListLink {
 
@@ -8,4 +8,4 @@ export default interface ListLink {
 
     link: Link
 
-};
+}

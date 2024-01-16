@@ -72,8 +72,8 @@
 </template>
 <script setup lang="ts">
 /* __vue_virtual_code_placeholder__ */
-import type Picture from '@interfaces/picture.interface';
-import type LinkGroupElement from '@interfaces/LinkGroupElement.interface';
+import type Picture from '../../interfaces/picture.interface';
+import type LinkGroupElement from '../../interfaces/LinkGroupElement.interface';
 
 import { computed, onMounted, ref, watch } from 'vue';
 // import checkInview from '../../mixins/checkin';

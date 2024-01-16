@@ -1,83 +1,104 @@
 <script setup lang="ts">
 
-import { Agreement, GenericData, List, ListPartiticpantsDetails, Editor } from '@lilaquadrat/studio/lib/interfaces';
-import ModelsClass from '../../libs/Models.class.ts';
-import StudioSDK from '../../libs/StudioSDK.ts';
-import type Textblock from '@interfaces/textblock.interface';
-import Contact from '../../models/Contact.model.ts';
-import Address from '../../models/Address.model.ts'; 
-import { ErrorsObject } from '@libs/ActionNotice';
-import ListCategoryExtended from '@interfaces/ListCategoryExtended.interface';
-import { computed, onBeforeMount } from 'vue';
+import { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
+import ModelsClass from '../../libs/Models.class';
+import StudioSDK from '../../libs/StudioSDK';
+import type Textblock from '../../interfaces/textblock.interface';
+import Contact from '../../models/Contact.model';
+import Address from '../../models/Address.model'; 
+import { ErrorsObject } from '../../libs/ActionNotice';
+import { ErrorObject } from 'ajv/dist/types';
+import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { computed, onBeforeMount} from 'vue';
+import ListCategoryExtended from '../../interfaces/ListCategoryExtended.interface';
 
 
+import useMainStore from '../../stores/main.store';
+
+const store = useMainStore();
 const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;
     genericData: GenericData;
+    list: List;
     editor:{modes: string[]},
-    state: string
+    state: string,
+    participantsState: ListPartiticpantsDetails,
+    variant: string;
+    errors: Error | null;
+    traceable: traceable;
+    agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
+
+    
+    // agreements: Record<string, Agreement & { value: boolean, error: boolean }>;
+
 }>();
 let model: Contact = null;
 let addressModel: Address = null;
-let errors = null;
+// let errors = null;
 let errorsObject: ErrorsObject = {};
 let translationPre = '';
-let participantsState: ListPartiticpantsDetails = null;
-let agreements: Record<string, Agreement & { value: boolean, error: boolean }> = {};
+// let agreements: Record<string, Agreement & { value: boolean, error: boolean }> = {};
+// let participantsState: ListPartiticpantsDetails = null;
 // const emit = defineEmits([
-//     'contact', 
+//     'contact',
 //     'address', 
 //     ''
 // ]);
 let emit = defineEmits<{
-    (e: string, i:boolean): void
+    (e: string, i:boolean): void;
+    (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
 const list = computed(():List => {
-  if(props.genericData?.lists && props.genericData.data && Array.isArray(props.genericData?.lists)) {
+  console.log('state:', props.state)
+
+  if(props.genericData?.lists && props.genericData?.data && Array.isArray(props.genericData?.lists)) {
     return props.genericData.data[props.genericData.lists[0]]
   }
 
   return null
 });
 const categories = computed((): ListCategoryExtended[] => {
-  if(props.list?.categories.length > 1) {
+  if (props.list?.categories.length > 1) {
     const categories = props.list.categories as ListCategoryExtended[];
 
-
-    if(props.participantsState) {
+    if (props.participantsState) {
       categories.forEach((single: ListCategoryExtended) => {
-        const stateCategory = props.participantsState?.categories?.find((singleState) => singleState.category === single.id);
+        const stateCategory = props.participantsState.categories?.find((singleState) => singleState.id === single.id);
 
+        if (stateCategory) {
+     
+          single.used = stateCategory.used;
+          console.log(stateCategory.used)
+          single.available = single.amount - single.used;
+          single.percentUsed = (single.used / single.amount) * 100;
+          single.percentAvailable = 100 - (single.used / single.amount) * 100;
 
-        if(stateCategory) {
-          singe.used = stateCategory.used;
-          single.available = single.amount - single.used; 
-          single.percentUsed = (single.used / single.amount) *100;
-          single.percentAvailable = 100 - (single.used / single.amount) *100;
         }
       });
-    }
 
-    return categories;
+      return categories;
+    }
   }
 
   return null;
 });
 const selectCategories = computed(() => {
-  if(props.list.catagories.length > 1) {
+  if(props.list?.categories.length > 1) {
     return props.list.categories.map((single) => ({
       value      : single.id,
       text       : single.name,
       description: single.description,
       disabled   : single.disabled,
-    }))
+    }));
   }
 
-  return null;
-});
+  return null
+})
 const feedback = computed(() => {
-  if(props.genericData?.editor && props.genericData?.data && Array.isArray(genericData?.editor)){
+  console.log('props.genericData?:', props.genericData)
+
+  if(props.genericData?.editor && props.genericData?.data && Array.isArray(props.genericData.editor)){
     console.log('props.genericData:', props.genericData)
     return props.genericData.data[props.genericData.editor[0]]
   }
@@ -88,7 +109,7 @@ const showFeedback = computed(() => {
   return props.state && (props.state === 'success' || props.editor?.modes?.includes('feedback'))
 });
 const feedbackContent = computed(() => {
-  return prepareContent(props.feedback)
+  return prepareContent(feedback.value)
 });
 const limited = computed(() => {
   return props.list?.participants?.max || null;
@@ -104,8 +125,10 @@ const hideFreeSlots = computed(() => {
   return props.variant.includes('hide-free-slots')
 })
 const mainErrors = computed(() => {
-  if(['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE'].includes(props.errors?.message)) {
-    return `${props.errors?.message}`
+  const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
+
+  if(props.errors && validErrors.includes((props.errors as { message?:string}).message)) {
+    return `${(props.errors as { message?:string}).message}`;
   }
 
   return null;
@@ -130,28 +153,29 @@ function resetForm () {
 //    props.addressModel = ModelsClass.add({}, 'address');
 //    props.errors = null;
 //    props.errorsObject = {};
-  state = '';
+  emit('state', '')
   model = ModelsClass.add({}, 'contact');
   addressModel = ModelsClass.add({}, 'address');
-  errors = null;
   errorsObject = {};
+  emit('errors', null)
    
 }
 
 function updateErrors (errorsObject: ErrorsObject) {
-  emit(errorsObject); //this.errorsObject = errorsObject;
   updateAgreements();
+  emit('errors', errorsObject); //this.errorsObject = errorsObject; -> errorsObject = errorsObject hätte keinen Effekt
 }
 
-function changeAgreement (event: MouseEvent, index: string) {
-  const agreement = props.agreement[index];
-  const target = event.target as HMTMLInputElement;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function changeAgreement (event: MouseEvent, agreement: Agreement & { value: boolean, error: boolean }): void {
+  // const agreement = agreements[index];
+  const target = event.target as HTMLInputElement;
 
   agreement.value = target.checked;
 }
 
 function updateAgreements () {
-  const agreements = {};
+  const agreements = {} as Record<string, Agreement & { value: boolean, error: boolean }>;
 
 
   props.list?.agreements.forEach((single: Agreement & {error: boolean}) => {
@@ -160,7 +184,7 @@ function updateAgreements () {
       value: props.agreements[single.contentId]?.value || false,
     };
 
-    const values = props.errorsObject.agreements?.translatedPath?.values;
+    let values = errorsObject.agreements?.translatedPath?.values;
 
 
     if(values && values[1]) {
@@ -174,16 +198,15 @@ function updateAgreements () {
     
 }
 
+
 const getparticipantsState = async () => {
-  console.log('props:', props);
-  console.log('props.values', Object.values(props));
-  console.log('props.$store.state.api:', $store.state.api);
+  console.log('store:', store);
+  console.log('store.state:', store.state);
 
-  const sdk = new StudioSDK('design', props.$store.state.api);
-
+  const sdk = new StudioSDK('design', store.state.api);
 
   try {
-
+   
     const participantsState = await sdk.public.lists.state(props.list?._id.toString());
 
     if (participantsState.data) {
@@ -202,12 +225,12 @@ const getparticipantsState = async () => {
 
   }
 };
-const handleForm = async (event: Event): void => {
+const handleForm = async (event: Event): Promise<void> => {
   event.preventDefault();
-  state = '';//this.state = ''
+ 
 
-  const address = ModelsClass.save(props.addressModel, 'address');
-  const customer = ModelsClass.save({...props.model, ...address}, 'contact');
+  const address = ModelsClass.save(addressModel, 'address');
+  const customer = ModelsClass.save({...model, ...address}, 'contact');
   const agreements = [];
   let category: string;
 
@@ -236,11 +259,12 @@ const handleForm = async (event: Event): void => {
     category = props.list.categories[0].id;
 
   }
-   
-  const sdk = new StudioSDK('design', props.$store.state.api);
-  const call = sdk.public.lists.join(props.list?._id.toString(), customer, message, category, agreements);
+
 
   try {
+    const sdk = new StudioSDK('design', store.state.api);
+    const call = sdk.public.lists.join(props.list?._id.toString(), customer, message, category, agreements);
+
 
     await props.$traceable(call);
 

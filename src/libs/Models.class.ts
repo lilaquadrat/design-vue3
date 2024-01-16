@@ -15,7 +15,7 @@ type SingleDeclaration = { type: 'string', default?: string } |
 //   [key in keyof T]: SingleDeclaration
 // }
 
-type ModelDeclaration<T = GenericModel> = Record<keyof T, SingleDeclaration>;
+type ModelDeclaration<T > = Record<keyof T, SingleDeclaration>;
 type ModelDeclarationExtended<T, E> = Record<Exclude<keyof T, keyof E>, SingleDeclaration>;
 
 interface ModelOptions {
@@ -53,7 +53,7 @@ class Models {
 
   registeredModels: string[] = [];
 
-  declarations: Record<string, ModelDeclaration> = {};
+  declarations: Record<string, ModelDeclaration<T>> = {};
 
   options: Record<string, ModelOptions> = {};
 
@@ -73,7 +73,7 @@ class Models {
   // eslint-disable-next-line no-unused-vars
   register<T, E>(name: string, declaration: ModelDeclarationExtended<T, E>, hooks: ModelHooks<T> | undefined, options: ModelOptions): void;
 
-  register<T, E> (name: string, declaration: ModelDeclaration | ModelDeclarationExtended<T, E>, hooks: ModelHooks<T> | undefined, options?: ModelOptions) {
+  register<T, E> (name: string, declaration: ModelDeclaration<T > | ModelDeclarationExtended<T, E>, hooks: ModelHooks<T> | undefined, options?: ModelOptions) {
 
     if (this.debug) console.debug(`registed model ${name}`);
     // this.registeredModels[name] = declaration;
@@ -84,11 +84,11 @@ class Models {
 
   }
 
-  getDeclaration (name: string): ModelDeclaration {
+  getDeclaration (name: string): ModelDeclaration<any> {
 
     if (!this.declarations[name]) console.error(`DECLARATION_NOT_FOUND - ${name}`);
 
-    return this.declarations[name];
+    return this.declarations[name] as ModelDeclaration<any> ;
 
   }
 
@@ -492,5 +492,8 @@ const ModelsClass = new Models();
 
 export default ModelsClass;
 export {
-  Models, ModelDeclaration, ModelDeclarationExtended, ModelOptions, ModelHooks,
+  Models
+};
+export type {
+  ModelDeclaration, ModelDeclarationExtended, ModelOptions, ModelHooks,
 };
