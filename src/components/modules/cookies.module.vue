@@ -99,7 +99,6 @@ function updateSelection () {
       if (cookies.value[single] !== undefined) {
 
         cookies.value[single] = true;
-
       }
 
     });
