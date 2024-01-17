@@ -7,7 +7,6 @@ import type {
   EditorBase, Location,
 } from '@lilaquadrat/studio/lib/interfaces';
 import hardCopy from '../mixins/hardCopy';
-import type Contact from '../models/Contact.model';
 import axios, { type AxiosResponse, type AxiosRequestConfig } from 'axios';
 
 const mockJs = {};

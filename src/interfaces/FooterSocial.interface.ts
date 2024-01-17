@@ -1,5 +1,5 @@
-import Link from './link.interface';
-import PictureGroupElement from './PictureGroupElement.interface';
+import type Link from './link.interface';
+import type PictureGroupElement from './PictureGroupElement.interface';
 
 export default interface FooterSocial {
 
@@ -7,5 +7,5 @@ export default interface FooterSocial {
 
     link: Link;
 
-    elements: PictureGroupElement[];
-  };
+    elements: (PictureGroupElement & {link: Link})[];
+  }

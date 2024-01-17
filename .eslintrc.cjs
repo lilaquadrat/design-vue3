@@ -82,6 +82,8 @@ module.exports = {
         next     : ['export', 'import'],
       },
     ],
-    quotes: ['error', 'single'],
+    quotes            : ['error', 'single'],
+    'arrow-body-style': ['error', 'as-needed'],
+    'prefer-const'    : 'error'
   },
 };

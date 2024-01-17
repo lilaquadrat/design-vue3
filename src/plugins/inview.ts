@@ -1,4 +1,4 @@
-import { watch, type WatchStopHandle } from 'vue';
+import { watch } from 'vue';
 import { ref } from 'vue';
 import { type Ref } from 'vue';
 
@@ -127,35 +127,6 @@ class Inview {
 
   }
 
-
-  // checkImage (component) {
-
-  //   const element = component.$el;
-
-  //   if (typeof element.getBoundingClientRect !== 'function') return;
-
-  //   const height = document.body.getBoundingClientRect().height * 2;
-  //   const rect = element.getBoundingClientRect();
-  //   const { top } = rect;
-  //   const { bottom } = rect;
-
-  //   if (component.loading) return;
-
-  //   if (top <= height && bottom >= 0) {
-
-  //     component.loading = true;
-  //     return;
-
-  //   }
-
-  //   if (top <= 0 && bottom + height >= 0) {
-
-  //     component.loading = true;
-
-  //   }
-
-  // }
-
   adjustScrolling (component: HTMLElement, top: number) {
 
     const offset = window.outerHeight / 10;
@@ -174,6 +145,16 @@ class Inview {
 
 const inview = new Inview();
 
+/**
+ * the preload option is used to check if the element is in range of two times of the viewport and changes the preload value accordingly
+ *
+ * without the preload options the inviewState array holds the following values
+ ** inview-before - the element is before the viewport
+ ** inview-current - the element is centered in the viewport
+ ** inview-after - the element is after the viewport
+ ** inview-visible - more than 30% of the element are visible in the current viewport, regardless if it is centered or nor
+ */
+
 export function useInview (element: Ref<HTMLElement | undefined>, options?: {align?: boolean, preload?: boolean}) {
 
   const state = ref<string[]>(['inview']);
@@ -185,13 +166,15 @@ export function useInview (element: Ref<HTMLElement | undefined>, options?: {ali
 
       if(options?.preload) {
 
-
         inview.checkPreload(element.value, preload);
 
         const unwatchPreload = watch(inview.scrolled, () => {
 
+          if(!element.value) return;
+
           inview.checkPreload(element.value as HTMLElement, preload);
 
+          //unwatch when the preload value is true
           if(preload.value) unwatchPreload();
 
         })

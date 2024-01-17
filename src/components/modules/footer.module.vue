@@ -1,12 +1,31 @@
+<script setup lang="ts">
+import type Sitemap from '@/interfaces/Sitemap.interface';
+import type FooterContact from '@/interfaces/FooterContact.interface';
+import type FooterSocial from '@/interfaces/FooterSocial.interface';
+import { useInview } from '@/plugins/inview';
+import { ref } from 'vue';
+
+const props = defineProps<{
+  contact: FooterContact;
+  social: FooterSocial;
+  legal: string;
+  sitemap: Sitemap[];
+  variant?: string[];
+  id?: string;
+}>();
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
+
+</script>
 <template>
-  <footer :id="id" :class="[view, fontVariant, variant]" class="lila-footer-module lila-module">
+  <footer :id="id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
     <section class="footer-container">
       <template v-if="sitemap">
-        <section v-for="(element, index) in sitemap" :key="`sitemap-elements-${index}`" class="content">
-          <h3>{{ element.title }}</h3>
+        <section v-for="(sitemap, index) in props.sitemap" :key="`sitemap-elements-${index}`" class="content">
+          <h3>{{ sitemap.title }}</h3>
 
           <ul class="icon-container">
-            <li v-for="(element, index) in element.elements" :key="`sitemap-element-links-${index}`">
+            <li v-for="(element, index) in sitemap.elements" :key="`sitemap-element-links-${index}`">
               <lila-link-partial v-bind="element"></lila-link-partial>
             </li>
           </ul>
@@ -24,8 +43,7 @@
         <h3>{{ social.title }}</h3>
 
         <div class="icon-container">
-          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
-            :link="element.link.link">
+          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`" :link="element.link.link">
             <lila-picture-partial v-bind="element.picture" />
           </lila-link-partial>
         </div>
@@ -35,30 +53,6 @@
     <section class="legal">{{ legal }}</section>
   </footer>
 </template>
-<script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
-import type Sitemap from '@interfaces/Sitemap.interface';
-import type FooterContact from '@interfaces/FooterContact.interface';
-import type FooterSocial from '@interfaces/FooterSocial.interface';
-
-const props = defineProps<{
-  fontVariant?: string[];
-
-  contact: FooterContact;
-
-  social: FooterSocial;
-
-  legal: string;
-
-  sitemap: Sitemap;
-  variant?: string[];
-  id?: string;
-  view?:string;
-
-}>();
-
-
-</script>
 <style lang="less" scoped>
 
 .lila-footer-module {

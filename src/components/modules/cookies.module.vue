@@ -63,8 +63,6 @@ function calcVisibilty () {
 
   const cookies = getCookies();
 
-  console.log(cookies, props.variant?.includes('overlay'), cookies.find((single) => single.name === 'lila-cookies'));
-
   if (props.variant?.includes('overlay')) {
 
     visible.value = !cookies.find((single) => single.name === 'lila-cookies');
@@ -147,8 +145,6 @@ function consent (type: 'all' | 'selection') {
   const cookieKeys = Object.keys(cookies).filter((single) => (cookies.value[single] ? single : null));
 
   cookieKeys.push('technical');
-
-  console.log(cookieKeys);
 
   document.cookie = `lila-cookies=1; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
   document.cookie = `lila-cookies-accepted=${cookieKeys.join(',')}; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;

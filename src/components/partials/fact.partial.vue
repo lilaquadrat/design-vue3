@@ -1,46 +1,35 @@
-<template>
-<section class="lila-fact-partial" :class="[variant, {hasPicture}]">
-
-    <lila-picture-partial v-if="hasPicture" v-bind="picture" />
-
-    <lila-textblock-partial v-bind="textblock" />
-
-    <slot></slot>
-
-</section>
-</template>
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed } from 'vue';
 
-const props = defineProps < {
+const props = defineProps<{
   textblock: Textblock;
-  picture: Picture;
-  variant?: string[]
+  picture?: Picture;
+  variant?: string[];
+}>();
+const hasPicture = computed(() => !!props.picture?.src?.length);
+const pictureFit = computed(() => props.variant?.includes('fit'));
 
-}> ();
-const hasPicture = computed(() =>{
-
-return !!props.picture?.src?.length;
-
-});
 </script>
+<template>
+  <section class="lila-fact-partial" :class="[variant, { hasPicture }]">
+    <lila-picture-partial v-if="hasPicture" v-bind="picture" :fit="pictureFit" />
+    <lila-textblock-partial v-bind="textblock" />
+
+    <slot />
+  </section>
+</template>
 <style lang="less" scoped>
-
-
 .lila-fact-partial {
   display: grid;
 
   @media @desktop {
-
     &.hasPicture {
-      grid-template-columns: 15% 1fr;
-      grid-column-gap: 40px;
+      gap: 40px;
     }
 
-    .lila-figure::v-deep {
+    :deep(.lila-figure) {
       display: grid;
     }
   }
@@ -53,42 +42,39 @@ return !!props.picture?.src?.length;
     }
   }
 
-  .lila-figure::v-deep {
+  grid-template-rows: max-content;
+  grid-template-columns: 1fr;
+
+  gap: 20px;
+  align-content: start;
+  justify-content: start;
+
+  max-width: 500px;
+  text-align: center;
+
+  :deep(.lila-textblock) {
+    width: 100%;
+  }
+
+  :deep(.lila-figure) {
+    position: relative;
+    display: grid;
+    justify-self: center;
+
+    .index(2);
 
     img {
-      max-width: 80px;
-      max-height: 80px;
+      min-width: 80px;
+      max-width: 150px;
+      min-height: 80px;
     }
   }
 
-  &.variant2 {
-
-    display: grid;
-    grid-template-rows: min-content;
-
+  &.topics {
+    text-align: left;
     grid-template-columns: 1fr;
 
-    gap: 20px;
-    align-content: start;
-
-    justify-content: start;
-
-    max-width: 500px;
-    text-align: center;
-
-    // &.hasPicture {
-    //   grid-template-rows: 1fr;
-    //   grid-template-columns: 1fr;
-    // }
-
-    .lila-textblock::v-deep {
-      width: 100%;
-      // background-color: @grey1;
-      // .multi(padding, 12, 4, 4, 4);
-      // margin-top: -40px;
-    }
-
-    .lila-figure::v-deep {
+    :deep(.lila-figure) {
       position: relative;
       display: grid;
       justify-self: center;
@@ -96,17 +82,20 @@ return !!props.picture?.src?.length;
       .index(2);
 
       img {
-
-        min-width: 80px;
-
-        max-width: 150px;
-        min-height: 80px;
-
+        max-width: 100%;
       }
     }
 
+    @media @desktop {
+      &.hasPicture {
+        grid-template-rows: max-content 1fr;
+        grid-column-gap: 40px;
+      }
+
+      :deep(.lila-figure) {
+        display: grid;
+      }
+    }
   }
-
 }
-
 </style>

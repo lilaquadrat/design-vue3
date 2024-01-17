@@ -14,7 +14,8 @@
     "projects/**/*.vue",
     "projects/company/project/src/modules/*.vue",
     "components.d.ts",
-    "customs.ts"
+    "customs.ts",
+    "src/views/viewData/*"
   ],
   "exclude": [
     "src/**/__tests__/*"

@@ -23,7 +23,6 @@ import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
 import { onBeforeMount } from 'vue';
-import { onMounted } from 'vue';
 import { computed, ref, watch, type Ref } from 'vue';
 
 const store = useMainStore();
@@ -45,11 +44,11 @@ const props = defineProps<{
 }>();
 const element = ref<HTMLElement>();
 const {preload} = useInview(element, {preload: true})
-let loading: Ref<boolean> = ref(false);
+const loading: Ref<boolean> = ref(false);
 
-// watch(preload, () => {
-//   if (!loading.value) loading.value = true;
-// });
+watch(preload, () => {
+  if (!loading.value) loading.value = true;
+});
 
 onBeforeMount(() => {
 
