@@ -19,6 +19,7 @@ import pictureandtext from './viewData/pictureandtext';
 import quote from './viewData/quote';
 import text from './viewData/text';
 import index from './viewData/index';
+import compare from './viewData/compare';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -34,6 +35,7 @@ const modules: Record<string, Partial<Content>> = {
   picturegroup,
   quote,
   text,
+  compare,
   'blog-intro': blogIntro
 };
 const route = useRoute();

@@ -1,7 +1,7 @@
 export interface CompareHeadline {
     headline?: string
     description?: string
-    structure: boolean
+    structure?: boolean
 }
 
 export default interface CompareModified extends Array<any> {

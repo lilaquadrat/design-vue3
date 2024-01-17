@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
 import type Textblock from '@interfaces/textblock.interface';
 import type CompareElement from '@interfaces/CompareElement.interface';
 import type CompareStructure from '@interfaces/CompareStructure.interface';
@@ -7,102 +6,64 @@ import type CompareModified from '@interfaces/CompareModified.interface';
 import type { CompareHeadline } from '@interfaces/CompareModified.interface';
 import { computed } from 'vue';
 
-
 const props = defineProps<{
-  textblock: Textblock;
-
+  textblock?: Textblock;
   elements: CompareElement[];
-
   structure: CompareStructure[];
   id?: string;
 }>();
-const modifiedElements=computed(() => {
-
+const modifiedElements = computed(() => {
   const data: CompareModified[] = [];
-  const headline: (CompareHeadline | string)[] = [''];
+  const headline: CompareHeadline[] = [{}];
 
   props.elements?.forEach((element) => {
-
-    headline.push({ headline: element.headline, description: element.description } as CompareHeadline);
-
+    headline.push({ headline: element.headline, description: element.description });
   });
 
   data.push(headline);
+
   props.structure?.forEach((structure, index) => {
-
     data.push([{ headline: structure.headline, description: structure.description, structure: true }]);
-    structure.list?.forEach((list: any, listIndex: string | number) => {
 
-      const newLine = [];
+    structure.list?.forEach((list, listIndex) => {
+      const newLine: CompareHeadline | string[] = [];
 
       newLine.push(list);
 
       props.elements?.forEach((element) => {
-
-        let value: string | { [key: string]: string } = '';
+        let value = '';
 
         if (element.elements?.[index]) {
-
           if (element.elements[index][listIndex]) {
-
             const newValue = element.elements[index][listIndex];
 
             value = newValue;
-
           }
-
         }
 
         newLine.push(value);
-
       });
 
       data.push(newLine);
-
     });
-
   });
 
   return data;
-
 });
-const legend=computed(() => {
-
-  return modifiedElements.value[0].slice(1);
-
-});
-const amountStyle=computed(() => {
-
-  return {
-    '--amount': props.elements.length,
-  };
-
-});
+const legend = computed(() => modifiedElements.value[0].slice(1));
+const amountStyle = computed(() => ({
+  '--amount': props.elements?.length,
+}));
 
 function elementsLength (getLength: boolean) {
-
-  return getLength ? props.elements.length + 1 : false;
-
+  return getLength ? props.elements?.length + 1 : 0;
 }
-
-// eslint-disable-next-line class-methods-use-this
-function componentType (lineIndex: number) {
-
-  if (lineIndex === 0) return 'h3';
-
-  return 'td';
-
-}
-
-
 </script>
 <template>
-  <section :id="id" class="lila-compare-module lila-module">
-
+  <section :id="id" ref="element" class="lila-compare-module lila-module">
     <lila-textblock-partial v-bind="textblock" />
 
     <section v-if="modifiedElements" class="compare-container">
-
       <ul class="legend">
         <li v-for="(head, index) in legend" :key="`headline-${index}`">
           <h3>{{ index + 1 }}*</h3>
@@ -111,44 +72,30 @@ function componentType (lineIndex: number) {
       </ul>
 
       <table>
-
         <tbody>
-
-          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle"
-            v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
-
-            <td :class="{ structure: singleIndex === 0 }" :colspan="elementsLength(line.length === 1)"
-              v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`">
-
-              <template v-if="single.headline || single.description">
+          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle" v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
+            <td :class="{ structure: singleIndex === 0 }" v-for="(single, singleIndex) in line" :colspan="elementsLength(line.length === 1)" :key="`line-${singleIndex}`">
+              <template v-if="typeof single !== 'string'">
                 <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
                 <p v-if="single.description">{{ single.description }}</p>
                 <h4 class="index">{{ singleIndex }}*</h4>
               </template>
               <template v-else>
-                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'"
-                  class="icon checkbox-checked_color1">yes</lila-icons-partial>
-                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'"
-                  class="icon cancel_color1">no</lila-icons-partial>
-                <template v-else><abbr :title="single">{{ single }}</abbr></template>
+                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'" class="icon checkbox-checked_color1">{{ $translate('yes') }}</lila-icons-partial>
+                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'" class="icon cancel_color1">{{ $translate('no') }}</lila-icons-partial>
+                <template v-else>
+                  <abbr :title="single">{{ single }}</abbr>
+                </template>
               </template>
-
             </td>
-
           </tr>
-
         </tbody>
-
       </table>
-
     </section>
-
   </section>
 </template>
 
 <style lang="less" scoped>
-
-
 .lila-compare-module {
   .module;
   .modulePadding();
@@ -158,78 +105,47 @@ function componentType (lineIndex: number) {
   justify-items: center;
   gap: 40px;
 
-  .lila-textblock::v-deep {
+  :deep(.lila-textblock) {
     max-width: @desktopWidth;
   }
 
   .compare-container {
-
     max-width: @desktopWidthExt;
 
-    .legend {
-      .multi(margin-bottom, 12);
+    ul {
+      &.legend {
+        .multi(margin-bottom, 12);
 
-      li {
+        li {
+          display: grid;
+          grid-template-columns: 40px 1fr;
 
-        display: grid;
-        grid-template-columns: 40px 1fr;
-
-        h3 {
-          .font-head;
-          color: @color1;
-          text-transform: uppercase;
+          // h3 {
+          //   .font-head;
+          //   color: @color1;
+          //   text-transform: uppercase;
+          // }
         }
-      }
 
-      @media @tablet,
-      @desktop {
-        display: none;
+        @media @tablet, @desktop {
+          display: none;
+        }
       }
     }
 
-    table {
+    h3 {
+      .font-head;
+      color: @color1;
+      text-transform: uppercase;
+    }
 
+    table {
       width: 100%;
       table-layout: fixed;
       border-collapse: collapse;
 
       tr {
-
-        &.head {
-          td {
-            text-align: center;
-
-            h3,
-            p {
-              display: none;
-            }
-
-            h4 {
-              .font-head;
-              color: @color1;
-            }
-
-            @media @tablet,
-            @desktop {
-
-              h3,
-              p {
-                display: block;
-
-              }
-
-              h4 {
-                display: none;
-              }
-
-            }
-
-          }
-
-        }
-
         td {
-
           .multi(padding, 4, 1);
 
           border-bottom: solid 1px @grey;
@@ -250,21 +166,14 @@ function componentType (lineIndex: number) {
           }
 
           h3 {
-            .font-head;
-            color: @color1;
-            text-transform: uppercase;
-
             &.index {
-
-              @media @tablet,
-              @desktop {
-                display: none
+              @media @tablet, @desktop {
+                display: none;
               }
-
             }
           }
 
-          h3+p {
+          h3 + p {
             .multi(margin-top, 1);
           }
 
@@ -273,31 +182,43 @@ function componentType (lineIndex: number) {
           }
 
           &.structure {
-
             width: 25%;
             text-align: left;
 
             h4 {
               display: none;
             }
-
           }
-
         }
-
         &.head {
           td {
-            .multi(padding, 0);
+            .multi(padding, 0, 4);
+            vertical-align: top;
+          }
+
+          h3,
+          p {
+            display: none;
+            word-break: normal;
+          }
+
+          @media @tablet, @desktop {
+            h3,
+            p {
+              display: block;
+            }
+
+            h4 {
+              display: none;
+            }
           }
         }
 
         &.group {
-
           td,
           td.structure {
             width: 100%;
           }
-
         }
 
         &.group,
@@ -308,13 +229,10 @@ function componentType (lineIndex: number) {
             &:nth-child(even) {
               background-color: transparent;
             }
-
           }
         }
       }
-
     }
-
   }
-
-}</style>
+}
+</style>
