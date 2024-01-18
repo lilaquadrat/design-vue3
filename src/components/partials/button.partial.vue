@@ -15,10 +15,10 @@ const props = withDefaults(
     }>(),
   {}
 );
-let showCheck = ref(false);
-let timeout = ref<number>();
-let confirmed = ref(false);
-let emit = defineEmits<{(e: string): void}>();
+const showCheck = ref(false);
+const timeout = ref<number>();
+const confirmed = ref(false);
+const emit = defineEmits<{(e: string): void}>();
 const check = (): void => {
 
   if (!showCheck.value) {
@@ -66,7 +66,7 @@ const confirm = (event: MouseEvent): void => {
 
 </script>
 <template>
-  <button class="lila-button base" :disabled="disabled" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button base" :disabled="disabled" type="button" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
       <slot v-if="!showCheck && !confirmed" />
       <span v-if="showCheck">Please confirm your action.</span>
       <span v-if="confirmed">confirmed</span>

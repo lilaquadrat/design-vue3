@@ -50,10 +50,14 @@ class Resize {
       const childClass = child.getAttribute('class') as string;
 
       if (this.media.value !== childClass) {
+
         this.media.value = childClass;
         window.dispatchEvent(this.mediaEvent);
+
       } else {
+
         this.media.value = childClass;
+        
       }
     }
   }

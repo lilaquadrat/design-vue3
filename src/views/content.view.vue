@@ -20,6 +20,9 @@ import quote from './viewData/quote';
 import text from './viewData/text';
 import index from './viewData/index';
 import compare from './viewData/compare';
+import prices from './viewData/prices';
+import quellcode from './viewData/quellcode';
+import video from './viewData/video';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -36,6 +39,9 @@ const modules: Record<string, Partial<Content>> = {
   quote,
   text,
   compare,
+  prices,
+  quellcode,
+  video,
   'blog-intro': blogIntro
 };
 const route = useRoute();

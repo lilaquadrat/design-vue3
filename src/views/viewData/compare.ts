@@ -32,7 +32,7 @@ export default {
           'description': 'Distinctive features of Product B',
           'elements'   : [
             [
-              'Cutting-edge Design',
+              'no',
               'Energy Efficient',
               'High Durability'
             ]
@@ -44,7 +44,7 @@ export default {
           'elements'   : [
             [
               'Innovative Functionality',
-              'Sustainable Materials',
+              'yes',
               'Easy Maintenance'
             ]
           ]

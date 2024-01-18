@@ -1,69 +1,55 @@
 <script setup lang="ts">
+import type IconsPartial from '@/interfaces/IconsPartial';
 import { computed, getCurrentInstance, inject, type ComputedRef } from 'vue';
 
 const props = defineProps<{
-    link: string
-    text?: string
-    icon?: string
-    attributes?: string[]
-    classes?: string[]
-    variant?: string[]
+  link: string
+  text?: string
+  icon?: IconsPartial['type']
+  attributes?: string[]
+  classes?: string[]
+  variant?: string[]
+  callToAction?: boolean
+  button?: boolean
 }>();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
-const linkWithBase: ComputedRef<string> = computed(() => linkBase ? `${linkBase}/${props.link}` : props.link); 
-const type: ComputedRef<'router-link' | 'a'> = computed(() => linkMode === 'event' ? 'a' : 'router-link'); 
+const linkWithBase: ComputedRef<string> = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
+const type: ComputedRef<'router-link' | 'a'> = computed(() => (linkMode === 'event' ? 'a' : 'router-link'));
 const emit = defineEmits<{
-  (e: string, id: string): void
+  (e: string, id: string): void;
 }>();
 const event = ($event: MouseEvent) => {
-
   if (props.attributes?.includes('event') || linkMode === 'event') {
-
     $event.preventDefault();
 
     const instance = getCurrentInstance();
 
     if (linkMode === 'event') {
 
-      instance?.emit('integratedLink', {link: props.link.slice(1), text: props.text});
+      instance?.emit('integratedLink', { link: props.link.slice(1), text: props.text });
       // this.$root.$emit('integratedLink', { link: this.link, text: this.text });
-
     } else {
 
-      emit(props.link.slice(1), props.text);
+      emit(props.link.slice(1), props.text as string);
       instance?.emit(props.link.slice(1), props.text);
 
       // this.$emit(this.link.slice(1), this.text);
       // this.$root.$emit(this.link.slice(1), this.text);
-
     }
-
-
   }
-
 };
 
 </script>
 <template>
-  <component
-    v-if="link"
-    :class="[variant, classes, {hasIcon: icon}]"
-    class="lila-link"
-    :is="type"
-    :to="linkWithBase"
-    :href="linkWithBase"
-    @click="event"
-    >
+  <component v-if="link" :class="[variant, classes, { hasIcon: icon, callToAction: props.callToAction, button: props.button }]" class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase" @click="event">
     <lila-icons-partial v-if="icon" :type="icon" size="small" />
     {{ text }}
     <slot v-if="!text"></slot>
   </component>
 </template>
 <style lang="less" scoped>
-
 .lila-link {
-
   color: @link;
   .font-normal;
   .trans(color);
@@ -73,9 +59,8 @@ const event = ($event: MouseEvent) => {
   }
 
   &.hasIcon {
-
     .lila-icon-partial {
-      display: inline
+      display: inline;
     }
   }
 
@@ -89,9 +74,7 @@ const event = ($event: MouseEvent) => {
     color: @white;
 
     font-size: @fontTextSmaller;
-
     line-height: @linkLineHeight;
-
     text-transform: uppercase;
 
     transition: background @aTime @aType;
@@ -104,12 +87,11 @@ const event = ($event: MouseEvent) => {
     }
 
     &.colorScheme2 {
-      border-color: @color3;
-      color: @color3;
+      background-color: @color3;
+      color: @white;
 
       &:hover {
-        border-color: @color1;
-        color: @color1;
+        background-color: @color1;
       }
 
       &.router-link-active {

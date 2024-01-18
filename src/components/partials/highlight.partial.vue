@@ -1,96 +1,88 @@
 <template>
-  <section ref="$el" class="lila-highlight" :class="[variant]" v-if="notEmpty">
+  <section ref="element" class="lila-highlight" :class="[variant]" v-if="notEmpty">
     <pre :key="keyhelper">
-        <div class="codeContainer">
-          <lila-button-partial class="copyCode transparent" @confirmed="copyCode()">
-            Copy
-          </lila-button-partial>
-        <code>{{ code }}</code>
-        </div>
-      </pre>
-
+      <div class="codeContainer">
+        <lila-button-partial class="copyCode transparent" @click="copyCode()">Copy</lila-button-partial>
+        <code ref="codeElement">{{ props.code }}</code>
+      </div>
+    </pre>
+    <textarea v-show="copyMode" ref="copyTextarea" :value="props.code" />
   </section>
 </template>
 <script setup lang="ts">
-// import hljs from 'highlight.js/lib/core';
-// import javascript from 'highlight.js/lib/languages/javascript';
-// import typescript from 'highlight.js/lib/languages/typescript';
-// import css from 'highlight.js/lib/languages/css';
-// import less from 'highlight.js/lib/languages/less';
-// import xml from 'highlight.js/lib/languages/xml';
-// import bash from 'highlight.js/lib/languages/bash';
-// import markdown from 'highlight.js/lib/languages/markdown';
-// import json from 'highlight.js/lib/languages/json';
-// import scss from 'highlight.js/lib/languages/scss';
-// import yaml from 'highlight.js/lib/languages/yaml';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import css from 'highlight.js/lib/languages/css';
+import less from 'highlight.js/lib/languages/less';
+import xml from 'highlight.js/lib/languages/xml';
+import bash from 'highlight.js/lib/languages/bash';
+import markdown from 'highlight.js/lib/languages/markdown';
+import json from 'highlight.js/lib/languages/json';
+import scss from 'highlight.js/lib/languages/scss';
+import yaml from 'highlight.js/lib/languages/yaml';
 
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('less', less);
+hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('markdown', markdown);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('scss', scss);
+hljs.registerLanguage('yaml', yaml);
+
 const props = defineProps<{
-  text: string[];
   code: string;
-  headline: string;
   variant?: string[];
 }>();
-let keyhelper: string = Date.now().toString();
-let copyElement: boolean = false;
-const notEmpty = computed((): boolean => {
+const keyhelper = ref<string>(Date.now().toString());
+const copyMode = ref<boolean>(false);
+const notEmpty = computed((): boolean => !!props.code);
+const codeElement = ref<HTMLElement>();
+const copyTextarea = ref<HTMLTextAreaElement>();
 
-  return !!props.code;
-
-});
-let $el = ref(null);
-
-//wasn't sure how to correct this
 watch(props, (state, prevstate) => {
 
   if (state.code != prevstate.code) {
-    keyhelper = Date.now().toString();
+    keyhelper.value = Date.now().toString();
+
     nextTick().then(() => {
-
-      hljs.highlightElement($el.value.querySelector('pre code'));
-
+      if(codeElement.value && notEmpty.value) hljs.highlightElement(codeElement.value);
     });
 
-
   }
-
-
 });
 
 onMounted(() => {
 
-  hljs.registerLanguage('javascript', javascript);
-  hljs.registerLanguage('typescript', typescript);
-  hljs.registerLanguage('css', css);
-  hljs.registerLanguage('less', less);
-  hljs.registerLanguage('xml', xml);
-  hljs.registerLanguage('bash', bash);
-  hljs.registerLanguage('markdown', markdown);
-  hljs.registerLanguage('json', json);
-  hljs.registerLanguage('scss', scss);
-  hljs.registerLanguage('yaml', yaml);
-
-  if (notEmpty.value) {
-
-    hljs.highlightElement($el.value.querySelector('pre code'));
-
+  if (notEmpty.value && codeElement.value) {
+    hljs.highlightElement(codeElement.value);
   }
 
 });
 
-function copyCode(this: any) {
+function copyCode () {
+  copyMode.value = true;
 
-  navigator.clipboard.writeText(this.code);
+  requestAnimationFrame(() => {
 
+    if(copyTextarea.value) {
+
+      copyTextarea.value.select();
+      document.execCommand('copy');
+      
+    }
+
+    copyMode.value = false;
+  })
 }
-
-
 </script>
 
 <style lang="less">
-
-
 .lila-highlight {
   overflow: hidden;
   width: 100%;
@@ -102,26 +94,20 @@ function copyCode(this: any) {
   }
 
   &.darkmode .copyCode {
-
     color: white;
-
   }
 
   pre {
     white-space: nowrap;
 
     .codeContainer {
-
       position: relative;
 
       .copyCode {
-
         position: absolute;
         right: 15px;
         top: 5px;
-
       }
-
     }
 
     code.hljs {
@@ -129,7 +115,7 @@ function copyCode(this: any) {
       overflow-y: auto;
       white-space: pre;
 
-      .multi(padding, 12, 8, 8, 8);
+      .multi(padding, 12, 4, 8, 4);
     }
   }
 
@@ -228,7 +214,6 @@ function copyCode(this: any) {
   // highlight.js standard css code (github-dark.css)
 
   &.darkmode {
-
     .hljs {
       background: #0d1117;
       color: #c9d1d9;

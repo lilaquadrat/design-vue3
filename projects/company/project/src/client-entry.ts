@@ -9,6 +9,7 @@ import translations from '@/plugins/translations';
 import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
+import youtubePlugin from '@/plugins/youtube';
 
 const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
 const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
@@ -25,6 +26,7 @@ app.use(createRouter(routes));
 app.use(translations);
 app.use(HelpersPlugin);
 app.use(resizePlugin);
+app.use(youtubePlugin);
 
 app.config.globalProperties.$translations.add(de, 'de');
 app.config.globalProperties.$translations.select('de');

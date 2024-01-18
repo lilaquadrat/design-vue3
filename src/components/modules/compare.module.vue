@@ -75,7 +75,7 @@ function elementsLength (getLength: boolean) {
         <tbody>
           <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle" v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
             <td :class="{ structure: singleIndex === 0 }" v-for="(single, singleIndex) in line" :colspan="elementsLength(line.length === 1)" :key="`line-${singleIndex}`">
-              <template v-if="typeof single !== 'string'">
+              <template v-if="(typeof single !== 'string')">
                 <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
                 <p v-if="single.description">{{ single.description }}</p>
                 <h4 class="index">{{ singleIndex }}*</h4>
@@ -103,7 +103,7 @@ function elementsLength (getLength: boolean) {
 
   display: grid;
   justify-items: center;
-  gap: 40px;
+  gap: 80px;
 
   :deep(.lila-textblock) {
     max-width: @desktopWidth;
@@ -120,11 +120,6 @@ function elementsLength (getLength: boolean) {
           display: grid;
           grid-template-columns: 40px 1fr;
 
-          // h3 {
-          //   .font-head;
-          //   color: @color1;
-          //   text-transform: uppercase;
-          // }
         }
 
         @media @tablet, @desktop {

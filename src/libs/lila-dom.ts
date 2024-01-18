@@ -9,14 +9,14 @@ export default class Dom {
 
   store: Store<any>;
 
-  constructor(store: Store<MainStoreState>) {
+  constructor (store: Store<MainStoreState>) {
 
     this.bindings = [];
     this.store = store;
 
   }
 
-  on(events: string, selector: string, func: EventListener) {
+  on (events: string, selector: string, func: EventListener) {
 
     const splitEvents = events.split(' ');
     const selectedElement = this.getElement(selector);
@@ -30,7 +30,7 @@ export default class Dom {
 
   }
 
-  onElement(events: string, element: Element, func: EventListener) {
+  onElement (events: string, element: Element, func: EventListener) {
 
     const splitEvents = events.split(' ');
 
@@ -43,7 +43,7 @@ export default class Dom {
 
   }
 
-  off(events: string, selector: string) {
+  off (events: string, selector: string) {
 
     const splitEvents = events.split(' ');
     const selectedElement = this.getElement(selector);
@@ -61,7 +61,7 @@ export default class Dom {
 
   }
 
-  destroyBindings() {
+  destroyBindings () {
 
     this.bindings.forEach((e) => {
 
@@ -73,7 +73,7 @@ export default class Dom {
 
   }
 
-  getElement(selector: string) {
+  getElement (selector: string) {
 
     let selectedElement: Document | HTMLElement;
 
@@ -91,7 +91,7 @@ export default class Dom {
 
   }
 
-  set title(title: string) {
+  set title (title: string) {
 
     document.title = title
       ? `${title} ${this.store.state.settings?.title?.short}`

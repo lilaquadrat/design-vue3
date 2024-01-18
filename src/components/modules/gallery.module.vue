@@ -42,28 +42,20 @@ function indexChange (): void {
   updateText();
 }
 
-const cssElementsLength = computed((): { [key: string]: string | number } => {
-  return {
-    '--n' : props.elements.length,
-    '--i' : currentOptionIndex.value,
-    '--ts': `${tempSwipe.value}px`,
-  };
-});
-const cssWidth = computed((): { [key: string]: string } => {
-  return {
-    '--width': `${100 / props.elements.length}%`,
-  };
-});
-const controlsTop = computed((): { [key: string]: string } => {
-  return {
-    '--top': `${controlsOffset.value / 2}px`,
-  };
-});
-const indicatorsTop = computed((): { [key: string]: string } => {
-  return {
-    '--top': `${controlsOffset.value}px`,
-  };
-});
+const cssElementsLength = computed((): { [key: string]: string | number } => ({
+  '--n' : props.elements.length,
+  '--i' : currentOptionIndex.value,
+  '--ts': `${tempSwipe.value}px`,
+}));
+const cssWidth = computed((): { [key: string]: string } => ({
+  '--width': `${100 / props.elements.length}%`,
+}));
+const controlsTop = computed((): { [key: string]: string } => ({
+  '--top': `${controlsOffset.value / 2}px`,
+}));
+const indicatorsTop = computed((): { [key: string]: string } => ({
+  '--top': `${controlsOffset.value}px`,
+}));
 /** checks if any elements has a description */
 const elementDescription = computed(() => !!props.elements.find((single) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length));
 const variant2 = computed((): boolean => !!props.variant?.includes('variant2'));

@@ -1,26 +1,22 @@
 <template>
-  <section :class="[variant, view]" class="lila-module lila-quellcode-module">
-    <lila-textblock-partial v-bind="$props" />
-    <lila-highlight-partial v-bind="$props" />
+  <section ref="element" :class="[variant, inviewState]" class="lila-module lila-quellcode-module">
+    <lila-textblock-partial v-bind="props.textblock" />
+    <lila-highlight-partial :code="props.code" :variant="props.variant" />
   </section>
 </template>
 <script setup lang="ts">
+import type Textblock from '@/interfaces/textblock.interface';
+import { useInview } from '@/plugins/inview';
+import { ref } from 'vue';
 
 const props = defineProps<{
-
-  text: string[];
-
+  textblock?: Textblock
   code: string;
-
-  headline: string;
-
-  subline: string;
-
-  intro: string;
-  view?: string;
   variant: string[];
-
 }>();
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
+
 </script>
 
 <style lang="less" scoped>
