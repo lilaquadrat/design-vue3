@@ -7,6 +7,7 @@ import type faqModuleVue from '@/components/modules/faq.module.vue';
 import type accordionPartialVue from '@/components/partials/accordion.partial.vue';
 import type textblockPartialVue from '@/components/partials/textblock.partial.vue';
 import type linkPartialVue from '@/components/partials/link.partial.vue';
+import type videoPartialVue from '@/components/partials/video.partial.vue';
 
 declare module 'vue' {
     export interface GlobalComponents {
@@ -21,6 +22,7 @@ declare module 'vue' {
         'lila-accordion-partial': typeof accordionPartialVue
         'lila-textblock-partial': typeof textblockPartialVue
         'lila-link-partial': typeof linkPartialVue
+        'lila-video-partial': typeof videoPartialVue
     }
 }
 

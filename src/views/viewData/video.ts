@@ -16,7 +16,26 @@ export default {
       },
       'video': {
         'src'       : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/introfinal.mp4',
-        'attributes': []
+        'attributes': [],
+        'preload'   : 'none'
+      }
+    },
+    {
+      'type'     : 'video-module',
+      'variant'  : [],
+      'textblock': {
+        'headline': 'multi sources = Comparative Analysis of Product Features',
+        'subline' : 'A Detailed Look at What Sets Our Products Apart',
+      },
+      'video': {
+        'src'       : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/introfinal.mp4',
+        'attributes': [],
+        'source'    : [
+          {
+            media : 'tablet',
+            source: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/geforce-now-start.webm'
+          }
+        ]
       }
     },
     {
@@ -28,18 +47,58 @@ export default {
       },
       'video': {
         'src'       : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/introfinal.mp4',
-        'attributes': []
+        'attributes': [],
+        'preload'   : 'none'
       },
       'poster': {
         src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_fiery_color_002-2.jpg'
       }
     },
     {
-      'type'   : 'video-module',
-      'variant': [],
-      'video'  : {
+      'type'     : 'video-module',
+      'variant'  : [],
+      'textblock': {
+        'headline': 'World of Warcraft',
+        'subline' : 'A Detailed Look at What Sets Our Products Apart',
+      },
+      'poster': {
+        src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_fiery_color_002-2.jpg'
+      },
+      'video': {
+        'src'       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
+        'attributes': [],
+        'preload'   : 'none'
+      }
+    },
+
+    {
+      'type'     : 'video-module',
+      'variant'  : ['fullscreen'],
+      'textblock': {
+        'headline': 'World of Warcraft',
+        'subline' : 'A Detailed Look at What Sets Our Products Apart',
+      },
+      'poster': {
+        src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_fiery_color_002-2.jpg'
+      },
+      'video': {
         'src'       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
         'attributes': []
+      }
+    },
+    {
+      'type'     : 'video-module',
+      'variant'  : [],
+      'textblock': {
+        'headline': 'World of Warcraft',
+        'subline' : 'A Detailed Look at What Sets Our Products Apart',
+      },
+      'poster': {
+        src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_fiery_color_002-2.jpg'
+      },
+      'video': {
+        'src'       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
+        'attributes': ['autoplay', 'mute']
       }
     },
     {

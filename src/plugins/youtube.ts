@@ -1,26 +1,30 @@
 import { ref } from 'vue';
 
-
 class Youtube {
 
   youtubeApiState = ref<boolean>(false);
 
+  loadState = ref<boolean>(false);
+
   loadApi () {
+
+    if(this.loadState.value) return Promise.resolve();
+    
     return new Promise<void>((resolve) => {
-        
+      
       const script = document.createElement('script');
-            
+      
       script.src = 'https://www.youtube.com/iframe_api';
-            
+      
       script.onload = () => {
-            
+        
         console.log('youtube api loaded');
         
-
         resolve();
       };
-            
+      
       document.body.appendChild(script);
+      this.loadState.value = true;
             
             
     });
@@ -38,7 +42,7 @@ class Youtube {
     }
   
   }
-  
+
 
 }
 
@@ -52,7 +56,9 @@ const plugin = {
 };
 
 window.onYouTubeIframeAPIReady = () => {
+
   youtubePlugin.youtubeApiState.value = true;
+  
 };
 
   

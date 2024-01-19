@@ -1,6 +1,6 @@
 <template>
     <section class="lila-overlay-background" ref="background" :class="[backgroundMode]" @keydown="checkClose" @click="checkClose">
-      <slot></slot>
+      <slot />
     </section>
 </template>
 <script setup lang="ts">
@@ -9,39 +9,37 @@ import { computed, nextTick, onDeactivated, onMounted } from 'vue';
 const props = defineProps < {
   background: 'none' | 'mobile' | 'tablet' | 'desktop';
 }> ();
-let emit = defineEmits<{
+const emit = defineEmits<{
     (e: string): void
 }>();
-const backgroundMode= computed(() => {
+const backgroundMode= computed(() => props.background || 'mobile');
 
-  return props.background || 'mobile';
+function checkClose (event: Event) {
 
-});
+  console.log(event);
 
-function checkClose ($e: { target: any; }) {
+  // if (this.$refs.background !== $e.target) return;
 
-  if (this.$refs.background !== $e.target) return;
-
-  emit('close');
+  // emit('close');
 
 }
 
-onMounted(() => {
+// onMounted(() => {
 
-  nextTick(() => {
+//   nextTick(() => {
 
-    if (this.$store) this.$store.dispatch('fullscreen', true);
-    emit('mounted');
+//     if (this.$store) this.$store.dispatch('fullscreen', true);
+//     emit('mounted');
 
-  });
+//   });
 
-});
+// });
 
-onDeactivated(() => {
+// onDeactivated(() => {
 
-  if (this.$store) this.$store.dispatch('fullscreen', false);
+//   if (this.$store) this.$store.dispatch('fullscreen', false);
 
-});
+// });
 // not sure sbout this.$store
 </script>
 <style lang="less">

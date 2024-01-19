@@ -40,11 +40,13 @@ class Resize {
   }
 
   getMediaQuery (): void {
+    
     const element = document.getElementById('mediadetection');
-
+    
     if (!element) return;
 
     const child = Array.from(element.children).find(child => window.getComputedStyle(child).display === 'block');
+
 
     if (child) {
       const childClass = child.getAttribute('class') as string;
@@ -94,5 +96,6 @@ function useResize () {
 export default plugin;
 
 export {
-  useResize
+  useResize,
+  resize
 };

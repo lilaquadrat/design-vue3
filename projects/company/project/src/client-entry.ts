@@ -6,7 +6,7 @@ import routes from './routes';
 import createRouter from '@/mixins/createRouter';
 import loadComponents from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
-import resizePlugin from '@/plugins/resize';
+import resizePlugin, {resize} from '@/plugins/resize';
 import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
@@ -33,3 +33,6 @@ app.config.globalProperties.$translations.select('de');
 
 
 app.mount('#app');
+
+// update the media query directly after mount otherwise it will be mobile until resize
+resize.getMediaQuery();

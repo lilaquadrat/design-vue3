@@ -2,6 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": [
     "env.d.ts",
+    "globals.d.ts",
     "src/**/*",
     "src/stores/*",
     "src/**/*.vue",
@@ -24,6 +25,10 @@
     "composite": true,
     "noEmit": true,
     "baseUrl": ".",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [ "youtube" ],
     "paths": {
       "@/*": [
         "./src/*"

@@ -4,6 +4,7 @@ import type { VideoSource } from '../../interfaces/video.interface';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import dom from '@/functions/lila-dom';
 import { useYoutube } from '@/plugins/youtube';
+import { onBeforeMount } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -20,35 +21,50 @@ const props = withDefaults(
     preload: 'auto',
   },
 );
-const {youtubeApiState, addYoutube } = useYoutube();
+const emit = defineEmits<{
+  (e: string, i: boolean): void;
+}>();
+const { media } = useResize();
+const { youtubeApiState, addYoutube } = useYoutube();
 const videoElement = ref<HTMLVideoElement>();
-const youtubePlayer = ref();
+const youtubePlayerElement = ref<HTMLElement>();
+const youtubePlayer = ref<YT.Player>();
 const loading = ref<boolean>(true);
-const loadVideo = ref<boolean>();
+const loadVideo = ref<boolean>(false);
 const isPlaying = ref<boolean>(false);
 const renderTarget = ref<string>('browser');
-const state = ref<string>('loading');
+const state = ref<string>('init');
+const listenersAttached = ref<boolean>(false);
 const videoType = computed(() => (props.src?.match('^https://(www.)?youtube.com') ? 'youtube' : 'basic'));
+const renderVideo = computed(() => (props.preload === 'auto' || (props.preload === 'none' && loadVideo.value)) && props.src && videoType.value !== 'youtube' && renderTarget.value !== 'pdf');
 const youtubeId = computed(() => {
 
   if (videoType.value !== 'youtube') return false;
 
   const url = new URL(props.src);
-  
-  console.log(url, url.searchParams.get('v'));
 
   return url.searchParams.get('v');
 
 });
-const emit = defineEmits<{
-  (e: string, i: boolean): void;
-}>();
-const { media } = useResize();
 
 
+watch(() => media.value, () => start());
 watch(() => props.src, () => start());
 watch(() => props.source, () => start());
 watch(() => props.trigger, () => toggle());
+watch(() => isPlaying.value, () => emit('playing', isPlaying.value));
+watch(() => state.value, () => emit('loading', state.value === 'loading'));
+/**
+* used if preload is set to none to start the video after the element is loaded
+*/
+watch(() => videoElement.value, (before, after) => {
+
+
+  //if the watcher is called in the init process we wont force start playing
+  start(state.value !== 'init');
+  bind();
+
+});
 
 const attributesObject = computed(() => {
 
@@ -64,16 +80,28 @@ const attributesObject = computed(() => {
 
 });
 
-watch(() => isPlaying.value, () => emit('playing', isPlaying.value));
+onBeforeMount(() => {
+
+  if(props.preload === 'auto') loadVideo.value = true;
+
+})
+
 
 onMounted(() => {
+
   start();
   bind();
+
 });
 
+/**
+ * adds listeners for play, pause and ended events
+ */
 function bind () {
 
-  if (videoElement.value) {
+  if(listenersAttached.value || !loadVideo.value) return;
+
+  if (videoType.value === 'basic' && videoElement.value) {
 
     dom.onElement('playing', videoElement.value, () => {
 
@@ -93,74 +121,96 @@ function bind () {
 
     });
 
+    dom.onElement('canplay', videoElement.value, () => {
+
+      state.value = 'ready';
+
+    });
+
+    listenersAttached.value = true;
+
+  }
+
+  if (videoType.value === 'youtube' && youtubePlayer.value) {
+
+    youtubePlayer.value?.addEventListener('onStateChange', (event: YT.OnStateChangeEvent) => {
+
+      if(event.data === 1) isPlaying.value = true;
+      if(event.data === 2 || event.data === 0) isPlaying.value = false;
+
+    })
+
+    listenersAttached.value = true;
+
   }
 
 }
 
+/**
+ * starts or pauses the video
+ *
+ * if preload is set to none, inits the loading 
+ */
 function toggle () {
-  // if (props.preload === 'none' && !loadVideo.value) {
-  //   loadVideo.value = true;
-  //   nextTick(() => {
-  //     bind();
-  //     start();
-  //   });
-  //   return false;
-  // }
+
+  /**
+  * video was not preloaded and is not loaded
+  */
+  if (props.preload === 'none' && !loadVideo.value) {
+
+    loadVideo.value = true;
+    state.value = 'loading';
+    if(videoType.value === 'youtube') startYoutube();
+    return false;
+
+  }
 
   if (props.preview) return false;
 
-  if (videoType.value === 'basic') {
+  if (isPlaying.value) {
 
-    if (!videoElement.value) return false;
+    pause();
 
-    if (isPlaying.value) {
+  } else {
 
-      videoElement.value.pause();
-
-    } else {
-
-      if (props.attributes?.includes('unmuted')) {
-
-        videoElement.value.muted = false;
-        
-      }
-
-      play();
-
-    }
+    play();
 
   }
 
-  // if (videoType.value === 'youtube') {
-  //   if (isPlaying.value) {
-  //     youtubeObject.pause();
-  //   } else {
-  //     youtubeObject.playVideo();
-  //   }
-  // }
+
+}
+
+/**
+ * trigger the loading of the youtube api and create the player when its done
+ */
+function startYoutube () {
+
+  if(!youtubeApiState.value) {
+
+    addYoutube();
+    watch(youtubeApiState, () => createYoutubePlayer());
+
+  } else {
+
+    createYoutubePlayer()
+
+  }
+
+  return
 
 }
 
 
-async function start (this: any) {
+async function start (forcePlaying?: boolean) {
 
-  if (videoType.value === 'youtube') {
-  
-    if(!youtubeApiState.value) {
+  if(!loadVideo.value) return false;
 
-      addYoutube();
-      watch(youtubeApiState, () => createYoutubePlayer());
+  if(videoType.value === 'youtube') {
 
+    startYoutube();
+    return;
 
-    } else {
-
-      createYoutubePlayer()
-    }
-
-    return
   }
-
-  console.log(videoElement.value, props.src);
 
   await nextTick();
   if(!videoElement.value) return;
@@ -169,15 +219,13 @@ async function start (this: any) {
   const allSource = videoElement.value.querySelectorAll('source');
   let newSource = videoElement.value.querySelector(`.${media.value}`);
 
-  if (allSource.length === 1) newSource = allSource[0];
+  if (allSource.length === 1 || !newSource) newSource = allSource[0];
 
   if (current) current.removeAttribute('src');
   if (newSource) newSource.setAttribute('src', newSource.getAttribute('data-src') as string);
 
   await nextTick();
   if (typeof videoElement.value.load !== 'function') return;
-
-  videoElement.value.load();
 
   if (props.attributes?.includes('muted')) {
 
@@ -186,82 +234,105 @@ async function start (this: any) {
 
   }
 
-  if (props.attributes?.includes('play')) {
+  /** play the video when its ready to play */
+  videoElement.value.addEventListener('canplay', () => {
 
-    play();
+    if (props.attributes?.includes('play') || forcePlaying || isPlaying.value) {
 
-  }
+      play();
 
+    }
+
+  }, 
+  {once: true}
+  );
+
+  videoElement.value.load();
 }
 
 function play () {
 
-  videoElement.value.play();
-  isPlaying.value = true;
+
+  if(youtubePlayer.value) {
+
+    youtubePlayer.value.playVideo();
+
+  } else {
+
+    videoElement.value?.play();
+
+    if (props.attributes?.includes('unmuted')) {
+
+      if(videoElement.value) videoElement.value.muted = false;
+  
+    }
+  }
+
+}
+
+function pause () {
+
+  if(youtubePlayer.value) {
+
+    youtubePlayer.value.pauseVideo();
+
+  } else {
+
+    videoElement.value?.pause();
+  }
+
+}
+
+/**
+ * create the youtube player
+ */
+function createYoutubePlayer () {
+
+  if(!youtubePlayerElement.value || !youtubeId.value) return;
+
+  const playerVars: YT.PlayerVars = {
+    loop    : props.attributes?.includes('loop') ? 1 : 0,
+    autoplay: props.attributes?.includes('autoplay') ? 1 : 0,
+    mute    : props.attributes?.includes('mute') ? 1 : 0,
+    controls: props.attributes?.includes('controls') ? 1 : 0,
+    rel     : 0,
+    showinfo: 0
+  }
+
+  youtubePlayer.value = new YT.Player(
+    youtubePlayerElement.value, 
+    {
+      height : '100%',
+      width  : '100%',
+      videoId: youtubeId.value,
+      playerVars,
+      events : {
+        onReady: () => {
+
+          bind();
+          state.value = 'ready';
+          if(props.preload === 'none') play();
+
+        }
+      }
+    }
+  );
+
+  bind();
   
 }
 
-
-function createYoutubePlayer () {
-  new YT.Player(youtubePlayer.value, {
-    height : '100%',
-    width  : '100%',
-    videoId: youtubeId.value,
-    // Additional player parameters
-  });
-}
-// const youtubeSettings = computed(() => {
-//   if (videoType.value !== 'youtube') return false;
-//   return {
-//     'video-id'     : youtubeId,
-//     'player-width' : '100%',
-//     'player-height': '100%',
-//     'player-vars'  : {
-//       autoplay      : props.attributes?.includes('autoplay') ? 1 : 0,
-//       controls      : props.attributes?.includes('controls') ? 1 : 0,
-//       loop          : props.attributes?.includes('loop') ? 1 : 0,
-//       modestbranding: 1,
-//       rel           : 0,
-//     },
-//     host: 'https://www.youtube-nocookie.com',
-//   };
-// });
-// const realSrc = computed(() => {
-//   if (videoType.value === 'youtube') {
-//     const url = new URL(props.src);
-//     const videoId = url.searchParams.get('v');
-
-//     return props.js ? videoId : `https://www.youtube-nocookie.com/embed/${videoId}`;
-//   }
-
-//   return props.src;
-// });
-
-// function ready (event: { target: any }) {
-//   youtubeObject = event.target;
-// }
-
-
-function paused () {
-  isPlaying.value = false;
-  emit('playing', false);
-}
-
-function ended () {
-  isPlaying.value = false;
-  emit('ended', false);
-}
 </script>
 <template>
-  <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="{ noPreload: preload === 'none' }">
-    <section v-if="preload === 'none' && !loadVideo" class="preload-placeholder">LOAD VIDEO</section>
-    <video v-if="(preload === 'auto' || (preload === 'none' && loadVideo)) && src && !youtubeId && renderTarget !== 'pdf'" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
+  <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none' }, state]">
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
+    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
       <source v-for="single in source" :key="single.media" :class="single.media" :data-src="single.source" />
       <track kind="captions" />
       <source v-if="src" :data-src="src" />
     </video>
     <section v-if="youtubeId" class="youtube-container">
-      <div ref="youtubePlayer" class="youtube-video">YOUTUBE {{ youtubeApiState }}</div>
+      <div ref="youtubePlayerElement" class="youtube-video"></div>
     </section>
   </section>
 </template>
@@ -274,7 +345,19 @@ function ended () {
     cursor: pointer;
   }
 
-  .youtube-container {
+  &.noPreload {
+    video {
+      position: absolute;
+    }
+
+    &.ready {
+      video {
+        position: relative;
+      }
+    }
+  }
+
+  .youtube-container, .preload-placeholder {
     position: relative;
     width: 100%;
     padding-top: 56.25%; /* Aspect Ratio 16:9 */

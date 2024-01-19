@@ -18,6 +18,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 const playing = ref<boolean>(false);
 const trigger = ref<boolean>(false);
 const started = ref<boolean>(false);
+const loading = ref<boolean>(false);
 
 // if the video is not already playing activate the trigger for the video partial
 function start () {
@@ -42,6 +43,12 @@ function ended () {
   
 }
 
+function updateLoading (loadingState: boolean) {
+
+  loading.value = loadingState;
+
+}
+
 const hasPoster = computed(() => !!props.poster?.src);
 const controls = computed(() => props.video?.attributes?.includes('controls'));
 
@@ -49,10 +56,11 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
 <template>
   <section ref="element" :id="id" @click="start" @keypress="start" :class="[variant, inviewState, { started, controls }]" class="lila-video-module lila-module">
     <section class="video-container">
-      <lila-video-partial :trigger="trigger" v-bind="video" @playing="toggle" @ended="ended" />
+      <lila-video-partial :trigger="trigger" v-bind="video" @playing="toggle" @loading="updateLoading" @ended="ended" />
 
       <section class="position-container" :class="{ visible: !playing }">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
+        <lila-indicator-partial  v-if="loading" :variant="variant" />
       </section>
 
       <lila-picture-partial class="posterExt" v-if="hasPoster" :class="{ visible: !playing }" v-bind="poster" />
@@ -88,6 +96,10 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
       align-self: center;
       justify-self: center;
       text-align: center;
+
+      display: grid;
+      grid-template-rows: max-content 20px;
+      justify-items: center;
 
       &.visible {
         .basicHover();

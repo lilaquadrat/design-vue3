@@ -32,7 +32,7 @@ const props = defineProps<{
   src: string;
 
   copyright?: string;
-  source: Picture['source'];
+  source?: Picture['source'];
 
   noLoadAnimation?: boolean;
 

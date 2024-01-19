@@ -29,7 +29,7 @@ const props = defineProps<{
   id?: string;
   variant: string[];
 }>();
-let fullscreenOverlay = ref(false);
+const fullscreenOverlay = ref(false);
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const showText = computed((): boolean => {
@@ -41,9 +41,7 @@ const showText = computed((): boolean => {
     return props.textblock[singleTyped]?.length;
   });
 });
-const fullscreenOverlayEnabled = computed(() => {
-  return props.variant.includes('fullscreenOverlayEnabled');
-});
+const fullscreenOverlayEnabled = computed(() => props.variant.includes('fullscreenOverlayEnabled'));
 
 function toggleFullscreenOverlay () {
   fullscreenOverlay.value = !fullscreenOverlay.value;

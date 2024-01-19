@@ -23,6 +23,7 @@ import compare from './viewData/compare';
 import prices from './viewData/prices';
 import quellcode from './viewData/quellcode';
 import video from './viewData/video';
+import navigation from './viewData/navigation';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -42,6 +43,7 @@ const modules: Record<string, Partial<Content>> = {
   prices,
   quellcode,
   video,
+  navigation,
   'blog-intro': blogIntro
 };
 const route = useRoute();

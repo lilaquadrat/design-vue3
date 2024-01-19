@@ -1,10 +1,8 @@
-<script setup lang="ts">
-
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <RouterView />
+  <lila-mediadetection-partial />
 </template>
 
 <style lang="less">
