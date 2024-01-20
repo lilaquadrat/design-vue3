@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
-import { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
+import type { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
 import ModelsClass from '../../libs/Models.class';
 import StudioSDK from '../../libs/StudioSDK';
 import type Textblock from '../../interfaces/textblock.interface';
-import Contact from '../../models/Contact.model';
-import Address from '../../models/Address.model'; 
-import { ErrorsObject } from '../../libs/ActionNotice';
-import { ErrorObject } from 'ajv/dist/types';
+import type Contact from '../../models/Contact.model';
+import type Address from '../../models/Address.model'; 
+import { type ErrorsObject } from '../../libs/ActionNotice';
+import { type ErrorObject } from 'ajv/dist/types';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import { computed, onBeforeMount} from 'vue';
-import ListCategoryExtended from '../../interfaces/ListCategoryExtended.interface';
+import type ListCategoryExtended from '../../interfaces/ListCategoryExtended.interface';
 
 
 import useMainStore from '../../stores/main.store';
@@ -26,7 +26,6 @@ const props = defineProps<{
     participantsState: ListPartiticpantsDetails,
     variant: string;
     errors: Error | null;
-    traceable: traceable;
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 
     
@@ -37,7 +36,7 @@ let model: Contact = null;
 let addressModel: Address = null;
 // let errors = null;
 let errorsObject: ErrorsObject = {};
-let translationPre = '';
+const translationPre = '';
 // let agreements: Record<string, Agreement & { value: boolean, error: boolean }> = {};
 // let participantsState: ListPartiticpantsDetails = null;
 // const emit = defineEmits([
@@ -45,7 +44,7 @@ let translationPre = '';
 //     'address', 
 //     ''
 // ]);
-let emit = defineEmits<{
+const emit = defineEmits<{
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
@@ -105,15 +104,9 @@ const feedback = computed(() => {
 
   return null
 });
-const showFeedback = computed(() => {
-  return props.state && (props.state === 'success' || props.editor?.modes?.includes('feedback'))
-});
-const feedbackContent = computed(() => {
-  return prepareContent(feedback.value)
-});
-const limited = computed(() => {
-  return props.list?.participants?.max || null;
-});
+const showFeedback = computed(() => props.state && (props.state === 'success' || props.editor?.modes?.includes('feedback')));
+const feedbackContent = computed(() => prepareContent(feedback.value));
+const limited = computed(() => props.list?.participants?.max || null);
 const disabled = computed(() => {
   if(props.participantsState && props.list?.participants?.max) {
     return props.participantsState.used >= props.list?.participants?.max
@@ -121,9 +114,7 @@ const disabled = computed(() => {
 
   return false
 })
-const hideFreeSlots = computed(() => {
-  return props.variant.includes('hide-free-slots')
-})
+const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
 const mainErrors = computed(() => {
   const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
@@ -132,9 +123,7 @@ const mainErrors = computed(() => {
   }
 
   return null;
-}); const slotsAvailable = computed(() => {
-  return (props.list?.participants.max || 0) - props.participantsState.used
-})
+}); const slotsAvailable = computed(() => (props.list?.participants.max || 0) - props.participantsState.used)
 
 
 onBeforeMount(() => {
@@ -184,7 +173,7 @@ function updateAgreements () {
       value: props.agreements[single.contentId]?.value || false,
     };
 
-    let values = errorsObject.agreements?.translatedPath?.values;
+    const values = errorsObject.agreements?.translatedPath?.values;
 
 
     if(values && values[1]) {
