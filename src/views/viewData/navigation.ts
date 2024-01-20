@@ -9,8 +9,45 @@ export default {
   modules: [
     {
       type      : 'navigation-module',
-      'name'    : 'name',
+      'name'    : 'thats a very long name is the top',
       'elements': [
+        {
+          'text' : 'with children 1',
+          'link' : '',
+          'icon' : '',
+          'links': [
+            {
+              'text'      : 'first children 11',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            },
+            {
+              'text'      : 'first children 12',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            },
+            {
+              'text'      : 'first children 13',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            }
+          ],
+          'classes'   : [],
+          'attributes': [],
+          'external'  : false
+        },
         {
           'text' : 'normal link',
           'link' : '/link',
@@ -36,7 +73,7 @@ export default {
           'icon' : '',
           'links': [
             {
-              'text'      : 'first children 1',
+              'text'      : 'first children 21',
               'link'      : '/chisas',
               'icon'      : '',
               'classes'   : [],
@@ -45,7 +82,7 @@ export default {
               'external'  : false
             },
             {
-              'text'      : 'first children 2',
+              'text'      : 'first children 22',
               'link'      : '/chisas',
               'icon'      : '',
               'classes'   : [],
@@ -54,7 +91,44 @@ export default {
               'external'  : false
             },
             {
-              'text'      : 'first children 3',
+              'text'      : 'first children 23',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            }
+          ],
+          'classes'   : [],
+          'attributes': [],
+          'external'  : false
+        },
+        {
+          'text' : 'with children 1',
+          'link' : '',
+          'icon' : '',
+          'links': [
+            {
+              'text'      : 'first children 31',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            },
+            {
+              'text'      : 'first children 32',
+              'link'      : '/chisas',
+              'icon'      : '',
+              'classes'   : [],
+              'attributes': [],
+              'variant'   : [],
+              'external'  : false
+            },
+            {
+              'text'      : 'first children 33',
               'link'      : '/chisas',
               'icon'      : '',
               'classes'   : [],

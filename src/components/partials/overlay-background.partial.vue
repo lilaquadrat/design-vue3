@@ -1,10 +1,10 @@
 <template>
-    <section class="lila-overlay-background" ref="background" :class="[backgroundMode]" @keydown="checkClose" @click="checkClose">
+    <section class="lila-overlay-background" ref="element" :class="[backgroundMode]" @keydown="checkClose" @click="checkClose">
       <slot />
     </section>
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onDeactivated, onMounted } from 'vue';
+import { computed, nextTick, onDeactivated, onMounted, ref } from 'vue';
 
 const props = defineProps < {
   background: 'none' | 'mobile' | 'tablet' | 'desktop';
@@ -12,15 +12,16 @@ const props = defineProps < {
 const emit = defineEmits<{
     (e: string): void
 }>();
-const backgroundMode= computed(() => props.background || 'mobile');
+const backgroundMode = computed(() => props.background || 'mobile');
+const element = ref<HTMLElement>();
 
 function checkClose (event: Event) {
 
   console.log(event);
 
-  // if (this.$refs.background !== $e.target) return;
+  if (element.value !== event.target) return;
 
-  // emit('close');
+  emit('close');
 
 }
 
@@ -42,7 +43,7 @@ function checkClose (event: Event) {
 // });
 // not sure sbout this.$store
 </script>
-<style lang="less">
+<style lang="less" scoped>
 
 
 .lila-overlay-background {
