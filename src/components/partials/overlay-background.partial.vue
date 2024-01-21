@@ -1,18 +1,21 @@
 <template>
-    <section class="lila-overlay-background" ref="element" :class="[backgroundMode]" @keydown="checkClose" @click="checkClose">
+    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex}]" @keydown="checkClose" @click="checkClose">
       <slot />
     </section>
 </template>
 <script setup lang="ts">
-import { computed, nextTick, onDeactivated, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps < {
   background: 'none' | 'mobile' | 'tablet' | 'desktop';
+  index?: number
 }> ();
 const emit = defineEmits<{
     (e: string): void
 }>();
 const backgroundMode = computed(() => props.background || 'mobile');
+const customIndex = computed(() => props.index ? `index${props.index}` : false);
+const hasCustomIndex = computed(() => props.index);
 const element = ref<HTMLElement>();
 
 function checkClose (event: Event) {
@@ -25,26 +28,8 @@ function checkClose (event: Event) {
 
 }
 
-// onMounted(() => {
-
-//   nextTick(() => {
-
-//     if (this.$store) this.$store.dispatch('fullscreen', true);
-//     emit('mounted');
-
-//   });
-
-// });
-
-// onDeactivated(() => {
-
-//   if (this.$store) this.$store.dispatch('fullscreen', false);
-
-// });
-// not sure sbout this.$store
 </script>
 <style lang="less" scoped>
-
 
 .lila-overlay-background {
   position: fixed;
@@ -61,7 +46,15 @@ function checkClose (event: Event) {
   @media @tablet, @desktop {
     background-color: transparent;
   }
-  .index(10);
+
+  &:not(.hasCustomIndex) {
+    .index(10);
+  }
+
+  &.index5 {
+    .index(5);
+  }
+
 
   &.mobile {
     background-color: rgba(0, 0, 0, .5);

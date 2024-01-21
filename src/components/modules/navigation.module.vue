@@ -27,20 +27,39 @@ const overlay = ref<HTMLElement>();
 const linksContainer = ref<HTMLElement>();
 const logoContainer = ref<HTMLElement>();
 const links = ref<HTMLElement>();
+const triggerMenuOverlay = ref<HTMLElement>();
 const overlayContent = ref<Link[]>();
 const isOverflow = ref<boolean>(false);
+const activeKey = ref<string>('');
 
-watch(() => resized.value, () => checkOverflow());
+watch(() => resized.value, () => {
+
+  attachTo.value = undefined;
+  open.value = false;
+  closeAll();
+  checkOverflow();
+
+});
 watch(() => props.elements, () => updateElements());
-watch(() => attachTo.value, () => requestAnimationFrame(() => calculateOptionsStyle()),
-);
+watch(() => attachTo.value, () => {
+
+  if(!useTriggerMenu.value && attachTo.value) requestAnimationFrame(() => calculateOptionsStyle())
+
+});
+watch(() => triggerMenuOverlay.value, () => {
+
+  if(triggerMenuOverlay.value && open.value) {
+    requestAnimationFrame(() => calculateOptionsStyle())
+  }
+
+});
 watch(() => media.value, () => {
+
   closeAll();
   open.value = false;
-},
-);
 
-const isLeft = computed(() => props.variant?.includes('left'));
+});
+
 const useTriggerMenu = computed(() => isOverflow.value);
 
 onBeforeMount((): void => {
@@ -53,6 +72,7 @@ function updateElements () {
   elementsArray.value = [];
 
   props.elements?.forEach((element) => {
+
     const newElement = { ...element, active: false };
 
     if (newElement.links) {
@@ -62,34 +82,65 @@ function updateElements () {
     }
 
     elementsArray.value.push(newElement);
+    
   });
 }
 
-// function type (element: { link: { text: any } }): 'router-link' | 'button' {
-//   if (element.link.text) return 'router-link';
-//   return 'button';
-// }
 
 function toggle (): void {
+
   open.value = !open.value;
+  if(!open.value) closeAll();
+
 }
 
-function toggleElement (event: Event, element: LinkGroupElement & { active: boolean }) {
-  console.log('toggleevent', event);
+function openElement (event: Event, element: LinkGroupElement & { active: boolean }) {
 
-  element.active = !element.active;
-  open.value = !open.value;
-  attachTo.value = event.target as HTMLElement;
-  overlayContent.value = element.links;
+  open.value = false;
+  attachTo.value = undefined;
+
+  if(element.active) {
+
+    element.active = false;
+    open.value = false;
+
+  } else {
+
+    closeAll();
+
+    element.active = true;
+    open.value = true;
+    activeKey.value = Date.now().toString();
+    attachTo.value = event.target as HTMLElement;
+    overlayContent.value = element.links;
+
+  }
+
+
 }
+
+function toggleTriggerElement (event: Event, element: LinkGroupElement & { active: boolean }) {
+
+  if(element.active) {
+
+    element.active = false;
+
+  } else {
+
+    closeAll();
+    element.active = true;
+
+  }
+
+}
+
 
 function closeAll () {
+
   elementsArray.value?.forEach((element) => {
     element.active = false;
   });
 
-  open.value = false;
-  attachTo.value = undefined;
 }
 
 function checkOverflow () {
@@ -107,49 +158,52 @@ function checkOverflow () {
 }
 
 const calculateOptionsStyle = () => {
-  if (media.value === 'mobile') {
-    style.value = {};
-    return;
-  }
 
-  if (!overlay.value || !attachTo.value) return;
+  const overlayElement = useTriggerMenu.value ? triggerMenuOverlay.value : overlay.value;
 
-  console.log(attachTo.value);
+  if(!overlayElement) return;
 
-  const overlayElement = overlay.value;
   const bounds = overlayElement.getBoundingClientRect();
-  const targetBounds = attachTo.value.getBoundingClientRect();
-  const left = targetBounds.left;
-  const top = targetBounds.top + targetBounds.height;
+  const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
+
+  if(!targetBounds) return;
+
+  let left = targetBounds.left;
+  let top = targetBounds.top + targetBounds.height;
   const body = document.querySelector('body') as HTMLBodyElement;
   const positionLeft = targetBounds.left + bounds.width + 50 > body.offsetWidth;
 
-  // if(positionLeft) {
 
-  //   left = targetBounds.left - bounds.width + targetBounds.width;
+  if(positionLeft) {
 
-  // }
+    left = targetBounds.left - bounds.width + targetBounds.width;
+    if(!useTriggerMenu.value) left += 10;
+
+  } else {
+
+    //match the padding of the attachTo element and the links inside the overlay
+    if(!useTriggerMenu.value) left -= 10;
+    
+  }
+
+  if(media.value === 'wide' && useTriggerMenu.value) {
+    left -= 20;
+  }
+
+  // add one px to prevent overlaying border or box-shadow
+  top += 1;
 
   style.value = {
     top : `${top}px`,
     left: `${left}px`,
   };
 
-  // if(this.inline) {
-
-  // style.value =  {
-  // style.value =  {
-  //    top: `${top}px`,
-  //    left: `${bounds.left}px`,
-  // };
 };
 
 </script>
 <template>
   <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module">
     <section class="placeholder"></section>
-
-    {{ style }} -- {{ overlay }} -- {{ open }} -- {{ isOverflow }}
 
     <section class="overflow-container">
       <section ref="linksContainer" class="links-container">
@@ -169,12 +223,12 @@ const calculateOptionsStyle = () => {
           </div>
         </button>
 
-        <section ref="links" class="links" v-if="!isLeft">
+        <section ref="links" class="links">
           <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
 
-            <lila-link-partial :key="`link-${index}`" class="main" v-if="!element.links" v-bind="element" />
+            <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
 
-            <button :class="{ hasIcon: element.icon }" @click="toggleElement($event, element)">
+            <button :class="{ hasIcon: element.icon, isActive: element.active }" @click="openElement($event, element)" >
               <lila-icons-partial v-if="element.icon" :type="element.icon" size="small" />
               {{ element.text }}
             </button>
@@ -183,32 +237,11 @@ const calculateOptionsStyle = () => {
         </section>
       </section>
 
-      <!-- <section class="link-group-container" v-if="isLeft">
-          <section class="links">
-            <template v-for="(element, index) in elementsArray">
-              <lila-link-partial :key="`link-${index}`" class="main" v-if="!element.links" v-bind="element" />
-              <section :key="`group-${index}`" v-if="element.links" class="link-group main">
-                <button :class="{ hasIcon: element.icon }" @click="toggleElement(element)">
-                  <lila-icons-partial v-if="element.icon" colorScheme="white" :type="element.icon" size="small" />
-                  {{ element.text }}
-                </button>
-                <transition mode="out-in" name="menu">
-                  <ul class="link-list" v-if="element.links && element.active">
-                    <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
-                      <lila-link-partial v-if="single.text" v-bind="single"></lila-link-partial>
-                    </li>
-                  </ul>
-                </transition>
-              </section>
-            </template>
-          </section>
-        </section> -->
-
-      <section class="action-container" @click="toggle" @keyup="toggle" v-if="isLeft"></section>
     </section>
+
     <teleport to="body">
       <transition name="menu">
-          <lila-overlay-background-partial class="lila-navigation-module-overlay-background" v-if="overlayContent && open" background="none" @close="closeAll">
+          <lila-overlay-background-partial :index="5" :key="activeKey" class="lila-navigation-module-overlay-background" v-if="overlayContent && open && !useTriggerMenu" background="none" @close="toggle">
               <ul class="lila-navigation-module-overlay" v-if="overlayContent" ref="overlay" :style="style">
                 <li :key="`sublinks-${index}`" v-for="(single, index) in overlayContent">
                   <lila-link-partial v-if="single.text" v-bind="single" />
@@ -217,64 +250,69 @@ const calculateOptionsStyle = () => {
           </lila-overlay-background-partial>
         </transition>
     </teleport>
+
+    <teleport to="body">
+      <transition name="menu">
+          <lila-overlay-background-partial :index="5" class="lila-navigation-module-overlay-background" v-if="open && useTriggerMenu" background="none" @close="toggle">
+            <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu" :style="style">
+              <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
+
+                <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
+
+                <section :key="`group-${index}`" v-if="element.links" class="link-group main">
+
+                  <button :class="{hasIcon: element.icon, isActive: element.active}" @click="toggleTriggerElement($event, element)">
+                    <lila-icons-partial v-if="element.icon" :type="element.icon" size="small" />
+                    {{ element.text }}
+                  </button>
+
+                  <ul class="link-list" v-show="element.links && element.active">
+                    <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
+                      <lila-link-partial v-if="single.text" v-bind="single"></lila-link-partial>
+                    </li>
+                  </ul>
+
+                </section>
+              </template>
+            </section>
+          </lila-overlay-background-partial>
+        </transition>
+    </teleport>
+
   </nav>
 </template>
 <style lang="less" scoped>
 
-.lila-overlay-background {
+.lila-navigation-module-overlay, .lila-navigation-module {
+  a,
+  button {
+    .font-head;
 
-  transition: opacity @aTime @aType, transform @aTime @aType;
-  
-  .lila-navigation-module-overlay {
-    transition: opacity @aTime @aType, transform @aTime @aType;
-    background-color: @white;
+    display: grid;
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    line-height: 41px;
 
-      position: absolute;
-      .multi(padding, 2, 4);
+    border: none;
+    background: transparent;
+    color: @color1;
 
+    outline: none;
+    font-size: @fontText;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
 
-      li {
-        display: grid;
-        grid-template-columns: max-content;
-      margin: 0;
-
-      a,
-      button {
-        .multi(padding, 0, 10);
-
-        @media @wide {
-          .multi(padding, 0, 2);
-        }
-      }
+    .basicHover;
+    &.isActive {
+      color: @color3
     }
+
   }
-  &.menu-leave-active {
-
-    .lila-navigation-module-overlay { 
-      opacity: 0;
-      transition-delay: 0.1s;
-  
-      transform: translateY(-10px);
-    }
-    
-  }
-
-  &.menu-enter-active {
-
-    .lila-navigation-module-overlay { 
-
-      opacity: 0;
-      transition-delay: 0.1s;
-
-      transform: translateY(-10px);
-    }
-  }
-
-
 }
-
 .lila-navigation-module {
-  .index(8);
+  .index(6);
 
   position: relative;
 
@@ -282,6 +320,15 @@ const calculateOptionsStyle = () => {
 
   background-color: transparent;
   transition-delay: 0s;
+
+  a, button {
+    .multi(padding, 0, 2);
+  }
+
+  .logo, .trigger {
+    padding: 0;
+  }
+
 
   .placeholder {
     height: 40px;
@@ -293,22 +340,12 @@ const calculateOptionsStyle = () => {
     }
   }
 
-  .container-menu {
-    width: 100%;
-
-    // @media only screen and (min-width: 520px), print and (min-width: 520px) {
-    //   width: 250px;
-
-    //   transform: translateX(0);
-    // }
-  }
-
   .trigger {
     position: relative;
     padding: 0;
 
+    grid-column-start: 3;
     -webkit-tap-highlight-color: transparent;
-    .multi(padding-right, 8);
 
     @media @wide {
       padding: 0;
@@ -322,7 +359,7 @@ const calculateOptionsStyle = () => {
       position: absolute;
       display: grid;
 
-      grid-template-rows: min-content;
+      grid-template-rows: max-content;
 
       gap: 4px;
 
@@ -332,16 +369,11 @@ const calculateOptionsStyle = () => {
       width: 20px;
     }
 
-    &:after {
-      display: none;
-    }
-
     span {
       display: grid;
 
       width: 20px;
       height: 2px;
-      margin: auto;
 
       background-color: @color1;
       transition: all @aTime @aType;
@@ -371,91 +403,6 @@ const calculateOptionsStyle = () => {
     }
   }
 
-  // .action-container {
-  //   .index(3);
-
-  //   position: fixed;
-  //   top: 0;
-  //   left: 0;
-
-  //   width: 100%;
-  //   height: 100%;
-
-  //   background-color: @white;
-  //   opacity: 0;
-
-  //   pointer-events: none;
-
-  //   transition: opacity @animationTime @animationType;
-  // }
-
-
-  a,
-  button {
-    .font-head;
-
-    // .multi(padding, 0, 8);
-    display: grid;
-    width: 100%;
-    height: 40px;
-    min-height: 40px;
-
-    border: none;
-    border-bottom: solid 1px @grey1;
-    background: transparent;
-    color: @color1;
-
-    outline: none;
-
-    font-size: @fontText;
-    line-height: 41px;
-
-    text-align: left;
-
-    white-space: nowrap;
-    cursor: pointer;
-
-    // @media @wide {
-      .multi(padding, 0, 2);
-      .basicHover();
-
-      border-bottom: 0;
-    // }
-
-    &:hover {
-      background-color: @grey2;
-
-      @media @wide {
-        background-color: transparent;
-      }
-    }
-
-    // &.lila-link {
-    //   &.hasIcon {
-    //     .lila-icon-partial {
-    //       display: grid;
-    //     }
-    //   }
-    // }
-
-    // svg {
-    //   fill: @color1;
-    // }
-
-    // &.hasIcon {
-    //   grid-template-columns: 15px 1fr;
-    //   gap: 10px;
-
-    //   .icon-partial {
-    //     display: grid;
-
-    //     align-self: center;
-    //     justify-self: center;
-    //     margin-top: -2px;
-    //   }
-    // }
-  }
-
   .links-container {
     display: grid;
 
@@ -483,6 +430,7 @@ const calculateOptionsStyle = () => {
       justify-self: end;
       justify-content: end;
       grid-auto-flow: column;
+      grid-column-start: 3;
     }
 
   }
@@ -497,256 +445,79 @@ const calculateOptionsStyle = () => {
     }
   }
 
-  // .logo::v-deep {
-  //   .basicHover();
-
-  //   width: max-content;
-  //   height: 40px;
-  //   padding: 0;
-
-  //   line-height: 42px;
-  //   .multi(padding-left, 8);
-
-  //   @media @wide {
-  //     padding: 0;
-  //   }
-
-  //   &:hover {
-  //     background-color: transparent;
-  //   }
-
-  //   img {
-  //     align-self: center;
-  //     max-width: 190px;
-  //     max-height: 40px;
-  //     mix-blend-mode: normal;
-
-  //     @media @tablet, @desktop {
-  //       max-width: 250px;
-  //     }
-
-  //     &:hover {
-  //       background-color: transparent;
-  //     }
-  //   }
-  // }
-
-  // &.colorScheme1 {
-  //   .link-group {
-  //     .link-list {
-  //       background-color: transparent;
-
-  //       @media @desktop {
-  //         position: relative;
-
-  //         left: 0;
-
-  //         width: 100%;
-  //         min-width: 100%;
-
-  //         padding: 0;
-
-  //         background-color: transparent;
-
-  //         transition: none;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // &.open {
-  //   .links-container {
-  //     .links {
-  //       display: grid;
-  //       opacity: 1;
-  //       pointer-events: all;
-  //     }
-  //   }
-
-  //   .logo {
-  //     justify-content: end;
-  //   }
-
-  //   .trigger {
-  //     span {
-  //       align-self: center;
-
-  //       transform: rotate(45deg) translateY(4px);
-
-  //       &:first-child {
-  //         display: none;
-  //       }
-
-  //       &:last-child {
-  //         transform: rotate(-45deg) translateY(-4.5px);
-  //       }
-  //     }
-  //   }
-
-  //   .action-container {
-  //     opacity: 0.8;
-  //     pointer-events: all;
-  //   }
-
-  //   .overflow-container {
-  //     border-bottom: 0;
-  //   }
-  // }
-
-  // &.left {
-  //   .link-list {
-  //     li {
-  //       display: block;
-  //       margin: 0;
-
-  //       a,
-  //       button {
-  //         .multi(padding, 2, 10);
-  //       }
-  //     }
-  //   }
-
-  //   .links-container {
-  //     position: relative;
-  //     grid-template-columns: min-content 1fr;
-
-  //     transition: transform @animationTime @animationType;
-  //     transition-delay: 0.1s;
-
-  //     .index(5);
-
-  //     .logo-container {
-  //       display: grid;
-  //       grid-row-start: 1;
-  //       grid-column-start: 2;
-  //     }
-
-  //     .trigger {
-  //       grid-row-start: 1;
-  //       grid-column-start: 1;
-
-  //       padding: 0;
-
-  //       .multi(padding-left, 8);
-
-  //       @media @wide {
-  //         display: grid;
-  //       }
-
-  //       .trigger-container {
-  //         justify-self: start;
-  //       }
-  //     }
-
-  //     .logo {
-  //       display: grid;
-  //       justify-self: end;
-  //       padding: 0;
-  //       .multi(padding-right, 8);
-  //     }
-
-  //     .links {
-  //       width: 250px;
-  //     }
-  //   }
-
-  //   .link-group-container {
-  //     position: fixed;
-
-  //     top: 0;
-  //     left: 0;
-
-  //     display: grid;
-
-  //     grid-template-rows: 40px;
-  //     width: 250px;
-
-  //     height: 100vh;
-
-  //     background-color: @grey3;
-
-  //     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.13);
-
-  //     transition: transform @animationTime @animationType;
-  //     transition-delay: 0.1s;
-
-  //     transform: translateX(-250px);
-
-  //     .index(5);
-
-  //     .links {
-  //       grid-row-start: 2;
-  //     }
-
-  //     a,
-  //     button {
-  //       display: grid;
-  //       align-content: center;
-
-  //       height: auto;
-  //       line-height: 22px;
-
-  //       white-space: normal;
-
-  //       .multi(padding, 2, 8);
-  //     }
-  //   }
-
-  //   &.colorScheme1 {
-  //     .link-group-container {
-  //       background-color: @color1;
-
-  //       a::v-deep,
-  //       button::v-deep {
-  //         border-bottom: solid 1px @color3;
-  //         color: @white;
-
-  //         &:hover {
-  //           background-color: @color3;
-  //           opacity: 1;
-  //         }
-
-  //         // svg {
-  //         //   fill: @white;
-  //         // }
-  //       }
-  //     }
-  //   }
-
-  //   &.open {
-  //     @media @wide {
-  //       .links-container {
-  //         transform: translateX(150px);
-  //       }
-  //     }
-
-  //     .links-container {
-  //       transform: translatex(250px);
-  //     }
-
-  //     .link-group-container {
-  //       transform: translateX(0);
-  //     }
-  //   }
-
-  //   .link-group {
-  //     .link-list {
-  //       @media @desktop {
-  //         position: relative;
-
-  //         left: 0;
-
-  //         width: 100%;
-  //         min-width: 100%;
-
-  //         padding: 0;
-
-  //         background-color: transparent;
-
-  //         transition: none;
-  //       }
-  //     }
-  //   }
-  // }
 }
+
+.lila-navigation-module-overlay {
+  a, button {
+    .multi(padding, 0, 4);
+  }
+
+  &.useTriggerMenu {
+
+    width: 100%;
+    @media @desktop {
+      max-width: 100%;
+    }
+
+    @media @wide {
+      max-width: calc(@desktopWidthExt + 40px);
+      padding: 0;
+    }
+
+    a, button {
+    .multi(padding, 0, 4);
+  }
+
+    .link-group {
+      .link-list {
+        a {
+          .multi(padding, 0, 8);
+        }
+      }
+    }
+
+  }
+}
+
+
+.lila-overlay-background {
+  transition: opacity @aTime @aType, transform @aTime @aType;
+  
+  .lila-navigation-module-overlay {
+    transition: opacity @aTime @aType, transform @aTime @aType;
+    background-color: @white;
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.13);
+
+    position: absolute;
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin: 0;
+    }
+  }
+  &.menu-leave-active {
+
+    .lila-navigation-module-overlay { 
+      opacity: 0;
+      transition-delay: 0.1s;
+  
+      transform: translateY(-5px);
+    }
+    
+  }
+
+  &.menu-enter-active {
+
+    .lila-navigation-module-overlay { 
+
+      opacity: 0;
+      transition-delay: 0.1s;
+
+      transform: translateY(-5px);
+    }
+  }
+
+}
+
 </style>

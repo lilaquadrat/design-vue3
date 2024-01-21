@@ -13,6 +13,7 @@ export default defineConfig({
     cssCodeSplit: true
   },
   css: {
+    devSourcemap       : true,
     preprocessorOptions: {
       less: {
         globalVars: {

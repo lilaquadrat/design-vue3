@@ -11,6 +11,7 @@ const props = defineProps<{
   variant?: string[]
   callToAction?: boolean
   button?: boolean
+  [key: string]: any,
 }>();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
