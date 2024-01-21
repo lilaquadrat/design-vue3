@@ -8,7 +8,7 @@ export abstract class PartialModel {
      */
   type: string;
 
-  setData(data?: ModuleGeneric) {
+  setData (data?: ModuleGeneric) {
 
     const keys = Object.getOwnPropertyNames(this);
 

@@ -96,7 +96,7 @@ function watchFunc (this: any): void {
 
 }
 
-let el = ref(null);
+const el = ref(null);
 
 watch('media', watchMediafunction);
 
@@ -107,15 +107,7 @@ function watchMediafunction (): void {
 
 }
 
-const media=computed((): string => {
-
-  return this.$store.state.media;
-
-}); const isLeft=computed((): boolean => {
-
-  return props.variant?.includes('left');
-
-});
+const media=computed((): string => this.$store.state.media); const isLeft=computed((): boolean => props.variant?.includes('left'));
 
 
 function created (): void {

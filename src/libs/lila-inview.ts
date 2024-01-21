@@ -10,7 +10,7 @@ class Inview {
 
   scrolledEvent: any;
 
-  constructor() {
+  constructor () {
 
     if (isNode) return;
 
@@ -25,7 +25,7 @@ class Inview {
 
   }
 
-  addScrollListener(element: Element) {
+  addScrollListener (element: Element) {
 
     element.addEventListener('scroll', () => {
 
@@ -35,14 +35,14 @@ class Inview {
 
   }
 
-  trigger() {
+  trigger () {
 
     this.checkIsTop();
     window.dispatchEvent(this.scrolledEvent);
 
   }
 
-  checkIsTop() {
+  checkIsTop () {
 
     if (window.scrollY > 0) {
 
@@ -56,7 +56,7 @@ class Inview {
 
   }
 
-  debounce() {
+  debounce () {
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -67,7 +67,7 @@ class Inview {
 
   }
 
-  check(component) {
+  check (component) {
 
     const element = component.$el;
 
@@ -107,7 +107,7 @@ class Inview {
 
   }
 
-  checkImage(component) {
+  checkImage (component) {
 
     const element = component.$el;
 
@@ -135,7 +135,7 @@ class Inview {
 
   }
 
-  adjustScrolling(component, top) {
+  adjustScrolling (component, top) {
 
     const offset = window.outerHeight / 10;
 

@@ -57,12 +57,12 @@ const props = withDefaults(
 
   }
 );
-let slots = useSlots();
+const slots = useSlots();
 const emit = defineEmits(['update:modelValue']);
 const updateValue = (event: TypedEvent<HTMLInputElement>) => emit('update:modelValue', event.target?.checked);
-let textType = ref<string>('word');
+const textType = ref<string>('word');
 
-function setTextType(): void {
+function setTextType (): void {
   
   const slotContent = slots.default ? slots.default() : null;
   const useText = props.text 

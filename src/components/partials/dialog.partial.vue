@@ -32,12 +32,10 @@ const props = defineProps<{
   translations?: {confirm?: string, cancel?: string, acknowledge?: string};
   callback?: (confirm: boolean) => void;
 }>();
-let emit = defineEmits<{
+const emit = defineEmits<{
     (e: string): void
 }>();
-const colorScheme: ComputedRef<string|undefined> = computed(() => {
-  return props.variant?.some((single) => ['error', 'success', 'color1', 'color3'].includes(single)) ? 'transparent' : 'colorScheme1';
-}); 
+const colorScheme: ComputedRef<string|undefined> = computed(() => props.variant?.some((single) => ['error', 'success', 'color1', 'color3'].includes(single)) ? 'transparent' : 'colorScheme1'); 
 const confirm =() => {
   emit('confirm');
   if (props.callback) props.callback(true);
@@ -49,21 +47,10 @@ const cancel = () => {
   return;
 
 };
-const CONFIRM = computed((): string => {
+const CONFIRM = computed((): string => props.translations?.confirm ?? 'confirm');
+const CANCEL = computed((): string => props.translations?.cancel ?? 'cancel');
+const ACKNOWLEDGE = computed((): string => props.translations?.acknowledge ?? 'acknowledge');
 
-  return props.translations?.confirm ?? 'confirm';
-
-});
-const CANCEL = computed((): string => {
-
-  return props.translations?.cancel ?? 'cancel';
-
-});
-const ACKNOWLEDGE = computed((): string => {
-
-  return props.translations?.acknowledge ?? 'acknowledge';
-
-});
 </script>
 <style lang="less" scoped>
 

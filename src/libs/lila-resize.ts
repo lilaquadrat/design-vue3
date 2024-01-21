@@ -14,7 +14,7 @@ class Resize {
 
   _realHeight: number = 0;
 
-  constructor() {
+  constructor () {
 
     if (isNode) return;
 
@@ -32,13 +32,13 @@ class Resize {
 
   }
 
-  get realHeight() {
+  get realHeight () {
 
     return this._realHeight;
 
   }
 
-  trigger() {
+  trigger () {
 
     this.getMediaQuery();
     this._realHeight = window.innerHeight;
@@ -46,7 +46,7 @@ class Resize {
 
   }
 
-  getMediaQuery(): void {
+  getMediaQuery (): void {
 
     const element = document.getElementById('mediadetection');
 
@@ -80,7 +80,7 @@ class Resize {
 
   }
 
-  debounce() {
+  debounce () {
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
