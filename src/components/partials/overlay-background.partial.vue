@@ -1,15 +1,16 @@
 <template>
-    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex}]" @keydown="checkClose" @click="checkClose">
+    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="checkClose" @click="checkClose">
       <slot />
     </section>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-const props = defineProps < {
-  background: 'none' | 'mobile' | 'tablet' | 'desktop';
+const props = defineProps<{
+  background: 'none' | 'mobile' | 'tablet' | 'desktop'
   index?: number
-}> ();
+  inactive?: boolean
+}>();
 const emit = defineEmits<{
     (e: string): void
 }>();
@@ -43,6 +44,10 @@ function checkClose (event: Event) {
 
   background-color: rgba(0, 0, 0, .5);
 
+  &.inactive {
+    pointer-events: none;
+  }
+
   @media @tablet, @desktop {
     background-color: transparent;
   }
@@ -53,6 +58,18 @@ function checkClose (event: Event) {
 
   &.index5 {
     .index(5);
+  }
+  &.index6 {
+    .index(6);
+  }
+  &.index7 {
+    .index(7);
+  }
+  &.index8 {
+    .index(8);
+  }
+  &.index9 {
+    .index(9);
   }
 
 

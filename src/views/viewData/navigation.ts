@@ -10,12 +10,13 @@ export default {
     {
       type      : 'navigation-module',
       position  : 'top',
+      variant   : ['left'],
       'name'    : 'thats a very long name is the top',
       'elements': [
         {
-          'text' : 'with children 1',
+          'text' : 'with children 1 & icon',
           'link' : '',
-          'icon' : '',
+          'icon' : 'arrow-right',
           'links': [
             {
               'text'      : 'first children 11',
@@ -50,9 +51,9 @@ export default {
           'external'  : false
         },
         {
-          'text' : 'normal link',
+          'text' : 'normal link & icon',
           'link' : '/link',
-          'icon' : '',
+          'icon' : 'arrow-right',
           'links': [
             {
               'text'      : '',
@@ -76,43 +77,6 @@ export default {
             {
               'text'      : '',
               'link'      : '',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
-            }
-          ],
-          'classes'   : [],
-          'attributes': [],
-          'external'  : false
-        },
-        {
-          'text' : 'with children',
-          'link' : '',
-          'icon' : '',
-          'links': [
-            {
-              'text'      : 'first children 21',
-              'link'      : '/chisas',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
-            },
-            {
-              'text'      : 'first children 22',
-              'link'      : '/chisas',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
-            },
-            {
-              'text'      : 'first children 23',
-              'link'      : '/chisas',
               'icon'      : '',
               'classes'   : [],
               'attributes': [],

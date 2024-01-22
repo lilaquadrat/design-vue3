@@ -16,12 +16,15 @@ const props = defineProps<{
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
 const linkWithBase: ComputedRef<string> = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
+const isWhite = computed(() => props.variant?.includes('white'));
 const type: ComputedRef<'router-link' | 'a'> = computed(() => (linkMode === 'event' ? 'a' : 'router-link'));
 const emit = defineEmits<{
   (e: string, id: string): void;
 }>();
 const event = ($event: MouseEvent) => {
+
   if (props.attributes?.includes('event') || linkMode === 'event') {
+
     $event.preventDefault();
 
     const instance = getCurrentInstance();
@@ -39,14 +42,15 @@ const event = ($event: MouseEvent) => {
       // this.$root.$emit(this.link.slice(1), this.text);
     }
   }
+
 };
 
 </script>
 <template>
   <component v-if="link" :class="[variant, classes, { hasIcon: icon, callToAction: props.callToAction, button: props.button }]" class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase" @click="event">
-    <lila-icons-partial v-if="icon" :type="icon" size="small" />
     {{ text }}
     <slot v-if="!text"></slot>
+    <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'color1'" :type="icon" size="smaller" />
   </component>
 </template>
 <style lang="less" scoped>
@@ -60,9 +64,12 @@ const event = ($event: MouseEvent) => {
   }
 
   &.hasIcon {
-    .lila-icon-partial {
-      display: inline;
-    }
+    grid-template-columns: max-content 15px;
+    gap: 5px
+  }
+
+  &.white {
+    color: @white;
   }
 
   &.callToAction {

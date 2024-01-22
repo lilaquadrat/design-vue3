@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type IconsPartial from '@/interfaces/IconsPartial';
 import { ref } from 'vue';
 
 defineOptions({
@@ -9,16 +10,17 @@ const props = withDefaults(
   defineProps<{
         doublecheck?: string,
         disabled?: boolean,
-        icon?: boolean,
+        icon?: IconsPartial['type'],
         noPadding?: boolean,
         colorScheme?: string,
+        active?: boolean
     }>(),
   {}
 );
 const showCheck = ref(false);
 const timeout = ref<number>();
 const confirmed = ref(false);
-const emit = defineEmits<{(e: string): void}>();
+const emit = defineEmits<{(e: string, event?: Event): void}>();
 const check = (): void => {
 
   if (!showCheck.value) {
@@ -59,26 +61,26 @@ const confirm = (event: MouseEvent): void => {
 
   } else {
 
-    emit('click');
+    emit('click', event);
 
   }
 };
 
 </script>
 <template>
-  <button class="lila-button base" :disabled="disabled" type="button" :class="[colorScheme, { doublecheck: doublecheck, showCheck: showCheck, confirmed: confirmed, icon, noPadding }, $attrs.class]" @click.stop="confirm">
-      <slot v-if="!showCheck && !confirmed" />
-      <span v-if="showCheck">Please confirm your action.</span>
-      <span v-if="confirmed">confirmed</span>
+  <button class="lila-button" :disabled="disabled" type="button" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active }, $attrs.class]" @click.stop="confirm">
+    <slot v-if="!showCheck && !confirmed" />
+    <span v-if="showCheck">Please confirm your action.</span>
+    <span v-if="confirmed">confirmed</span>
+    <lila-icons-partial v-if="icon" :type="icon" size="smaller" animate :class="{rotate90: active}" />
   </button>
 </template>
 <style lang="less" scoped>
 .lila-button {
 
   border: none;
-  background: transparent;
-
   outline: none;
+  background: transparent;
 
   white-space: nowrap;
   cursor: pointer;
@@ -87,17 +89,15 @@ const confirm = (event: MouseEvent): void => {
 
   .trans(background);
 
-  &.base {
-    height: @buttonHeight;
-    font-size: @fontTextSmaller;
+  height: @buttonHeight;
+  font-size: @fontTextSmaller;
 
-    line-height: @buttonLineHeight;
+  line-height: @buttonLineHeight;
 
-    text-transform: uppercase;
+  text-transform: uppercase;
 
-    .font-head;
-    .multi(padding, 0, 3);
-  }
+  .font-head;
+  .multi(padding, 0, 3);
 
   &.colorScheme1,
   &.colorScheme2 {
@@ -175,13 +175,8 @@ const confirm = (event: MouseEvent): void => {
   }
 
   &.icon {
-
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    width: 35px;
-    height: 35px;
-    padding: 0;
+    grid-template-columns: max-content 15px;
+    gap: 5px;
   }
 
   &.noPadding {
@@ -200,7 +195,6 @@ const confirm = (event: MouseEvent): void => {
   }
 
   &.callToAction {
-    .base;
     .colorScheme1;
     .trans(background);
   }

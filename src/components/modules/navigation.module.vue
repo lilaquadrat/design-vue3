@@ -60,7 +60,8 @@ watch(() => media.value, () => {
 
 });
 
-const useTriggerMenu = computed(() => isOverflow.value);
+const useTriggerMenu = computed(() => isOverflow.value || props.variant.includes('left'));
+const isLeft = computed(() => props.variant.includes('left'));
 
 onBeforeMount((): void => {
   updateElements();
@@ -69,9 +70,12 @@ onBeforeMount((): void => {
 onMounted(() => checkOverflow());
 
 function updateElements () {
-  elementsArray.value = [];
+
+  const newElements: (LinkGroupElement & { active: boolean })[] = [];
 
   props.elements?.forEach((element) => {
+
+    console.log(element)
 
     const newElement = { ...element, active: false };
 
@@ -81,9 +85,11 @@ function updateElements () {
       }
     }
 
-    elementsArray.value.push(newElement);
+    newElements.push(newElement);
     
   });
+
+  elementsArray.value = newElements;
 }
 
 
@@ -98,6 +104,8 @@ function openElement (event: Event, element: LinkGroupElement & { active: boolea
 
   open.value = false;
   attachTo.value = undefined;
+
+  console.log(event, element);
 
   if(element.active) {
 
@@ -161,7 +169,7 @@ const calculateOptionsStyle = () => {
 
   const overlayElement = useTriggerMenu.value ? triggerMenuOverlay.value : overlay.value;
 
-  if(!overlayElement) return;
+  if(!overlayElement || isLeft.value) return;
 
   const bounds = overlayElement.getBoundingClientRect();
   const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
@@ -214,7 +222,7 @@ const calculateOptionsStyle = () => {
           </a>
         </section>
 
-        <button v-if="useTriggerMenu" class="trigger close" @click="toggle">
+        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle">
           <div class="placeholder"></div>
           <div class="trigger-container">
             <span></span>
@@ -228,10 +236,9 @@ const calculateOptionsStyle = () => {
 
             <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
 
-            <button :class="{ hasIcon: element.icon, isActive: element.active }" @click="openElement($event, element)" >
-              <lila-icons-partial v-if="element.icon" :type="element.icon" size="small" />
+            <lila-button-partial class="rotate90" v-if="element.links" v-bind="element"  @click="openElement($event, element)">
               {{ element.text }}
-            </button>
+            </lila-button-partial>
             
           </template>
         </section>
@@ -253,18 +260,17 @@ const calculateOptionsStyle = () => {
 
     <teleport to="body">
       <transition name="menu">
-          <lila-overlay-background-partial :index="5" class="lila-navigation-module-overlay-background" v-if="open && useTriggerMenu" background="none" @close="toggle">
-            <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu" :style="style">
+          <lila-overlay-background-partial :index="isLeft ? 7 : 5" class="lila-navigation-module-overlay-background" v-if="open && useTriggerMenu || isLeft" :inactive="isLeft && !open" background="none" @close="toggle">
+            <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu" :class="[variant, {open}]" :style="style">
               <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
 
-                <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
+                <lila-link-partial :key="`link-${index}`" class="main" :variant="['white']" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
 
                 <section :key="`group-${index}`" v-if="element.links" class="link-group main">
 
-                  <button :class="{hasIcon: element.icon, isActive: element.active}" @click="toggleTriggerElement($event, element)">
-                    <lila-icons-partial v-if="element.icon" :type="element.icon" size="small" />
+                  <lila-button-partial v-bind="element" @click="toggleTriggerElement($event, element)">
                     {{ element.text }}
-                  </button>
+                  </lila-button-partial>
 
                   <ul class="link-list" v-show="element.links && element.active">
                     <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
@@ -285,7 +291,7 @@ const calculateOptionsStyle = () => {
 
 .lila-navigation-module-overlay, .lila-navigation-module {
   a,
-  button {
+  :deep(.lila-button) {
     .font-head;
 
     display: grid;
@@ -302,6 +308,7 @@ const calculateOptionsStyle = () => {
     font-size: @fontText;
     text-align: left;
     white-space: nowrap;
+    text-transform: none;
     cursor: pointer;
 
     .basicHover;
@@ -310,6 +317,7 @@ const calculateOptionsStyle = () => {
     }
 
   }
+
 }
 .lila-navigation-module {
   .index(6);
@@ -321,14 +329,13 @@ const calculateOptionsStyle = () => {
   background-color: transparent;
   transition-delay: 0s;
 
-  a, button {
+  a, :deep(.lila-button) {
     .multi(padding, 0, 2);
   }
 
   .logo, .trigger {
     padding: 0;
   }
-
 
   .placeholder {
     height: 40px;
@@ -340,12 +347,17 @@ const calculateOptionsStyle = () => {
     }
   }
 
+
   .trigger {
+    display: grid;
     position: relative;
     padding: 0;
 
     grid-column-start: 3;
     -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
 
     @media @wide {
       padding: 0;
@@ -359,14 +371,16 @@ const calculateOptionsStyle = () => {
       position: absolute;
       display: grid;
 
-      grid-template-rows: max-content;
+      grid-template-rows: max-content max-content max-content;
 
       gap: 4px;
 
       align-items: center;
+      align-content: center;
       align-self: center;
       justify-self: end;
       width: 20px;
+      height: 40px;
     }
 
     span {
@@ -378,14 +392,71 @@ const calculateOptionsStyle = () => {
       background-color: @color1;
       transition: all @aTime @aType;
 
+      &:nth-child(2) {
+        width: 15px;
+      }
+
       transform: rotate(0);
     }
-
     &:hover {
-      span {
-        background-color: @color2;
+        .trigger-container {
+          span {
+            background-color: @color2;
+          }
+        }
+      }
+    &.open {
+
+      .trigger-container {
+        span {
+
+          width: 20px;
+
+          transform: rotate(45deg);
+
+          &:nth-child(1) {
+            transform: rotate(-45deg);
+            align-self: center;
+            margin-top: 8px;
+          }
+
+          &:nth-child(2) {
+            margin-top: -9px;
+          }
+
+          &:nth-child(3) {
+            display: none;
+          }
+
+        }
+      }
+
+    }
+
+  }
+
+  &.left {
+
+    .trans(transform);
+
+    &.open {
+      transform: translateX(250px);
+    }
+    .trigger {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+
+      .trigger-container {
+        justify-self: start;
       }
     }
+
+    .logo-container {
+      grid-column-start: 3;
+      grid-column-end: 4;
+    }
+
   }
 
   .overflow-container {
@@ -394,9 +465,12 @@ const calculateOptionsStyle = () => {
     top: 0;
     left: 0;
 
+    height: 40px;
+
     width: 100%;
 
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.13);
+    border-bottom: solid 1px rgba(0, 0, 0, 0.13);
 
     @media @desktop {
       background-color: @white;
@@ -448,7 +522,7 @@ const calculateOptionsStyle = () => {
 }
 
 .lila-navigation-module-overlay {
-  a, button {
+  a, :deep(.lila-button) {
     .multi(padding, 0, 4);
   }
 
@@ -464,15 +538,29 @@ const calculateOptionsStyle = () => {
       padding: 0;
     }
 
-    a, button {
-    .multi(padding, 0, 4);
-  }
+    a, :deep(.lila-button) {
+      .multi(padding, 0, 4);
+      border-bottom: solid 1px @color3;
+      color: @white;
+
+      svg {
+        stroke: @white;
+      }
+
+      .trans(background);
+
+      &:hover {
+        background-color: @color3;
+        opacity: 1;
+      }
+    }
 
     .link-group {
       .link-list {
         a {
           .multi(padding, 0, 8);
         }
+        
       }
     }
 
@@ -495,14 +583,37 @@ const calculateOptionsStyle = () => {
       grid-template-columns: 1fr;
       margin: 0;
     }
+
+    &.left {
+      max-width: 80vw;
+      width: 250px;
+
+      height: 100%;
+
+      background-color: @color1;
+
+      top: 0;
+      left: 0;
+      transform: translateX(-250px);
+      &.open {
+        transform: translateX(0);
+      }
+
+    }
+
   }
+
   &.menu-leave-active {
 
     .lila-navigation-module-overlay { 
       opacity: 0;
-      transition-delay: 0.1s;
-  
       transform: translateY(-5px);
+
+      &.left {
+        opacity: 1;
+        transform: translateX(-250px);
+      }
+
     }
     
   }
@@ -512,9 +623,12 @@ const calculateOptionsStyle = () => {
     .lila-navigation-module-overlay { 
 
       opacity: 0;
-      transition-delay: 0.1s;
-
       transform: translateY(-5px);
+
+      &.left {
+        opacity: 1;
+        transform: translateX(-250px);
+      }
     }
   }
 
