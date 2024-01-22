@@ -15,14 +15,14 @@ abstract class ExtPartial extends vue {
 
   public traceId: string = '';
 
-  get renderTarget(): 'pdf' | 'web' {
+  get renderTarget (): 'pdf' | 'web' {
 
     return this.$store.state.renderTarget;
 
   }
 
   // eslint-disable-next-line class-methods-use-this
-  $translate(text: string, values?: (string | number)[]) {
+  $translate (text: string, values?: (string | number)[]) {
 
     console.log('trams;ate');
 
@@ -31,7 +31,7 @@ abstract class ExtPartial extends vue {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  $translateDiff(textToTranslate: string, value: number) {
+  $translateDiff (textToTranslate: string, value: number) {
 
     return translate.translateWithDiff(textToTranslate, value);
 
@@ -42,7 +42,7 @@ abstract class ExtPartial extends vue {
    *
    * additionally provides a minimum time before the promise gets resolved
    */
-  async $traceable<T>(promise: Promise<T>, time = 3000) {
+  async $traceable<T> (promise: Promise<T>, time = 3000) {
 
     // add the new call to vuex and fetch the id
     const id = await this.$store.dispatch('Calls/add', promise);

@@ -20,9 +20,9 @@ const props = defineProps<{
   variant?: string[];
 
 }>();
-let technical = ref<boolean>(true);
-let visible = ref<boolean>(false);
-let cookies = ref<Record<string, boolean>>({
+const technical = ref<boolean>(true);
+const visible = ref<boolean>(false);
+const cookies = ref<Record<string, boolean>>({
   analytics: false
 });
 const element = ref<HTMLElement>();

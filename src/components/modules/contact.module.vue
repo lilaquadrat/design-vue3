@@ -32,8 +32,8 @@ const props = defineProps<{
     // agreements: Record<string, Agreement & { value: boolean, error: boolean }>;
 
 }>();
-let model: Contact = null;
-let addressModel: Address = null;
+let model: Contact | null = null;
+let addressModel: Address |null = null;
 // let errors = null;
 let errorsObject: ErrorsObject = {};
 const translationPre = '';
@@ -48,11 +48,11 @@ const emit = defineEmits<{
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
-const list = computed(():List => {
-  console.log('state:', props.state)
-
+const list = computed(():List | null => {
   if(props.genericData?.lists && props.genericData?.data && Array.isArray(props.genericData?.lists)) {
-    return props.genericData.data[props.genericData.lists[0]]
+    console.log(props.genericData.data)
+    return props.genericData.data
+    // return props.genericData.data[props.genericData.lists[0]]
   }
 
   return null

@@ -15,7 +15,7 @@ const props = defineProps<{
   modules: ModuleGeneric[];
 
 }>();
-let el = ref(null);
+const el = ref(null);
 
 onMounted(() => {
 

@@ -2,7 +2,7 @@ class Endpoints {
 
   endpoints: {} = {};
 
-  constructor(endpoints: Endpoint[]) {
+  constructor (endpoints: Endpoint[]) {
 
     if (!endpoints) return;
 
@@ -46,7 +46,7 @@ export class Response {
    */
   r: any;
 
-  constructor(status: number, r: any) {
+  constructor (status: number, r: any) {
 
     this.status = status;
     this.r = r;
@@ -67,7 +67,7 @@ export class Call extends Endpoints {
    *Creates an instance of Call.
    * @memberof Call
    */
-  constructor(endpoints?: Endpoint[]) {
+  constructor (endpoints?: Endpoint[]) {
 
     super(endpoints);
 
@@ -87,7 +87,7 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  get(endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
+  get (endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
 
     return this.call(this.getUrl(endpoint, method), 'GET', data, headers);
 
@@ -102,13 +102,13 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  post(endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
+  post (endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
 
     return this.call(this.getUrl(endpoint, method), 'POST', data, headers);
 
   }
 
-  delete(endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
+  delete (endpoint: string, method: string, data?: object, headers?: { [key: string]: string }) {
 
     return this.call(this.getUrl(endpoint, method), 'DELETE', data, headers);
 
@@ -123,7 +123,7 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  call(url: string, type: string, data?: object | FormData, headers?: { [key: string]: string }) {
+  call (url: string, type: string, data?: object | FormData, headers?: { [key: string]: string }) {
 
     const req = new XMLHttpRequest();
     let response: string;
@@ -223,7 +223,7 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  serializeObject(object: { [key: string]: any }, prefix?: string) {
+  serializeObject (object: { [key: string]: any }, prefix?: string) {
 
     if (object === null || object === undefined) return;
 
@@ -257,7 +257,7 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  getUrl(endpoint: string, method: string) {
+  getUrl (endpoint: string, method: string) {
 
     if (!endpoint) return `${window.location.protocol}//${window.location.host}/${method}`;
 
@@ -273,7 +273,7 @@ export class Call extends Endpoints {
    * @returns
    * @memberof Call
    */
-  modifyContent(content: string, contentType: string) {
+  modifyContent (content: string, contentType: string) {
 
     let newContent: string;
 
@@ -298,7 +298,7 @@ export class Call extends Endpoints {
    * @param {string} url
    * @memberof Call
    */
-  addEndpoint(name: string, url: string) {
+  addEndpoint (name: string, url: string) {
 
     if (this[name]) {
 

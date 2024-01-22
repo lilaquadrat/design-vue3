@@ -72,7 +72,7 @@ let $refs:
 let currentIndex: number = 0;
 let headIndexOpen: boolean = false;
 let forceMobileIndex: boolean = false;
-let el = ref(null);
+const el = ref(null);
 
 onMounted((): void => {
 
@@ -119,11 +119,7 @@ const indexTeaser = computed(() => {
   return mapped.filter((single) => single) ?? [];
 
 });
-const contentCount = computed(() => {
-
-  return props.childData?.index.length;
-
-});
+const contentCount = computed(() => props.childData?.index.length);
 const currentContent = computed(() => {
 
   if (!props.childData?.data) return null;

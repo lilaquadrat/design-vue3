@@ -11,27 +11,19 @@ const props = withDefaults(defineProps<{
 const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered')); 
 const noStyle: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noStyle')); 
 const actions: ComputedRef<boolean> = computed(() => !!props.variant?.includes('actions')); 
-const notEmpty: ComputedRef<boolean> = computed(() => {
-  
-  return !!props.value?.find((single) => {
+const notEmpty: ComputedRef<boolean> = computed(() => !!props.value?.find((single) => {
 
-    if (typeof single === 'string') return single.length > 0;
-    return single.text?.length > 0;
+  if (typeof single === 'string') return single.length > 0;
+  return single.text?.length > 0;
 
-  });
+})); 
+const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => props.value?.filter((single) => {
 
-}); 
-const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => {
+  if (typeof single === 'string' && single.length) return single;
+  if (typeof single === 'object' && single.text && single.link) return single;
+  return false;
 
-  return props.value?.filter((single) => {
-
-    if (typeof single === 'string' && single.length) return single;
-    if (typeof single === 'object' && single.text && single.link) return single;
-    return false;
-
-  });
-
-}); 
+})); 
 
 </script>
 

@@ -31,11 +31,7 @@ function scrollToNext (): void {
 
 }
 
-const scrollNotice = computed((): boolean => {
-
-  return props.variant?.includes('scrollNotice');
-
-}); 
+const scrollNotice = computed((): boolean => props.variant?.includes('scrollNotice')); 
 const filteredLinks = computed(() => {
 
   let filteredLinks: Link[] | undefined = props.links?.filter((link) => !!link.text);
