@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type TypedEvent from '@/interfaces/Event.interface';
 import type { ParsedError } from '../../libs/ActionNotice'
-import {defineProps, computed, watch, ref, defineSlots, onMounted} from 'vue'
+import {defineProps, computed, watch, ref, defineSlots, defineEmits} from 'vue'
 
 const props = defineProps<{
     value?: string
@@ -10,10 +11,14 @@ const props = defineProps<{
     error?: ParsedError 
 }>();
 const inputElement = ref<HTMLInputElement | null>(null);
-let tempValue = ''
+let tempValue: string = ''
+const debounceTime:number = 500 
+let timeout: ReturnType<typeof setTimeout> | null = null;
 const slots = defineSlots<{
     default(): any
 }>();
+//
+const emit = defineEmits(['update', 'focus'])
 
 
 watch(() => props.value, () => {
@@ -27,13 +32,25 @@ watch(() => props.value, () => {
   }
 })
 
+const update = ($event?: KeyboardEvent) => {
+  const target = $event.target as HTMLInputElement;
 
+  tempValue = target?.value;
+
+  clearTimeout(timeout!);
+
+  timeout = setTimeout(() => {
+    if(!$event) {
+      emit('update', '' );
+      return
+    }
+  }, debounceTime);
+};
 const slotUsed = computed(() => slots.default?.().length);
 const errorMessage = computed(() => props.error?.keyword !== 'requires' ? props.error?.error : null)
 const hasError = computed(() => !!props.error?.error)
-onMounted() {
-    
-}
+
+
 </script>
 <template>
     <label class="lila-input" :class="{ error: hasError }">
@@ -41,6 +58,11 @@ onMounted() {
        ref="inputElement"
        type="text"
        :disabled="disabled"
+       :value="tempValue"
+       @keyDown="checkInput($event)"
+       @keyup="update"
+       @focus="focus"
+       @blur="blur"
 
        
      />
