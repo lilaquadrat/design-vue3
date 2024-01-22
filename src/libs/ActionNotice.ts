@@ -20,6 +20,7 @@ export interface ErrorsObject {
 }
 
 export default class ActionNotice {
+  error: any;
 
   static parse (errors: ErrorObject[], translationPre?: string): ErrorsObject {
 

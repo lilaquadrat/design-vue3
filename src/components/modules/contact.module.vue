@@ -13,9 +13,9 @@ import { computed, onBeforeMount} from 'vue';
 import type ListCategoryExtended from '../../interfaces/ListCategoryExtended.interface';
 
 
-import useMainStore from '../../stores/main.store';
+// import useMainStore from '../../stores/main.store';
 
-const store = useMainStore();
+// const store = useMainStore();
 const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;
@@ -24,8 +24,9 @@ const props = defineProps<{
     editor:{modes: string[]},
     state: string,
     participantsState: ListPartiticpantsDetails,
-    variant: string;
-    errors: Error | null;
+    variant: string,
+    errors: null,
+    errorsobject: ErrorsObject
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 
     
@@ -57,7 +58,7 @@ const list = computed(():List | null => {
 
   return null
 });
-const categories = computed((): ListCategoryExtended[] => {
+const categories = computed((): ListCategoryExtended[] | null => {
   if (props.list?.categories.length > 1) {
     const categories = props.list.categories as ListCategoryExtended[];
 
@@ -189,150 +190,150 @@ function updateAgreements () {
 
 
 const getparticipantsState = async () => {
-  console.log('store:', store);
-  console.log('store.state:', store.state);
+  // console.log('store:', store);
+  // console.log('store.state:', store.state);
 
-  const sdk = new StudioSDK('design', store.state.api);
+  // const sdk = new StudioSDK('design', store.state.api);
 
-  try {
+  // try {
    
-    const participantsState = await sdk.public.lists.state(props.list?._id.toString());
+  //   const participantsState = await sdk.public.lists.state(props.list?._id.toString());
 
-    if (participantsState.data) {
+  //   if (participantsState.data) {
 
-      // this.participantsState = participantsState.data;
-      //participantsState.data;
-      emit('participantsState', participantsState.data)
+  //     // this.participantsState = participantsState.data;
+  //     //participantsState.data;
+  //     emit('participantsState', participantsState.data)
       
 
-    }
+  //   }
 
-  } catch (e) {
+  // } catch (e) {
 
-    console.error(e);
-    console.log(e.response?.data);
+  //   console.error(e);
+  //   console.log(e.response?.data);
 
-  }
+  // }
 };
 const handleForm = async (event: Event): Promise<void> => {
-  event.preventDefault();
+  // event.preventDefault();
  
 
-  const address = ModelsClass.save(addressModel, 'address');
-  const customer = ModelsClass.save({...model, ...address}, 'contact');
-  const agreements = [];
-  let category: string;
+  // const address = ModelsClass.save(addressModel, 'address');
+  // const customer = ModelsClass.save({...model, ...address}, 'contact');
+  // const agreements = [];
+  // let category: string;
 
-  customer.type = 'person';
+  // customer.type = 'person';
 
-  const message = customer.message;
+  // const message = customer.message;
 
-  delete customer.message;
+  // delete customer.message;
 
-  category = customer.category;
+  // category = customer.category;
 
-  delete customer.category;
+  // delete customer.category;
 
-  props.list?.agreements.forEach((single: Agreement) => {
+  // props.list?.agreements.forEach((single: Agreement) => {
 
-    if (props.agreements[single.contentId].value) {
+  //   if (props.agreements[single.contentId].value) {
 
-      agreements.push({ id: single.contentId, version: 0 });
+  //     agreements.push({ id: single.contentId, version: 0 });
 
-    }
+  //   }
 
-  });
+  // });
 
-  if (props.list?.categories.length === 1 && !category) {
+  // if (props.list?.categories.length === 1 && !category) {
 
-    category = props.list.categories[0].id;
+  //   category = props.list.categories[0].id;
 
-  }
-
-
-  try {
-    const sdk = new StudioSDK('design', store.state.api);
-    const call = sdk.public.lists.join(props.list?._id.toString(), customer, message, category, agreements);
+  // }
 
 
-    await props.$traceable(call);
+  // try {
+  //   const sdk = new StudioSDK('design', store.state.api);
+  //   const call = sdk.public.lists.join(props.list?._id.toString(), customer, message, category, agreements);
 
-    //this.state = 'success';
-    emit('state', 'success')
+
+  //   await props.$traceable(call);
+
+  //   //this.state = 'success';
+  //   emit('state', 'success')
     
 
-  } catch (e) {
+  // } catch (e) {
 
-    console.error(e);
-    console.log(e.response?.data);
+  //   console.error(e);
+  //   console.log(e.response?.data);
 
-    /**
-       * because of the address partial we need to remove the single errors from the error messages and add
-       * one error for the whole address
-       */
-    const addressKeys = ['street', 'streetNumber', 'osm_id', 'zipcode', 'city', 'country'];
-    const filteredErrorArray = [];
-    let addAddressError = false;
+  //   /**
+  //      * because of the address partial we need to remove the single errors from the error messages and add
+  //      * one error for the whole address
+  //      */
+  //   const addressKeys = ['street', 'streetNumber', 'osm_id', 'zipcode', 'city', 'country'];
+  //   const filteredErrorArray = [];
+  //   let addAddressError = false;
 
-    // Check if the error response has a message indicating validation failure
-    if (e.response?.data?.message === 'VALIDATION_FAILED') {
+  //   // Check if the error response has a message indicating validation failure
+  //   if (e.response?.data?.message === 'VALIDATION_FAILED') {
 
-      // Iterate over each error in the response data
-      e.response?.data?.errors.forEach((single: ErrorObject) => {
+  //     // Iterate over each error in the response data
+  //     e.response?.data?.errors.forEach((single: ErrorObject) => {
 
-        // If the missing property in the error is not in the addressKeys array
-        if (!addressKeys.includes(single.params.missingProperty)) {
+  //       // If the missing property in the error is not in the addressKeys array
+  //       if (!addressKeys.includes(single.params.missingProperty)) {
 
-          // Add the error to the filtered error array
-          filteredErrorArray.push(single);
+  //         // Add the error to the filtered error array
+  //         filteredErrorArray.push(single);
 
-        } else {
+  //       } else {
 
-          // Flag that there's an address-related error
-          addAddressError = true;
+  //         // Flag that there's an address-related error
+  //         addAddressError = true;
 
-        }
+  //       }
 
-      });
+  //     });
 
-      // After checking all errors, if there's an address-related error
-      if (addAddressError) {
+  //     // After checking all errors, if there's an address-related error
+  //     if (addAddressError) {
 
-        // Add a custom address error to the filtered error array
-        filteredErrorArray.push({
-          instancePath: '',
-          schemaPath  : '#/required',
-          keyword     : 'required',
-          params      : {
-            missingProperty: 'address',
-          },
-          message: 'must have required property \'address\'',
-        });
+  //       // Add a custom address error to the filtered error array
+  //       filteredErrorArray.push({
+  //         instancePath: '',
+  //         schemaPath  : '#/required',
+  //         keyword     : 'required',
+  //         params      : {
+  //           missingProperty: 'address',
+  //         },
+  //         message: 'must have required property \'address\'',
+  //       });
 
-      }
+  //     }
 
-      // Set the component's errors property to the filtered error array
-      //   this.errors = {
-      //     message: 'VALIDATION_FAILED',
-      //     errors : filteredErrorArray,
-      //   };
-      emit('errors', {
-        message: 'VALIDATION_FAILED',
-        errors : filteredErrorArray,
-      })
+  //     // Set the component's errors property to the filtered error array
+  //     //   this.errors = {
+  //     //     message: 'VALIDATION_FAILED',
+  //     //     errors : filteredErrorArray,
+  //     //   };
+  //     emit('errors', {
+  //       message: 'VALIDATION_FAILED',
+  //       errors : filteredErrorArray,
+  //     })
 
-    } else {
+  //   } else {
 
-      // If the error isn't a validation failure, just set the component's errors to the response data
-      //this.errors = e.response?.data;
-      emit('errors', e.response?.data)
-    }
+  //     // If the error isn't a validation failure, just set the component's errors to the response data
+  //     //this.errors = e.response?.data;
+  //     emit('errors', e.response?.data)
+  //   }
 
 
-    //this.state = 'error';
-    emit('state', 'error')
+  //   //this.state = 'error';
+  //   emit('state', 'error')
 
-  }
+  // }
 
 }
 

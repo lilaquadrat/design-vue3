@@ -1,44 +1,34 @@
 <script setup lang="ts">
-import { computed, ref, useSlots, defineEmits, withDefaults, defineProps } from 'vue';
-import { type ParsedError } from '../../libs/ActionNotice';
+import { computed, ref, defineEmits, defineProps, defineSlots} from 'vue';
+import type { ParsedError } from '../../libs/ActionNotice';
 
-
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   disabled?: boolean
-  error: ParsedError
-  readonly: boolean
-  value: string
-  maxLength: number
-  placeholder: string
-  required: boolean
-  debounce: number
-  
-  
-}>(), 
-{});
-const slots = useSlots();
-// const $refs = ref<{
-//   textarea: HTMLTextAreaElement | null;
-//   timeout: any ;
-// }>({
-//   textarea: null,
-//   timeout : null
-// });
+  error?: ParsedError
+  readonly?: boolean
+  value?: string
+  maxLength?: number
+  placeholder?: string
+  required?: boolean
+  debounce?: number
+}>();
 const textareaRef = ref<HTMLTextAreaElement>();
 const timeoutRef = ref<any>();
 let length: number = 0;
 const emits = defineEmits<{
   (e: string, i: string): void;
 }>();
-const slotUsed = computed(() => slots.default?.length);
+const slots = defineSlots<{
+  default(): any
+}>()
+const slotUsed = computed(() => slots.default?.().length);
 const checkInput = (event: KeyboardEvent) => {
   
   // const input: HTMLTextAreaElement = $refs.value.textarea!;
   const input = textareaRef.value
 
-
   if(input){
-    updateLength(input.value.length, +props.maxLength)
+    updateLength(input.value.length, +props.maxLength!)
 
     if(event.key === 'Escape') {
       input.blur()
@@ -48,15 +38,22 @@ const checkInput = (event: KeyboardEvent) => {
 const updateLength = (currentLength: number, maxLength: number) => {
   length = currentLength;
 
-  if(maxLength) {
-    if(currentLength > maxLength) {
-      input(input.value.substring(0, maxLength));
+  
+  if (maxLength !== undefined) {
+    if (currentLength > maxLength) {
+      const textarea = textareaRef.value
+
+
+      if(textarea) {
+        textarea.value = textarea.value.substring(0, maxLength)
+        handleInput(textarea.value)
+      }
     }
   }
 }
-const input = (value: string) => {
+const handleInput = (value: string) => { 
   if(!props.debounce) {
-    return emits('input', value);
+    return emits('input', value)
   }
 
   clearTimeout(timeoutRef.value);
@@ -73,7 +70,7 @@ const input = (value: string) => {
       <textarea ref="textarea" 
       :disabled="disabled" 
       :read-only="readonly" 
-      @input="input($event.target.value)" 
+      @input="($event) => handleInput($event.target?.value)"
       @keyup="checkInput($event)" 
   
       :placeholder="placeholder" />
@@ -84,13 +81,17 @@ const input = (value: string) => {
       </div>
     </span>
 
-    <lila-input-labels-partial :required="required" :error="error" :disabled="disabled"><slot/></lila-input-labels-partial>
+    <lila-input-labels-partial 
+    :required="required" 
+    :error="error" 
+    :disabled="disabled">
+    <slot/>
+  </lila-input-labels-partial>
 
   </label>
 </template>
 
 <style lang="less" scoped>
-@import (reference) "@{projectPath}/source/less/shared.less";
 
 .lila-textarea {
 
