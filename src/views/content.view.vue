@@ -24,7 +24,8 @@ import prices from './viewData/prices';
 import quellcode from './viewData/quellcode';
 import video from './viewData/video';
 import navigation from './viewData/navigation';
-import contact from './viewData/contact'
+import contact from './viewData/contact';
+import menu from './viewData/menu';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -46,7 +47,8 @@ const modules: Record<string, Partial<Content>> = {
   video,
   navigation,
   'blog-intro': blogIntro,
-  contact
+  contact,
+  menu
 };
 const route = useRoute();
 const store = useMainStore();

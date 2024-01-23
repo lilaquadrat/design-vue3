@@ -1,6 +1,6 @@
 <template>
   <section class="lila-legend">
-    <p v-for="(single, index) in text" :key="`legend-${index}`">
+    <p v-for="(single, index) in props.text" :key="`legend-${index}`">
       {{ single }}
     </p>
   </section>

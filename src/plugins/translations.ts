@@ -15,7 +15,7 @@ class TranslationPlugin {
 
   }
 
-  translateV2 (value: string, values?: (string|number)[]) {
+  translate (value: string, values?: string[]) {
 
     
     let returnValue: string;
@@ -98,18 +98,30 @@ class TranslationPlugin {
 
 const plugin = {
   install: (vue: App): void => {
-
+    
     const translationPlugin = new TranslationPlugin();
 
     vue.config.globalProperties.$translations = translationPlugin;
-    vue.config.globalProperties.$translate = (value: string, values?: string[]) => translationPlugin.translateV2(value, values);
+    vue.config.globalProperties.$translate = (value: string, values?: string[]) => translationPlugin.translate(value, values);
     vue.config.globalProperties.$translateWithDiff = (key: string, value: number) => translationPlugin.translateWithDiff(key, value);
 
     console.log('translate plugin installed');
   },
 };
+const useTranslations = () => {
+
+  const translationPlugin = new TranslationPlugin();
+
+  translationPlugin.select('de');
+
+  return {
+    translate: translationPlugin,
+  }
+
+};
 
 export default plugin;
 export {
-  TranslationPlugin
+  TranslationPlugin,
+  useTranslations
 };

@@ -19,31 +19,16 @@ export default {
           'icon' : 'arrow-right',
           'links': [
             {
-              'text'      : 'first children 11',
-              'link'      : '/chisas',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
+              'text': 'first children 11',
+              'link': 'https://lilaquadrat.de',
             },
             {
-              'text'      : 'first children 12',
-              'link'      : '/chisas',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
+              'text': 'first children 12',
+              'link': '/chisas',
             },
             {
-              'text'      : 'first children 13',
-              'link'      : '/chisas',
-              'icon'      : '',
-              'classes'   : [],
-              'attributes': [],
-              'variant'   : [],
-              'external'  : false
+              'text': 'first children 13',
+              'link': '/chisas',
             }
           ],
           'classes'   : [],

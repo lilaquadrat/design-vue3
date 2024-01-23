@@ -57,7 +57,7 @@ watch(() => state.value, () => emit('loading', state.value === 'loading'));
 /**
 * used if preload is set to none to start the video after the element is loaded
 */
-watch(() => videoElement.value, (before, after) => {
+watch(() => videoElement.value, () => {
 
 
   //if the watcher is called in the init process we wont force start playing
@@ -345,17 +345,6 @@ function createYoutubePlayer () {
     cursor: pointer;
   }
 
-  &.noPreload {
-    video {
-      position: absolute;
-    }
-
-    &.ready {
-      video {
-        position: relative;
-      }
-    }
-  }
 
   .youtube-container, .preload-placeholder {
     position: relative;
@@ -376,6 +365,18 @@ function createYoutubePlayer () {
   .preload-placeholder {
     display: grid;
     max-width: 100%;
+  }
+
+  &.noPreload {
+    video {
+      position: absolute;
+    }
+
+    &.ready {
+      video {
+        position: relative;
+      }
+    }
   }
 
   .preload-placeholder {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
-import { computed, getCurrentInstance, inject, type ComputedRef } from 'vue';
+import { onBeforeMount } from 'vue';
+import { computed, getCurrentInstance, inject, ref } from 'vue';
 
 const props = defineProps<{
   link: string
@@ -15,13 +16,31 @@ const props = defineProps<{
 }>();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
-const linkWithBase: ComputedRef<string> = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
+const linkWithBase = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
 const isWhite = computed(() => props.variant?.includes('white'));
-const type: ComputedRef<'router-link' | 'a'> = computed(() => (linkMode === 'event' ? 'a' : 'router-link'));
+const isStatic = computed(() => props.attributes?.includes('static'));
+const isEvent = computed(() => props.attributes?.includes('static'));
+const type = computed(() => linkMode !== 'event' && !isStatic.value && !isEvent.value && !isExternal.value ? 'router-link': 'a');
+const isExternal = ref<boolean>(false);
 const emit = defineEmits<{
   (e: string, id: string): void;
 }>();
-const event = ($event: MouseEvent) => {
+
+onBeforeMount(() => {
+
+  analyse(props.link);
+
+})
+
+function analyse (link: string) {
+
+  if (typeof link !== 'string') return;
+
+  isExternal.value = !!link?.match(/^http/i);
+
+}
+
+function event ($event: MouseEvent) {
 
   if (props.attributes?.includes('event') || linkMode === 'event') {
 
@@ -43,7 +62,7 @@ const event = ($event: MouseEvent) => {
     }
   }
 
-};
+}
 
 </script>
 <template>

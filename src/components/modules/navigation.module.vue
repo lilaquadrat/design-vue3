@@ -19,17 +19,26 @@ const props = defineProps<{
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-const elementsArray = ref<(LinkGroupElement & { active: boolean })[]>([]);
-const open = ref<boolean>(false);
-const style = ref();
 const attachTo = ref<HTMLElement>();
 const overlay = ref<HTMLElement>();
 const linksContainer = ref<HTMLElement>();
 const logoContainer = ref<HTMLElement>();
 const links = ref<HTMLElement>();
 const triggerMenuOverlay = ref<HTMLElement>();
+const elementsArray = ref<(LinkGroupElement & { active: boolean })[]>([]);
+const open = ref<boolean>(false);
+/**
+ * holds the style for the overlay positioning
+ */
+const style = ref();
 const overlayContent = ref<Link[]>();
+/**
+ * indicates that the links are wider than the available space
+ */
 const isOverflow = ref<boolean>(false);
+/**
+ * is used to force rerender the overlay to always have the same animation
+ */
 const activeKey = ref<string>('');
 
 watch(() => resized.value, () => {
@@ -43,6 +52,7 @@ watch(() => resized.value, () => {
 watch(() => props.elements, () => updateElements());
 watch(() => attachTo.value, () => {
 
+  // if attachTo gets a value it indicates that the overlay is getting rendered
   if(!useTriggerMenu.value && attachTo.value) requestAnimationFrame(() => calculateOptionsStyle())
 
 });
@@ -53,22 +63,19 @@ watch(() => triggerMenuOverlay.value, () => {
   }
 
 });
-watch(() => media.value, () => {
 
-  closeAll();
-  open.value = false;
-
-});
-
+/**
+ * switches the rendermode to triggerMenu
+ */
 const useTriggerMenu = computed(() => isOverflow.value || props.variant.includes('left'));
 const isLeft = computed(() => props.variant.includes('left'));
 
-onBeforeMount((): void => {
-  updateElements();
-});
-
+onBeforeMount((): void => updateElements());
 onMounted(() => checkOverflow());
 
+/**
+ * removes empty entries and adds active
+ */
 function updateElements () {
 
   const newElements: (LinkGroupElement & { active: boolean })[] = [];
@@ -151,19 +158,30 @@ function closeAll () {
 
 }
 
+/**
+ * Checks if the combined width of the logo and links elements
+ * exceeds the available width within their container.
+ *
+ * If this is true we switch to triggerMenu through isOverflow
+ * 
+ */
 function checkOverflow () {
 
   if(!linksContainer.value || !logoContainer.value || !links.value) return;
 
+  // Calculate the available width inside the links container.
+  // Subtract 60 pixels as a margin or padding.
   const availableWidth = linksContainer.value.clientWidth - 60;
   const logoWidth = logoContainer.value.offsetWidth;
   const linksWidth = links.value.offsetWidth;
 
+  // Set isOverflow to true if the sum of the logo width and links width
+  // is greater than the available width in the links container.
+  // This indicates an overflow situation.
   isOverflow.value = availableWidth < logoWidth + linksWidth;
 
-  console.log(linksContainer.value, availableWidth, logoContainer.value, logoWidth, links.value, linksWidth, logoWidth + linksWidth);
-
 }
+
 
 const calculateOptionsStyle = () => {
 
@@ -421,7 +439,7 @@ const calculateOptionsStyle = () => {
           }
 
           &:nth-child(2) {
-            margin-top: -9px;
+            margin-top: -10px;
           }
 
           &:nth-child(3) {
