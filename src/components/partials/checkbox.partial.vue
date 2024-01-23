@@ -1,43 +1,3 @@
-<template>
-  <section class="lila-label-parent-container">
-    <label :class="[textType, { error: error, checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
-      <div class="indicator-text">
-        <span class="indicator">
-          <lila-icons-partial type="checked" size="small" colorScheme="white" />
-        </span>
-
-        <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-          <slot v-if="!text"></slot>
-          <description-partial inline v-if="description && !text">{{ description | translate }}</description-partial>
-          {{ text }}
-        </span>
-
-        <div v-if="!text" class="label-container">
-          <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
-          <span class="disabled" v-if="disabled">{{ 'disabled' | translate }}</span>
-        </div>
-      </div>
-
-      <div v-if="error" class="errors">
-        <p>{{ error }}</p>
-      </div>
-
-      <input type="checkbox" :name="name" :required="required" :disabled="disabled" :checked="modelValue" @input="updateValue" />
-    </label>
-    <div v-if="text" class="indicator-text">
-      <span class="indicator"> </span>
-      <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-        <slot />
-        <description-partial inline v-if="description">{{ description | translate}}</description-partial>
-      </span>
-
-      <div class="label-container">
-        <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
-        <span class="required" v-if="disabled">{{ 'disabled' | translate }}</span>
-      </div>
-    </div>
-  </section>
-</template>
 <script setup lang="ts">
 import type TypedEvent from '@/interfaces/Event.interface';
 import { onMounted, onBeforeUpdate, useSlots, ref } from 'vue';
@@ -90,6 +50,47 @@ onMounted(() => setTextType());
 onBeforeUpdate(() => setTextType());
 
 </script>
+<template>
+  <section class="lila-label-parent-container">
+    <label :class="[textType, { error: error, checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
+      <div class="indicator-text">
+        <span class="indicator">
+          <lila-icons-partial type="checked" size="small" colorScheme="white" />
+        </span>
+
+        <span class="label" v-if="textType !== 'noText'" :class="[textType]">
+          <slot v-if="!text"></slot>
+          <description-partial inline v-if="description && !text">{{ description | translate }}</description-partial>
+          {{ text }}
+        </span>
+
+        <div v-if="!text" class="label-container">
+          <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
+          <span class="disabled" v-if="disabled">{{ 'disabled' | translate }}</span>
+        </div>
+      </div>
+
+      <div v-if="error" class="errors">
+        <p>{{ error }}</p>
+      </div>
+
+      <input type="checkbox" :name="name" :required="required" :disabled="disabled" :checked="modelValue" @input="updateValue" />
+    </label>
+    <div v-if="text" class="indicator-text">
+      <span class="indicator"> </span>
+      <span class="label" v-if="textType !== 'noText'" :class="[textType]">
+        <slot />
+        <description-partial inline v-if="description">{{ description | translate}}</description-partial>
+      </span>
+
+      <div class="label-container">
+        <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
+        <span class="required" v-if="disabled">{{ 'disabled' | translate }}</span>
+      </div>
+    </div>
+  </section>
+</template>
+
 <style lang="less" scoped>
 
 

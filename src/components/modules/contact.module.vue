@@ -51,7 +51,8 @@ const emit = defineEmits<{
 }>();
 const list = computed(():List | null => {
   if(props.genericData?.lists && props.genericData?.data && Array.isArray(props.genericData?.lists)) {
-    console.log(props.genericData.data)
+    console.log('props.genericData.data:', props.genericData.data)
+    console.log('props.genericData.lists:', props.genericData.lists)
     return props.genericData.data
     // return props.genericData.data[props.genericData.lists[0]]
   }
