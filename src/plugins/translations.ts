@@ -15,19 +15,17 @@ class TranslationPlugin {
 
   }
 
-  translate (value: string, values?: string[]) {
+  translate (textToTranslate: string, values?: string[]) {
 
-    
     let returnValue: string;
+    const lowerCaseValue = textToTranslate?.toLocaleLowerCase();
     const translation = this.store.translations[this.current];
 
+    if (!translation) return textToTranslate;
     
-    if (!translation) return value;
-    
-    
-    returnValue = translation[value]
-      ? translation[value]
-      : value;
+    returnValue = translation[lowerCaseValue]
+      ? translation[lowerCaseValue]
+      : textToTranslate;
     
     if (values) {
 
@@ -42,13 +40,11 @@ class TranslationPlugin {
 
   translateWithDiff (textToTranslate: string, value: number) {
 
-    console.log(textToTranslate, value);
-
     const translation = this.store.translations[this.current];
     const type = value === 1
       ? 'singular'
       : 'plural';
-    const useKey = `${textToTranslate}_${type}`;
+    const useKey = `${textToTranslate.toLocaleLowerCase()}_${type}`;
 
     if (!translation) return useKey;
 

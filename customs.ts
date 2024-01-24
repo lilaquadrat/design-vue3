@@ -7,7 +7,7 @@ export {}
 declare module 'vue' {
   interface ComponentCustomProperties {
     $translations: TranslationPlugin
-    $translate: TranslationPlugin['translateV2']
+    $translate: TranslationPlugin['translate']
     $translateWithDiff: TranslationPlugin['translateWithDiff']
     $helpers: typeof HelpersPlugin
   }

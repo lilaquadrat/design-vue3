@@ -1,39 +1,35 @@
 <template>
-  <section :id="id" ref="element" :class="[view, variant, { mobileIndex: forceMobileIndex }]"
-    class="lila-training-module lila-module fullscreen">
+  <section :id="id" ref="element" :class="[inviewState, variant, { mobileIndex: forceMobileIndex }]" class="lila-training-module lila-module fullscreen">
     <section v-if="textblock" class="module generic-module">
       <lila-textblock-partial v-bind="textblock" />
     </section>
 
     <article ref="mainGridContainer" class="main-grid-container">
-      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer"
-        v-if="currentContent">
+      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer" v-if="currentContent">
+
         <section class="content-head">
           <div class="grid-container">
-            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{
-              currentContent.settings.title }}</lila-button-partial>
+            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }}</lila-button-partial>
             <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
           </div>
 
           <div :class="{ open: headIndexOpen }" class="headIndex">
             <ul>
               <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`">
-                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton"
-                  @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
+                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
               </li>
             </ul>
           </div>
+
         </section>
-        <lila-content-module ref="currentContent" class="currentContent" :key="currentContent.id" :routeBase="linkBase"
-          :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
+        <lila-content-module ref="currentContentContainer" class="currentContent" :key="currentContent.id" :routeBase="linkBase" :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
       </section>
       <section class="current-content-container" v-if="!currentContent">
         <section class="content-module"></section>
       </section>
 
       <section class="index-container">
-        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser"
-          :key="`teaser-index-${index}`">
+        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`">
           <div class="index-indicator">{{ index + 1 }}.</div>
 
           <button @click="setIndex(index)">
@@ -47,69 +43,56 @@
 </template>
 <script setup lang="ts">
 import type Textblock from '@interfaces/textblock.interface';
-import type { ChildData, Editor } from '@lilaquadrat/studio/lib/interfaces';
+import type { ChildData, Content } from '@lilaquadrat/studio/lib/interfaces';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
-import { computed, inject, onMounted, ref } from 'vue';
-import checkInview from '../../mixins/checkin';
+import { computed, inject, onMounted, ref, watch } from 'vue';
+import { useInview } from '@/plugins/inview';
+import { useResize } from '@/plugins/resize';
+import { useTranslations } from '@/plugins/translations';
 
 const props = defineProps<{
-
-  textblock: Textblock;
-
+  textblock?: Textblock;
   childData: ChildData;
-  id?:string;
-  view?: string;
+  id?: string;
   variant: string[];
-
 }>();
+const { resized } = useResize();
+const {translate} = useTranslations();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
-let $refs:
-  {
-    currentContent: HTMLElement;
-    mainGridContainer: HTMLElement;
-  };
-let currentIndex: number = 0;
-let headIndexOpen: boolean = false;
-let forceMobileIndex: boolean = false;
-const el = ref(null);
+const currentContentContainer = ref<HTMLElement>();
+const mainGridContainer = ref<HTMLElement>();
+const currentIndex = ref<number>(0);
+const headIndexOpen = ref<boolean>(false);
+const forceMobileIndex = ref<boolean>(false);
+const element = ref<HTMLElement>();
+const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
-onMounted((): void => {
+watch(resized, () => checkRealWidth());
+onMounted(() => checkRealWidth());
 
-  checkInview(el);
-  checkRealWidth();
+const contentCount = computed(() => props.childData?.index.length);
+const currentContent = computed(() => {
+  if (!props.childData?.data) return null;
 
-  window.addEventListener('resized', () => {
+  const currentContent = props.childData.data[props.childData.index[currentIndex.value]] ?? null;
 
-    checkRealWidth();
+  if (!currentContent) return null;
 
-  });
-
+  return prepareContent(currentContent);
 });
-
-function checkRealWidth () {
-
-  const element = $refs.mainGridContainer;
-
-  forceMobileIndex = element.clientWidth < 700;
-
-}
-
 const indexTeaser = computed(() => {
 
   if (!props.childData?.data) return [];
 
   const mapped = props.childData?.index.map((index) => {
-
-    const singleData: Partial<Editor> = props.childData?.data[index] ?? {};
+    const singleData: Partial<Content> = props.childData?.data[index] ?? {};
 
     if (!singleData.settings) {
-
       singleData.settings = {
-        title      : 'No Title',
+        title      : translate.translate('training-module-no-title'),
         description: '',
       };
-
     }
 
     return singleData;
@@ -117,25 +100,18 @@ const indexTeaser = computed(() => {
   });
 
   return mapped.filter((single) => single) ?? [];
-
-});
-const contentCount = computed(() => props.childData?.index.length);
-const currentContent = computed(() => {
-
-  if (!props.childData?.data) return null;
-
-  const currentContent = props.childData.data[props.childData.index[currentIndex]] ?? null;
-
-  if (!currentContent) return null;
-
-  return prepareContent(currentContent);
-
 });
 
+
+function checkRealWidth () {
+  const element = mainGridContainer.value as HTMLElement;
+
+  forceMobileIndex.value = element.clientWidth < 700;
+}
 
 function setIndex (index: number) {
 
-  currentIndex = index;
+  currentIndex.value = index;
   toggleIndex(null, false);
 
 }
@@ -143,21 +119,14 @@ function setIndex (index: number) {
 function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 
   if (hint !== undefined) {
-
-    headIndexOpen = hint;
-
+    headIndexOpen.value = hint;
   } else {
-
-    headIndexOpen = !headIndexOpen;
-
+    headIndexOpen.value = !headIndexOpen.value;
   }
 
 }
-
 </script>
 <style lang="less" scoped>
-
-
 .lila-training-module {
   .module;
   .modulePadding('none');
@@ -194,7 +163,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
       justify-content: start;
 
       @media @desktop {
-
         position: sticky;
         top: 40px;
         display: grid;
@@ -220,7 +188,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
         }
 
         button {
-
           display: grid;
           justify-content: start;
 
@@ -274,7 +241,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
     }
 
     .current-content-container {
-
       min-width: 100%;
 
       @media @desktop {
@@ -332,11 +298,13 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 
         .headIndex {
           background-color: @white;
-          box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .13);
+          box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.13);
 
           opacity: 0;
           pointer-events: none;
-          transition: opacity @aTime @aType, transform @aTime @aType;
+          transition:
+            opacity @aTime @aType,
+            transform @aTime @aType;
           transform: translateY(-5px);
 
           &.open {
@@ -348,7 +316,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
           .index(5);
 
           ul {
-
             li {
               border-bottom: solid 1px @grey2;
               .modulePadding();
@@ -364,12 +331,43 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
     }
   }
 
-  &.mobileIndex {
+  &.indexIndicator {
+    @media @desktop {
+      .index-container {
+        .index-element {
+          .index-indicator {
+            .font-head;
+            display: grid;
 
+            justify-self: start;
+            height: @headlineLineHeight_XS;
+
+            margin-top: -1px;
+
+            color: @grey;
+            font-size: @headline_XS;
+
+            .trans(color);
+          }
+        }
+      }
+    }
+
+    .main-grid-container {
+      .index-container {
+        .index-element {
+          grid-template-columns: max-content 1fr;
+        }
+      }
+
+    }
+
+  }
+
+  &.mobileIndex {
     .modulePadding('none');
 
     .main-grid-container {
-
       grid-template-columns: 1fr;
 
       .index-container {
@@ -380,21 +378,14 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
         grid-column-start: 1;
 
         .content-head {
-
           display: grid;
-
         }
       }
     }
-
   }
-
   &.offsetTop {
-
     .main-grid-container {
-
       .current-content-container {
-
         .content-head {
           top: 40px;
         }
@@ -405,21 +396,12 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
       }
     }
 
-    &.indexVariant {
 
-      .main-grid-container {
-
-        .index-container {
-          top: 60px;
-        }
-      }
-    }
   }
 
   &.indexVariant {
 
     .main-grid-container {
-
       @media @desktop {
         grid-template-columns: 230px 1fr;
       }
@@ -435,7 +417,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
           .multi(padding, 0, 4);
 
           button {
-
             h2 {
               .font-normal;
               height: initial;
@@ -462,31 +443,22 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
           }
 
           &.active {
-
             button {
-
               h2 {
                 color: @color1;
               }
             }
-
           }
-
         }
       }
-
     }
 
     &.indexIndicator {
-
       .main-grid-container {
 
         @media @desktop {
-
           .index-container {
-
             .index-element {
-
               grid-template-columns: max-content 1fr;
 
               .index-indicator {
@@ -502,7 +474,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
               }
 
               button {
-
                 h2 {
                   .font-normal;
                   height: initial;
@@ -510,13 +481,10 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
                   line-height: @headlineLineHeight_XS;
                   text-transform: initial;
                 }
-
               }
 
               &.active {
-
                 button {
-
                   h2 {
                     color: @color1;
                   }
@@ -525,54 +493,23 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
                 .index-indicator {
                   color: @color1;
                 }
-
               }
-
             }
           }
         }
+        
       }
     }
 
-  }
-
-  &.indexIndicator {
-
-    @media @desktop {
-
-      .index-container {
-
-        .index-element {
-
-          .index-indicator {
-            .font-head;
-            display: grid;
-
-            justify-self: start;
-            height: @headlineLineHeight_XS;
-
-            margin-top: -1px;
-
-            color: @grey;
-            font-size: @headline_XS;
-
-            .trans(color);
-          }
+    &.offsetTop {
+      &.indexVariant {
+      .main-grid-container {
+        .index-container {
+          top: 60px;
         }
-
       }
-
     }
-
-    .index-container {
-
-      .index-element {
-
-        grid-template-columns: max-content 1fr;
-      }
-
     }
-
   }
 
 }

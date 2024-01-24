@@ -1,79 +1,78 @@
 <script setup lang="ts">
-import { computed, ref, defineEmits, defineProps, defineSlots} from 'vue';
-import type { ParsedError } from '../../libs/ActionNotice';
+import { ref, defineEmits, defineProps } from 'vue';
+import type { ParsedError } from '@/libs/ActionNotice';
 
-const props = defineProps<{
-  disabled?: boolean
-  error?: ParsedError
-  readonly?: boolean
-  value?: string
-  maxLength?: number
-  placeholder?: string
-  required?: boolean
-  debounce?: number
-}>();
-const textareaRef = ref<HTMLTextAreaElement>();
+const props = withDefaults(defineProps<{
+  disabled?: boolean;
+  error?: ParsedError;
+  readonly?: boolean;
+  value?: string;
+  maxLength?: number;
+  placeholder?: string;
+  required?: boolean;
+  debounce?: number;
+}>(), {
+  debounce: 500
+});
+const textareaElement = ref<HTMLTextAreaElement>();
 const timeoutRef = ref<any>();
-let length: number = 0;
+const length = ref<number>(0);
 const emits = defineEmits<{
-  (e: string, i: string): void;
+  (event: 'update:modelValue', data: string): void;
 }>();
-const slots = defineSlots<{
-  default(): any
-}>()
-const slotUsed = computed(() => slots.default?.().length);
 const checkInput = (event: KeyboardEvent) => {
-  
-  // const input: HTMLTextAreaElement = $refs.value.textarea!;
-  const input = textareaRef.value
 
-  if(input){
-    updateLength(input.value.length, +props.maxLength!)
+  if (!textareaElement.value) return;
 
-    if(event.key === 'Escape') {
-      input.blur()
-    }
+  if (event.key === 'Escape') {
+
+    textareaElement.value.blur();
+
+  } else {
+      
+    updateLength();
+
   }
+
 };
-const updateLength = (currentLength: number, maxLength: number) => {
-  length = currentLength;
+const updateLength = () => {
 
-  
-  if (maxLength !== undefined) {
-    if (currentLength > maxLength) {
-      const textarea = textareaRef.value
+  if (!textareaElement.value) return;
 
+  length.value = textareaElement.value.value.length;
 
-      if(textarea) {
-        textarea.value = textarea.value.substring(0, maxLength)
-        handleInput(textarea.value)
-      }
+  if (props.maxLength) {
+
+    if (length.value > props.maxLength) {
+
+      const textarea = textareaElement.value;
+
+      textarea.value = textareaElement.value.value.substring(0, props.maxLength);
+
     }
   }
-}
-const handleInput = (value: string) => { 
-  if(!props.debounce) {
-    return emits('input', value)
+
+  emitChanges(textareaElement.value.value);
+};
+const emitChanges = (value: string) => {
+  
+  if (!props.debounce) {
+    return emits('update:modelValue', value);
   }
 
   clearTimeout(timeoutRef.value);
+
   timeoutRef.value = setTimeout(() => {
-    emits('input', value)
-  }, +props.debounce);
-  
-}
+    emits('update:modelValue', value);
+  }, props.debounce);
+
+};
 
 </script>
 <template>
   <label class="lila-textarea" tabindex="">
     <span class="textarea-placement-container">
-      <textarea ref="textarea" 
-      :disabled="disabled" 
-      :read-only="readonly" 
-      @input="($event) => handleInput($event.target?.value)"
-      @keyup="checkInput($event)" 
-  
-      :placeholder="placeholder" />
+      <textarea ref="textareaElement" :disabled="disabled" :read-only="readonly" @keyup="checkInput($event)" :placeholder="placeholder" />
 
       <div class="length">
         {{ length }}
@@ -81,25 +80,18 @@ const handleInput = (value: string) => {
       </div>
     </span>
 
-    <lila-input-labels-partial 
-    :required="required" 
-    :error="error" 
-    :disabled="disabled">
-    <slot/>
-  </lila-input-labels-partial>
-
+    <lila-input-labels-partial :required="required" :error="error" :disabled="disabled">
+      <slot />
+    </lila-input-labels-partial>
   </label>
 </template>
 
 <style lang="less" scoped>
-
 .lila-textarea {
-
   display: grid;
   gap: 10px;
 
   .textarea-placement-container {
-
     display: grid;
 
     textarea {
@@ -140,7 +132,6 @@ const handleInput = (value: string) => {
           border: solid 1px @color1;
         }
       }
-
     }
 
     .length {
@@ -148,13 +139,11 @@ const handleInput = (value: string) => {
       align-self: end;
       justify-self: end;
       background-color: @grey1;
-      opacity: .8;
+      opacity: 0.8;
       pointer-events: none;
       .multi(padding, 1);
-
       .multi(margin, 2);
     }
   }
-
 }
 </style>

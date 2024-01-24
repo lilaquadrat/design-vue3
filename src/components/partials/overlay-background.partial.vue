@@ -4,6 +4,7 @@
     </section>
 </template>
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -19,15 +20,16 @@ const customIndex = computed(() => props.index ? `index${props.index}` : false);
 const hasCustomIndex = computed(() => props.index);
 const element = ref<HTMLElement>();
 
-function checkClose (event: Event) {
+onMounted(() => emit('mounted'));
 
-  console.log(event);
+function checkClose (event: Event) {
 
   if (element.value !== event.target) return;
 
   emit('close');
 
 }
+
 
 </script>
 <style lang="less" scoped>

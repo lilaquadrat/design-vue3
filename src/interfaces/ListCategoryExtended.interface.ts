@@ -8,4 +8,4 @@ type ListCategoryExtended = ListCategory &
         percentAvailable?: number
     };
 
-export default ListCategoryExtended;
+export {type ListCategoryExtended};

@@ -1,51 +1,43 @@
+<script setup lang="ts">
+
+withDefaults(
+  defineProps<{
+    label: string
+    padding?: boolean
+    margin?: boolean
+    type?: string
+    background?: boolean
+  }>(), 
+  {background: true}
+);
+
+</script>
 <template>
   <section class="lila-description-partial" :class="[type, { padding: padding, margin: margin, background: background }]">
-    <h4 v-if="label">{{ label | translate }}</h4>
+    <h4 v-if="label">{{ $translate(label) }}</h4>
     <p>
-      <slot></slot>
+      <slot />
     </p>
   </section>
 </template>
-<script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-
-    label: string;
-
-    padding: boolean;
-
-    margin: boolean;
-
-    type: string;
-
-    background: boolean;
-
-
-  }>(),
-  {
-    background: true,
-  });
-
-</script>
 <style lang="less" scoped>
-
 
 .lila-description-partial {
   .font-bold;
-  color: @color1;
-  font-size: @fontTextSmaller;
-  text-align: left;
-
-  border-left: solid 2px @color1;
-
-  .multi(padding, 2);
 
   display: grid;
   gap: 10px;
 
+  border-left: solid 2px @color1;
+  color: @color1;
+  font-size: @fontTextSmaller;
+  text-align: left;
+
+  .multi(padding, 2);
+
   h4 {
-    text-transform: uppercase;
     font-size: @fontTextSmaller;
+    text-transform: uppercase;
     .font-head;
   }
 

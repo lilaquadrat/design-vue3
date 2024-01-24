@@ -218,7 +218,7 @@ function getCookies () {
     display: grid;
     gap: 10px;
 
-    .lila-label-parent-container::v-deep {
+    :deep(.lila-label-parent-container) {
 
       .label-container {
         display: none;

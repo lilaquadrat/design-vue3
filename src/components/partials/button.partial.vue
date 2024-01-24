@@ -13,9 +13,12 @@ const props = withDefaults(
         icon?: IconsPartial['type'],
         noPadding?: boolean,
         colorScheme?: string,
-        active?: boolean
+        active?: boolean,
+        type: 'submit' | 'button'
     }>(),
-  {}
+  {
+    type: 'button'
+  }
 );
 const showCheck = ref(false);
 const timeout = ref<number>();
@@ -62,13 +65,14 @@ const confirm = (event: MouseEvent): void => {
   } else {
 
     emit('click', event);
+    if(props.type === 'submit') emit('submit', event);
 
   }
 };
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" type="button" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active }, $attrs.class]" @click.stop="confirm">
     <slot v-if="!showCheck && !confirmed" />
     <span v-if="showCheck">Please confirm your action.</span>
     <span v-if="confirmed">confirmed</span>

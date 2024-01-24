@@ -7,7 +7,15 @@ export const useTranslationsStore = defineStore('translations', () => {
 
   function add (key: string, value: Record<string, string>) {
 
-    translations.value[key] = {...translations.value[key], ...value};
+    const convertedObject: Record<string, string> = {};
+
+    Object.keys(value).forEach((key) => {
+
+      convertedObject[key.toLocaleLowerCase()] = value[key];
+
+    });
+
+    translations.value[key] = {...translations.value[key], ...convertedObject};
 
   }
 

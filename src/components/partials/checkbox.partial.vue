@@ -1,66 +1,32 @@
-<template>
-  <section class="lila-label-parent-container">
-    <label :class="[textType, { error: error, checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
-      <div class="indicator-text">
-        <span class="indicator">
-          <lila-icons-partial type="checked" size="small" colorScheme="white" />
-        </span>
-
-        <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-          <slot v-if="!text"></slot>
-          <description-partial inline v-if="description && !text">{{ description | translate }}</description-partial>
-          {{ text }}
-        </span>
-
-        <div v-if="!text" class="label-container">
-          <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
-          <span class="disabled" v-if="disabled">{{ 'disabled' | translate }}</span>
-        </div>
-      </div>
-
-      <div v-if="error" class="errors">
-        <p>{{ error }}</p>
-      </div>
-
-      <input type="checkbox" :name="name" :required="required" :disabled="disabled" :checked="modelValue" @input="updateValue" />
-    </label>
-    <div v-if="text" class="indicator-text">
-      <span class="indicator"> </span>
-      <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-        <slot />
-        <description-partial inline v-if="description">{{ description | translate}}</description-partial>
-      </span>
-
-      <div class="label-container">
-        <span class="required" v-if="required && !disabled">{{ 'required' | translate }}</span>
-        <span class="required" v-if="disabled">{{ 'disabled' | translate }}</span>
-      </div>
-    </div>
-  </section>
-</template>
 <script setup lang="ts">
-import type TypedEvent from '@/interfaces/Event.interface';
 import { onMounted, onBeforeUpdate, useSlots, ref } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    name: string;
-    modelValue: boolean;
-    error?: string;
-    required?: boolean;
-    description?: string;
-    disabled?: boolean;
-    noIndicator?: boolean;
-    text?: string;
+    name: string
+    modelValue: boolean
+    error?: boolean
+    required?: boolean
+    description?: string
+    disabled?: boolean
+    noIndicator?: boolean
+    text?: string
   }>(),
   {
 
   }
 );
 const slots = useSlots();
-const emit = defineEmits(['update:modelValue']);
-const updateValue = (event: TypedEvent<HTMLInputElement>) => emit('update:modelValue', event.target?.checked);
 const textType = ref<string>('word');
+const emit = defineEmits(['update:modelValue', 'change']);
+const changeHandler = (event: Event) => {
+
+  const target = event.target as HTMLInputElement;
+
+  emit('update:modelValue', target.checked);
+  emit('change', target.checked);
+
+};
 
 function setTextType (): void {
   
@@ -90,10 +56,47 @@ onMounted(() => setTextType());
 onBeforeUpdate(() => setTextType());
 
 </script>
+<template>
+  <section class="lila-checkbox-parent-container" :class="{error}">
+    <label :class="[textType, { checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
+      <div class="indicator-text">
+        <span class="indicator">
+          <lila-icons-partial type="checked" size="small" colorScheme="white" />
+        </span>
+
+        <span class="label" v-if="textType !== 'noText'" :class="[textType]">
+          <slot v-if="!text"></slot>
+          <lila-description-partial inline v-if="description && !text">{{$translate(description)}}</lila-description-partial>
+          {{ text }}
+        </span>
+
+      </div>
+
+      <input type="checkbox" :name="name" :disabled="disabled" :checked="modelValue" @change="changeHandler" />
+    </label>
+
+    <div v-if="text" class="indicator-text">
+      <span class="indicator"> </span>
+      <span class="label" v-if="textType !== 'noText'" :class="[textType]">
+        <slot></slot>
+        <lila-description-partial inline v-if="description">{{$translate(description)}}</lila-description-partial>
+      </span>
+
+
+    </div>
+    <lila-input-labels-partial hideLabel :error="error" :required="required" :disabled="disabled" />
+  </section>
+</template>
 <style lang="less" scoped>
 
+.lila-checkbox-parent-container {
+  display: grid;
+  gap: 0 20px;
+  grid-template-columns: 1fr max-content;
 
-.lila-label-parent-container {
+  @media @desktop {
+    gap: 0 40px;
+  }
 
   .indicator-text {
     display: grid;
@@ -123,6 +126,7 @@ label.checkbox {
     &[type='checkbox'] {
       display: none;
     }
+
   }
 
   &.noText {
@@ -153,8 +157,6 @@ label.checkbox {
     }
 
     &.word {
-      .font-bold;
-
       display: grid;
       gap: 5px;
       align-self: center;
@@ -204,44 +206,51 @@ label.checkbox {
     }
   }
 
-  &:hover {
-
-    .indicator {
-      border: solid 1px @color1;
-
-      svg {
-        stroke: @color1;
-      }
-    }
-
-    .label {
-      color: @color3;
-    }
-  }
-
   &.checked {
 
     .indicator {
       border: solid 1px @color1;
       background-color: @color1;
 
-      svg {
-        stroke: @white;
-        stroke-width: 2;
-      }
     }
 
-    &:hover {
+  }
+
+
+  &:hover {
+
+    .indicator {
+
+      :deep(.lila-icons-partial) {
+
+        svg {
+          stroke: @color1;
+        }
+
+      }
+
+    }
+
+    &.checked {
 
       .indicator {
         border: solid 1px @color3;
         background-color: @color3;
 
-        svg {
-          stroke: @white;
-          stroke-width: 2;
+        :deep(.lila-icons-partial) {
+
+          svg {
+
+            stroke: @white;
+          }
+
         }
       }
+
+    }
+
+    .label {
+      color: @color3;
     }
   }
 
@@ -251,7 +260,7 @@ label.checkbox {
     user-select: none;
 
     .indicator {
-      border: solid 3px @grey;
+      border-color: @grey;
     }
 
     &.checked {
@@ -265,6 +274,8 @@ label.checkbox {
     .description {
       color: @grey;
     }
+
   }
+
 }
 </style>

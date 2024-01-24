@@ -4,7 +4,7 @@ import { type Ref } from 'vue';
 
 class Inview {
 
-  timeout!: NodeJS.Timeout;
+  timeout!: NodeJS.Timeout | undefined;
 
   debounceTime: number = 50;
 
@@ -15,6 +15,11 @@ class Inview {
   scrolled = ref<number>(window.scrollY); 
 
   scrollDirection = ref<'up'|'down'>();
+
+  /**
+  * if true we fire an inital scroll event to indicate that scrolling has started without waiting for the debounce
+  */
+  triggerStart = ref<boolean>(true); 
 
   constructor () {
 
@@ -39,7 +44,7 @@ class Inview {
 
   }
 
-  trigger () {
+  trigger (isStart?: boolean) {
 
     this.checkIsTop();
     this.scrollDirection.value = this.scrolled.value > window.scrollY 
@@ -48,6 +53,7 @@ class Inview {
     this.scrolled.value = window.scrollY;
 
     window.dispatchEvent(this.scrolledEvent);
+    if(!isStart) this.triggerStart.value = true;
 
   }
 
@@ -58,6 +64,16 @@ class Inview {
   }
 
   debounce () {
+
+    /**
+     * indicates that the scrolling has begun and fire an inital scrolling event without waiting for the debounce
+     */
+    if(this.triggerStart.value) {
+
+      this.triggerStart.value = false;
+      this.trigger(true);
+
+    } 
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -155,46 +171,50 @@ const inview = new Inview();
  ** inview-visible - more than 30% of the element are visible in the current viewport, regardless if it is centered or nor
  */
 
-export function useInview (element: Ref<HTMLElement | undefined>, options?: {align?: boolean, preload?: boolean}) {
+export function useInview (element?: Ref<HTMLElement | undefined>, options?: {align?: boolean, preload?: boolean}) {
 
   const state = ref<string[]>(['inview']);
   const preload = ref<boolean>(false);
 
-  watch(element, () => {
+  if(element) {
 
-    if(element.value) {
-
-      if(options?.preload) {
-
-        inview.checkPreload(element.value, preload);
-
-        const unwatchPreload = watch(inview.scrolled, () => {
-
-          if(!element.value) return;
-
-          inview.checkPreload(element.value as HTMLElement, preload);
-
-          //unwatch when the preload value is true
-          if(preload.value) unwatchPreload();
-
-        })
-
-      } else {
-
-        inview.check(element.value, state, options);
+    watch(element, () => {
   
-        watch(inview.scrolled, () => {
+      if(element.value) {
   
-          inview.check(element.value as HTMLElement, state, options)
+        if(options?.preload) {
   
-        })
-
+          inview.checkPreload(element.value, preload);
+  
+          const unwatchPreload = watch(inview.scrolled, () => {
+  
+            if(!element.value) return;
+  
+            inview.checkPreload(element.value as HTMLElement, preload);
+  
+            //unwatch when the preload value is true
+            if(preload.value) unwatchPreload();
+  
+          })
+  
+        } else {
+  
+          inview.check(element.value, state, options);
+    
+          watch(inview.scrolled, () => {
+    
+            inview.check(element.value as HTMLElement, state, options)
+    
+          })
+  
+        }
+    
+    
       }
   
-  
-    }
-
-  })
+    })
+    
+  }
 
 
   return {inviewState: state, scrolled: inview.scrolled, scrollDirection: inview.scrollDirection, preload};

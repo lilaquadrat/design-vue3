@@ -1,5 +1,7 @@
 export default interface SelectOption {
-    value: (number|string);
-    text: string;
-    selected?: boolean;
+    value: string
+    text: string
+    selected?: boolean
+    description?: string
+    disabled?: boolean
   }

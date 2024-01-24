@@ -11,7 +11,6 @@ export default {
       type     : 'contact-module',
       textblock: {
         headline: 'Reserve your spot',
-        // eslint-disable-next-line max-len
         text    : ['Welcome to our online ticket reservation platform. Whether you re planning a night out at the theater, attending a concert, or looking forward to a sports event, securing your tickets has never been easier. Our user-friendly form ensures a smooth reservation experience, allowing you to secure your spot at your desired event in just a few clicks.'],
       },
       categoryTextblock: {
@@ -30,15 +29,19 @@ export default {
             mode       : 'contact',
             categories : [
               {
-                id    : 'standard',
-                name  : 'standard',
-                amount: 15,
-                price : {
-                  currency: 'euro',
-                  amount  : 45,
-                  tax     : 19,
-                },
+                'id'         : 'standard',
+                'name'       : 'Premium Package',
+                'description': 'Premium subscription package with additional features',
+                'amount'     : 20,
+                'price'      : {'currency': 'euro', 'amount': 60, 'tax': 19}
               },
+              {
+                'id'         : 'basic',
+                'name'       : 'Basic Package',
+                'description': 'Basic subscription package with standard features',
+                'amount'     : 10,
+                'price'      : {'currency': 'euro', 'amount': 30, 'tax': 19}
+              }
             ],
             company: 'company',
             project: 'project',
@@ -115,7 +118,100 @@ export default {
         lists : [1],
         editor: [2],
       },
+    },
+    {
+      type     : 'contact-module',
+      textblock: {
+        headline: 'Contact Module',
+        text    : ['Wir nutzen Cookies und Pixel um Dir die bestmögliche Browsing-Erfahrung zu bieten. Die mit Hilfe von Cookies und Pixeln gesammelten Daten werden zur Optimierung unserer Webseite genutzt. Diese Daten werden im Rahmen unserer EU-weiten und globalen Tätigkeiten genutzt.'],
+      },
+      categoryTextblock: {
+        headline: 'Select your Category',
+        text    : ['You can decide which category you want to use.'],
+      },
+      variant    : [],
+      genericData: {
+        data: {
+          1: {
+            _id        : '64e8a1d3d96549a0378c9d2a',
+            name       : 'Liste 12',
+            description: 'fasfdd',
+            payment    : 'free',
+            state      : 'open',
+            mode       : 'reservation',
+            categories : [
+              {
+                'id'         : 'id-base',
+                'name'       : 'Base',
+                'description': 'Basic access package, ideal for individual users. Includes standard features and support.',
+                'amount'     : 25,
+                'available'  : true,
+                'price'      : {
+                  'currency': '€',
+                  'amount'  : 29.99,
+                  'tax'     : 19
+                }
+              },
+              {
+                'id'         : 'id-anfrage',
+                'name'       : 'Anfrage',
+                'description': 'On-demand query service. Pay per use, ideal for sporadic data analysis needs.',
+                'amount'     : 0,
+                'available'  : true,
+                'price'      : {
+                  'currency': '€',
+                  'amount'  : 9.99,
+                  'tax'     : 19
+                }
+              },
+              {
+                'id'         : 'id-hilfe',
+                'name'       : 'Hilfe',
+                'description': 'Extended support package. Includes 24/7 customer service and personalized assistance.',
+                'amount'     : 0,
+                'available'  : true,
+                'price'      : {
+                  'currency': '€',
+                  'amount'  : 19.99,
+                  'tax'     : 19
+                }
+              }
+            ],
+            agreements: [
+              {
+                'contentId' : 'contact-dsgvo',
+                'predefined': true,
+                'text'      : 'Ich stimme zu, dass meine persönlichen Daten gemäß der Datenschutz-Grundverordnung (DSGVO) verarbeitet werden dürfen. Ich habe die Datenschutzrichtlinie gelesen und verstanden.',
+                'required'  : true
+              },
+              {
+                'text'     : 'Bitte geben Sie Ihre Meinung zu unserem Service an.',
+                'contentId': '61e2de3585f79bcb5e58c518',
+                'required' : true
+              },
+              {
+                'text'     : 'Haben Sie Verbesserungsvorschläge für uns?',
+                'contentId': '6213769a11814099b0ecc292',
+                'required' : false
+              },
+              {
+                'text'     : 'Teilen Sie uns Ihre Erfahrungen mit unserem Produkt mit.',
+                'contentId': 'hallo',
+                'required' : false
+              }
+            ],
+            company: 'lilaquadrat',
+            project: 'homepage',
+            history: {
+              version: 4,
+              created: '2023-08-25T12:42:59.228Z',
+              source : 'lists-app',
+              updated: '2023-08-25T16:24:16.289Z',
+            },
+          },
+        },
+        lists: [1],
+      },
     }
-      
   ],
 };

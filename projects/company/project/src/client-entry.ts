@@ -10,6 +10,7 @@ import resizePlugin, {resize} from '@/plugins/resize';
 import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
+import './models';
 
 const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
 const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});

@@ -16,6 +16,11 @@ class Resize {
 
   realHeight = ref<number>(0);
 
+  /**
+  * if true we fire an inital resied event to indicate that resizing has started without waiting for the debounce
+  */
+  triggerStart = ref<boolean>(true); 
+
   constructor () {
 
 
@@ -30,12 +35,14 @@ class Resize {
   }
 
 
-  trigger () {
+  trigger (isStart?: boolean) {
 
     this.getMediaQuery();
     this.realHeight.value = window.innerHeight;
     this.resized.value = Date.now();
     window.dispatchEvent(this.resizedEvent);
+
+    if(!isStart) this.triggerStart.value = true;
 
   }
 
@@ -66,6 +73,17 @@ class Resize {
 
 
   debounce () {
+
+    /**
+     * indicates that the scrolling has begun and fire an inital scrolling event without waiting for the debounce
+     */
+    if(this.triggerStart.value) {
+
+      this.triggerStart.value = false;
+      this.trigger(true);
+    
+    } 
+    
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
