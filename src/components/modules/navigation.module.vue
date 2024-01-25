@@ -9,6 +9,8 @@ import { onBeforeMount } from 'vue';
 import type Link from '@/interfaces/link.interface';
 import { onMounted } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const { media, resized } = useResize();
 const props = defineProps<{
   name?: string;
@@ -41,6 +43,15 @@ const isOverflow = ref<boolean>(false);
  */
 const activeKey = ref<string>('');
 
+watch(() => props.variant, () => {
+
+  attachTo.value = undefined;
+  open.value = false;
+  closeAll();
+  checkOverflow();
+  calculateOptionsStyle()
+
+});
 watch(() => resized.value, () => {
 
   attachTo.value = undefined;
@@ -49,7 +60,12 @@ watch(() => resized.value, () => {
   checkOverflow();
 
 });
-watch(() => props.elements, () => updateElements());
+watch(() => props.elements, () => {
+
+  updateElements();
+  checkOverflow();
+
+});
 watch(() => attachTo.value, () => {
 
   // if attachTo gets a value it indicates that the overlay is getting rendered
@@ -187,7 +203,11 @@ const calculateOptionsStyle = () => {
 
   const overlayElement = useTriggerMenu.value ? triggerMenuOverlay.value : overlay.value;
 
-  if(!overlayElement || isLeft.value) return;
+  if(!overlayElement || isLeft.value) {
+
+    style.value = {};
+    return;
+  }
 
   const bounds = overlayElement.getBoundingClientRect();
   const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
@@ -195,7 +215,7 @@ const calculateOptionsStyle = () => {
   if(!targetBounds) return;
 
   let left = targetBounds.left;
-  let top = targetBounds.top + targetBounds.height;
+  const top = targetBounds.top + targetBounds.height;
   const body = document.querySelector('body') as HTMLBodyElement;
   const positionLeft = targetBounds.left + bounds.width + 50 > body.offsetWidth;
 
@@ -217,7 +237,7 @@ const calculateOptionsStyle = () => {
   }
 
   // add one px to prevent overlaying border or box-shadow
-  top += 1;
+  // top += 1;
 
   style.value = {
     top : `${top}px`,
@@ -254,7 +274,7 @@ const calculateOptionsStyle = () => {
 
             <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
 
-            <lila-button-partial class="rotate90" v-if="element.links" v-bind="element"  @click="openElement($event, element)">
+            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="white" v-bind="element" icon="arrow-right"  @click="openElement($event, element)">
               {{ element.text }}
             </lila-button-partial>
             
@@ -282,11 +302,11 @@ const calculateOptionsStyle = () => {
             <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu" :class="[variant, {open}]" :style="style">
               <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
 
-                <lila-link-partial :key="`link-${index}`" class="main" :variant="['white']" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
+                <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
 
                 <section :key="`group-${index}`" v-if="element.links" class="link-group main">
 
-                  <lila-button-partial v-bind="element" @click="toggleTriggerElement($event, element)">
+                  <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="white" @click="toggleTriggerElement($event, element)">
                     {{ element.text }}
                   </lila-button-partial>
 
@@ -316,7 +336,7 @@ const calculateOptionsStyle = () => {
     width: 100%;
     height: 40px;
     min-height: 40px;
-    line-height: 41px;
+    line-height: 40px;
 
     border: none;
     background: transparent;
@@ -347,7 +367,7 @@ const calculateOptionsStyle = () => {
   background-color: transparent;
   transition-delay: 0s;
 
-  a, :deep(.lila-button) {
+  a, :deep(.lila-button.icon.iconText) {
     .multi(padding, 0, 2);
   }
 
@@ -455,11 +475,6 @@ const calculateOptionsStyle = () => {
 
   &.left {
 
-    .trans(transform);
-
-    &.open {
-      transform: translateX(250px);
-    }
     .trigger {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -483,6 +498,8 @@ const calculateOptionsStyle = () => {
     top: 0;
     left: 0;
 
+    .trans(transform);
+
     height: 40px;
 
     width: 100%;
@@ -490,8 +507,20 @@ const calculateOptionsStyle = () => {
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.13);
     border-bottom: solid 1px rgba(0, 0, 0, 0.13);
 
+    background-color: @white;
+
     @media @desktop {
       background-color: @white;
+    }
+  }
+
+  &.open {
+
+    &.left {
+      .overflow-container {
+        transform: translateX(250px);
+      }
+
     }
   }
 
@@ -540,9 +569,16 @@ const calculateOptionsStyle = () => {
 }
 
 .lila-navigation-module-overlay {
-  a, :deep(.lila-button) {
+  a {
     .multi(padding, 0, 4);
   }
+
+  :deep(.lila-button) {
+    &.icon.iconText {
+      .multi(padding, 0, 4);
+    }
+  }
+
 
   &.useTriggerMenu {
 
@@ -556,22 +592,26 @@ const calculateOptionsStyle = () => {
       padding: 0;
     }
 
-    a, :deep(.lila-button) {
-      .multi(padding, 0, 4);
-      border-bottom: solid 1px @color3;
-      color: @white;
-
-      svg {
-        stroke: @white;
-      }
-
-      .trans(background);
-
-      &:hover {
-        background-color: @color3;
-        opacity: 1;
+    &.left {
+      
+      a, :deep(.lila-button) {
+        .multi(padding, 0, 4);
+        border-bottom: solid 1px @color3;
+        color: @white;
+  
+        svg {
+          stroke: @white;
+        }
+  
+        .trans(background);
+  
+        &:hover {
+          background-color: @color3;
+          opacity: 1;
+        }
       }
     }
+
 
     .link-group {
       .link-list {

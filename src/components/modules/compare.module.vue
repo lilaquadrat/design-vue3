@@ -6,6 +6,8 @@ import type CompareModified from '@interfaces/CompareModified.interface';
 import type { CompareHeadline } from '@interfaces/CompareModified.interface';
 import { computed } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   textblock?: Textblock;
   elements: CompareElement[];

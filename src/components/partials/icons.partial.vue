@@ -144,7 +144,7 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
       height: 10px;
     }
   }
-  &.colorScheme1 {
+  &.colorScheme1, &.dark {
 
     svg {
       stroke: @color1;
@@ -183,7 +183,7 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
 
   }
 
-  &.white {
+  &.white, &.bright {
 
     svg {
       stroke: @white;

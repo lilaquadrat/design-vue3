@@ -12,6 +12,8 @@ import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import { computed, onBeforeMount, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;

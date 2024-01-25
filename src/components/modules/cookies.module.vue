@@ -9,6 +9,8 @@ import { computed, onMounted, ref } from 'vue';
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
 
+defineOptions({ inheritAttrs: false });
+
 const store = useMainStore();
 const props = defineProps<{
   textblock: Textblock;

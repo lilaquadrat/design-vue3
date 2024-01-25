@@ -1,4 +1,22 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+import { getAvailableModules } from '@/mixins/loadComponents';
+import {resize} from '@/plugins/resize';
+import useEditorStore from '@/stores/editor.store';
+import { onMounted } from 'vue';
+import modules from './modules';
+
+const editorStore = useEditorStore();
+
+// update the media query directly after mount otherwise it will be mobile until resize
+onMounted(() => {
+  
+  resize.getMediaQuery();
+  editorStore.availableModulesWithRevision = {revision: 2, modules: getAvailableModules(modules.modules)};
+
+})
+
+</script>
 
 <template>
   <RouterView />
@@ -18,6 +36,8 @@ body {
 
   font-size: @fontText;
   .lineHeight(@fontText, 1.5);
+
+  overflow-x: hidden;
 
   &.fullscreen {
     overflow: hidden;

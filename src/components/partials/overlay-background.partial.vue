@@ -4,9 +4,12 @@
     </section>
 </template>
 <script setup lang="ts">
+import useMainStore from '@/stores/main.store';
+import { onUnmounted, watch } from 'vue';
 import { onMounted } from 'vue';
 import { computed, ref } from 'vue';
 
+const mainStore = useMainStore();
 const props = defineProps<{
   background: 'none' | 'mobile' | 'tablet' | 'desktop'
   index?: number
@@ -20,7 +23,29 @@ const customIndex = computed(() => props.index ? `index${props.index}` : false);
 const hasCustomIndex = computed(() => props.index);
 const element = ref<HTMLElement>();
 
-onMounted(() => emit('mounted'));
+watch(() => props.inactive, () => {
+
+  if(props.inactive) {
+    mainStore.checkFullscreen();
+  } else {
+    mainStore.setFullscreen(true);
+  }
+
+})
+
+onMounted(() => {
+
+  emit('mounted');
+
+  if(!props.inactive) mainStore.setFullscreen(true);
+
+});
+
+onUnmounted(() => {
+
+  mainStore.checkFullscreen();
+
+});
 
 function checkClose (event: Event) {
 

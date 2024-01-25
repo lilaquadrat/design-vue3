@@ -4,6 +4,8 @@ import type Accordion from '@interfaces/Accordion.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   textblock: Textblock;
 

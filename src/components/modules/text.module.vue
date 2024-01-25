@@ -4,9 +4,7 @@ import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
-defineOptions({
-  inheritAttrs: false
-})
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   headline?: string
@@ -42,7 +40,7 @@ const listVariant = (type: 'list' | 'links') => {
 
 </script>
 <template>
-  <article ref="element" class="lila-text-module lila-module" :class="[inviewState]">
+  <article ref="element" class="lila-text-module lila-module" :class="[inviewState, variant]">
 
     <lila-textblock-partial v-bind="props" />
     <lila-list-partial v-bind="list" mode="list" :variant="listVariant('list')"></lila-list-partial>
@@ -69,15 +67,20 @@ const listVariant = (type: 'list' | 'links') => {
   }
 
   &.notice {
-
     .modulePadding('none');
-    justify-content: center;
+    
     max-width: 100%;
+    grid-template-columns: 1fr;
+    justify-items: center;
 
     background-color: @color1;
 
-    .lila-textblock {
-      .modulePadding('full');
+    :deep(.lila-textblock) {
+      padding: @modulePadding;
+
+      @media @tablet, @desktop {
+        padding: @modulePaddingExt;
+      }
 
       max-width: @moduleWidth_S;
       color: @white;

@@ -5,6 +5,8 @@ import { computed, ref } from 'vue';
 import type { AdditionalContentInformation } from '@lilaquadrat/studio/lib/interfaces';
 import { useInview } from '@/plugins/inview';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   textblock?: Textblock;
   links: LinkListWithTitle;

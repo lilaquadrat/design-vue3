@@ -4,6 +4,8 @@ import type PricesElementModel from '@interfaces/PricesElement.interface';
 import { ref } from 'vue';
 import { useInview } from '@/plugins/inview';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   textblock?: Textblock;
   elements: PricesElementModel[];

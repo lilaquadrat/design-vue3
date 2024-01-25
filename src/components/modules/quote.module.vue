@@ -9,6 +9,8 @@ import { useInview } from '@/plugins/inview';
 import type Link from '@interfaces/link.interface';
 import { ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   quote: string;
   link: Link;

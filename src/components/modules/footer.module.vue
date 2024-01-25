@@ -5,6 +5,8 @@ import type FooterSocial from '@/interfaces/FooterSocial.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   contact: FooterContact;
   social: FooterSocial;

@@ -34,7 +34,16 @@ export const useMainStore = defineStore('main', () => {
 
     }
 
+  }
 
+  function checkFullscreen () {
+
+    const elements = document.querySelectorAll('.overlay-background:not(.inactive)');
+
+    if(!elements.length) setFullscreen(false);
+
+    console.log(elements.length);
+    
   }
 
   function setConfiguration (value: EditorConfiguration) {
@@ -49,6 +58,7 @@ export const useMainStore = defineStore('main', () => {
     layout, 
     fullscreen, 
     setFullscreen,
+    checkFullscreen,
     setConfiguration,
     configuration
   }

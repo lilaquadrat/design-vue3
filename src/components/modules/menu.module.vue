@@ -4,6 +4,8 @@ import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   id?: string;
   variant: string[];

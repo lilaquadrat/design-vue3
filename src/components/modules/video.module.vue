@@ -5,6 +5,8 @@ import type Textblock from '@interfaces/textblock.interface';
 import type Video from '@interfaces/video.interface';
 import { computed, ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   poster?: Picture;
   textblock?: Textblock;

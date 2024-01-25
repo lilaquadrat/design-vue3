@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
-import { ref } from 'vue';
+import { computed, ref, useSlots } from 'vue';
 
 defineOptions({
   inheritAttrs: false
@@ -14,17 +14,22 @@ const props = withDefaults(
         noPadding?: boolean,
         colorScheme?: string,
         active?: boolean,
-        type: 'submit' | 'button'
+        type?: 'submit' | 'button'
     }>(),
   {
-    type: 'button'
+    type       : 'button',
+    colorScheme: 'colorScheme1'
   }
 );
 const showCheck = ref(false);
 const timeout = ref<number>();
 const confirmed = ref(false);
 const emit = defineEmits<{(e: string, event?: Event): void}>();
-const check = (): void => {
+const iconColorScheme = computed(() => ['colorScheme1', 'colorScheme3', 'error', 'success'].includes(props.colorScheme) ? 'bright' : 'dark')
+const slotUsed = computed(() => !!useSlots().default);
+
+
+function check () {
 
   if (!showCheck.value) {
 
@@ -52,7 +57,8 @@ const check = (): void => {
     // emit('click');
 
   }
-};
+}
+
 const confirm = (event: MouseEvent): void => {
 
   console.log('confirm');
@@ -72,11 +78,11 @@ const confirm = (event: MouseEvent): void => {
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed }, $attrs.class]" @click.stop="confirm">
     <slot v-if="!showCheck && !confirmed" />
     <span v-if="showCheck">Please confirm your action.</span>
     <span v-if="confirmed">confirmed</span>
-    <lila-icons-partial v-if="icon" :type="icon" size="smaller" animate :class="{rotate90: active}" />
+    <lila-icons-partial v-if="icon" :colorScheme="iconColorScheme" :size="icon && slotUsed ? 'smaller' : 'medium'" :type="icon" animate :class="{rotate90: active}" />
   </button>
 </template>
 <style lang="less" scoped>
@@ -179,8 +185,19 @@ const confirm = (event: MouseEvent): void => {
   }
 
   &.icon {
-    grid-template-columns: max-content 15px;
-    gap: 5px;
+
+    display: grid;
+    padding: 0;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    min-width: 35px;
+
+    &.iconText {
+      grid-template-columns: max-content 15px;
+      gap: 5px;
+    }
+
   }
 
   &.noPadding {

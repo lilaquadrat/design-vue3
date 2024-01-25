@@ -1,27 +1,10 @@
-<template>
-  <figure :class="[loading,{ notLoaded: !loading, noLoadAnimation: noLoadAnimation, fit, center }]" class="lila-figure" ref="element">
-    <section class="picture-container">
-      <picture>
-        <template v-if="loading">
-          <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
-          <img :src="src" :alt="alt" />
-        </template>
-  
-        <template v-if="!loading">
-          <img :alt="alt" />
-        </template>
-      </picture>
-  
-      <figcaption v-if="copyright">{{ copyright }}</figcaption>
-    </section>
-  </figure>
-</template>
 <script setup lang="ts">
 
 import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
+import { onMounted } from 'vue';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch, type Ref } from 'vue';
 
@@ -42,12 +25,25 @@ const props = defineProps<{
 
 
 }>();
+const emit = defineEmits(['loaded']);
 const element = ref<HTMLElement>();
+const image = ref<HTMLImageElement>();
 const {preload} = useInview(element, {preload: true})
 const loading: Ref<boolean> = ref(false);
 
 watch(preload, () => {
   if (!loading.value) loading.value = true;
+});
+watch(image, () => {
+
+  const imageElement = image.value as HTMLImageElement;
+
+
+  imageElement.onload = () => {
+
+    emit('loaded');
+
+  }
 });
 
 onBeforeMount(() => {
@@ -94,12 +90,31 @@ const sourceMedia = computed((): PictureMedia[] => {
 });
 
 </script>
+<template>
+  <figure :class="[loading,{ notLoaded: !loading, noLoadAnimation: noLoadAnimation, fit, center }]" class="lila-figure" ref="element">
+    <section class="picture-container">
+      <picture>
+        <template v-if="loading">
+          <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
+          <img ref="image" :src="src" :alt="alt" />
+        </template>
+  
+        <template v-if="!loading">
+          <img :alt="alt" />
+        </template>
+      </picture>
+  
+      <figcaption v-if="copyright">{{ copyright }}</figcaption>
+    </section>
+  </figure>
+</template>
 <style lang="less" scoped>
 
 .lila-figure {
   position: relative;
   display: grid;
   justify-content: center;
+  grid-template-columns: 1fr;
 
   .picture-container {
     display: grid;
@@ -112,6 +127,7 @@ const sourceMedia = computed((): PictureMedia[] => {
     img {
       max-width: 100%;
       max-height: 100%;
+      width: 100%;
     }
   }
 

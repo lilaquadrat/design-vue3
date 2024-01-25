@@ -7,6 +7,8 @@ import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
 
+defineOptions({ inheritAttrs: false });
+
 const store = useMainStore();
 const props = defineProps<{
   textblock?: Textblock;
@@ -57,10 +59,10 @@ const indicatorsTop = computed((): { [key: string]: string } => ({
   '--top': `${controlsOffset.value}px`,
 }));
 /** checks if any elements has a description */
-const elementDescription = computed(() => !!props.elements.find((single) => single.textblock?.headline || single.textblock?.subline || single.textblock?.intro || single.textblock?.text?.length));
+const elementDescription = computed(() => !!props.elements.find((single) => single.textblock?.headline?.length || single.textblock?.subline?.length || single.textblock?.intro || single.textblock?.text?.length));
 const variant2 = computed((): boolean => !!props.variant?.includes('variant2'));
 const simpleIndicator = computed((): boolean => !!props.variant?.includes('simpleIndicator'));
-const noControls = computed((): boolean => !!props.variant?.includes('disableControls'));
+const disableControls = computed((): boolean => !!props.variant?.includes('disableControls'));
 const fullscreenOverlayEnabled = computed(() => !props.variant?.includes('disableOverlay'));
 
 function toggleFullscreenOverlay () {
@@ -211,13 +213,11 @@ function indicatorchange (index: number): void {
       </section>
 
       <div v-if="simpleIndicator" class="carousel-indicators carousel-indicators-numbers">
-        <lila-button-partial class="indicator" icon v-for="(element, index) in elements" :key="`indicator-${index}`" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
+        <lila-button-partial class="indicator" v-for="(element, index) in elements" :key="`indicator-${index}`" colorScheme="transparent" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
       </div>
 
       <div class="indexIndicator">
-        <lila-button-partial v-if="fullscreenOverlayEnabled" colorScheme="transparent" icon @click="toggleFullscreenOverlay">
-          <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
-        </lila-button-partial>
+        <lila-button-partial v-if="fullscreenOverlayEnabled" colorScheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
         <template v-if="!simpleIndicator">
           <span class="currentIndex">{{ $helpers.leadingZero(currentOptionIndex + 1, 2) }}</span>
           <span class="seperator" />
@@ -225,14 +225,9 @@ function indicatorchange (index: number): void {
         </template>
       </div>
 
-      <div v-if="firstLoad && !noControls" :style="controlsTop" class="gallery-controls">
-        <lila-button-partial icon :class="{ active: currentOptionIndex > 0 }" @click="change('less')">
-          <lila-icons-partial colorScheme="white" type="arrow-left" />
-        </lila-button-partial>
-
-        <lila-button-partial icon :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')">
-          <lila-icons-partial colorScheme="white" type="arrow-right" />
-        </lila-button-partial>
+      <div v-if="firstLoad && !disableControls" :style="controlsTop" class="gallery-controls">
+        <lila-button-partial icon="arrow-left" colorScheme="colorScheme1" :class="{ active: currentOptionIndex > 0 }" @click="change('less')" />
+        <lila-button-partial icon="arrow-right" colorScheme="colorScheme1" :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')" />
       </div>
 
     </section>
@@ -298,17 +293,20 @@ function indicatorchange (index: number): void {
     .font-normal;
     position: absolute;
 
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
 
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 2;
     grid-column-end: 3;
 
+    line-height: 35px;
+
     width: 100%;
     height: 100%;
 
-    gap: 5px;
+    gap: 10px;
 
     .multi(padding, 4);
 
@@ -512,6 +510,14 @@ function indicatorchange (index: number): void {
     }
   }
 
+  &.fullscreen {
+    max-width: @moduleWidth_Full;
+    .content-container, .gallery-controls {
+      max-width: @moduleWidth_Full;
+      width: @moduleWidth_Full;
+    }
+  }
+
   &.simpleIndicator {
     .indexIndicator {
       grid-row-start: 1;
@@ -522,6 +528,20 @@ function indicatorchange (index: number): void {
 
       :deep(.lila-button) {
         background-color: @white;
+      }
+    }
+
+    &:not(.hasElementDescription) {
+      .content-container,
+      .elements,
+      .element {
+        grid-template-columns: 1fr 120px;
+        grid-template-rows: 1fr;
+
+        @media @desktop {
+          grid-template-columns: 1fr 185px;
+          grid-template-rows: 1fr;
+        }
       }
     }
 
@@ -557,9 +577,6 @@ function indicatorchange (index: number): void {
     }
   }
 
-  &.fullscreen {
-    max-width: @moduleWidth_Full;
-  }
 
   &.fullscreenOverlay.fullscreenOverlayEnabled {
     .index(9);
@@ -588,7 +605,7 @@ function indicatorchange (index: number): void {
         .multi(padding, 4, 8);
       }
         span {
-          align-self: start;
+          align-self: center;
         }
     }
 
@@ -658,18 +675,5 @@ function indicatorchange (index: number): void {
     }
   }
   
-  &.noControls.simpleIndicator:not(.hasElementDescription) {
-    .content-container,
-    .elements,
-    .element {
-      grid-template-columns: 1fr 120px;
-      grid-template-rows: 1fr;
-
-      @media @desktop {
-        grid-template-columns: 1fr 185px;
-        grid-template-rows: 1fr;
-      }
-    }
-  }
 }
 </style>

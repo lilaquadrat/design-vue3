@@ -4,9 +4,7 @@ import type Fact from '@interfaces/Fact.interface';
 import { useInview } from '@/plugins/inview';
 import { computed, ref } from 'vue';
 
-defineOptions({
-  inheritAttrs: false
-})
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   textblock: Textblock;

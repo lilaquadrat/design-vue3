@@ -7,9 +7,7 @@
     </div>
 
     <section v-if="fullscreenOverlayEnabled" class="controls-container">
-      <lila-button-partial colorScheme="colorScheme2" :icon="true" @click="toggleFullscreenOverlay">
-        <lila-icons-partial colorScheme="colorScheme1" :type="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" />
-      </lila-button-partial>
+      <lila-button-partial colorScheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
     </section>
   </section>
 </template>
@@ -94,6 +92,7 @@ function toggleFullscreenOverlay () {
   &.fullscreen {
     width: 100%;
     max-width: 100%;
+    grid-template-columns: 1fr;
 
     .position-container {
       position: absolute;

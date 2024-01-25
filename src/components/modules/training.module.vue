@@ -50,6 +50,8 @@ import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
 import { useTranslations } from '@/plugins/translations';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   textblock?: Textblock;
   childData: ChildData;

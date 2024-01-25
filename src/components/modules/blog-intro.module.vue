@@ -6,6 +6,8 @@ import type Textblock from '@interfaces/textblock.interface';
 import { computed, ref } from 'vue';
 import { useInview } from '@/plugins/inview';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
 
   textblock: Textblock;
