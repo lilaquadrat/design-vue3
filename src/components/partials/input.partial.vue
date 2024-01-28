@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ParsedError } from '@/libs/ActionNotice';
+import type { ParsedError } from '../../libs/ActionNotice';
 import { defineProps, computed, watch, ref, defineSlots, defineEmits } from 'vue';
 
 const props = defineProps<{
@@ -29,6 +29,7 @@ watch(() => props.modelValue, () => {
 
 const update = (event: KeyboardEvent) => {
 
+  console.log('update', update)
   const target = event?.target as HTMLInputElement;
 
   tempValue = target?.value;
