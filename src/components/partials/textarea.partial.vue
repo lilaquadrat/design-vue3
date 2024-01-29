@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineEmits, defineProps } from 'vue';
-import type { ParsedError } from '@/libs/ActionNotice';
+import type { ParsedError } from '../../libs/ActionNotice';
 
 const props = withDefaults(defineProps<{
   disabled?: boolean;
