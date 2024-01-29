@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
+// import type { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
 import ModelsClass from '@/libs/Models.class';
 import StudioSDK from '../../libs/StudioSDK';
 import type Textblock from '@/interfaces/textblock.interface';
@@ -11,9 +11,12 @@ import { type ErrorObject } from 'ajv/dist/types';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import { computed, onBeforeMount, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
+import useMainStore from '@/stores/main.store';
+import { type Agreement, type GenericData, type List, type ListPartiticpantsDetails} from '@lilaquadrat/interfaces';
 
 defineOptions({ inheritAttrs: false });
 
+const mainStore = useMainStore();
 const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;
@@ -193,30 +196,29 @@ function updateAgreements () {
 }
 
 const getparticipantsState = async () => {
-  // console.log('store:', store);
-  // console.log('store.state:', store.state);
+  console.log('store.state:', mainStore.apiConfig);
 
-  // const sdk = new StudioSDK('design', store.state.api);
+  const sdk = new StudioSDK('design', mainStore.apiConfig);
 
-  // try {
+  try {
    
-  //   const participantsState = await sdk.public.lists.state(props.list?._id.toString());
+    const participantsState = await sdk.public.lists.state(props.list?._id.toString());
 
-  //   if (participantsState.data) {
+    if (participantsState.data) {
 
-  //     // this.participantsState = participantsState.data;
-  //     //participantsState.data;
-  //     emit('participantsState', participantsState.data)
+      // this.participantsState = participantsState.data;
+      //participantsState.data;
+      emit('participantsState', participantsState.data)
       
 
-  //   }
+    }
 
-  // } catch (e) {
+  } catch (e) {
 
-  //   console.error(e);
-  //   console.log(e.response?.data);
+    console.error(e);
+    console.log(e.response?.data);
 
-  // }
+  }
 };
 const handleForm = async (event: Event) => {
   console.log('handle form');

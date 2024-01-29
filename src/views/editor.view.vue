@@ -3,8 +3,8 @@ import hardCopy from '@/mixins/hardCopy';
 import { getAvailableModules } from '@/mixins/loadComponents';
 import useEditorStore from '@/stores/editor.store';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
-import { type EditorActiveModule, type Content, type ContentWithPositions, type Editor, type StudioIframeMessage } from '@lilaquadrat/studio/lib/interfaces';
 import { nextTick, onMounted, ref } from 'vue';
+import { type Content, type ContentWithPositions, type EditorActiveModule, type StudioIframeMessage } from '@lilaquadrat/interfaces';
 
 const editorStore = useEditorStore();
 const content = ref<ContentWithPositions>({ settings: {}, top: [], content: [], bottom: [], additional: {} });
@@ -15,7 +15,7 @@ const contentCache = ref<Content['modules']>();
 const settingsCache = ref<Content['settings']>();
 
 onMounted(() => {
-  
+
   if (window.origin === 'null') {
     live.value = true;
   }

@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Content } from '@lilaquadrat/studio/lib/interfaces';
 import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
+import type ApiConfig from '@/interfaces/ApiConfig';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -9,6 +10,15 @@ export const useMainStore = defineStore('main', () => {
   const layout = ref<Partial<Content>>({});
   const configuration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
+  const apiConfig = ref<ApiConfig>({
+    mode: 'custom',
+    customEndpoints: {
+      api: 'http://localhost:9090',
+      media: 'http://localhost:9091',
+    },
+    company: 'company',
+    project: 'project',
+  })
 
   function setData (value: Partial<Content>) {
 
@@ -60,7 +70,8 @@ export const useMainStore = defineStore('main', () => {
     setFullscreen,
     checkFullscreen,
     setConfiguration,
-    configuration
+    configuration,
+    apiConfig
   }
 
 })

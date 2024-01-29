@@ -15,12 +15,10 @@ import modules from './modules';
 import partials from './partials';
 import useEditorStore from '@/stores/editor.store';
 
-const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
-const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
-const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
+// const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
+// const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
+// const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
 const app = createApp(App);
-
-console.log(modules);
 
 // loadViaGlob(localComponents, 'lila', app);
 // loadViaGlob(globalModules, 'lila', app);
@@ -32,8 +30,11 @@ loadViaDeclaration(partials, 'lila', 'partial', app);
 const currentUrl = new URL(window.location.toString());
 const ISLOCAL = currentUrl.port === '5173';
 
+console.log(ISLOCAL);
+
 app.use(createPinia());
-app.use(createRouter(ISLOCAL ? editorRoutes : routes));
+// app.use(createRouter(ISLOCAL ? editorRoutes : routes));
+app.use(createRouter(routes));
 
 app.use(translations);
 app.use(HelpersPlugin);

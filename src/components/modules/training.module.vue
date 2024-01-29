@@ -1,50 +1,7 @@
-<template>
-  <section :id="id" ref="element" :class="[inviewState, variant, { mobileIndex: forceMobileIndex }]" class="lila-training-module lila-module fullscreen">
-    <section v-if="textblock" class="module generic-module">
-      <lila-textblock-partial v-bind="textblock" />
-    </section>
-
-    <article ref="mainGridContainer" class="main-grid-container">
-      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer" v-if="currentContent">
-
-        <section class="content-head">
-          <div class="grid-container">
-            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }}</lila-button-partial>
-            <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
-          </div>
-
-          <div :class="{ open: headIndexOpen }" class="headIndex">
-            <ul>
-              <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`">
-                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
-              </li>
-            </ul>
-          </div>
-
-        </section>
-        <lila-content-module ref="currentContentContainer" class="currentContent" :key="currentContent.id" :routeBase="linkBase" :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
-      </section>
-      <section class="current-content-container" v-if="!currentContent">
-        <section class="content-module"></section>
-      </section>
-
-      <section class="index-container">
-        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`">
-          <div class="index-indicator">{{ index + 1 }}.</div>
-
-          <button @click="setIndex(index)">
-            <h2>{{ teaser.settings?.title }}</h2>
-            <p>{{ teaser.settings?.description }}</p>
-          </button>
-        </div>
-      </section>
-    </article>
-  </section>
-</template>
 <script setup lang="ts">
 import type Textblock from '@interfaces/textblock.interface';
 import type { ChildData, Content } from '@lilaquadrat/studio/lib/interfaces';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, inject, onMounted, ref, watch } from 'vue';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
@@ -128,6 +85,49 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 
 }
 </script>
+<template>
+  <section :id="id" ref="element" :class="[inviewState, variant, { mobileIndex: forceMobileIndex }]" class="lila-training-module lila-module fullscreen">
+    <section v-if="textblock" class="module generic-module">
+      <lila-textblock-partial v-bind="textblock" />
+    </section>
+
+    <article ref="mainGridContainer" class="main-grid-container">
+      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer" v-if="currentContent">
+
+        <section class="content-head">
+          <div class="grid-container">
+            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }}</lila-button-partial>
+            <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
+          </div>
+
+          <div :class="{ open: headIndexOpen }" class="headIndex">
+            <ul>
+              <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`">
+                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
+              </li>
+            </ul>
+          </div>
+
+        </section>
+        <lila-content-module ref="currentContentContainer" class="currentContent" :key="currentContent.id" :routeBase="linkBase" :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
+      </section>
+      <section class="current-content-container" v-if="!currentContent">
+        <section class="content-module"></section>
+      </section>
+
+      <section class="index-container">
+        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`">
+          <div class="index-indicator">{{ index + 1 }}.</div>
+
+          <button @click="setIndex(index)">
+            <h2>{{ teaser.settings?.title }}</h2>
+            <p>{{ teaser.settings?.description }}</p>
+          </button>
+        </div>
+      </section>
+    </article>
+  </section>
+</template>
 <style lang="less" scoped>
 .lila-training-module {
   .module;

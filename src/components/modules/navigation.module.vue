@@ -98,8 +98,6 @@ function updateElements () {
 
   props.elements?.forEach((element) => {
 
-    console.log(element)
-
     const newElement = { ...element, active: false };
 
     if (newElement.links) {

@@ -534,6 +534,13 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz#d7c6e6755c78567a951e04ab52ef0fd26de59f32"
   integrity sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==
 
+"@lilaquadrat/interfaces@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.0.1.tgz#264377a39e844ca34ac94f11c7acc3ad0626540b"
+  integrity sha512-txgGyHRAzfkpsKEm8U18Zon59RxvGAQ/eKFNJPjCfxKtkF9inmguqi1hQ7Ou1MQhEsHzFECrtN/C45HJ6cj+bw==
+  dependencies:
+    typescript "^5.3.3"
+
 "@lilaquadrat/studio@^5.11.0":
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/@lilaquadrat/studio/-/studio-5.11.0.tgz#2784a4ad9139f44289e37b360e13da0dcf074d80"
@@ -4089,7 +4096,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript@^5.2.2, typescript@^5.3.2, typescript@~5.3.0:
+typescript@^5.2.2, typescript@^5.3.2, typescript@^5.3.3, typescript@~5.3.0:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==

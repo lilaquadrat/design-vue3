@@ -29,5 +29,10 @@ export default defineConfig({
       '~fonts': fileURLToPath(new URL('src/assets/fonts', import.meta.url)),
       '@'     : path.resolve(__dirname, '../../../src/'),
     }
+  },
+  define: {
+    'process.env.company': JSON.stringify('company'),
+    'process.env.project': JSON.stringify('project'),
+    // 'process.env.apiMode': JSON.stringify('https://api.example.com')
   }
 });

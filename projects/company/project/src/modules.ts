@@ -37,8 +37,17 @@ export default
       component: () => import('@/components/modules/contact.module.vue'),
     },
     {
-      name     : 'cookies',
-      variants : [],
+      name    : 'cookies',
+      variants: [
+        {
+          key : 'overlay',
+          name: 'Wird als Dialog Overlay angezeigt.',
+        },
+        {
+          key : 'overlayRight',
+          name: 'Overlay wird rechts unten angezeigt',
+        },
+      ],
       component: () => import('@/components/modules/cookies.module.vue'),
     },
     {
@@ -47,8 +56,19 @@ export default
       component: () => import('@/components/modules/emotion.module.vue'),
     },
     {
-      name     : 'facts',
-      variants : [],
+      name    : 'facts',
+      variants: [
+        {
+          key        : 'topics',
+          name       : 'Themenauswahl',
+          description: 'Es kann zwischen einzelnen Themen gewählt werden'
+        },
+        {
+          key        : 'threeRow',
+          name       : 'Drei Spalten',
+          description: 'Es werden drei Fakten pro Zeile angezeigt'
+        },
+      ],
       component: () => import('@/components/modules/facts.module.vue'),
     },
     {

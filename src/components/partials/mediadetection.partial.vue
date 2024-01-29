@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup lang="ts">
+import { useResize } from '@/plugins/resize';
+import { onMounted } from 'vue';
+
+const {plugin} = useResize();
+
+onMounted(() => plugin.getMediaQuery());
+
+</script>
 <template>
   <section id="mediadetection" class="mediadetection">
     <div class="mobile"></div>

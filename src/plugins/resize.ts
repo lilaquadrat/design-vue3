@@ -107,7 +107,7 @@ const plugin = {
 
 function useResize () {
 
-  return {realHeight: resize.realHeight, media: resize.media, resized: resize.resized};
+  return {realHeight: resize.realHeight, media: resize.media, resized: resize.resized, plugin: resize};
 
 }
 

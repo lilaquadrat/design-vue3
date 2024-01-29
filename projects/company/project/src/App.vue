@@ -1,26 +1,49 @@
 <script setup lang="ts">
-
 import { getAvailableModules } from '@/mixins/loadComponents';
-import {resize} from '@/plugins/resize';
 import useEditorStore from '@/stores/editor.store';
 import { onMounted } from 'vue';
 import modules from './modules';
+import useMainStore from '@/stores/main.store';
 
 const editorStore = useEditorStore();
+const mainStore = useMainStore();
 
-// update the media query directly after mount otherwise it will be mobile until resize
 onMounted(() => {
-  
-  resize.getMediaQuery();
-  editorStore.availableModulesWithRevision = {revision: 2, modules: getAvailableModules(modules.modules)};
 
-})
+  editorStore.availableModulesWithRevision = { revision: 2, modules: getAvailableModules(modules.modules) };
 
+  const currentUrl = new URL(window.location.toString());
+  const ISLOCAL = currentUrl.port === '5173';
+
+  if (ISLOCAL) {
+
+    mainStore.apiConfig = {
+      mode: 'custom',
+      customEndpoints: {
+        api: 'http://localhost:9090',
+        media: 'http://localhost:9091',
+      },
+      company: process.env.company,
+      project: process.env.project,
+    };
+
+
+  } else {
+
+    mainStore.apiConfig = {
+      mode: process.env.apiMode,
+      company: process.env.company,
+      project: process.env.project,
+    };
+
+  }
+
+});
 </script>
 
 <template>
-  <RouterView />
   <lila-mediadetection-partial />
+  <RouterView />
 </template>
 
 <style lang="less">
@@ -61,6 +84,4 @@ body {
 
   text-decoration: none;
 }
-
-
 </style>

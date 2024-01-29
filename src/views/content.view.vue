@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
-import type { Content } from '@lilaquadrat/studio/lib/interfaces';
+import type { Content } from '@lilaquadrat/interfaces';
 import dayjs from 'dayjs';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
@@ -34,7 +34,6 @@ const modules: Record<string, Partial<Content>> = {
   footer,
   cookies,
   faq,
-  footer,
   gallery,
   index,
   picture,

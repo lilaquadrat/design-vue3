@@ -18,10 +18,13 @@ const props = defineProps<{
 }>();
 const useElements = ref<AccordionElementWithSettings[]>([]);
 
+watch(() => props.elements, () => setElements(props.elements));
+watch(() => props.openOnStart, () => setElements(props.elements, true));
+watch(resized, () => setElements(props.elements));
+
 onMounted(() => {
 
   setElements(props.elements, true);
-  watch(resized, () => setElements(props.elements));
 
 });
 
@@ -78,6 +81,7 @@ function setElements (elements: AccordionElement[], resetVisible = false) {
 
     if (resetVisible) {
 
+      visible = false;
       if (props.openOnStart === 'first' && index === 0) visible = true;
       if (props.openOnStart === 'all' && props.multiOpen) visible = true;
 

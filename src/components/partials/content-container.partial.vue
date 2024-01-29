@@ -2,7 +2,7 @@
 import { ref, watch, onBeforeMount, defineProps, defineEmits, computed } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
 import { useTranslations } from '@/plugins/translations';
-import type { ContentWithPositions } from '@lilaquadrat/studio/lib/interfaces';
+import type { Content, ContentWithPositions } from '@lilaquadrat/interfaces';
 
 const { translate } = useTranslations();
 const props = defineProps({
@@ -49,7 +49,7 @@ const getContent = async () => {
   content.value = undefined;
   loading.value = 100;
 
-  const data: SDKResponse<Editor> | null = null;
+  const data: SDKResponse<Content> | null = null;
 
   try {
     // Replace this with the appropriate store dispatch call

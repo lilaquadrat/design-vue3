@@ -1,13 +1,9 @@
-import type {
-  Company,
-  Editor, HttpStatusCode, Me, Project, PublishMethod,
-  Hosting, Domain, ApiResponses, AppFilter,
-  ListOfModels, Tracker, TrackerStatistics, DataObject, Media,
-  MediaContentFiles, PublishContentGroup, Publish, Customers, List, ListParticipants, Content,
-  EditorBase, Location,
-} from '@lilaquadrat/studio/lib/interfaces';
-import hardCopy from '../mixins/hardCopy';
-import axios, { type AxiosResponse, type AxiosRequestConfig } from 'axios';
+import {
+  type Content, type Customers, type DataObject, type List, type ListOfModels, type ListParticipants, type ListPartiticpantsDetails
+} from '@lilaquadrat/interfaces';
+import hardCopy from '@/mixins/hardCopy';
+// import Contact from '@models/Contact.model';
+import axios, { type AxiosResponse, type AxiosRequestConfig, HttpStatusCode } from 'axios';
 
 const mockJs = {};
 const ISMOCK = false;
@@ -27,6 +23,8 @@ export type SDKCache = {
   cacheLifetime?: number
   cacheTime?: number;
 };
+
+export type SDKModes = 'live' | 'next' | 'custom';
 
 export type SDKCallOptions = {
   /**
@@ -52,7 +50,7 @@ export type SDKCallOptions = {
   cacheLifetime?: number
 };
 
-let cachedCalls: Record<string, SDKResponse<any> & SDKCache> = {};
+let cachedCalls: Record<string, SDKResponse<unknown> & SDKCache> = {};
 
 export default class StudioSDK {
 
@@ -72,23 +70,23 @@ export default class StudioSDK {
     media: '',
   };
 
-  authToken: string;
+  authToken!: string;
 
-  mode: 'live' | 'next' | 'custom' | null;
+  mode!: 'live' | 'next' | 'custom';
 
-  company: string;
+  company!: string;
 
-  project: string;
+  project!: string;
 
   app: string;
 
-  universalModel: string;
+  universalModel!: string;
 
-  options: {
+  options!: {
     company?: string,
     project?: string,
     authToken?: string,
-    mode?: StudioSDK['mode'],
+    mode?: SDKModes,
     customEndpoints?: { api: string, media: string }
     universalModel?: string
   };
@@ -98,29 +96,27 @@ export default class StudioSDK {
     options: StudioSDK['options'],
   ) {
 
-    this.authToken = options.authToken;
+    if (options.authToken) this.authToken = options.authToken;
 
-    this.customEndpoints = options.customEndpoints;
+    if (options.customEndpoints) this.customEndpoints = options.customEndpoints;
 
     this.mode = options.customEndpoints ? 'custom' : options.mode || 'live';
 
-    this.company = options.company;
+    if (options.company) this.company = options.company;
 
-    this.project = options.project;
+    if (options.project) this.project = options.project;
 
     this.app = app;
 
-    this.universalModel = options.universalModel;
+    if (options.universalModel) this.universalModel = options.universalModel;
 
   }
 
-  private getUrl (type: 'api' | 'media', methodArray: (string | number)[], options?: { noCompanyProject?: boolean }) {
+  private getUrl (type: 'api' | 'media', methodArray: (string | number)[]) {
 
     const method = methodArray.filter((single) => single);
     const urlArray = [];
     let useEndpoint: string;
-
-    console.log(124, this.mode);
 
     if (this.mode === 'custom') {
 
@@ -179,13 +175,13 @@ export default class StudioSDK {
 
   }
 
-  static handleCall<T, D = any> (call: AxiosRequestConfig<D>, options?: SDKCallOptions): Promise<SDKResponse<T>> {
+  static handleCall<T, D = unknown> (call: AxiosRequestConfig<D>, options?: SDKCallOptions): Promise<SDKResponse<T>> {
 
     if (ISMOCK) {
 
       if (call.method !== 'GET') return Promise.resolve({ data: {} as T, status: 200 });
 
-      const key = StudioSDK.getCacheKeyMock(call.url);
+      const key = StudioSDK.getCacheKeyMock(call.url as string);
 
       console.group(`SDK_MOCK_CALL: [${call.method}] ${key}`);
 
@@ -248,7 +244,7 @@ export default class StudioSDK {
 
     }
 
-    const useCache = cachedCalls[key];
+    const useCache = cachedCalls[key] as SDKResponse<T> & SDKCache;
 
     if (!useCache) return null;
 
@@ -321,7 +317,7 @@ export default class StudioSDK {
   public = {
     content: {
 
-      fetch: (type: string, link: string, options?: { state?: 'draft' | 'publish' }) => StudioSDK.handleCall<Editor>(
+      fetch: (type: string, link: string, options?: { state?: 'draft' | 'publish' }) => StudioSDK.handleCall<Content>(
         {
           method : 'GET',
           url    : this.getUrl('api', ['public', 'content', type, link]),
@@ -334,7 +330,7 @@ export default class StudioSDK {
 
         const params = { search, ...options };
 
-        return StudioSDK.handleCall<Editor>(
+        return StudioSDK.handleCall<Content>(
           {
             method : 'GET',
             url    : this.getUrl('api', ['public', 'content', type, 'search', site.toString()]),
@@ -345,7 +341,7 @@ export default class StudioSDK {
 
       },
 
-      predefined: (id: string) => StudioSDK.handleCall<Editor>(
+      predefined: (id: string) => StudioSDK.handleCall<Content>(
         {
           method : 'GET',
           url    : this.getUrl('api', ['public', 'content', 'lilaquadrat', 'studio', id]),
@@ -358,7 +354,7 @@ export default class StudioSDK {
         },
       ),
 
-      predefinedLatest: (categories: string[]) => StudioSDK.handleCall<Editor>(
+      predefinedLatest: (categories: string[]) => StudioSDK.handleCall<Content>(
         {
           method : 'GET',
           url    : this.getUrl('api', ['public', 'content', 'lilaquadrat', 'studio', 'latest']),
@@ -373,7 +369,7 @@ export default class StudioSDK {
         },
       ),
 
-      getById: (id: string) => StudioSDK.handleCall<Editor>(
+      getById: (id: string) => StudioSDK.handleCall<Content>(
         {
           method : 'GET',
           url    : this.getUrl('api', ['public', 'content', this.company, this.project, id]),
@@ -386,7 +382,7 @@ export default class StudioSDK {
         },
       ),
 
-      getByInternalId: (id: string) => StudioSDK.handleCall<Editor>(
+      getByInternalId: (id: string) => StudioSDK.handleCall<Content>(
         {
           method : 'GET',
           url    : this.getUrl('api', ['public', 'content', this.company, this.project, 'internal', id]),
@@ -402,7 +398,8 @@ export default class StudioSDK {
     },
 
     lists: {
-      join: (listId: string, person: Contact, message: string, category: string, agreements: any) => StudioSDK.handleCall<Customers>(
+      join: (listId: string, person: any, message: string, category: string, agreements: any) => StudioSDK.handleCall<Customers>(
+      // join: (listId: string, person: Contact, message: string, category: string, agreements: any) => StudioSDK.handleCall<Customers>(
         {
           method : 'POST',
           url    : this.getUrl('api', ['public', 'lists', 'participants', this.company, this.project, listId, 'join']),
@@ -425,7 +422,7 @@ export default class StudioSDK {
           },
         },
       ),
-      state: (listId: string) => StudioSDK.handleCall<any>(
+      state: (listId: string) => StudioSDK.handleCall<ListPartiticpantsDetails>(
         {
           method : 'get',
           url    : this.getUrl('api', ['public', 'lists', this.company, this.project, listId, 'state']),
@@ -437,7 +434,7 @@ export default class StudioSDK {
 
 
   editor = {
-    getById: (id: string) => StudioSDK.handleCall<Editor>(
+    getById: (id: string) => StudioSDK.handleCall<Content>(
       {
         method : 'GET',
         url    : this.getUrl('api', ['editor', this.company, this.project, id]),
@@ -450,7 +447,7 @@ export default class StudioSDK {
       },
     ),
 
-    getByInternalId: (id: string) => StudioSDK.handleCall<Editor>(
+    getByInternalId: (id: string) => StudioSDK.handleCall<Content>(
       {
         method : 'GET',
         url    : this.getUrl('api', ['editor', this.company, this.project, 'internal', id]),
@@ -464,7 +461,7 @@ export default class StudioSDK {
     ),
 
 
-    settings: (data: { company: string, project: string }) => StudioSDK.handleCall<Editor>(
+    settings: (data: { company: string, project: string }) => StudioSDK.handleCall<Content>(
       {
         method : 'GET',
         url    : this.getUrl('api', ['editor', data.company, data.project, 'settings']),
