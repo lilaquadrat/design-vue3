@@ -265,6 +265,7 @@ function indicatorchange (index: number): void {
   .element {
     grid-template-columns: 1fr 120px;
     grid-template-rows: 1fr 80px;
+    
 
     @media @desktop {
       grid-template-columns: 1fr 185px;
@@ -287,6 +288,7 @@ function indicatorchange (index: number): void {
     overflow: hidden;
     max-width: @moduleWidth_M;
     position: relative;
+    
   }
 
   .indexIndicator {
@@ -318,7 +320,7 @@ function indicatorchange (index: number): void {
     span {
       display: grid;
       font-size: @fontText;
-
+      
       align-content: center;
       align-self: center;
 
@@ -372,6 +374,7 @@ function indicatorchange (index: number): void {
     position: relative;
     grid-column-start: 1;
     grid-column-end: 3;
+    
 
     .scroll-container {
       --n: 1;
@@ -438,6 +441,7 @@ function indicatorchange (index: number): void {
         padding: 0;
 
         opacity: 0;
+        
 
         &.picture {
           position: absolute;
@@ -473,6 +477,7 @@ function indicatorchange (index: number): void {
   }
 
   .gallery-controls {
+    
     max-width: @moduleWidth_M;
 
     position: absolute;
@@ -640,7 +645,7 @@ function indicatorchange (index: number): void {
 
         .picture-container {
           overflow: hidden;
-
+          
           :deep(.lila-figure) {
             grid-template-rows: 100%;
             overflow: visible;
@@ -671,6 +676,7 @@ function indicatorchange (index: number): void {
     .scroll-container {
       @media @desktop {
         height: 100%;
+        
       }
     }
   }

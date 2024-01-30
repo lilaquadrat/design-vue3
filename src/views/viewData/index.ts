@@ -37,7 +37,35 @@ export default {
     },
     {
       type     : 'index-module',
-      variant  : ['numbered', 'medium'],
+      variant  : ['backgroundColor3'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['medium'],
       textblock: {
         headline: 'some headline'
       },
@@ -93,7 +121,35 @@ export default {
     },
     {
       type     : 'index-module',
-      variant  : ['backgroundColor3', 'numbered'],
+      variant  : ['numbered'],
+      textblock: {
+        headline: 'some headline'
+      },
+      links: {
+        title: 'Auf dieser Seite',
+        value: [
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          },
+          {
+            link: '/test',
+            text: 'some link'
+          }
+        ]
+      }
+    },
+    {
+      type     : 'index-module',
+      variant  : ['backgroundGrey','numbered', 'medium'],
       textblock: {
         headline: 'some headline'
       },

@@ -9,7 +9,7 @@ export default {
   modules: [
     {
       type     : 'faq-module',
-      variant  : [],
+      variant  : ['medium'],
       textblock: {
         headline: 'FAQ headline',
         text    : [

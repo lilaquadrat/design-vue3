@@ -68,12 +68,23 @@ export default
           name       : 'Drei Spalten',
           description: 'Es werden drei Fakten pro Zeile angezeigt'
         },
+        {
+          key        : 'fit',
+          name       : 'Bildergrößen werden vereinheitlicht',
+        description: 'verschieden grosse Bilder werden in eine einheitliche Grosse umgewandelt',
+        },
       ],
       component: () => import('@/components/modules/facts.module.vue'),
     },
     {
       name     : 'faq',
-      variants : [],
+      variants : [
+        {
+          key: 'medium',
+          name: 'Größe: Medium',
+          description: 'Die maximale Breite des Modules wird erhöht',
+        },
+      ],
       component: () => import('@/components/modules/faq.module.vue'),
     },
     {
@@ -84,6 +95,11 @@ export default
     {
       name    : 'gallery',
       variants: [
+        {
+          key: 'variant2',
+          name: 'alternatives Design',
+          description: 'alternatives Design, andere Bilderanzeige',
+        },
         {
           key        : 'fullscreen',
           name       : 'Vollbildmodus',
@@ -109,7 +125,33 @@ export default
     },
     {
       name     : 'index',
-      variants : [],
+      variants : [
+        {
+          key: 'medium',
+          name: 'Größe: Medium',
+          description: 'Die maximale Breite des Modules wird erhöht',
+        },
+        {
+          key: 'numbered',
+          name: 'Numberische Indikatoren',
+          description: 'Es werden fortlaufendes Zahlen anstatt Icons angezeigt',
+        },
+        {
+          key: 'backgroundColor1',
+          name: 'Hauptfarbe als Hintergrund',
+          description: 'Farbe des hintergrunds ist in gewählter Farbe1'
+        },
+        {
+          key: 'backgroundColor3',
+          name: 'Sekunddarfarbe als Hintergrund',
+          description: 'Farbe des hintergrunds ist in gewählter Farbe3'
+        },
+        {
+          key: 'backgroundGrey',
+          name: 'Grauer Hintergrund',
+          description: 'Farbe des hintergrunds ist in grau'
+        }
+      ],
       component: () => import('@/components/modules/index.module.vue'),
     },
     {
@@ -173,12 +215,64 @@ export default
     },
     {
       name     : 'pictureandtext',
-      variants : [],
+      variants : [
+        {
+          key        : 'fit',
+          name       : 'Bild mit Links',
+          description: 'das Bild wird links angezeigt und der Text rechts davon wird mittig angepasst',
+        },
+        {
+          key        : 'switchContent',
+          name       : 'Text fokussieren',
+          description: 'Der Text wird auf Kosten des Bildes hervorgehoben',
+        },
+        {
+          key        : 'focusImage',
+          name       : 'Bild fokussieren',
+          description: 'Das Bild wird hervorgehoben auf Kosten des Texts',
+        },
+      ],
       component: () => import('@/components/modules/pictureandtext.module.vue'),
     },
     {
       name     : 'picturegroup',
-      variants : [],
+      variants : [
+        {
+          key: 'fit',
+          name: 'Bildergrößen werden vereinheitlicht',
+          description: 'verschieden grosse Bilder werden in eine einheitliche Grösse umgewandelt',
+        },
+        {
+          key: 'fourColumns',
+          name: 'Darstellung von 4 Bildern',
+          description: '4 Bilder werden lose in einer Reihe angezeigt',
+        },
+        {
+          key: 'small',
+          name: 'Darstellung von 3 Bildern verkleinert',
+          description: '3 verschieden grosse Bilder werden verkleinert unter dem Text nebeneinander gereiht ',
+        },
+        {
+          key: 'align',
+          name: 'Darstellung von 3 Bildern angepasst',
+          description: '3 verschieden grosse Bilder werden genau auf die gleiche Breite des obigen Textes nebeneinander gereiht ',
+        },
+        {
+          key: 'color1',
+          name: 'Darstellung mit Hintergrundfarbe',
+          description: '3 Bilder werden bekommen die Hauptfarbe als Hintergrund',
+        },
+        {
+          key: 'color3',
+          name: 'Darstellung mit Hintergrundfarbe',
+          description: '3 Bilder werden bekommen die Sekundärfarbe als Hintergrund',
+        },
+        {
+          key: 'contact',
+          name:'Kontaktdarstellung',
+          description: 'Variante um Kontakte darzustellen',
+        },
+      ],
       component: () => import('@/components/modules/picturegroup.module.vue'),
     },
     {
@@ -188,17 +282,49 @@ export default
     },
     {
       name     : 'quellcode',
-      variants : [],
+      variants : [
+        {
+          key: 'darkmode',
+          name:'Dunkle Darstellung',
+          description: 'Darstellung von Code',
+        }
+      ],
       component: () => import('@/components/modules/quellcode.module.vue'),
     },
     {
       name     : 'quote',
-      variants : [],
+      variants : [
+        {
+          key: 'small',
+          name:'Kleine Darstellung',
+          description: 'Darstellung von Zitaten',
+        },
+      ],
       component: () => import('@/components/modules/quote.module.vue'),
     },
     {
+      name     : 'text',
+      variants : [
+        {
+          key: 'center',
+          name: 'Text zentriert',
+        },
+        {
+          key: ' notice',
+          name: 'Links werden zu Call To Action Buttons',
+        },
+      ],
+      component: () => import('@/components/modules/text.module.vue'),
+    },
+    {
       name     : 'training',
-      variants : [],
+      variants : [
+        {
+          key: 'offsetTop',
+          name: 'Index Abstand nach oben',
+          description: 'Index wird nach unten verschoben',
+        },
+      ],
       component: () => import('@/components/modules/training.module.vue'),
     },
     {

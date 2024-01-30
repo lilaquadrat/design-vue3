@@ -11,6 +11,7 @@ export default {
       'type'     : 'menu-module',
       'id'       : 'Speisekarte',
       'name'     : '',
+      'variant':[],
       'textblock': {
         'headline': '',
         'subline' : '',

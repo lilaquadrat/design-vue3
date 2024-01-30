@@ -9,6 +9,7 @@ export default {
   modules: [
     {
       type     : 'training-module',
+      variant: [],
       childData: {
         index: [
           'video1',
@@ -398,7 +399,7 @@ export default {
                 poster: {
                   source: [],
                   alt   : 'IMAGE ALT',
-                  src   : 'women1.jpg',
+                  src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/introfinal.mp4',
                 },
                 textblock: {
                   headline: 'VIDEO1',

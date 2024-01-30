@@ -9,7 +9,7 @@ export default {
   'modules': [
     {
       'type'     : 'quellcode-module',
-      'variant'  : [],
+      'variant'  : [''],
       'textblock': {
         'headline': 'Comparative Analysis of Product Features',
         'subline' : 'A Detailed Look at What Sets Our Products Apart',

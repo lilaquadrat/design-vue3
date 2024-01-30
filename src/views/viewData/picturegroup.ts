@@ -9,6 +9,53 @@ export default {
   modules: [
     {
       type     : 'picturegroup-module',
+      variant: ['fourColumns'],
+      textblock: {
+        headline: 'Picturegroup: fourColumns',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
+    },
+    {
+      type     : 'picturegroup-module',
+      variant: ['fit'],
       textblock: {
         headline: 'with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -67,10 +114,10 @@ export default {
           }
         },
       ],
-      variant: ['fit'],
     },
     {
       type     : 'picturegroup-module',
+      variant: ['fit', 'fourColumns'],
       textblock: {
         headline: 'four columns with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -112,29 +159,14 @@ export default {
             copyright: '© lilaquadrat',
           }
         },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
       ],
-      variant: ['fit', 'fourColumns'],
+      
     },
     {
       type     : 'picturegroup-module',
+      variant: ['small'],
       textblock: {
-        headline: 'four columns with fit and links and color',
+        headline: 'small without fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
         text    : [
           'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
@@ -172,37 +204,13 @@ export default {
             copyright: '© lilaquadrat',
           }
         },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
       ],
-      variant: ['fit', 'fourColumns', 'color1', 'align'],
     },
     {
       type     : 'picturegroup-module',
+      variant: ['small', 'fit'],
       textblock: {
-        headline: 'four columns with fit and links',
+        headline: 'small with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
         text    : [
           'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
@@ -240,37 +248,13 @@ export default {
             copyright: '© lilaquadrat',
           }
         },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
       ],
-      variant: ['fit', 'fourColumns'],
     },
     {
       type     : 'picturegroup-module',
+      variant: [ 'align'],
       textblock: {
-        headline: 'four columns with fit and links and description',
+        headline: 'three pics aligned',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
         text    : [
           'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
@@ -282,9 +266,6 @@ export default {
           link: {
             link: '/test'
           },
-          textblock: {
-            headline: 'four columns with fit and links and description',
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
@@ -296,9 +277,6 @@ export default {
           link: {
             link: '/test'
           },
-          textblock: {
-            subline: 'four columns with fit and links and description',
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
@@ -307,128 +285,75 @@ export default {
           }
         },
         { 
-          textblock: {
-            text: [
-              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
-            ],
-          },
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
             copyright: '© lilaquadrat',
           }
         },
       ],
-      variant: ['fourColumns', 'color1'],
     },
     {
       type     : 'picturegroup-module',
-      textblock: {
-        headline: 'four columns with fit and links and description',
-        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
-        text    : [
-          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
-          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
-        ],
-      },
-      elements: [
-        { 
-          link: {
-            link: '/test'
-          },
-          textblock: {
-            headline: 'four columns with fit and links and description',
-          },
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          link: {
-            link: '/test'
-          },
-          textblock: {
-            subline: 'four columns with fit and links and description',
-          },
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          textblock: {
-            text: [
-              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
-            ],
-          },
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-        { 
-          picture: {
-            source   : [],
-            alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
-            copyright: '© lilaquadrat',
-          }
-        },
-      ],
       variant: ['color1'],
+      textblock: {
+        headline: 'Backgroundcolor: color1',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            headline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            subline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          textblock: {
+            text: [
+              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
     },
     {
       type     : 'picturegroup-module',
+      variant: ['contact'],
       textblock: {
-        headline: 'four columns with fit and links and description',
+        headline: 'three pics + contact',
         text    : [
           'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
           'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
@@ -489,6 +414,116 @@ export default {
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
             copyright: '© lilaquadrat',
           }
+        }
+      ],
+    },
+    {
+      type     : 'picturegroup-module',
+      variant: ['color3'],
+      textblock: {
+        headline: 'Backgroundcolor: color3',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            headline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            subline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          textblock: {
+            text: [
+              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
+    },
+    {
+      type     : 'picturegroup-module',
+      variant: ['fourColumns', 'fit', 'align'],
+      textblock: {
+        headline: 'four columns with fit and links, description and small',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            headline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            subline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          textblock: {
+            text: [
+              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
         },
         { 
           picture: {
@@ -515,12 +550,92 @@ export default {
           }
         },
       ],
-      variant: ['contact', 'fit'],
     },
     {
       type     : 'picturegroup-module',
+      variant: ['color1', 'align', 'fit'],
       textblock: {
-        headline: 'four columns with fit and links and description',
+        headline: '6 Pics with fit of links, description with Backgroundcolor and aligned',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            headline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          link: {
+            link: '/test'
+          },
+          textblock: {
+            subline: 'four columns with fit and links and description',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          textblock: {
+            text: [
+              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
+     
+    },
+    {
+      type     : 'picturegroup-module',
+      variant: ['small', 'fit'],
+      textblock: {
+        headline: 'small with fit and links and description',
         text    : [
           'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
           'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
@@ -576,8 +691,67 @@ export default {
           }
         },
       ],
-      variant: ['small', 'fit'],
     },
-          
+    {
+      type     : 'picturegroup-module',
+      variant: ['align', 'fit'],
+      textblock: {
+        headline: 'align with fit and links and description',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
+    },      
   ],
 };
