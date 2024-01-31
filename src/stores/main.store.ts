@@ -1,8 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { Content } from '@lilaquadrat/studio/lib/interfaces';
+import type { Content } from '@lilaquadrat/interfaces';
 import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
 import type ApiConfig from '@/interfaces/ApiConfig';
+import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -11,9 +12,9 @@ export const useMainStore = defineStore('main', () => {
   const configuration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
   const apiConfig = ref<ApiConfig>({
-    mode: 'custom',
+    mode           : 'custom',
     customEndpoints: {
-      api: 'http://localhost:9090',
+      api  : 'http://localhost:9090',
       media: 'http://localhost:9091',
     },
     company: 'company',
@@ -62,6 +63,29 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
+  async function getContent (params: { predefined: boolean, latest: boolean, id: string, categories?: string[] }) {
+
+    const data = ref<SDKResponse<Content>>();
+    const sdk = new StudioSDK('design', apiConfig.value);
+
+    if (params.predefined && !params.latest) {
+
+      data.value = await sdk.public.content.predefined(params.id);
+
+    } else if (params.predefined && params.latest && params.categories) {
+
+      data.value = await sdk.public.content.predefinedLatest(params.categories);
+
+    } else {
+
+      data.value = await sdk.public.content.getByInternalId(params.id);
+
+    }
+
+    return data.value;
+
+  }
+
   return { 
     setData, 
     data, 
@@ -71,7 +95,8 @@ export const useMainStore = defineStore('main', () => {
     checkFullscreen,
     setConfiguration,
     configuration,
-    apiConfig
+    apiConfig,
+    getContent
   }
 
 })

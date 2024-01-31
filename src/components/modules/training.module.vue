@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type Textblock from '@interfaces/textblock.interface';
-import type { ChildData, Content } from '@lilaquadrat/studio/lib/interfaces';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import type { ChildData, Content } from '@lilaquadrat/interfaces';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, inject, onMounted, ref, watch } from 'vue';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';

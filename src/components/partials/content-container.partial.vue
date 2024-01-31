@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { ref, watch, onBeforeMount, defineProps, defineEmits, computed } from 'vue';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { useTranslations } from '@/plugins/translations';
 import type { Content, ContentWithPositions } from '@lilaquadrat/interfaces';
+import type { SDKResponse } from '@lilaquadrat/sdk';
+import useMainStore from '@/stores/main.store';
 
+const mainStore = useMainStore();
 const { translate } = useTranslations();
-const props = defineProps({
-  overlay   : Boolean,
-  id        : String,
-  type      : String,
-  category  : Array,
-  latest    : Boolean,
-  predefined: Boolean,
-  full      : Boolean,
-});
+const props = defineProps<{
+  overlay?: boolean
+  id?: string
+  type: string
+  categories?: string[]
+  latest?: boolean
+  predefined?: boolean
+  full?: boolean
+}>();
 const emits = defineEmits(['open', 'closed']);
 const content = ref<ContentWithPositions>();
 const error = ref<boolean>(true);
@@ -41,7 +44,7 @@ watch(visible, (newVisible) => {
 
 const getContent = async () => {
 
-  console.log('gety conten');
+  console.log('get content', props.id);
 
   if (loading.value) return false;
 
@@ -49,11 +52,14 @@ const getContent = async () => {
   content.value = undefined;
   loading.value = 100;
 
-  const data: SDKResponse<Content> | null = null;
+  let data: SDKResponse<Content> | null = null;
 
   try {
-    // Replace this with the appropriate store dispatch call
-    // data = await this.$store.dispatch('getContent', { ... });
+
+
+    data = await mainStore.getContent(props);
+
+
   } catch (e) {
 
     console.error(error);
@@ -96,7 +102,6 @@ onBeforeMount(() => {
 <template>
   <section class="content-container-full" :class="{ overlay, inline: !overlay, full, visible }">
     <button v-if="overlay" class="preview-text" type="button" @click="open"><slot /></button>
-    {{ overlay }} -- {{loading}}
 
     <Teleport :disabled="!overlay" to="body">
       <transition>

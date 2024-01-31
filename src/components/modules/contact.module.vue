@@ -1,18 +1,16 @@
 <script setup lang="ts">
 
-// import type { Agreement, GenericData, List, ListPartiticpantsDetails } from '@lilaquadrat/studio/lib/interfaces';
 import ModelsClass from '@/libs/Models.class';
-import StudioSDK from '../../libs/StudioSDK';
 import type Textblock from '@/interfaces/textblock.interface';
 import type Contact from '@/models/Contact.model';
 import type Address from '@/models/Address.model'; 
 import { type ErrorsObject } from '../../libs/ActionNotice';
-import { type ErrorObject } from 'ajv/dist/types';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, onBeforeMount, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
-import { type Agreement, type GenericData, type List, type ListPartiticpantsDetails} from '@lilaquadrat/interfaces';
+import { type Agreement, type BasicData, type Content, type GenericData, type List, type ListPartiticpantsDetails} from '@lilaquadrat/interfaces';
+import StudioSDK from '@lilaquadrat/sdk';
 
 defineOptions({ inheritAttrs: false });
 
@@ -21,7 +19,6 @@ const props = defineProps<{
     textblock: Textblock;
     categoryTextblock: Textblock;
     genericData: GenericData;
-    list: List;
     editor: {modes: string[]},
     state: string,
     variant: string,
@@ -35,56 +32,57 @@ const addressModel = ref<Address>();
 let errorsObject: ErrorsObject = {};
 const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
+const categoriesExtended = ref();
 const participantsState = ref<ListPartiticpantsDetails>();
 const emit = defineEmits<{
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
-const list = computed(() => {
+const list = computed<BasicData<List>>(() => props.genericData.data[props.genericData.lists[0]] as BasicData<List>);
 
-  if(props.genericData?.lists && props.genericData?.data && Array.isArray(props.genericData?.lists)) {
 
-    return props.genericData.data[props.genericData.lists[0]]
+function updateCategories () {
 
-  }
-
-  return null
-});
-const categories = computed(() => {
-
+  console.info('update categories', list.value, participantsState);
 
   // only show categories if there is more than one and the user has a choice
   if (list.value?.categories.length > 1) {
+
     const categories = list.value.categories as ListCategoryExtended[];
 
     if (participantsState.value) {
 
       categories.forEach((single: ListCategoryExtended) => {
-        const stateCategory = participantsState.value?.categories?.find((singleState) => singleState.id === single.id);
+        const stateCategory = participantsState.value?.categories?.find((singleState) => singleState.category === single.id);
+
+        console.log(single, stateCategory);
 
         if (stateCategory) {
      
+          console.log(stateCategory.used, stateCategory.category);
           single.used = stateCategory.used;
-          console.log(stateCategory.used)
-          single.available = single.amount - single.used;
-          single.percentUsed = (single.used / single.amount) * 100;
-          single.percentAvailable = 100 - (single.used / single.amount) * 100;
+          single.available = (single.amount || 0) - single.used;
+          single.percentUsed = (single.used / (single.amount || 0)) * 100;
+          single.percentAvailable = 100 - (single.used / (single.amount || 0)) * 100;
 
         }
       });
 
     }
 
-    return categories;
+    categoriesExtended.value = categories;
 
 
   }
 
-  return null;
-});
+  categoriesExtended.value = list.value.categories;
+
+}
+
 const selectCategories = computed(() => {
 
   if(list.value?.categories.length > 1) {
+    
     return list.value.categories.map((single) => ({
       value      : single.id,
       text       : single.name,
@@ -93,38 +91,49 @@ const selectCategories = computed(() => {
     }));
   }
 
-  return null
+  return null;
+
 })
-const feedback = computed(() => {
-  console.log('props.genericData?:', props.genericData)
+const feedback = computed<BasicData<Content>|undefined>(() => {
 
   if(props.genericData?.editor && props.genericData?.data && Array.isArray(props.genericData.editor)){
-    console.log('props.genericData:', props.genericData)
-    return props.genericData.data[props.genericData.editor[0]]
+    return props.genericData.data[props.genericData.editor[0]] as BasicData<Content>;
   }
 
-  return null
+  return undefined
+  
 });
+const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
 const showFeedback = computed(() => props.state && (props.state === 'success' || props.editor?.modes?.includes('feedback')));
-const feedbackContent = computed(() => prepareContent(feedback.value));
-const limited = computed(() => props.list?.participants?.max || null);
+const feedbackContent = computed(() => {
+
+  if(feedback.value) {
+    return prepareContent(feedback.value);
+  }
+
+  return {}
+
+});
+const limited = computed(() => list.value?.participants?.max || null);
 const disabled = computed(() => {
-  if(props.participantsState && props.list?.participants?.max) {
-    return props.participantsState.used >= props.list?.participants?.max
+
+  if(participantsState.value && list.value?.participants?.max) {
+    return participantsState.value.used >= list.value?.participants?.max
   }
 
   return false
+
 })
-const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
 const mainErrors = computed(() => {
   const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
-  if(props.errors && validErrors.includes((props.errors as { message?:string}).message)) {
+  if(props.errors && validErrors.includes(props.errors)) {
     return `${(props.errors as { message?:string}).message}`;
   }
 
   return null;
-}); const slotsAvailable = computed(() => (list.value?.participants.max || 0) - participantsState.value.used)
+}); 
+const slotsAvailable = computed(() => (list.value?.participants?.max || 0) - (participantsState.value?.used || 0))
 
 
 onBeforeMount(() => {
@@ -133,6 +142,7 @@ onBeforeMount(() => {
   addressModel.value = ModelsClass.add({}, 'address');
 
   updateAgreements();
+  // updateCategories();
   getparticipantsState();
 }) 
 
@@ -151,29 +161,30 @@ function resetForm () {
 }
 
 function updateErrors (errorsObject: ErrorsObject) {
+
   updateAgreements();
-  emit('errors', errorsObject); //this.errorsObject = errorsObject; -> errorsObject = errorsObject hätte keinen Effekt
+  emit('errors', errorsObject);
+
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function changeAgreement (event: MouseEvent, agreement: Agreement & { value: boolean, error: boolean }): void {
-  // const agreement = agreements[index];
-  const target = event.target as HTMLInputElement;
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// function changeAgreement (event: MouseEvent, agreement: Agreement & { value: boolean, error: boolean }): void {
+//   // const agreement = agreements[index];
+//   const target = event.target as HTMLInputElement;
 
-  agreement.value = target.checked;
-}
+//   agreement.value = target.checked;
+// }
 
 function updateAgreements () {
   const agreements = {} as Record<string, Agreement & { value: boolean, error: boolean }>;
 
-  console.log(list.value);
 
-
-  list.value?.agreements.forEach((single: Agreement & {error: boolean}) => {
+  list.value?.agreements.forEach((single) => {
 
     agreements[single.contentId] = {
       ...single,
       value: agreementsExtended.value[single.contentId]?.value || false,
+      error: false
     };
 
     const values = errorsObject.agreements?.translatedPath?.values;
@@ -198,18 +209,22 @@ function updateAgreements () {
 const getparticipantsState = async () => {
   console.log('store.state:', mainStore.apiConfig);
 
+  if(!list.value?._id) {
+    return;
+  }
+
   const sdk = new StudioSDK('design', mainStore.apiConfig);
 
   try {
    
-    const participantsState = await sdk.public.lists.state(props.list?._id.toString());
+    const stateData = await sdk.public.lists.state(list.value?._id.toString());
 
-    if (participantsState.data) {
+    if (stateData.data) {
 
-      // this.participantsState = participantsState.data;
-      //participantsState.data;
-      emit('participantsState', participantsState.data)
-      
+
+      participantsState.value = stateData.data;
+      updateCategories();
+
 
     }
 
@@ -217,6 +232,8 @@ const getparticipantsState = async () => {
 
     console.error(e);
     console.log(e.response?.data);
+    updateCategories();
+
 
   }
 };
@@ -350,12 +367,10 @@ const handleForm = async (event: Event) => {
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />
 
-      {{ model }}
-
       <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
       <h3 class="limited" v-if="limited && !disabled && !hideFreeSlots">
         <template v-if="!participantsState && !disabled">{{ $translateWithDiff('LIST_LIMITED_AVAILABILITY', limited) }}</template>
-        <template v-if="participantsState && !disabled">{{ $translate('LIST_LIMITED_AVAILABILITY_STATE', [slotsAvailable, limited]) }}</template>
+        <template v-if="participantsState && !disabled">{{ $translate('LIST_LIMITED_AVAILABILITY_STATE', [slotsAvailable.toString(), limited.toString()]) }}</template>
       </h3>
     </section>
 
@@ -372,9 +387,9 @@ const handleForm = async (event: Event) => {
 
       </lila-fieldset-partial>
 
-      <lila-fieldset-partial v-if="categories" extendedGap legend="category">
+      <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
-        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject.category" :variant="variant" :categories="categories" />
+        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject.category" :variant="variant" :categories="categoriesExtended" />
         <lila-select-partial v-if="list.mode === 'contact'" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 

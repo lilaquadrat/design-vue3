@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChildData, ContentWithPositions } from '@lilaquadrat/studio/lib/interfaces';
+import type { ChildData, ContentWithPositions } from '@lilaquadrat/interfaces';
 import { provide } from 'vue';
 
 const props = defineProps<{

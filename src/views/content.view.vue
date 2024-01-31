@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import type { Content } from '@lilaquadrat/interfaces';
 import dayjs from 'dayjs';
 import useMainStore from '@/stores/main.store';

@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import type GenericModel from '@lilaquadrat/studio/lib/interfaces';
-import hardCopy from '../mixins/hardCopy';
+import type GenericModel from '@lilaquadrat/interfaces';
+import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 
 type DeclarationTypes = 'string' | 'number' | 'boolean' | 'object';
 type SingleDeclaration = { type: 'string', default?: string } |

@@ -29,7 +29,6 @@ watch(() => props.modelValue, () => {
 
 const update = (event: KeyboardEvent) => {
 
-  console.log('update', update)
   const target = event?.target as HTMLInputElement;
 
   tempValue = target?.value;

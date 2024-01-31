@@ -1,4 +1,4 @@
-import type { ListCategory } from '@lilaquadrat/studio/lib/interfaces';
+import type { ListCategory } from '@lilaquadrat/interfaces';
 
 type ListCategoryExtended = ListCategory &
     {

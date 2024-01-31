@@ -65,12 +65,12 @@ export default {
               },
               {
                 text     : 'adfasdf',
-                contentId: 'layout-test',
+                contentId: '648839a1406f871021a3d874',
                 required : true,
               },
               {
                 text     : 'sdrtfgrfgh',
-                contentId: 'pdftest',
+                contentId: '648839a1406f871021a3d874',
               },
             ],
           },
@@ -133,19 +133,21 @@ export default {
       genericData: {
         data: {
           1: {
-            _id        : '64e8a1d3d96549a0378c9d2a',
-            name       : 'Liste 12',
-            description: 'fasfdd',
-            payment    : 'free',
-            state      : 'open',
-            mode       : 'reservation',
-            categories : [
+            _id         : '6464c12d074ca92142352b64',
+            name        : 'Liste 12',
+            description : 'fasfdd',
+            payment     : 'free',
+            state       : 'open',
+            mode        : 'reservation',
+            participants: {
+              max: 10
+            },
+            categories: [
               {
                 'id'         : 'id-base',
                 'name'       : 'Base',
                 'description': 'Basic access package, ideal for individual users. Includes standard features and support.',
                 'amount'     : 25,
-                'available'  : true,
                 'price'      : {
                   'currency': '€',
                   'amount'  : 29.99,
@@ -153,11 +155,10 @@ export default {
                 }
               },
               {
-                'id'         : 'id-anfrage',
+                'id'         : 'test1',
                 'name'       : 'Anfrage',
                 'description': 'On-demand query service. Pay per use, ideal for sporadic data analysis needs.',
-                'amount'     : 0,
-                'available'  : true,
+                'amount'     : 5,
                 'price'      : {
                   'currency': '€',
                   'amount'  : 9.99,
@@ -165,14 +166,24 @@ export default {
                 }
               },
               {
-                'id'         : 'id-hilfe',
-                'name'       : 'Hilfe',
+                'id'         : 'string',
+                'name'       : 'Hilfe - string',
                 'description': 'Extended support package. Includes 24/7 customer service and personalized assistance.',
-                'amount'     : 0,
-                'available'  : true,
+                'amount'     : 2,
                 'price'      : {
                   'currency': '€',
                   'amount'  : 19.99,
+                  'tax'     : 19
+                }
+              },
+              {
+                'id'         : 'string1',
+                'name'       : 'Hilfe not available',
+                'description': 'Extended support package. Includes 24/7 customer service and personalized assistance.',
+                'disabled'   : true,
+                'price'      : {
+                  'currency': '€',
+                  'amount'  : 0,
                   'tax'     : 19
                 }
               }
@@ -186,17 +197,17 @@ export default {
               },
               {
                 'text'     : 'Bitte geben Sie Ihre Meinung zu unserem Service an.',
-                'contentId': '61e2de3585f79bcb5e58c518',
+                'contentId': '6178122af0a16e35ec1f3ea1',
                 'required' : true
               },
               {
                 'text'     : 'Haben Sie Verbesserungsvorschläge für uns?',
-                'contentId': '6213769a11814099b0ecc292',
+                'contentId': '648839a1406f871021a3d874',
                 'required' : false
               },
               {
                 'text'     : 'Teilen Sie uns Ihre Erfahrungen mit unserem Produkt mit.',
-                'contentId': 'hallo',
+                'contentId': '648839a1406f871021a3d874',
                 'required' : false
               }
             ],

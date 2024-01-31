@@ -2,7 +2,7 @@
 import hardCopy from '@/mixins/hardCopy';
 import { getAvailableModules } from '@/mixins/loadComponents';
 import useEditorStore from '@/stores/editor.store';
-import { prepareContent } from '@lilaquadrat/studio/lib/frontend';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { nextTick, onMounted, ref } from 'vue';
 import { type Content, type ContentWithPositions, type EditorActiveModule, type StudioIframeMessage } from '@lilaquadrat/interfaces';
 
