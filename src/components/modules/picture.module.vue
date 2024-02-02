@@ -12,6 +12,7 @@
   </section>
 </template>
 <script setup lang="ts">
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
@@ -21,11 +22,9 @@ import { computed, ref } from 'vue';
 defineOptions({ inheritAttrs: false });
 
 const store = useMainStore();
-const props = defineProps<{
-  picture: Picture;
-  textblock: Textblock;
-  id?: string;
-  variant: string[];
+const props = defineProps<ModuleBaseProps & {
+  picture: Picture
+  textblock: Textblock
 }>();
 const fullscreenOverlay = ref(false);
 const element = ref<HTMLElement>();

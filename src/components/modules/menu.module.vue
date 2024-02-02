@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import type MenuCategoryElement from '@/interfaces/MenuCategory.interface';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
-  id?: string;
-  variant: string[];
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   intro?: Textblock;
   categories: MenuCategoryElement[];

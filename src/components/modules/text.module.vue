@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
 import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   headline?: string
   subline?: string
   intro?: string
   text?: string[]
   links?: LinkListWithTitle
   list?: ListWithTitle
-  variant?: string[]
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
@@ -40,7 +40,7 @@ const listVariant = (type: 'list' | 'links') => {
 
 </script>
 <template>
-  <article ref="element" class="lila-text-module lila-module" :class="[inviewState, variant]">
+  <article :id="id" ref="element" class="lila-text-module lila-module" :class="[inviewState, variant, {sub}]">
 
     <lila-textblock-partial v-bind="props" />
     <lila-list-partial v-bind="list" mode="list" :variant="listVariant('list')"></lila-list-partial>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { ParsedError } from '@/libs/ActionNotice';
 import ModelsClass from '@/libs/Models.class';
+import { useInview } from '@/plugins/inview';
+import { useResize } from '@/plugins/resize';
 import useMainStore from '@/stores/main.store';
 import type { Address, ListOfModels, Location } from '@lilaquadrat/interfaces';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
@@ -11,6 +13,8 @@ import { ref } from 'vue';
 
 
 const mainStore = useMainStore();
+const { scrolled } = useInview();
+const { resized } = useResize();
 const emit = defineEmits<{
   'update:modelValue': [value?: Address]
 }>();
@@ -25,7 +29,7 @@ const props = defineProps<{
 const model = ref<Address>();
 const selectedAddress = ref<Address>();
 const loading = ref<boolean>(false);
-const autocomplete = ref<any[]>();
+const autocomplete = ref<Location[]>();
 const search = ref<string>();
 const minLength = ref<number>(5);
 const calculatedOptions = ref();
@@ -41,6 +45,7 @@ onBeforeMount(() => {
 });
 
 watch(search, () => update());
+watch([resized, scrolled], () => calculateOptionsStyle())
 
 
 function select (address: Location) {
@@ -90,10 +95,17 @@ function calculateOptionsStyle () {
   const element = anchorElement.value as HTMLElement;
   const optionsContainer = optionsElement.value;
   const input = element.querySelector('input');
+
+  if(!optionsContainer || !element || !input) {
+
+    calculatedOptions.value = {};
+    return;
+
+  }
+
   const bounds = input.getBoundingClientRect();
   let top = bounds.top + input.offsetHeight;
-  const body = document.querySelector('body');
-  const positionTop = bounds.bottom + optionsContainer.offsetHeight + 50 > body.offsetHeight;
+  const positionTop = bounds.bottom + optionsContainer.offsetHeight + 50 > window.innerHeight;
 
   if (positionTop) {
 
@@ -112,13 +124,6 @@ function calculateOptionsStyle () {
 
 const hasError = computed(() => !!props.error?.error);
 const optionsStyle = computed(() => calculatedOptions.value);
-const addressString = computed(() => {
-
-  if (!selectedAddress.value) return null;
-
-  return `${selectedAddress.value.street} ${selectedAddress.value.streetNumber}, ${selectedAddress.value.zipcode} ${selectedAddress.value.city}, ${selectedAddress.value.country}`;
-
-});
 const isValidSearch = computed(() => {
 
   if(!search.value) return false;
@@ -134,7 +139,7 @@ async function update () {
     loading.value = true;
 
     const sdk = new StudioSDK('design', mainStore.apiConfig);
-    const call = sdk.public.lists.address(search.value);
+    const call = sdk.public.lists.address(search.value!);
     let response: SDKResponse<ListOfModels<Location>>;
 
     try {
@@ -193,7 +198,7 @@ async function update () {
 
     <lila-overlay-background-partial v-if="open" background="none" @mounted="calculateOptionsStyle" @close="closeOptions">
       <section ref="optionsElement" class="options-container address-container" :style="optionsStyle">
-        <h4 class="no-matching" v-if="!autocomplete.length && isValidSearch && !loading">{{ $translate('no matching addresses') }}</h4>
+        <h4 class="no-matching" v-if="!autocomplete?.length && isValidSearch && !loading">{{ $translate('no matching addresses') }}</h4>
 
         <button class="single-address" type="button" v-for="(single, index) in autocomplete" :key="`single-address-${index}`" @click="select(single)">
           {{ single.address.road }} {{ single.address.house_number }}, {{ single.address.postcode }} {{ single.address.city }}, {{ single.address.country }}
@@ -299,6 +304,10 @@ async function update () {
     line-height: @buttonHeight;
     text-align: left;
     cursor: pointer;
+  }
+
+  .single-address {
+    .basicHover;
   }
 
   .no-matching:hover {

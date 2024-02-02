@@ -6,14 +6,13 @@ import { computed, inject, onMounted, ref, watch } from 'vue';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
 import { useTranslations } from '@/plugins/translations';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   childData: ChildData;
-  id?: string;
-  variant: string[];
 }>();
 const { resized } = useResize();
 const {translate} = useTranslations();

@@ -5,10 +5,11 @@ import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, ref } from 'vue';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
 
   textblock: Textblock;
 
@@ -19,8 +20,6 @@ const props = defineProps<{
   author: string;
 
   date: string;
-  id?: string;
-  variant?: string[]
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
@@ -37,7 +36,7 @@ const hasLink = computed(() => !!props.link?.link);
 
 </script>
 <template>
-  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture }]" class="lila-blog-intro-module lila-module">
+  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture, sub }]" class="lila-blog-intro-module lila-module">
 
     <header>
       <template v-if="!hasLink">

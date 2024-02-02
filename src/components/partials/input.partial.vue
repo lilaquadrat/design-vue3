@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onBeforeMount } from 'vue';
 import type { ParsedError } from '../../libs/ActionNotice';
 import { defineProps, computed, watch, ref, defineSlots, defineEmits } from 'vue';
 
@@ -26,6 +27,12 @@ watch(() => props.modelValue, () => {
   }
 
 });
+
+onBeforeMount(() => {
+
+  tempValue = props.modelValue as string;
+
+})
 
 const update = (event: KeyboardEvent) => {
 

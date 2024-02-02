@@ -58,14 +58,19 @@ const filteredOptions = computed(() => props.options);
 
 function calculateOptionsStyle () {
 
-  console.log(triggerElement.value);
-
   const element = triggerElement.value as HTMLElement;
   const optionsContainer = document.querySelector('.lila-overlay-background .options-container') as HTMLElement;
+
+  if(!optionsContainer || !element) {
+
+    calculatedOptions.value = {};
+    return;
+
+  }
+
   const bounds = element.getBoundingClientRect();
   let top = bounds.top + element.offsetHeight;
-  const body = document.querySelector('body') as HTMLBodyElement;
-  const positionTop = bounds.bottom + optionsContainer.offsetHeight + 50 > body.offsetHeight;
+  const positionTop = bounds.bottom + optionsContainer.offsetHeight + 50 > window.innerHeight;
 
   if(positionTop) {
     top = bounds.top - 5 - optionsContainer.offsetHeight;
@@ -80,6 +85,7 @@ function calculateOptionsStyle () {
 
 }
 
+const hasError = computed(() => !!props.error?.error);
 const optionsStyle = computed(() => media.value === 'mobile' 
   ? {}
   : calculatedOptions.value)
@@ -264,7 +270,7 @@ function toggleOptions () {
       </lila-overlay-background-partial>
 
     </teleport>
-    <lila-input-labels-partial :required="required" :disabled="disabled"><slot /></lila-input-labels-partial>
+    <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled"><slot /></lila-input-labels-partial>
 
     <notice-partial v-if="errorMessage" type="error">
       {{errorMessage}}

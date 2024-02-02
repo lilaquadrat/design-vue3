@@ -4,6 +4,10 @@ export default [
     component: () => import('@/components/partials/accordion.partial.vue'),
   },
   {
+    name     : 'action-notice',
+    component: () => import('@/components/partials/action-notice.partial.vue'),
+  },
+  {
     name     : 'address',
     component: () => import('@/components/partials/address.partial.vue'),
   },

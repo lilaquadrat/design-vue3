@@ -8,16 +8,15 @@ import { useResize } from '@/plugins/resize';
 import { onBeforeMount } from 'vue';
 import type Link from '@/interfaces/link.interface';
 import { onMounted } from 'vue';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const { media, resized } = useResize();
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   name?: string;
   picture?: Picture;
   elements: (LinkGroupElement & { active: boolean })[];
-  id?: string;
-  variant: string[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });

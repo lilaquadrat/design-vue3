@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { ChildData, ContentWithPositions } from '@lilaquadrat/interfaces';
-import { provide } from 'vue';
+import { computed, provide } from 'vue';
 
 const props = defineProps<{
   content: ContentWithPositions
   inline?: boolean
+  sub?: boolean
   routeBase?: string
   linkEvents?: boolean
   linkBase?: string
@@ -15,24 +16,28 @@ const props = defineProps<{
 provide('linkMode', props.linkMode);
 provide('linkBase', props.linkBase);
 
+const mode = computed(() => props.content.settings.mode || 'presentation');
+
 </script>
 
 <template>
-  <article class="lila-content-module">
+  <section class="lila-content-module" :class="{sub}">
 
-    <article class="top container" :inline="inline" v-if="!!content.top?.length">
-      <component v-for="(single, i) in content?.top" :class="single.classes" :is="`${single.type}`" :key="`module-${single.type}-${i}`" v-bind="single" :additional="content.additional" position="top" />
+    <article class="top container" :class="{inline, sub}"  v-if="!!content.top.length">
+      <component v-for="single in content.top" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" />
     </article>
 
-    <article class="container" :class="[content.settings.mode, {inline: inline}]" :inline="inline" v-if="!!content.content?.length">
-      <component v-for="(single, i) in content.content"  :class="single.classes" :is="`${single.type}`" :key="`module-${single.type}-${i}`" v-bind="single" :additional="content.additional" position="content" />
+    <article class="container" :class="[mode, {inline, sub}]" :inline="inline" v-if="!!content.content.length">
+      <template v-for="single in content.content" :key="single.uuid">
+        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :sub="sub" :additional="content.additional" position="content" />
+      </template>
     </article>
 
-    <article class="bottom container" :inline="inline" v-if="!!content.bottom?.length">
-      <component v-for="(single, i) in content.bottom" :class="single.classes" :is="`${single.type}`" :key="`module-${single.type}-${i}`" v-bind="single" :additional="content.additional" position="bottom" />
+    <article class="bottom container" :class="{inline, sub}" v-if="!!content.bottom.length">
+      <component v-for="single in content.bottom" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="bottom" />
     </article>
 
-  </article>
+  </section>
 </template>
 
 <style lang="less" scoped>
@@ -62,8 +67,7 @@ provide('linkBase', props.linkBase);
       }
     }
 
-    &.top,
-    &.inline {
+    &.top, &.inline, &.sub {
       .multi(margin-bottom, 0);
 
       .lila-module {

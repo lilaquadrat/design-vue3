@@ -5,16 +5,16 @@
   </section>
 </template>
 <script setup lang="ts">
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock
   code: string;
-  variant: string[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

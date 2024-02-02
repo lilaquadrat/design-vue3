@@ -3,14 +3,13 @@ import type Textblock from '@interfaces/textblock.interface';
 import type PricesElementModel from '@interfaces/PricesElement.interface';
 import { ref } from 'vue';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   elements: PricesElementModel[];
-  id?: string;
-  variant: string[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

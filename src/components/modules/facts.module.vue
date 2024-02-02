@@ -3,14 +3,14 @@ import type Textblock from '@interfaces/textblock.interface';
 import type Fact from '@interfaces/Fact.interface';
 import { useInview } from '@/plugins/inview';
 import { computed, ref } from 'vue';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock: Textblock;
   elements: Fact[];
   variant?: string[];
-  id?: string;
 }>();
 const active = ref<number>(0);
 const element = ref<HTMLElement>();

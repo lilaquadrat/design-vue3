@@ -2,18 +2,17 @@
 import type LinkListWithTitle from '@interfaces/LinkListWithTitle.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, ref } from 'vue';
-import type { AdditionalContentInformation } from '@lilaquadrat/studio/lib/interfaces';
+import type { AdditionalContentInformation } from '@lilaquadrat/interfaces';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
-  textblock?: Textblock;
-  links: LinkListWithTitle;
-  legend?: string[];
-  variant: string[];
-  id?: string;
-  additional: AdditionalContentInformation;
+const props = defineProps<ModuleBaseProps & {
+  textblock?: Textblock
+  links: LinkListWithTitle
+  legend?: string[]
+  additional: AdditionalContentInformation
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

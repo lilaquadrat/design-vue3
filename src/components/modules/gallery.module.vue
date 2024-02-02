@@ -6,15 +6,14 @@ import dom from '@/functions/lila-dom';
 import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const store = useMainStore();
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   elements: GalleryElement[];
-  variant?: string[];
-  id?: string;
 }>();
 const currentOptionIndex: Ref<number> = ref(0);
 const swipeX = ref<number>(0);

@@ -7,14 +7,15 @@
   </section>
 </template>
 <script setup lang="ts">
-import type { ModuleGeneric } from '@lilaquadrat/studio/lib/interfaces';
+import type { ModuleGeneric } from '@lilaquadrat/interfaces';
 import { onMounted, ref } from 'vue';
 import checkInview from '../../mixins/checkin';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
-const props = defineProps<{
+defineProps<ModuleBaseProps & {
   modules: ModuleGeneric[];
-
 }>();
+
 const el = ref(null);
 
 onMounted(() => {

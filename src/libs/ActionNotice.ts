@@ -1,5 +1,7 @@
-import type translate from '@mixins/translation';
+import { useTranslations } from '@/plugins/translations';
 import type { ErrorObject } from 'ajv';
+
+const {translate} = useTranslations();
 
 
 export interface TranslatedPath {
@@ -98,8 +100,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 
@@ -109,8 +109,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 
@@ -120,8 +118,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 
@@ -131,8 +127,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 
@@ -144,8 +138,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 
@@ -158,8 +150,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         [Object.values(error.params).join(',')],
       );
 
@@ -169,8 +159,6 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        null,
-        null,
         Object.values(error.params),
       );
 

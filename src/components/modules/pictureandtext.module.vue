@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
 import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
@@ -7,7 +8,7 @@ import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   picture: Picture;
 
   textblock: Textblock;
@@ -17,8 +18,6 @@ const props = defineProps<{
   links?: Link[];
 
   list?: string[];
-  id?:string;
-  variant: string[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

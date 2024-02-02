@@ -4,16 +4,15 @@ import type FooterContact from '@/interfaces/FooterContact.interface';
 import type FooterSocial from '@/interfaces/FooterSocial.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   contact: FooterContact;
   social: FooterSocial;
   legal: string;
   sitemap: Sitemap[];
-  variant?: string[];
-  id?: string;
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

@@ -2,7 +2,6 @@
 
 import ModelsClass from '@/libs/Models.class';
 import type Textblock from '@/interfaces/textblock.interface';
-import type Contact from '@/models/Contact.model';
 import type Address from '@/models/Address.model'; 
 import { type ErrorsObject } from '../../libs/ActionNotice';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
@@ -11,25 +10,24 @@ import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.inter
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Content, type GenericData, type List, type ListPartiticpantsDetails} from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
+import type Contact from '@/interfaces/Contact.interface';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const mainStore = useMainStore();
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
     categoryTextblock: Textblock;
     genericData: GenericData;
     editor: {modes: string[]},
-    state: string,
-    variant: string,
-    errors: null,
-    errorsobject: ErrorsObject
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
+const state = ref<string>('init');
 const model = ref<Contact>();
 const addressModel = ref<Address>();
-// let errors = null;
-let errorsObject: ErrorsObject = {};
+const errors = ref({});
+const errorsObject = ref<ErrorsObject>({});
 const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
 const categoriesExtended = ref();
@@ -104,7 +102,7 @@ const feedback = computed<BasicData<Content>|undefined>(() => {
   
 });
 const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
-const showFeedback = computed(() => props.state && (props.state === 'success' || props.editor?.modes?.includes('feedback')));
+const showFeedback = computed(() => state.value && (state.value === 'success' || props.editor?.modes?.includes('feedback')));
 const feedbackContent = computed(() => {
 
   if(feedback.value) {
@@ -125,20 +123,22 @@ const disabled = computed(() => {
 
 })
 const mainErrors = computed(() => {
+
   const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
-  if(props.errors && validErrors.includes(props.errors)) {
-    return `${(props.errors as { message?:string}).message}`;
+  if(errors.value && validErrors.includes(errors.value)) {
+    return `${(errors.value as { message?:string}).message}`;
   }
 
   return null;
+
 }); 
 const slotsAvailable = computed(() => (list.value?.participants?.max || 0) - (participantsState.value?.used || 0))
 
 
 onBeforeMount(() => {
   
-  model.value = ModelsClass.add({}, 'contact');
+  model.value = ModelsClass.add<Contact>({email: 'm.schuebel@lila2.de'}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
 
   updateAgreements();
@@ -155,15 +155,17 @@ function resetForm () {
   emit('state', '')
   model.value = ModelsClass.add({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
-  errorsObject = {};
+  errorsObject.value = {};
   emit('errors', null)
    
 }
 
-function updateErrors (errorsObject: ErrorsObject) {
+function updateErrors (newErrorsObject: ErrorsObject) {
 
+  console.log('i[date0]', newErrorsObject);
+
+  errorsObject.value = newErrorsObject
   updateAgreements();
-  emit('errors', errorsObject);
 
 }
 
@@ -187,7 +189,9 @@ function updateAgreements () {
       error: false
     };
 
-    const values = errorsObject.agreements?.translatedPath?.values;
+    const values = errorsObject.value.agreements?.translatedPath?.values;
+
+    console.log(errorsObject.value);
 
 
     if(values && values[1]) {
@@ -243,7 +247,7 @@ const handleForm = async (event: Event) => {
  
 
   const address = ModelsClass.save(addressModel, 'address');
-  const customer = ModelsClass.save({...model.value, ...address.value}, 'contact');
+  const customer = ModelsClass.save<Contact>({...model.value, ...address.value}, 'contact');
   const agreements = [];
   let category: string;
 
@@ -253,7 +257,7 @@ const handleForm = async (event: Event) => {
 
   delete customer.message;
 
-  category = customer.category;
+  category = customer.category as string;
 
   delete customer.category;
 
@@ -273,96 +277,106 @@ const handleForm = async (event: Event) => {
 
   }
 
-
-  // try {
-  //   const sdk = new StudioSDK('design', store.state.api);
-  //   const call = sdk.public.lists.join(props.list?._id.toString(), customer, message, category, agreements);
+  console.log(customer, message, category, agreements);
 
 
-  //   await props.$traceable(call);
+  try {
+  // const sdk = new StudioSDK('design', store.state.api);
+    const sdk = new StudioSDK('design', mainStore.apiConfig);
+    const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
 
-  //   //this.state = 'success';
-  //   emit('state', 'success')
+    await call;
+
+    //   await props.$traceable(call);
+
+    //   //this.state = 'success';
+    state.value = 'success';
+    //   emit('state', 'success')
     
 
-  // } catch (e) {
+  } catch (e) {
 
-  //   console.error(e);
-  //   console.log(e.response?.data);
+    console.error(e);
+    console.log(e.response?.data);
 
-  //   /**
-  //      * because of the address partial we need to remove the single errors from the error messages and add
-  //      * one error for the whole address
-  //      */
-  //   const addressKeys = ['street', 'streetNumber', 'osm_id', 'zipcode', 'city', 'country'];
-  //   const filteredErrorArray = [];
-  //   let addAddressError = false;
+    /**
+         * because of the address partial we need to remove the single errors from the error messages and add
+         * one error for the whole address
+         */
+    const addressKeys = ['street', 'streetNumber', 'osm_id', 'zipcode', 'city', 'country'];
+    const filteredErrorArray = [];
+    let addAddressError = false;
 
-  //   // Check if the error response has a message indicating validation failure
-  //   if (e.response?.data?.message === 'VALIDATION_FAILED') {
+    // Check if the error response has a message indicating validation failure
+    if (e.response?.data?.message === 'VALIDATION_FAILED') {
 
-  //     // Iterate over each error in the response data
-  //     e.response?.data?.errors.forEach((single: ErrorObject) => {
+      // Iterate over each error in the response data
+      e.response?.data?.errors.forEach((single: ErrorObject) => {
 
-  //       // If the missing property in the error is not in the addressKeys array
-  //       if (!addressKeys.includes(single.params.missingProperty)) {
+        // If the missing property in the error is not in the addressKeys array
+        if (!addressKeys.includes(single.params.missingProperty)) {
 
-  //         // Add the error to the filtered error array
-  //         filteredErrorArray.push(single);
+          // Add the error to the filtered error array
+          filteredErrorArray.push(single);
 
-  //       } else {
+        } else {
 
-  //         // Flag that there's an address-related error
-  //         addAddressError = true;
+          // Flag that there's an address-related error
+          addAddressError = true;
 
-  //       }
+        }
 
-  //     });
+      });
 
-  //     // After checking all errors, if there's an address-related error
-  //     if (addAddressError) {
+      // After checking all errors, if there's an address-related error
+      if (addAddressError) {
 
-  //       // Add a custom address error to the filtered error array
-  //       filteredErrorArray.push({
-  //         instancePath: '',
-  //         schemaPath  : '#/required',
-  //         keyword     : 'required',
-  //         params      : {
-  //           missingProperty: 'address',
-  //         },
-  //         message: 'must have required property \'address\'',
-  //       });
+        // Add a custom address error to the filtered error array
+        filteredErrorArray.push({
+          instancePath: '',
+          schemaPath  : '#/required',
+          keyword     : 'required',
+          params      : {
+            missingProperty: 'address',
+          },
+          message: 'must have required property \'address\'',
+        });
 
-  //     }
+      }
 
-  //     // Set the component's errors property to the filtered error array
-  //     //   this.errors = {
-  //     //     message: 'VALIDATION_FAILED',
-  //     //     errors : filteredErrorArray,
-  //     //   };
-  //     emit('errors', {
-  //       message: 'VALIDATION_FAILED',
-  //       errors : filteredErrorArray,
-  //     })
+      // Set the component's errors property to the filtered error array
+      errors.value = {
+        message: 'VALIDATION_FAILED',
+        errors : filteredErrorArray,
+      };
+      emit('errors', {
+        message: 'VALIDATION_FAILED',
+        errors : filteredErrorArray,
+      })
 
-  //   } else {
+    } else {
 
-  //     // If the error isn't a validation failure, just set the component's errors to the response data
-  //     //this.errors = e.response?.data;
-  //     emit('errors', e.response?.data)
-  //   }
+      // If the error isn't a validation failure, just set the component's errors to the response data
+      console.log(e.response.data);
+      //this.errors = e.response?.data;
+      errors.value = e.response.data;
+      emit('errors', e.response?.data)
+    }
 
 
-  //   //this.state = 'error';
-  //   emit('state', 'error')
+    //this.state = 'error';
+    state.value = 'error';
+    emit('state', 'error')
 
-  // }
+  }
 
 }
 
 </script>
 <template>
   <section class="lila-contact-module lila-module">
+
+  {{errorsObject}} - {{errors}}
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />
@@ -374,7 +388,7 @@ const handleForm = async (event: Event) => {
       </h3>
     </section>
 
-    <section v-if="showFeedback" sub :content="feedbackContent">
+    <section v-if="showFeedback" :content="feedbackContent">
       <lila-button-partial @click="resetForm" colorScheme="colorScheme1">{{ $translate('back to the form') }}</lila-button-partial>
     </section>
 
@@ -426,7 +440,9 @@ const handleForm = async (event: Event) => {
 
       </lila-fieldset-partial>
 
-      <lila-fieldset-partial>
+      {{ mainErrors }} - {{ errors }}
+
+      <lila-fieldset-partial v-if="disabled || mainErrors">
         <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
         <lila-description-partial v-if="mainErrors" type="error">{{$translate(mainErrors)}}</lila-description-partial>
       </lila-fieldset-partial>
@@ -441,7 +457,7 @@ const handleForm = async (event: Event) => {
 
     </form>
 
-  </section>
+</section>
 </template>
 <style lang="less" scoped>
 

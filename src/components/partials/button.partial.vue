@@ -25,7 +25,7 @@ const showCheck = ref(false);
 const timeout = ref<number>();
 const confirmed = ref(false);
 const emit = defineEmits<{(e: string, event?: Event): void}>();
-const iconColorScheme = computed(() => ['colorScheme1', 'colorScheme3', 'error', 'success'].includes(props.colorScheme) ? 'bright' : 'dark')
+const iconColorScheme = computed(() => ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark')
 const slotUsed = computed(() => !!useSlots().default);
 
 
@@ -142,6 +142,10 @@ const confirm = (event: MouseEvent): void => {
       background-color: @color1;
     }
 
+  }
+
+  &.error {
+    background-color: @error;
   }
 
   &.colorScheme2 {

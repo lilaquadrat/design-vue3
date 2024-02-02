@@ -4,15 +4,14 @@ import type Textblock from '@interfaces/textblock.interface';
 import type PictureGroupElement from '@interfaces/PictureGroupElement.interface';
 import { computed, ref } from 'vue';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   elements: PictureGroupElement[];
 
   textblock: Textblock;
-  id?:string;
-  variant: string[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

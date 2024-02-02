@@ -8,19 +8,17 @@ import { computed, onMounted, ref } from 'vue';
 
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const store = useMainStore();
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock: Textblock;
 
   links?: Link[];
 
   list?: string[];
-  id?:string
-  variant?: string[];
-
 }>();
 const technical = ref<boolean>(true);
 const visible = ref<boolean>(false);

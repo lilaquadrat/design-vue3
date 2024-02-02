@@ -1,22 +1,6 @@
 
+import type Contact from '@/interfaces/Contact.interface';
 import Models, { type ModelDeclaration } from '@/libs/Models.class';
-
-export default interface Contact {
-  prename: string
-  name: string
-  email: string
-  phone: string
-  message: string
-  type: string
-  category: string
-  osm_id: number
-  street: string
-  streetNumber: string
-  city: string
-  zipcode: string
-  country: string
-  addressAddition: string
-}
 
 const declaration: ModelDeclaration<Contact> = {
   prename        : { type: 'string' },

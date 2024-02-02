@@ -5,14 +5,14 @@ import type CompareStructure from '@interfaces/CompareStructure.interface';
 import type CompareModified from '@interfaces/CompareModified.interface';
 import type { CompareHeadline } from '@interfaces/CompareModified.interface';
 import { computed } from 'vue';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   elements: CompareElement[];
   structure: CompareStructure[];
-  id?: string;
 }>();
 const modifiedElements = computed(() => {
   const data: CompareModified[] = [];
