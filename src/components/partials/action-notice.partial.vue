@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { ErrorsObject } from '@/libs/ActionNotice';
+import type { ErrorsObject, ParsedError } from '@/libs/ActionNotice';
 import ActionNotice from '@/libs/ActionNotice';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
+import type { ErrorObject } from '@lilaquadrat/interfaces';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch } from 'vue';
 
@@ -20,7 +21,7 @@ const { resized } = useResize();
 const open = ref<boolean>(false);
 const calculatedOptions = ref();
 const parsedErrors = ref<ErrorsObject>({});
-const flattenedErrors = ref<ErrorsObject>({});
+const flattenedErrors = ref<Record<string, ParsedError>>({});
 const triggerElement = ref<HTMLElement>();
 const errorsElement = ref<HTMLElement>();
 
@@ -74,7 +75,7 @@ watch([() => resized, () => scrolled], () => closeOptions())
 
 function flattenErrors (errors: ErrorsObject) {
 
-  const flattenedErrors = {};
+  const flattenedErrors: Record<string, ParsedError> = {};
 
   Object.keys(errors).forEach((single) => {
 
@@ -82,7 +83,7 @@ function flattenErrors (errors: ErrorsObject) {
 
     if (errors[single].translatedPath) {
 
-      flattenedErrors[single] = errors[single];
+      flattenedErrors[single] = errors[single] as ParsedError;
 
     } else {
 
@@ -94,7 +95,7 @@ function flattenErrors (errors: ErrorsObject) {
           flattenedErrors[`${single}-element-${index}-${childKey}`] = {
             ...child[childKey],
             parentPath: {
-              path  : this.translationPre ? `${this.translationPre}-${single}-parent` : `${single}-parent`,
+              path  : props.translationPre ? `${props.translationPre}-${single}-parent` : `${single}-parent`,
               values: [index + 1],
             },
           };
@@ -170,17 +171,15 @@ const optionsStyle = computed(() => calculatedOptions.value);
 <template>
   <section class="action-notice-partial">
 
-    {{ open }} {{ errorsElement }}
-
     <lila-overlay-background-partial background="none" v-if="open" @close="closeOptions">
       <ul class="error-list" ref="errorsElement" :style="optionsStyle">
         <li v-for="(error, index) in flattenedErrors" :key="`parsedErrors-${index}`">
-          <template v-if="error.translatedPath">
+          <template v-if="error.translatedPath?.path">
             <template v-if="error.translatedPath.path !== 'main'">
-              <template v-if="error.parentPath">
-                {{$translate(error.parentPath.path, error.parentPath.values)}}
+              <template v-if="error.parentPath?.path">
+                {{$translate(error.parentPath.path, error.parentPath.values as string[])}}
               </template>
-              {{$translate(error.translatedPath.path, error.translatedPath.values)}}
+              {{$translate(error.translatedPath.path, error.translatedPath.values as string[])}}
             </template>
           </template>
           {{error.error}}

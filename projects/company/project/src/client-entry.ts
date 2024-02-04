@@ -33,8 +33,7 @@ const ISLOCAL = currentUrl.port === '5173';
 console.log(ISLOCAL);
 
 app.use(createPinia());
-// app.use(createRouter(ISLOCAL ? editorRoutes : routes));
-app.use(createRouter(routes));
+app.use(createRouter(ISLOCAL ? editorRoutes : routes));
 
 app.use(translations);
 app.use(HelpersPlugin);

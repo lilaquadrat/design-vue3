@@ -3,15 +3,15 @@
 import ModelsClass from '@/libs/Models.class';
 import type Textblock from '@/interfaces/textblock.interface';
 import type Address from '@/models/Address.model'; 
-import { type ErrorsObject } from '../../libs/ActionNotice';
+import { type ErrorsObject, type ParsedError } from '../../libs/ActionNotice';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, onBeforeMount, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
-import { type Agreement, type BasicData, type Content, type GenericData, type List, type ListPartiticpantsDetails} from '@lilaquadrat/interfaces';
+import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, type ErrorObject, type GenericData, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
-import type Contact from '@/interfaces/Contact.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import type { AxiosError } from 'axios';
 
 defineOptions({ inheritAttrs: false });
 
@@ -23,14 +23,14 @@ const props = defineProps<ModuleBaseProps & {
     editor: {modes: string[]},
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
-const state = ref<string>('init');
+const state = ref<string>();
 const model = ref<Contact>();
 const addressModel = ref<Address>();
-const errors = ref({});
+const errors = ref<ResponseError>();
 const errorsObject = ref<ErrorsObject>({});
 const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
-const categoriesExtended = ref();
+const categoriesExtended = ref<ListCategoryExtended[]>();
 const participantsState = ref<ListPartiticpantsDetails>();
 const emit = defineEmits<{
     (e: string, i:boolean): void;
@@ -38,10 +38,12 @@ const emit = defineEmits<{
 }>();
 const list = computed<BasicData<List>>(() => props.genericData.data[props.genericData.lists[0]] as BasicData<List>);
 
-
+/**
+ * fills the categoriesExtended with the categories
+ * 
+ * if participantState exists the categories get extendend
+ */
 function updateCategories () {
-
-  console.info('update categories', list.value, participantsState);
 
   // only show categories if there is more than one and the user has a choice
   if (list.value?.categories.length > 1) {
@@ -53,11 +55,8 @@ function updateCategories () {
       categories.forEach((single: ListCategoryExtended) => {
         const stateCategory = participantsState.value?.categories?.find((singleState) => singleState.category === single.id);
 
-        console.log(single, stateCategory);
-
         if (stateCategory) {
      
-          console.log(stateCategory.used, stateCategory.category);
           single.used = stateCategory.used;
           single.available = (single.amount || 0) - single.used;
           single.percentUsed = (single.used / (single.amount || 0)) * 100;
@@ -70,13 +69,15 @@ function updateCategories () {
 
     categoriesExtended.value = categories;
 
-
   }
 
   categoriesExtended.value = list.value.categories;
 
 }
 
+/**
+ * if more than one category exists returns an array for selection
+ */
 const selectCategories = computed(() => {
 
   if(list.value?.categories.length > 1) {
@@ -102,6 +103,11 @@ const feedback = computed<BasicData<Content>|undefined>(() => {
   
 });
 const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
+/**
+ * decides if the feedback or the form will be shown. feedback will be show if:
+ ** state is sucess
+ ** editor modes inlcudes feedback
+ */
 const showFeedback = computed(() => state.value && (state.value === 'success' || props.editor?.modes?.includes('feedback')));
 const feedbackContent = computed(() => {
 
@@ -121,13 +127,20 @@ const disabled = computed(() => {
 
   return false
 
-})
+});
+/**
+ * errors that are not bound to a specific input element
+ ** LIST_CANNOT_JOIN customer is probably blocked
+ ** LIST_UNIQUE_CUSTOMER_CONFIRMED cannot join this list more than once
+ ** LIST_NOT_FOUND list is missing
+ ** LIST_NO_SPOT_AVAILABLE list is full
+ */
 const mainErrors = computed(() => {
 
   const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
-  if(errors.value && validErrors.includes(errors.value)) {
-    return `${(errors.value as { message?:string}).message}`;
+  if(errors.value && validErrors.includes(errors.value.message)) {
+    return `${errors.value.message}_${list.value.mode}`;
   }
 
   return null;
@@ -135,51 +148,38 @@ const mainErrors = computed(() => {
 }); 
 const slotsAvailable = computed(() => (list.value?.participants?.max || 0) - (participantsState.value?.used || 0))
 
-
 onBeforeMount(() => {
   
-  model.value = ModelsClass.add<Contact>({email: 'm.schuebel@lila2.de'}, 'contact');
+  model.value = ModelsClass.add<Contact>({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
 
   updateAgreements();
-  // updateCategories();
   getparticipantsState();
 }) 
 
 function resetForm () {
-//    props.state = '';
-//    props.model = ModelsClass.add({}, 'contact');
-//    props.addressModel = ModelsClass.add({}, 'address');
-//    props.errors = null;
-//    props.errorsObject = {};
-  emit('state', '')
+
+  state.value = '';
+
   model.value = ModelsClass.add({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
   errorsObject.value = {};
-  emit('errors', null)
    
 }
 
 function updateErrors (newErrorsObject: ErrorsObject) {
-
-  console.log('i[date0]', newErrorsObject);
 
   errorsObject.value = newErrorsObject
   updateAgreements();
 
 }
 
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// function changeAgreement (event: MouseEvent, agreement: Agreement & { value: boolean, error: boolean }): void {
-//   // const agreement = agreements[index];
-//   const target = event.target as HTMLInputElement;
-
-//   agreement.value = target.checked;
-// }
-
+/**
+ * adds errors to agreements if given
+ */
 function updateAgreements () {
   const agreements = {} as Record<string, Agreement & { value: boolean, error: boolean }>;
-
+  let values: string[];
 
   list.value?.agreements.forEach((single) => {
 
@@ -189,29 +189,34 @@ function updateAgreements () {
       error: false
     };
 
-    const values = errorsObject.value.agreements?.translatedPath?.values;
 
-    console.log(errorsObject.value);
+    if(errorsObject.value?.agreements) {
 
+      const agreementsErrors = errorsObject.value.agreements as ParsedError;
 
-    if(values && values[1]) {
+      values = agreementsErrors?.translatedPath?.values as string[];
 
-      if(values[1].includes(single.contentId)) {
-
-        agreements[single.contentId].error = true;
-
+      if(!values) return;
+  
+      if(values[1]) {
+  
+        if(values[1].includes(single.contentId)) {
+  
+          agreements[single.contentId].error = true;
+  
+        }
+  
       }
-
+      
     }
+
   });
 
   agreementsExtended.value = agreements
-  emit('agreements', agreements);
     
 }
 
 const getparticipantsState = async () => {
-  console.log('store.state:', mainStore.apiConfig);
 
   if(!list.value?._id) {
     return;
@@ -225,17 +230,18 @@ const getparticipantsState = async () => {
 
     if (stateData.data) {
 
-
       participantsState.value = stateData.data;
-      updateCategories();
-
-
+      
     }
+
+    updateCategories();
 
   } catch (e) {
 
-    console.error(e);
-    console.log(e.response?.data);
+    const error = e as AxiosError<ResponseError>;
+
+    console.error(error);
+    console.log(error.response?.data);
     updateCategories();
 
 
@@ -244,12 +250,17 @@ const getparticipantsState = async () => {
 const handleForm = async (event: Event) => {
   console.log('handle form');
   event.preventDefault();
- 
 
-  const address = ModelsClass.save(addressModel, 'address');
-  const customer = ModelsClass.save<Contact>({...model.value, ...address.value}, 'contact');
-  const agreements = [];
+  console.log(addressModel.value);
+  
+  
+  const address = ModelsClass.save(addressModel.value as Address, 'address');
+  const customer = ModelsClass.save<Contact>({...model.value, ...address}, 'contact');
+  const agreements: ContactAgreement[] = [];
   let category: string;
+
+
+  console.log(address, customer);
 
   customer.type = 'person';
 
@@ -271,17 +282,16 @@ const handleForm = async (event: Event) => {
 
   });
 
+  console.log(list.value?.categories);
+
   if (list.value?.categories.length === 1 && !category) {
 
     category = list.value.categories[0].id;
 
   }
 
-  console.log(customer, message, category, agreements);
-
-
   try {
-  // const sdk = new StudioSDK('design', store.state.api);
+    
     const sdk = new StudioSDK('design', mainStore.apiConfig);
     const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
 
@@ -296,8 +306,10 @@ const handleForm = async (event: Event) => {
 
   } catch (e) {
 
+    const error = e as AxiosError<ResponseError>;
+
     console.error(e);
-    console.log(e.response?.data);
+    console.log(error.response?.data);
 
     /**
          * because of the address partial we need to remove the single errors from the error messages and add
@@ -308,10 +320,10 @@ const handleForm = async (event: Event) => {
     let addAddressError = false;
 
     // Check if the error response has a message indicating validation failure
-    if (e.response?.data?.message === 'VALIDATION_FAILED') {
+    if (error.response?.data?.message === 'VALIDATION_FAILED') {
 
       // Iterate over each error in the response data
-      e.response?.data?.errors.forEach((single: ErrorObject) => {
+      error.response?.data?.errors?.forEach((single: ErrorObject) => {
 
         // If the missing property in the error is not in the addressKeys array
         if (!addressKeys.includes(single.params.missingProperty)) {
@@ -357,16 +369,12 @@ const handleForm = async (event: Event) => {
     } else {
 
       // If the error isn't a validation failure, just set the component's errors to the response data
-      console.log(e.response.data);
+      console.log(error.response?.data);
       //this.errors = e.response?.data;
-      errors.value = e.response.data;
-      emit('errors', e.response?.data)
+      errors.value = error.response?.data;
     }
 
-
-    //this.state = 'error';
     state.value = 'error';
-    emit('state', 'error')
 
   }
 
@@ -375,8 +383,6 @@ const handleForm = async (event: Event) => {
 </script>
 <template>
   <section class="lila-contact-module lila-module">
-
-  {{errorsObject}} - {{errors}}
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />
@@ -439,8 +445,6 @@ const handleForm = async (event: Event) => {
         v-model="single.value" :required="single.required" :predefined="single.predefined" :contentId="single.contentId">{{$translate(single.text)}}</lila-agreement-partial>
 
       </lila-fieldset-partial>
-
-      {{ mainErrors }} - {{ errors }}
 
       <lila-fieldset-partial v-if="disabled || mainErrors">
         <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>

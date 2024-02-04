@@ -13,9 +13,6 @@ export default {
         headline: 'Reserve your spot',
         text    : ['Welcome to our online ticket reservation platform. Whether you re planning a night out at the theater, attending a concert, or looking forward to a sports event, securing your tickets has never been easier. Our user-friendly form ensures a smooth reservation experience, allowing you to secure your spot at your desired event in just a few clicks.'],
       },
-      editor: {
-        modes: ['feedback']
-      },
       categoryTextblock: {
         headline: 'Select your Category',
         text    : ['You can decide which category you want to use.'],

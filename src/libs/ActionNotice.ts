@@ -6,7 +6,7 @@ const {translate} = useTranslations();
 
 export interface TranslatedPath {
   path?: string,
-  values?: string|number[]
+  values?: string[]|number[]
 }
 
 export interface ParsedError {
@@ -59,20 +59,19 @@ export default class ActionNotice {
     }
     ```
     */
-    console.log(60, arrayElementIndex, path, pathArray);
 
     if (arrayElementIndex) {
 
       const arrayMessageResponse = ActionNotice.getParsedError(error, pathArray[0], pathArray[0], translationPre);
       const useKey = `${pathArray[0]}-elements`;
-      const useIndex = arrayElementIndex - 1;
+      const useIndex = (arrayElementIndex - 1).toString();
+      let useError = errors[useKey] as unknown as Record<string, Record<string, ParsedError>>;
 
-      // if (!pathArray[2]) arrayMessageResponse.path = pathArray[0];
+      if (!useError) useError = {} as Record<string, Record<string, ParsedError>>;
 
-      if (!errors[useKey]) errors[useKey] = {};
-      if (!errors[useKey][useIndex]) errors[useKey][useIndex] = {};
+      if (!useError[useIndex]) useError[useIndex] = {};
 
-      errors[useKey][useIndex][path] = arrayMessageResponse;
+      useError[useIndex][path] = arrayMessageResponse;
 
     } else {
 
@@ -84,9 +83,9 @@ export default class ActionNotice {
 
   static getParsedError (error: ErrorObject, usePath: string, basePath: string | undefined, translationPre: string | undefined): ParsedError {
 
-    let message: string;
-    let path: string = usePath || undefined;
-    let translatedPath: string;
+    let message: string = '';
+    let path = usePath;
+    let translatedPath: string = '';
 
     if (error.keyword === 'type') {
 
@@ -180,7 +179,7 @@ export default class ActionNotice {
 
       const combinedPath = basePath ? `${basePath}-${path}` : path;
 
-      translatedPath = translationPre ? `${translationPre}-${combinedPath}` : combinedPath;
+      translatedPath = translationPre ? `${translationPre}-${combinedPath}` : combinedPath as string;
 
     }
 

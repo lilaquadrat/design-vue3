@@ -18,9 +18,9 @@ onMounted(() => {
   if (ISLOCAL) {
 
     mainStore.apiConfig = {
-      mode: 'custom',
+      mode           : 'custom',
       customEndpoints: {
-        api: 'http://localhost:9090',
+        api  : 'http://localhost:9090',
         media: 'http://localhost:9091',
       },
       company: process.env.company,
@@ -31,7 +31,7 @@ onMounted(() => {
   } else {
 
     mainStore.apiConfig = {
-      mode: process.env.apiMode,
+      mode   : process.env.apiMode,
       company: process.env.company,
       project: process.env.project,
     };

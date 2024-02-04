@@ -32,8 +32,16 @@ export default
       component: () => import('@/components/modules/compare.module.vue'),
     },
     {
-      name     : 'contact',
-      variants : [],
+      name    : 'contact',
+      variants: [],
+      editor  : {
+        modes: [
+          {
+            key : 'feedback',
+            name: 'Zeigt die Ergebnissseite anstatt das Formular',
+          },
+        ],
+      },
       component: () => import('@/components/modules/contact.module.vue'),
     },
     {
@@ -71,17 +79,17 @@ export default
         {
           key        : 'fit',
           name       : 'Bildergrößen werden vereinheitlicht',
-        description: 'verschieden grosse Bilder werden in eine einheitliche Grosse umgewandelt',
+          description: 'verschieden grosse Bilder werden in eine einheitliche Grosse umgewandelt',
         },
       ],
       component: () => import('@/components/modules/facts.module.vue'),
     },
     {
-      name     : 'faq',
-      variants : [
+      name    : 'faq',
+      variants: [
         {
-          key: 'medium',
-          name: 'Größe: Medium',
+          key        : 'medium',
+          name       : 'Größe: Medium',
           description: 'Die maximale Breite des Modules wird erhöht',
         },
       ],
@@ -96,8 +104,8 @@ export default
       name    : 'gallery',
       variants: [
         {
-          key: 'variant2',
-          name: 'alternatives Design',
+          key        : 'variant2',
+          name       : 'alternatives Design',
           description: 'alternatives Design, andere Bilderanzeige',
         },
         {
@@ -124,31 +132,31 @@ export default
       component: () => import('@/components/modules/gallery.module.vue'),
     },
     {
-      name     : 'index',
-      variants : [
+      name    : 'index',
+      variants: [
         {
-          key: 'medium',
-          name: 'Größe: Medium',
+          key        : 'medium',
+          name       : 'Größe: Medium',
           description: 'Die maximale Breite des Modules wird erhöht',
         },
         {
-          key: 'numbered',
-          name: 'Numberische Indikatoren',
+          key        : 'numbered',
+          name       : 'Numberische Indikatoren',
           description: 'Es werden fortlaufendes Zahlen anstatt Icons angezeigt',
         },
         {
-          key: 'backgroundColor1',
-          name: 'Hauptfarbe als Hintergrund',
+          key        : 'backgroundColor1',
+          name       : 'Hauptfarbe als Hintergrund',
           description: 'Farbe des hintergrunds ist in gewählter Farbe1'
         },
         {
-          key: 'backgroundColor3',
-          name: 'Sekunddarfarbe als Hintergrund',
+          key        : 'backgroundColor3',
+          name       : 'Sekunddarfarbe als Hintergrund',
           description: 'Farbe des hintergrunds ist in gewählter Farbe3'
         },
         {
-          key: 'backgroundGrey',
-          name: 'Grauer Hintergrund',
+          key        : 'backgroundGrey',
+          name       : 'Grauer Hintergrund',
           description: 'Farbe des hintergrunds ist in grau'
         }
       ],
@@ -214,8 +222,8 @@ export default
       component: () => import('@/components/modules/picture.module.vue'),
     },
     {
-      name     : 'pictureandtext',
-      variants : [
+      name    : 'pictureandtext',
+      variants: [
         {
           key        : 'fit',
           name       : 'Bild mit Links',
@@ -235,41 +243,41 @@ export default
       component: () => import('@/components/modules/pictureandtext.module.vue'),
     },
     {
-      name     : 'picturegroup',
-      variants : [
+      name    : 'picturegroup',
+      variants: [
         {
-          key: 'fit',
-          name: 'Bildergrößen werden vereinheitlicht',
+          key        : 'fit',
+          name       : 'Bildergrößen werden vereinheitlicht',
           description: 'verschieden grosse Bilder werden in eine einheitliche Grösse umgewandelt',
         },
         {
-          key: 'fourColumns',
-          name: 'Darstellung von 4 Bildern',
+          key        : 'fourColumns',
+          name       : 'Darstellung von 4 Bildern',
           description: '4 Bilder werden lose in einer Reihe angezeigt',
         },
         {
-          key: 'small',
-          name: 'Darstellung von 3 Bildern verkleinert',
+          key        : 'small',
+          name       : 'Darstellung von 3 Bildern verkleinert',
           description: '3 verschieden grosse Bilder werden verkleinert unter dem Text nebeneinander gereiht ',
         },
         {
-          key: 'align',
-          name: 'Darstellung von 3 Bildern angepasst',
+          key        : 'align',
+          name       : 'Darstellung von 3 Bildern angepasst',
           description: '3 verschieden grosse Bilder werden genau auf die gleiche Breite des obigen Textes nebeneinander gereiht ',
         },
         {
-          key: 'color1',
-          name: 'Darstellung mit Hintergrundfarbe',
+          key        : 'color1',
+          name       : 'Darstellung mit Hintergrundfarbe',
           description: '3 Bilder werden bekommen die Hauptfarbe als Hintergrund',
         },
         {
-          key: 'color3',
-          name: 'Darstellung mit Hintergrundfarbe',
+          key        : 'color3',
+          name       : 'Darstellung mit Hintergrundfarbe',
           description: '3 Bilder werden bekommen die Sekundärfarbe als Hintergrund',
         },
         {
-          key: 'contact',
-          name:'Kontaktdarstellung',
+          key        : 'contact',
+          name       : 'Kontaktdarstellung',
           description: 'Variante um Kontakte darzustellen',
         },
       ],
@@ -281,47 +289,47 @@ export default
       component: () => import('@/components/modules/prices.module.vue'),
     },
     {
-      name     : 'quellcode',
-      variants : [
+      name    : 'quellcode',
+      variants: [
         {
-          key: 'darkmode',
-          name:'Dunkle Darstellung',
+          key        : 'darkmode',
+          name       : 'Dunkle Darstellung',
           description: 'Darstellung von Code',
         }
       ],
       component: () => import('@/components/modules/quellcode.module.vue'),
     },
     {
-      name     : 'quote',
-      variants : [
+      name    : 'quote',
+      variants: [
         {
-          key: 'small',
-          name:'Kleine Darstellung',
+          key        : 'small',
+          name       : 'Kleine Darstellung',
           description: 'Darstellung von Zitaten',
         },
       ],
       component: () => import('@/components/modules/quote.module.vue'),
     },
     {
-      name     : 'text',
-      variants : [
+      name    : 'text',
+      variants: [
         {
-          key: 'center',
+          key : 'center',
           name: 'Text zentriert',
         },
         {
-          key: ' notice',
+          key : ' notice',
           name: 'Links werden zu Call To Action Buttons',
         },
       ],
       component: () => import('@/components/modules/text.module.vue'),
     },
     {
-      name     : 'training',
-      variants : [
+      name    : 'training',
+      variants: [
         {
-          key: 'offsetTop',
-          name: 'Index Abstand nach oben',
+          key        : 'offsetTop',
+          name       : 'Index Abstand nach oben',
           description: 'Index wird nach unten verschoben',
         },
       ],

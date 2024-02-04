@@ -1,6 +1,6 @@
 
-import type Contact from '@/interfaces/Contact.interface';
 import Models, { type ModelDeclaration } from '@/libs/Models.class';
+import type { Contact } from '@lilaquadrat/interfaces';
 
 const declaration: ModelDeclaration<Contact> = {
   prename        : { type: 'string' },
