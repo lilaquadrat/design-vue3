@@ -61,6 +61,7 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
 
 .lila-picturegroup-module {
 
+
   width: 100%;
 
   word-break: break-word;
@@ -104,13 +105,15 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
   }
 
   .content-container {
-
+ 
     .multi(padding, 0, 8);
 
     display: grid;
     gap: 60px;
+    
 
     .elements-container {
+      
       display: grid;
       gap: 40px;
 

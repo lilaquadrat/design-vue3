@@ -9,7 +9,7 @@ export default {
   modules: [
     {
       type     : 'picturegroup-module',
-      variant: ['fourColumns'],
+      variant  : ['fourColumns'],
       textblock: {
         headline: 'Picturegroup: fourColumns',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -25,7 +25,8 @@ export default {
             alt      : 'IMAGE ALT',
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
             copyright: '© lilaquadrat',
-          }
+          },
+         
         },
         { 
           picture: {
@@ -33,7 +34,7 @@ export default {
             alt      : 'IMAGE ALT',
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
             copyright: '© lilaquadrat',
-          }
+          },
         },
         { 
           picture: {
@@ -55,7 +56,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['fit'],
+      variant  : ['fit'],
       textblock: {
         headline: 'with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -72,6 +73,7 @@ export default {
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
             copyright: '© lilaquadrat',
           }
+         
         },
         { 
           picture: {
@@ -87,7 +89,8 @@ export default {
             alt      : 'IMAGE ALT',
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
             copyright: '© lilaquadrat',
-          }
+          },
+        
         },
         { 
           picture: {
@@ -117,7 +120,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['fit', 'fourColumns'],
+      variant  : ['fit', 'fourColumns'],
       textblock: {
         headline: 'four columns with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -164,7 +167,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['small'],
+      variant  : ['small'],
       textblock: {
         headline: 'small without fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -208,7 +211,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['small', 'fit'],
+      variant  : ['small', 'fit'],
       textblock: {
         headline: 'small with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -252,7 +255,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: [ 'align'],
+      variant  : [ 'align'],
       textblock: {
         headline: 'three pics aligned',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -296,7 +299,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['color1'],
+      variant  : ['color1'],
       textblock: {
         headline: 'Backgroundcolor: color1',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -351,7 +354,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['contact'],
+      variant  : ['contact'],
       textblock: {
         headline: 'three pics + contact',
         text    : [
@@ -419,7 +422,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['color3'],
+      variant  : ['color3'],
       textblock: {
         headline: 'Backgroundcolor: color3',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -474,7 +477,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['fourColumns', 'fit', 'align'],
+      variant  : ['fourColumns', 'fit', 'align'],
       textblock: {
         headline: 'four columns with fit and links, description and small',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -553,7 +556,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['color1', 'align', 'fit'],
+      variant  : ['color1', 'align', 'fit'],
       textblock: {
         headline: '6 Pics with fit of links, description with Backgroundcolor and aligned',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -633,7 +636,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['small', 'fit'],
+      variant  : ['small', 'fit'],
       textblock: {
         headline: 'small with fit and links and description',
         text    : [
@@ -694,7 +697,7 @@ export default {
     },
     {
       type     : 'picturegroup-module',
-      variant: ['align', 'fit'],
+      variant  : ['align', 'fit'],
       textblock: {
         headline: 'align with fit and links and description',
         text    : [

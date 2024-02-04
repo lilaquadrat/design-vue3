@@ -23,7 +23,7 @@ export default {
     },
     {
       type     : 'pictureandtext-module',
-      variant: ['switchContent'],
+      variant  : ['switchContent'],
       textblock: {
         headline: 'pictureTextVertical: switched Content',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -64,7 +64,7 @@ export default {
     
     {
       type     : 'pictureandtext-module',
-      variant: ['focusImage'],
+      variant  : ['focusImage'],
       textblock: {
         headline: 'Focused Image',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -83,7 +83,7 @@ export default {
     },
     {
       type     : 'pictureandtext-module',
-      variant: ['switchContent',  'fit'],
+      variant  : ['switchContent', 'fit'],
       textblock: {
         headline: 'pictureTextVertical: Switched and fit Content',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
@@ -101,7 +101,7 @@ export default {
     },
     {
       type     : 'pictureandtext-module',
-      variant: ['focusImage', 'fit'],
+      variant  : ['focusImage', 'fit'],
       textblock: {
         headline: 'Focused and fit Image',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',

@@ -9,7 +9,7 @@ export default {
   modules: [
     {
       type     : 'picture-module',
-      variant: ['small'],
+      variant  : ['small'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -22,7 +22,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['middle'],
+      variant  : ['middle'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -35,7 +35,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['fullscreenOverlayEnabled'],
+      variant  : ['fullscreenOverlayEnabled'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -48,7 +48,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['textOverlay'],
+      variant  : ['textOverlay'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -61,7 +61,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['textPictureVertical'],
+      variant  : ['textPictureVertical'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -74,7 +74,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['pictureTextVertical'],
+      variant  : ['pictureTextVertical'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -87,7 +87,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['fullscreen'],
+      variant  : ['fullscreen'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
@@ -100,7 +100,7 @@ export default {
     },
     {
       type     : 'picture-module',
-      variant: ['fullscreen', 'textOverlay'],
+      variant  : ['fullscreen', 'textOverlay'],
       textblock: {
         intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.',
       },
