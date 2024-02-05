@@ -1,4 +1,3 @@
-import useTranslationsStore from '@/stores/translations.store';
 import type { App } from 'vue';
 
 const HelpersPlugin = {

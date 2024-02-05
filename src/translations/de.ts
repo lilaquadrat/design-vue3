@@ -115,4 +115,9 @@ export default {
   halal                                                                                                   : 'Halal',
   required                                                                                                : 'erforderlich',
   disabled                                                                                                : 'deaktiviert',
+  'loading'                                                                                               : 'wird geladen',
+  'Something went wrong'                                                                                  : 'Hier ist etwas schief gelaufen',
+  'The content is missing'                                                                                : 'Der Inhalt wurde nicht gefunden',
+  'CONTENT_NOT_FOUND'                                                                                     : 'Inhalt wurde nicht gefunden',
+  'CONTENT_LOADING'                                                                                       : 'Wird geladen'
 };

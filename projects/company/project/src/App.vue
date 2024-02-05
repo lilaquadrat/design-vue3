@@ -13,7 +13,7 @@ onMounted(() => {
   editorStore.availableModulesWithRevision = { revision: 2, modules: getAvailableModules(modules.modules) };
 
   const currentUrl = new URL(window.location.toString());
-  const ISLOCAL = currentUrl.port === '5173';
+  const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
 
   if (ISLOCAL) {
 

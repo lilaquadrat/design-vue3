@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
+import useCallStore from '@/stores/calls.store';
 import { computed, ref, useSlots } from 'vue';
 
 defineOptions({
   inheritAttrs: false
 })
 
+const callStore = useCallStore();
 const props = withDefaults(
   defineProps<{
         doublecheck?: string,
@@ -13,8 +15,10 @@ const props = withDefaults(
         icon?: IconsPartial['type'],
         noPadding?: boolean,
         colorScheme?: string,
+        save?: boolean,
         active?: boolean,
         type?: 'submit' | 'button'
+        callId?: string
     }>(),
   {
     type       : 'button',
@@ -27,6 +31,13 @@ const confirmed = ref(false);
 const emit = defineEmits<{(e: string, event?: Event): void}>();
 const iconColorScheme = computed(() => ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark')
 const slotUsed = computed(() => !!useSlots().default);
+const state = computed(() => {
+
+  if(props.callId) return callStore.calls[props.callId];
+
+  return null
+
+})
 
 
 function check () {
@@ -78,7 +89,8 @@ const confirm = (event: MouseEvent): void => {
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, state, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed, save, }, $attrs.class]" @click.stop="confirm">
+    <span v-if="save"></span>
     <slot v-if="!showCheck && !confirmed" />
     <span v-if="showCheck">Please confirm your action.</span>
     <span v-if="confirmed">confirmed</span>
@@ -87,6 +99,33 @@ const confirm = (event: MouseEvent): void => {
 </template>
 <style lang="less" scoped>
 .lila-button {
+
+  @keyframes border {
+    0% {
+      bottom: calc(100% - 3px);
+      left: -17px;
+    }
+
+    25% {
+      bottom: calc(100% - 3px);
+      left: calc(100% - 3px);
+    }
+
+    50% {
+      bottom: -17px;
+      left: calc(100% - 3px);
+    }
+
+    75% {
+      bottom: -17px;
+      left: -17px;
+    }
+
+    100% {
+      bottom: calc(100% - 3px);
+      left: -17px;
+    }
+  }
 
   border: none;
   outline: none;
@@ -117,13 +156,6 @@ const confirm = (event: MouseEvent): void => {
       &.init {
         background-color: transparent;
         color: @color1;
-
-        span {
-
-          &:after {
-            background-color: @color1;
-          }
-        }
       }
     }
 
@@ -224,15 +256,47 @@ const confirm = (event: MouseEvent): void => {
     .trans(background);
   }
 
-  &.scrollButton {
-    display: grid;
-    text-align: center;
-    .font-head;
+  &.save {
 
-    .icon {
-      justify-self: center;
-      margin-top: 5px;
+    position: relative;
+    overflow: hidden;
+
+    &.pending {
+
+      background-color: transparent;
+      color: @color1;
+
+      span {
+
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+
+          width: 20px;
+          height: 20px;
+
+          background-color: @color1;
+
+          animation-name: border;
+          animation-duration: 1.5s;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+        }
+      }
     }
+
+    &.resolved {
+      background-color: @success;
+      color: @white;
+    }
+
+    &.rejected {
+      background-color: @error;
+      color: @white;
+    }
+
   }
 }
 </style>

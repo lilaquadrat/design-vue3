@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { Content, EditorActiveModule } from '@lilaquadrat/studio/lib/interfaces';
-import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
+import type { EditorActiveModule } from '@lilaquadrat/interfaces';
 
 export const useEditorStore = defineStore('editor', () => {
 

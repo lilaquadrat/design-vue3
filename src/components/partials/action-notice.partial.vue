@@ -216,7 +216,7 @@ const optionsStyle = computed(() => calculatedOptions.value);
 
   max-height: 30vh;
   background-color: @grey2;
-  // box-shadow: 0 0 5px 1px @shadow;
+  box-shadow: 0 0 5px 1px @shadow;
 
   white-space: nowrap;
 

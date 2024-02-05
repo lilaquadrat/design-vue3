@@ -70,8 +70,19 @@ const getContent = async () => {
 
   }
 
-  if (data) content.value = prepareContent(data.data);
-  loading.value = 200;
+  if(data.status === 200) {
+
+    if (data) content.value = prepareContent(data.data);
+    loading.value = 200;
+    error.value = false;
+
+  } else {
+
+    content.value = undefined;
+    error.value = true;
+    loading.value = 404;
+
+  }
 
   return true;
 
@@ -88,7 +99,7 @@ const close = () => {
   visible.value = false;
 
 };
-const contentOrError = computed(() => (loading.value > 100 || content.value) || error.value);
+const contentOrError = computed(() => (loading.value === 200 || content.value) || error.value);
 
 
 onBeforeMount(() => {
@@ -110,12 +121,12 @@ onBeforeMount(() => {
             <section class="content-position-container">
               <lila-content-head-partial @close="close" :hideButton="!overlay">
                 <template v-if="content && loading > 100">{{ content.settings.title }}</template>
-                <template v-if="loading > 400">CONTENT_NOT_FOUND</template>
-                <template v-if="loading === 100">CONTENT_LOADING</template>
+                <template v-if="loading > 400">{{$translate('CONTENT_NOT_FOUND')}}</template>
+                <template v-if="loading === 100">{{$translate('CONTENT_LOADING')}}</template>
               </lila-content-head-partial>
 
               <section class="scroll-container">
-                <lila-indicator-partial v-if="loading === 100">LOADING</lila-indicator-partial>
+                <lila-indicator-partial v-if="loading === 100">{{$translate('LOADING')}}</lila-indicator-partial>
                 <lila-content-module v-if="contentOrError" :content="error ? errorContent : content" :inline="!overlay" />
               </section>
             </section>
@@ -159,6 +170,7 @@ onBeforeMount(() => {
     height: 80vh;
     opacity: 1;
     transition: opacity @aTime @aType, transform @aTime @aType;
+    overflow: hidden;
 
     @media @wide {
       max-width: @moduleWidth_M;
@@ -169,13 +181,13 @@ onBeforeMount(() => {
       display: grid;
       grid-template-rows: min-content 1fr;
       background-color: @white;
+      height: 80vh;
 
       .scroll-container {
         display: grid;
         overflow-y: scroll;
-        max-height: 35vh;
 
-        .loading-indicator {
+        .lila-loading-indicator {
           position: absolute;
           display: grid;
           align-self: center;

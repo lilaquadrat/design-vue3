@@ -12,9 +12,11 @@ import { type Agreement, type BasicData, type Contact, type ContactAgreement, ty
 import StudioSDK from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
+import { useTraceable } from '@/plugins/traceable';
 
 defineOptions({ inheritAttrs: false });
 
+const {traceable} = useTraceable();
 const mainStore = useMainStore();
 const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
@@ -24,6 +26,7 @@ const props = defineProps<ModuleBaseProps & {
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
 const state = ref<string>();
+const traceId = ref<string>();
 const model = ref<Contact>();
 const addressModel = ref<Address>();
 const errors = ref<ResponseError>();
@@ -282,7 +285,6 @@ const handleForm = async (event: Event) => {
 
   });
 
-  console.log(list.value?.categories);
 
   if (list.value?.categories.length === 1 && !category) {
 
@@ -295,7 +297,7 @@ const handleForm = async (event: Event) => {
     const sdk = new StudioSDK('design', mainStore.apiConfig);
     const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
 
-    await call;
+    await traceable(call, traceId);
 
     //   await props.$traceable(call);
 
@@ -452,7 +454,7 @@ const handleForm = async (event: Event) => {
       </lila-fieldset-partial>
 
       <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
-        <lila-button-partial save :disabled="disabled" :callId="props.traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">
+        <lila-button-partial save :disabled="disabled" :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">
           <template v-if="list.payment === 'required'">{{$translate('order with payment')}}</template>
           <template v-if="list.payment !== 'required' && list.mode === 'contact'">{{$translate('send contactform')}}</template>
           <template v-if="list.payment !== 'required' && list.mode === 'reservation'">{{$translate('send reservation')}}</template>

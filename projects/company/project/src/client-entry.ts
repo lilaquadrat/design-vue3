@@ -10,6 +10,7 @@ import resizePlugin, {resize} from '@/plugins/resize';
 import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
+import traceablePlugin from '@/plugins/traceable';
 import './models';
 import modules from './modules';
 import partials from './partials';
@@ -28,7 +29,7 @@ loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
 
 const currentUrl = new URL(window.location.toString());
-const ISLOCAL = currentUrl.port === '5173';
+const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
 
 console.log(ISLOCAL);
 
@@ -39,6 +40,7 @@ app.use(translations);
 app.use(HelpersPlugin);
 app.use(resizePlugin);
 app.use(youtubePlugin);
+app.use(traceablePlugin);
 
 app.config.globalProperties.$translations.add(de, 'de');
 app.config.globalProperties.$translations.select('de');
