@@ -6,14 +6,15 @@ import dom from '@/functions/lila-dom';
 import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
-import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const store = useMainStore();
-const props = defineProps<ModuleBaseProps & {
+const props = defineProps<{
   textblock?: Textblock;
   elements: GalleryElement[];
+  variant?: string[];
+  id?: string;
 }>();
 const currentOptionIndex: Ref<number> = ref(0);
 const swipeX = ref<number>(0);
@@ -128,6 +129,7 @@ function swipe (event: TouchEvent): void {
 
   emit('change', props.elements[currentOptionIndex.value]);
 }
+
 
 function change (direction: string): void {
   const length = props.elements.length - 1;

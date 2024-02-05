@@ -149,7 +149,7 @@ export default {
     },
     {
       type     : 'index-module',
-      variant  : ['backgroundGrey','numbered', 'medium'],
+      variant  : ['backgroundGrey', 'numbered', 'medium'],
       textblock: {
         headline: 'some headline'
       },

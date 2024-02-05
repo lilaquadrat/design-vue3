@@ -9,7 +9,7 @@ export default {
   modules: [
     {
       type     : 'training-module',
-      variant: [],
+      variant  : [],
       childData: {
         index: [
           'video1',

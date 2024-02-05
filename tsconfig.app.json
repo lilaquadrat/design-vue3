@@ -24,11 +24,14 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "typeRoots": [
       "node_modules/@types"
     ],
-    "types": [ "youtube" ],
+    "types": [
+      "youtube"
+    ],
     "paths": {
       "@/*": [
         "./src/*"

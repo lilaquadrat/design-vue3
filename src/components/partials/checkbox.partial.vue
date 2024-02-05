@@ -142,6 +142,7 @@ label.checkbox {
       display: none;
     }
   }
+  
 
   .label {
     .multi(margin-bottom, 2);

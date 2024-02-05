@@ -340,6 +340,11 @@ export default
       variants : [],
       component: () => import('@/components/modules/video.module.vue'),
     },
+    {
+      name     : 'timeline',
+      variants : [],
+      component: () => import('@/components/modules/timeline.module.vue'),
+    },
   ]
 }
   
