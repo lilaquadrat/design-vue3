@@ -13,6 +13,7 @@ const props = defineProps<{
     date?: string;
     variant?: string[]
 }>();
+
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
