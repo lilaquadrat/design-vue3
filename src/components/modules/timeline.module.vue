@@ -14,39 +14,39 @@ const props = defineProps<{
     date?: string;
     variant?: string[]
 }>();
+
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
-const formattedDate = computed(() => {
-  if(props.date) {
-    const formattedYear = dayjs(props.date).year();
-    const formattedDayMont = dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase();
-
-    return {
-      year    : formattedYear,
-      dayMonth: formattedDayMont
+const formattedDate = computed(() =>  {
+    if(props.date) {
+         const formattedYear =   dayjs(props.date).year();
+         const formattedDayMont = dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase();
+         return {
+        year: formattedYear,
+        dayMonth: formattedDayMont
         
+        }
+    } else {
+        return {
+            year: '',
+            dayMonth: ''
+        };
     }
-  } else {
-    return {
-      year    : '',
-      dayMonth: ''
-    };
-  }
    
 });
-
 </script>
 <template>
     <section  
     ref="element" 
     id="id"
-    class="timeline-module lila-module"
+    class="lila-timeline-parent-container"
     :class="[inviewState, variant, {hasImage: picture, hasVideo: video}]">
-   
-    <!-- hier habe ich die Kontrolle über den Inhalt -->
-    <section class="elements-container">
-        <span class="middleLine"></span>
-        <div class="date-container">
+    
+        
+         
+        
+            <div class="content-container">
+                <div class="date-container">
             <time v-if="date" class="year" >
                 {{ formattedDate.year }} 
             </time>
@@ -55,75 +55,103 @@ const formattedDate = computed(() => {
                 {{ formattedDate.dayMonth }}
             </time>
         </div>
-        
-        <!-- wenn Bild vorhanden, anzeigen -->
-        <div class="media-container">
-            <lila-picture-partial v-if="picture" v-bind="picture"></lila-picture-partial>
-        <!-- Wenn Video vorhanden, anzeigen -->
-            <lila-video-partial v-if="video" v-bind="video"></lila-video-partial>
-        </div>
 
-        <!--  hier drüber wird der Inhalt aller Elemente angepasst -->
-            <section class="text-container">
-                <span></span>
+            <span class="media-container">
+            <lila-picture-partial v-if="picture" v-bind="picture"></lila-picture-partial>
+            <lila-ideo-partial v-if="video" v-bind="video"></lila-ideo-partial>
+         </span>
+        <div class="separating-line"></div>
+      
+            <span class="text-container">
                 <lila-textblock-partial v-bind="textblock" />
                 <lila-list-partial v-if="list" v-bind="list" class="list-container"></lila-list-partial>
-            </section>
-    </section>
+            </span>
+            
+        
+            </div>
+            
+            
+         
+        
 
     </section>
 </template>
 <style lang="less" scoped>
-.lila-content-module .container .lila-module:first-child {
-    // margin-top: 0;
-}
-.lila-module.timeline-module {
-     
-    margin: 0 auto;
-    width: @moduleWidth_L;
-    height: 650px;
-    .font-light();
-    // height: calc(575px, 80px);
-}
- .elements-container {
-    display: grid;
-    row-gap: 50px;
-    height: 427px;
-    //  height: 575px; 
-     grid-template-columns: repeat(2, auto);
-     grid-template-rows:  repeat(3, auto);
-    //  position: relative;
+.lila-timeline-parent-container {
+    .module;
+    .headlines;
     
-     grid-template-areas: 
-     "date-container date-container"
-     "media-container text-container"
-     "media-container text-container";
- }
 
-&.date-container {
+    margin: 80px;
     display: grid;
-    grid-area: date-container;
-    // border: dotted 2px red;
+    grid-template-columns: 1fr auto max-content;
+    max-width: @moduleWidth_L;
+    
+    .content-container {
+        display: grid;
+        gap:50px 0;
     
     }
-&.year {
-    font-size: 60px;
-    color:@color4;
-    line-height: 62px;
-    font-weight: 800;
-}
-&.media-container{
-    grid-area: media-container;
-    padding: 0 40px;
-    // width:344px;
-}
-&.text-container {
-    padding: 0 40px;
-    border-left: solid 8px @color4; 
-    grid-area: text-container;
-    width: 778px; 
-    border-radius: 20px;
-    
+
+    .date-container {
+        justify-self: end;
+        padding: 0 40px;
+        .font-bold;
+        display: grid;
+
+     
+    .year {
+            font-size: 60px;
+            line-height: 62px;
+            justify-self: end;
+            color: @color4;
+  
+        }
+    .dayMonth {
+        font-size: 34px;
+        color: @color1;
+      
+        
+     }
+
+    }
+    .media-container {
+        grid-column-start: 1;
+        padding: 0 40px;
+        border: red solid 2px;
+    }
+
+    .text-container {
+        grid-column-start: 3;
+        display: grid;
+        gap: 15px;
+        padding: 0 40px; 
+        border: 3px dotted black; 
+    } 
+    .separating-line {
+    position: relative;
+    }
+    .separating-line::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    background: @color4;
+    top: 0;
+    bottom: -50px;
+    left: 50%;
+    border-radius: 99px;
+    }
+    .separating-line::before  {
+    content: '';
+    position: absolute;
+    width: 8px;
+    background: @color4;
+    top: -200px;
+    bottom: 0;
+    left: 50%;
+    border-radius: 99px;
+    }
+ 
 }
 </style>
 
