@@ -45,7 +45,6 @@ const listVariant = computed(() => {
 
 });
 
-
 </script>
 <template>
   <section ref="element" :id="id" :class="[inviewState, variant]" class="lila-index-module lila-module">

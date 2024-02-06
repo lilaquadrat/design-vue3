@@ -46,7 +46,6 @@ const useTraceable = () => {
   
 };
 
-
 export default plugin;
 export {
   useTraceable

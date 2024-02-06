@@ -55,7 +55,6 @@ function checkClose (event: Event) {
 
 }
 
-
 </script>
 <style lang="less" scoped>
 
@@ -98,7 +97,6 @@ function checkClose (event: Event) {
   &.index9 {
     .index(9);
   }
-
 
   &.mobile {
     background-color: rgba(0, 0, 0, .5);

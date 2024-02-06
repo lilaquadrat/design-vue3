@@ -192,7 +192,6 @@ function updateAgreements () {
       error: false
     };
 
-
     if(errorsObject.value?.agreements) {
 
       const agreementsErrors = errorsObject.value.agreements as ParsedError;
@@ -247,7 +246,6 @@ const getparticipantsState = async () => {
     console.log(error.response?.data);
     updateCategories();
 
-
   }
 };
 const handleForm = async (event: Event) => {
@@ -256,12 +254,10 @@ const handleForm = async (event: Event) => {
 
   console.log(addressModel.value);
   
-  
   const address = ModelsClass.save(addressModel.value as Address, 'address');
   const customer = ModelsClass.save<Contact>({...model.value, ...address}, 'contact');
   const agreements: ContactAgreement[] = [];
   let category: string;
-
 
   console.log(address, customer);
 
@@ -285,7 +281,6 @@ const handleForm = async (event: Event) => {
 
   });
 
-
   if (list.value?.categories.length === 1 && !category) {
 
     category = list.value.categories[0].id;
@@ -304,7 +299,6 @@ const handleForm = async (event: Event) => {
     //   //this.state = 'success';
     state.value = 'success';
     //   emit('state', 'success')
-    
 
   } catch (e) {
 

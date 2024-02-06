@@ -4,7 +4,6 @@ import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
-import { onMounted } from 'vue';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch, type Ref } from 'vue';
 
@@ -23,7 +22,6 @@ const props = defineProps<{
 
   center?: boolean;
 
-
 }>();
 const emit = defineEmits(['loaded']);
 const element = ref<HTMLElement>();
@@ -37,7 +35,6 @@ watch(preload, () => {
 watch(image, () => {
 
   const imageElement = image.value as HTMLImageElement;
-
 
   imageElement.onload = () => {
 

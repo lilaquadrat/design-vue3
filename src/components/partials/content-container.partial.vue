@@ -56,9 +56,12 @@ const getContent = async () => {
 
   try {
 
-
-    data = await mainStore.getContent(props);
-
+    data = await mainStore.getContent({
+      id        : props.id as string, 
+      latest    : props.latest, 
+      categories: props.categories as string[], 
+      predefined: props.predefined
+    });
 
   } catch (e) {
 
@@ -100,7 +103,6 @@ const close = () => {
 
 };
 const contentOrError = computed(() => (loading.value === 200 || content.value) || error.value);
-
 
 onBeforeMount(() => {
 
@@ -199,7 +201,6 @@ onBeforeMount(() => {
     &.overlay {
       opacity: 1;
       transition: opacity 0.2s @aType;
-
 
     }
   }

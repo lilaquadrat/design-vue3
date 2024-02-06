@@ -23,7 +23,6 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
 <style lang="less" scoped>
 
-
 .lila-quellcode-module {
   .module;
   .modulePadding('none');

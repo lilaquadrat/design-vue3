@@ -33,7 +33,6 @@ function scrollToNext (): void {
 
 }
 
-const scrollNotice = computed((): boolean => props.variant?.includes('scrollNotice')); 
 const filteredLinks = computed(() => {
 
   let filteredLinks: Link[] | undefined = props.links?.filter((link) => !!link.text);
@@ -45,12 +44,10 @@ const filteredLinks = computed(() => {
 
 });
 
-
 </script>
 <template>
   <section ref="element" :class="[inviewState, props.variant, { hasImage: background }]"
     class="lila-module emotion-module fullscreen">
-
 
     <lila-picture-partial class="background" v-if="background" v-bind="background" />
     <lila-video-partial class="background" v-if="video" v-bind="video" />
@@ -73,14 +70,9 @@ const filteredLinks = computed(() => {
 
     </div>
 
-    <lila-button-partial @click="scrollToNext" icon v-if="scrollNotice" class="scrollButton">
-      <lila-icons-partial colorScheme="white" size="large" type="mouse" />
-    </lila-button-partial>
-
   </section>
 </template>
 <style lang="less" scoped>
-
 
 .lila-module.emotion-module {
   .module;
@@ -214,20 +206,6 @@ const filteredLinks = computed(() => {
       }
 
     }
-  }
-
-  &.dark {
-
-    a:not(.callToAction),
-    .more {
-        .trans(color);
-        color: @color1;
-
-        &:hover {
-          color: @color3;
-        }
-    }
-
   }
 
   &.picture-switch {

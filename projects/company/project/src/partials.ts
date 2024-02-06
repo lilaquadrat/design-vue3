@@ -16,10 +16,6 @@ export default [
     component: () => import('@/components/partials/agreement.partial.vue'),
   },
   {
-    name     : 'appcomponent',
-    component: () => import('@/components/partials/appcomponent.partial.vue'),
-  },
-  {
     name     : 'button-group',
     component: () => import('@/components/partials/button-group.partial.vue'),
   },
@@ -46,6 +42,10 @@ export default [
   {
     name     : 'dialog',
     component: () => import('@/components/partials/dialog.partial.vue'),
+  },
+  {
+    name     : 'error',
+    component: () => import('@/components/partials/error.partial.vue'),
   },
   {
     name     : 'fact',
@@ -90,6 +90,10 @@ export default [
   {
     name     : 'list',
     component: () => import('@/components/partials/list.partial.vue'),
+  },
+  {
+    name     : 'main-components',
+    component: () => import('@/components/partials/main-components.partial.vue'),
   },
   {
     name     : 'mediadetection',

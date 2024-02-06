@@ -318,9 +318,7 @@ function toggleOptions () {
 
     height: @buttonHeight;
 
-
     line-height: @buttonHeight;
-
 
     .selected-container {
       position: relative;
@@ -341,7 +339,6 @@ function toggleOptions () {
     }
 
   }
-
 
   &:hover {
     .options-trigger {
@@ -368,7 +365,6 @@ function toggleOptions () {
       border: 0;
     }
   }
-
 
   &.options {
 
@@ -520,7 +516,6 @@ function toggleOptions () {
     }
 
   }
-
 
 }
 </style>

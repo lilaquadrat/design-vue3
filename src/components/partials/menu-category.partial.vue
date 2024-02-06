@@ -4,7 +4,6 @@ import type Textblock from '@/interfaces/textblock.interface';
 import getAnchor from '@/mixins/getAnchor';
 import { computed } from 'vue';
 
-
 const props = defineProps<{
   textblock: Textblock
   items: MenuItemElement[]

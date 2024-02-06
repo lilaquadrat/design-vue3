@@ -20,7 +20,6 @@ const props = defineProps<ModuleBaseProps & {
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
-
 </script>
 
 <style lang="less" scoped>

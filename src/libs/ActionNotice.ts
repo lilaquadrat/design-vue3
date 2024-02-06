@@ -3,7 +3,6 @@ import type { ErrorObject } from 'ajv';
 
 const {translate} = useTranslations();
 
-
 export interface TranslatedPath {
   path?: string,
   values?: string[]|number[]

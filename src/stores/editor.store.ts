@@ -14,5 +14,4 @@ export const useEditorStore = defineStore('editor', () => {
 
 })
 
-
 export default useEditorStore;

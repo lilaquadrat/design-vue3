@@ -6,7 +6,6 @@ function getName (name: string, type: 'module' | 'partial', namespace?: string) 
 
 }
 
-
 function loadViaGlob (components: Record<string, Record<'default', Component>>, namespace: string | undefined, app: App<Element>) {
 
   console.log(components);

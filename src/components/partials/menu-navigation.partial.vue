@@ -54,4 +54,3 @@ const categorieTitles = computed(() => {
 }
 </style>
 
-

@@ -6,7 +6,7 @@ import {routes, editorRoutes} from './routes';
 import createRouter from '@/mixins/createRouter';
 import {loadViaGlob, loadViaDeclaration, getAvailableModules} from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
-import resizePlugin, {resize} from '@/plugins/resize';
+import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
@@ -14,7 +14,6 @@ import traceablePlugin from '@/plugins/traceable';
 import './models';
 import modules from './modules';
 import partials from './partials';
-import useEditorStore from '@/stores/editor.store';
 
 // const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
 // const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
@@ -30,8 +29,6 @@ loadViaDeclaration(partials, 'lila', 'partial', app);
 
 const currentUrl = new URL(window.location.toString());
 const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
-
-console.log(ISLOCAL);
 
 app.use(createPinia());
 app.use(createRouter(ISLOCAL ? editorRoutes : routes));

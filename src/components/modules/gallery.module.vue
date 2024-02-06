@@ -130,7 +130,6 @@ function swipe (event: TouchEvent): void {
   emit('change', props.elements[currentOptionIndex.value]);
 }
 
-
 function change (direction: string): void {
   const length = props.elements.length - 1;
 
@@ -266,7 +265,6 @@ function indicatorchange (index: number): void {
   .element {
     grid-template-columns: 1fr 120px;
     grid-template-rows: 1fr 80px;
-    
 
     @media @desktop {
       grid-template-columns: 1fr 185px;
@@ -375,7 +373,6 @@ function indicatorchange (index: number): void {
     position: relative;
     grid-column-start: 1;
     grid-column-end: 3;
-    
 
     .scroll-container {
       --n: 1;
@@ -442,7 +439,6 @@ function indicatorchange (index: number): void {
         padding: 0;
 
         opacity: 0;
-        
 
         &.picture {
           position: absolute;
@@ -583,7 +579,6 @@ function indicatorchange (index: number): void {
     }
   }
 
-
   &.fullscreenOverlay.fullscreenOverlayEnabled {
     .index(9);
 
@@ -623,7 +618,6 @@ function indicatorchange (index: number): void {
       height: 100vh;
       grid-template-rows: calc(100% - 90px) 90px;
     }
-
 
     .content-container,
     .gallery-controls {

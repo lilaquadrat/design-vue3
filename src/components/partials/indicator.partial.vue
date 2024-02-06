@@ -42,7 +42,6 @@ const props = defineProps<{
     background-color: @color1;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 
-
     &:after {
       content: '';
       display: block;
@@ -76,7 +75,6 @@ const props = defineProps<{
     }
   }
 }
-
 
 @keyframes loading-indicator1 {
 

@@ -15,6 +15,5 @@ export default interface LinkGroupElement {
 
     icon?: IconsPartial['type'];
 
-
   }
 

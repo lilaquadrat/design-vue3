@@ -4,14 +4,12 @@
   </section>
 </template>
 <script setup lang="ts">
-// import { ExtPartial, Component, Prop } from '../libs/lila-partial';
-const props = defineProps<{
+defineProps<{
   gap: boolean;
 }>();
 
 </script>
 <style lang="less" scoped>
-
 
 .lila-button-group {
 

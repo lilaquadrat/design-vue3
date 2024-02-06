@@ -11,7 +11,6 @@ import { watch } from 'vue';
 import { computed, onBeforeMount } from 'vue';
 import { ref } from 'vue';
 
-
 const mainStore = useMainStore();
 const { scrolled } = useInview();
 const { resized } = useResize();
@@ -37,7 +36,6 @@ const open = ref<boolean>();
 const anchorElement = ref<HTMLElement>();
 const optionsElement = ref<HTMLElement>();
 
-
 onBeforeMount(() => {
 
   model.value = ModelsClass.add(props.modelValue, 'address');
@@ -46,7 +44,6 @@ onBeforeMount(() => {
 
 watch(search, () => update());
 watch([resized, scrolled], () => calculateOptionsStyle())
-
 
 function select (address: Location) {
 
@@ -90,7 +87,6 @@ function closeOptions () {
 }
 
 function calculateOptionsStyle () {
-
 
   const element = anchorElement.value as HTMLElement;
   const optionsContainer = optionsElement.value;
@@ -155,7 +151,6 @@ async function update () {
       return;
 
     }
-
 
     autocomplete.value = response.data.data;
     loading.value = false;

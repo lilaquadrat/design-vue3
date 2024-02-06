@@ -137,9 +137,7 @@ class Models {
 
   }
 
-
   add<T> (data: Partial<T>, name: string): T {
-
 
     const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'add'), this.getDeclaration(name), name, 'add');
 
@@ -150,7 +148,6 @@ class Models {
   }
 
   save<T> (data: Partial<T>, name: string): T {
-
 
     const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'save'), this.getDeclaration(name), name, 'save') as T;
 
@@ -175,7 +172,6 @@ class Models {
     if (this.debug) console.debug(data, declaration, targetObject, usecase);
 
     const keys = Object.keys(declaration || {});
-
 
     // if (typeof this.legacy === 'function' && legacy) {
 
@@ -233,7 +229,6 @@ class Models {
 
       if (usecase === 'save' && Models.isEmpty(currentData)) return;
 
-
       /**
       * SPECIAL CASE type
       * dont override the type of the module
@@ -257,7 +252,6 @@ class Models {
 
         }
 
-
         /**
         * if usecase is save an no data is given, dont add default values
         */
@@ -270,7 +264,6 @@ class Models {
 
         // if (name === 'legacy') return targetObject;
         // if (name === 'onSave') return targetObject;
-
 
         /**
         * string and number gets assigned
@@ -289,7 +282,6 @@ class Models {
           const arrayContains = currentDeclaration.contains;
 
           if ('type' in arrayContains) {
-
 
             if (['string', 'number'].includes(arrayContains.type)) {
 
@@ -317,7 +309,6 @@ class Models {
               if (!targetObject[keyName].length) delete targetObject[keyName];
 
             }
-
 
           }
 
@@ -378,7 +369,6 @@ class Models {
 
       }
 
-
       /**
       * if its an object, it will be a child model
       */
@@ -402,7 +392,6 @@ class Models {
           if (Models.isEmpty(targetObject[keyName])) {
 
             delete targetObject[keyName];
-
 
           }
 
@@ -432,7 +421,6 @@ class Models {
 
     }
 
-
     return false;
 
   }
@@ -452,7 +440,6 @@ class Models {
     }
 
     if ('type' in declaration) {
-
 
       if (declaration.type === 'string') {
 
@@ -482,9 +469,7 @@ class Models {
 
     return null;
 
-
   }
-
 
 }
 

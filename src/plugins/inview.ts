@@ -209,13 +209,11 @@ export function useInview (element?: Ref<HTMLElement | undefined>, options?: {al
   
         }
     
-    
       }
   
     })
     
   }
-
 
   return {inviewState: state, scrolled: inview.scrolled, scrollDirection: inview.scrollDirection, preload};
 

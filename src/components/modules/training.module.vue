@@ -60,7 +60,6 @@ const indexTeaser = computed(() => {
   return mapped.filter((single) => single) ?? [];
 });
 
-
 function checkRealWidth () {
   const element = mainGridContainer.value as HTMLElement;
 
@@ -396,7 +395,6 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
         top: 80px;
       }
     }
-
 
   }
 

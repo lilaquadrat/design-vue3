@@ -7,7 +7,6 @@ import type { ErrorObject } from '@lilaquadrat/interfaces';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch } from 'vue';
 
-
 const emit = defineEmits<{
   'update': [value?: ErrorsObject]
 }>();
@@ -24,7 +23,6 @@ const parsedErrors = ref<ErrorsObject>({});
 const flattenedErrors = ref<Record<string, ParsedError>>({});
 const triggerElement = ref<HTMLElement>();
 const errorsElement = ref<HTMLElement>();
-
 
 watch(() => props.errors, () => {
 
@@ -72,7 +70,6 @@ watch(errorsElement, () => {
 
 watch([() => resized, () => scrolled], () => closeOptions())
 
-
 function flattenErrors (errors: ErrorsObject) {
 
   const flattenedErrors: Record<string, ParsedError> = {};
@@ -104,7 +101,6 @@ function flattenErrors (errors: ErrorsObject) {
 
       });
 
-
     }
 
   });
@@ -133,7 +129,6 @@ function closeOptions () {
 
 }
 
-
 function toggleErrors () {
 
   console.log('toggle');
@@ -143,7 +138,6 @@ function toggleErrors () {
 }
 
 function calculateOptionsStyle () {
-
   
   console.log(triggerElement.value, errorsElement.value);
   if (!triggerElement.value || !errorsElement.value) return;

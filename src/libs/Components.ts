@@ -1,7 +1,6 @@
 // import Vue from 'vue';
 import { createApp } from 'vue';
 
-
 class Components {
 
   static add (components: any, type: 'module' | 'partial', namespace?: string) {
@@ -11,7 +10,6 @@ class Components {
       Components.single(single, type, namespace);
 
     });
-
 
   }
 

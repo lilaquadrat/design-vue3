@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { Content } from '@lilaquadrat/interfaces';
+import type { BasicData, Content } from '@lilaquadrat/interfaces';
 import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
 import type ApiConfig from '@/interfaces/ApiConfig';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
@@ -63,23 +63,38 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  async function getContent (params: { predefined: boolean, latest: boolean, id: string, categories?: string[] }) {
+  async function getContent (params: { id: string }): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { internalId: string }): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { latest: true, predefined: true, categories: string[] }): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }): Promise<SDKResponse<BasicData<Content>>> {
 
-    const data = ref<SDKResponse<Content>>();
+    const data = ref<SDKResponse<BasicData<Content>>>();
     const sdk = new StudioSDK('design', apiConfig.value);
 
-    if (params.predefined && !params.latest) {
+    try {
 
-      data.value = await sdk.public.content.predefined(params.id);
+      if (params.predefined && !params.latest && params.id) {
 
-    } else if (params.predefined && params.latest && params.categories) {
+        data.value = await sdk.public.content.predefined(params.id);
+  
+      } else if (params.predefined && params.latest && params.categories) {
+  
+        data.value = await sdk.public.content.predefinedLatest(params.categories);
+  
+      } else if(params.internalId) {
+  
+        data.value = await sdk.public.content.getByInternalId(params.internalId);
+  
+      } else if(params.id) {
+  
+        data.value = await sdk.public.content.getById(params.id);
+  
+      }
 
-      data.value = await sdk.public.content.predefinedLatest(params.categories);
+    } catch (error) {
 
-    } else {
-
-      data.value = await sdk.public.content.getByInternalId(params.id);
-
+      data.value = {status: error.response.status};
+      
     }
 
     return data.value;
@@ -99,7 +114,6 @@ export const useMainStore = defineStore('main', () => {
     getContent
   }
 
-})
-
+});
 
 export default useMainStore;

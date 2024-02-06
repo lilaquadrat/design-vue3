@@ -26,7 +26,7 @@ module.exports = {
     ],
     curly                        : [2, 'multi-line'],
     'prefer-destructuring'       : 0,
-    'no-multiple-empty-lines'    : [1, { max: 2 }],
+    'no-multiple-empty-lines'    : [1, { max: 1 }],
     'no-multi-spaces'            : ['error', { ignoreEOLComments: false }],
     'arrow-spacing'              : ['error', { 'before': true, 'after': true }],
     'space-before-function-paren': ['error', {

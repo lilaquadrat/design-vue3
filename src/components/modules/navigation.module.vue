@@ -82,8 +82,8 @@ watch(() => triggerMenuOverlay.value, () => {
 /**
  * switches the rendermode to triggerMenu
  */
-const useTriggerMenu = computed(() => isOverflow.value || props.variant.includes('left'));
-const isLeft = computed(() => props.variant.includes('left'));
+const useTriggerMenu = computed(() => isOverflow.value || props.variant?.includes('left'));
+const isLeft = computed(() => props.variant?.includes('left'));
 
 onBeforeMount((): void => updateElements());
 onMounted(() => checkOverflow());
@@ -111,7 +111,6 @@ function updateElements () {
 
   elementsArray.value = newElements;
 }
-
 
 function toggle (): void {
 
@@ -144,7 +143,6 @@ function openElement (event: Event, element: LinkGroupElement & { active: boolea
 
   }
 
-
 }
 
 function toggleTriggerElement (event: Event, element: LinkGroupElement & { active: boolean }) {
@@ -161,7 +159,6 @@ function toggleTriggerElement (event: Event, element: LinkGroupElement & { activ
   }
 
 }
-
 
 function closeAll () {
 
@@ -195,7 +192,6 @@ function checkOverflow () {
 
 }
 
-
 const calculateOptionsStyle = () => {
 
   const overlayElement = useTriggerMenu.value ? triggerMenuOverlay.value : overlay.value;
@@ -215,7 +211,6 @@ const calculateOptionsStyle = () => {
   const top = targetBounds.top + targetBounds.height;
   const body = document.querySelector('body') as HTMLBodyElement;
   const positionLeft = targetBounds.left + bounds.width + 50 > body.offsetWidth;
-
 
   if(positionLeft) {
 
@@ -381,7 +376,6 @@ const calculateOptionsStyle = () => {
       display: none;
     }
   }
-
 
   .trigger {
     display: grid;
@@ -576,7 +570,6 @@ const calculateOptionsStyle = () => {
     }
   }
 
-
   &.useTriggerMenu {
 
     width: 100%;
@@ -609,7 +602,6 @@ const calculateOptionsStyle = () => {
       }
     }
 
-
     .link-group {
       .link-list {
         a {
@@ -621,7 +613,6 @@ const calculateOptionsStyle = () => {
 
   }
 }
-
 
 .lila-overlay-background {
   transition: opacity @aTime @aType, transform @aTime @aType;

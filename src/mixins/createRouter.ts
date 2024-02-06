@@ -8,7 +8,6 @@ export default (routes: readonly RouteRecordRaw[]) => {
       : createWebHistory('/'),
     routes
   });
-
   
   return router;
 

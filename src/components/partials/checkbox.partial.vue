@@ -35,7 +35,6 @@ function setTextType (): void {
     ? props.text 
     : slotContent;
 
-
   if (useText?.length) {
 
     if (useText.length >= 30) textType.value = 'text';
@@ -81,7 +80,6 @@ onBeforeUpdate(() => setTextType());
         <slot></slot>
         <lila-description-partial inline v-if="description">{{$translate(description)}}</lila-description-partial>
       </span>
-
 
     </div>
     <lila-input-labels-partial hideLabel :error="error" :required="required" :disabled="disabled" />
@@ -142,7 +140,6 @@ label.checkbox {
       display: none;
     }
   }
-  
 
   .label {
     .multi(margin-bottom, 2);
@@ -216,7 +213,6 @@ label.checkbox {
     }
 
   }
-
 
   &:hover {
 

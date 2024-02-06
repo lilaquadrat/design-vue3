@@ -15,9 +15,6 @@ const inputElement = ref<HTMLInputElement>();
 let tempValue: string = '';
 const debounceTime: number = 500;
 const timeout = ref<ReturnType<typeof setTimeout>>();
-const slots = defineSlots<{
-  default(): any;
-}>();
 const emit = defineEmits(['update:modelValue', 'focus', 'enter', 'keydown', 'blur']);
 
 watch(() => props.modelValue, () => {
@@ -65,7 +62,6 @@ function checkInput (event: KeyboardEvent) {
 
   }
 
-
   if (['Backspace', 'Enter'].includes(event.key)) return;
 
   if (event.key === 'Escape') {
@@ -111,7 +107,7 @@ const hasError = computed(() => !!props.error?.error);
 </script>
 <template>
   <label ref="element" class="lila-input" :class="{ error: hasError }">
-    <input ref="inputElement" type="text" :placeholder="$translate(placeholder)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
+    <input ref="inputElement" type="text" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
       <slot />
     </lila-input-labels-partial>

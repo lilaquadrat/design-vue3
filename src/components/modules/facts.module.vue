@@ -17,7 +17,6 @@ const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const topics = computed(() => props.variant?.includes('topics'));
 
-
 function setActive (index: number) {
 
   active.value = index;
@@ -103,7 +102,6 @@ function setActive (index: number) {
     justify-self: center;
     max-width: @moduleWidth_S;
   }
-
 
   &.topics {
     max-width: @moduleWidth_M;

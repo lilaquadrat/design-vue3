@@ -33,7 +33,6 @@ const textBottom = computed(() => ({
 }));
 const hasLink = computed(() => !!props.link?.link);
 
-
 </script>
 <template>
   <article ref="element" :id="id" :class="[inviewState, { hasImage: picture, sub }]" class="lila-blog-intro-module lila-module">

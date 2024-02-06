@@ -33,7 +33,6 @@ class TranslationPlugin {
 
     }
 
-
     return returnValue;
 
   }

@@ -2,7 +2,6 @@
 
 const emit = defineEmits(['close']);
 
-
 defineProps<{
   hideButton?: boolean
 }>();

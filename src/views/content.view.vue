@@ -1,91 +1,70 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import type { Content } from '@lilaquadrat/interfaces';
-import dayjs from 'dayjs';
+import type { BasicData, Content } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
+import { onBeforeMount } from 'vue';
+import type { SDKResponse } from '@lilaquadrat/sdk';
 
-import emotion from './viewData/emotion';
-import blogIntro from './viewData/blog-intro';
-import facts from './viewData/facts';
-import footer from './viewData/footer';
-import cookies from './viewData/cookies';
-import faq from './viewData/faq';
-import gallery from './viewData/gallery';
-import picture from './viewData/picture';
-import picturegroup from './viewData/picturegroup';
-import pictureandtext from './viewData/pictureandtext';
-import quote from './viewData/quote';
-import text from './viewData/text';
-import index from './viewData/index';
-import compare from './viewData/compare';
-import prices from './viewData/prices';
-import quellcode from './viewData/quellcode';
-import video from './viewData/video';
-import navigation from './viewData/navigation';
-import contact from './viewData/contact';
-import menu from './viewData/menu';
-import training from './viewData/training';
-import timeline from './viewData/timeline';
-
-const modules: Record<string, Partial<Content>> = {
-  emotion,
-  facts,
-  footer,
-  cookies,
-  faq,
-  gallery,
-  index,
-  picture,
-  pictureandtext,
-  picturegroup,
-  quote,
-  text,
-  compare,
-  prices,
-  quellcode,
-  video,
-  navigation,
-  'blog-intro': blogIntro,
-  contact,
-  menu,
-  training,
-  timeline
-};
 const route = useRoute();
 const store = useMainStore();
-const baseContent: Content = {
-  id      : 'home',
-  company : 'company',
-  project : 'project',
-  settings: {
-    mode: 'presentation'
-  },
-  state  : 'publish',
-  modules: [
-    {
-      type    : 'text-module',
-      headline: 'Available Modules',
-      links   : {
-        title: 'content sites',
-        value: Object.keys(modules).sort((a, b) => a.localeCompare(b)).map((single) => ({
-          link: single,
-          text: single
-        }))
-      }
-    },
-  ],
-}
+const data = ref<SDKResponse<BasicData<Content>>>();
+const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
+const loading = ref<number>(0);
+const error = ref<boolean>(false);
+
+watch(route, () => getContent());
+onBeforeMount(() => getContent());
 
 store.setConfiguration({preloadImages: true})
 
+function getContentId (contentType: 'public' | 'member', pathMatch?: string) {
+
+  const name = pathMatch ? pathMatch : 'home';
+
+  return `${contentType}-${name}`;
+  
+}
+
+async function getContent () {
+
+  loading.value = 0;
+
+  const contentType = route.meta.contentType as 'public' | 'member';
+
+  console.log(route.params, route.name, getContentId(contentType, route.params.pathMatch as string));
+
+  const contentId = getContentId(contentType, route.params.pathMatch as string);
+
+  data.value = await store.getContent({id: contentId});
+
+  if(data.value.status === 200) {
+
+    if(data.value.data.settings.useLayout) {
+
+      layout.value = await store.getContent({internalId: data.value.data.settings.useLayout.toString()});
+      loading.value = 200;
+
+    } else {
+
+      layout.value = undefined;
+      loading.value = 200;
+
+    }
+
+  } else if (data.value.status === 403 || data.value.status === 401) {
+
+    error.value = true;
+
+  } 
+
+}
+
 const contentMerged = computed(() => {
 
-  const content = modules[route.params.pathMatch[0] as keyof typeof modules];
-
-  if(!content) return prepareContent(baseContent);
-  return prepareContent(content);
+  if(loading.value === 200 && data.value) return prepareContent(data.value?.data, layout.value?.data);
+  return prepareContent({})
 
 }); 
 
@@ -93,6 +72,8 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
+      {{ error }}
+        <lila-error-partial v-if="error" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>
 </template>

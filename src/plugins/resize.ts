@@ -23,7 +23,6 @@ class Resize {
 
   constructor () {
 
-
     this.resizedEvent = new Event('resized');
     this.mediaEvent = new Event('media');
     this.realHeight.value = window.innerHeight;
@@ -33,7 +32,6 @@ class Resize {
     window.addEventListener('resize', () => this.debounce());
 
   }
-
 
   trigger (isStart?: boolean) {
 
@@ -54,7 +52,6 @@ class Resize {
 
     const child = Array.from(element.children).find(child => window.getComputedStyle(child).display === 'block');
 
-
     if (child) {
       const childClass = child.getAttribute('class') as string;
 
@@ -71,7 +68,6 @@ class Resize {
     }
   }
 
-
   debounce () {
 
     /**
@@ -83,7 +79,6 @@ class Resize {
       this.trigger(true);
     
     } 
-    
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -103,7 +98,6 @@ const plugin = {
     console.log('resize plugin installed');
   },
 };
-
 
 function useResize () {
 

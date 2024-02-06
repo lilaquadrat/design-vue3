@@ -5,7 +5,6 @@ const props = defineProps<{
     variant: string[]
 }>();
 
-
 </script>
 <template>
   <section :class="[variant, {gap: props.gap}]" class="lila-link-group">

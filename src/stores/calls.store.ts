@@ -30,5 +30,4 @@ export const useCallStore = defineStore('calls', () => {
 
 })
 
-
 export default useCallStore;

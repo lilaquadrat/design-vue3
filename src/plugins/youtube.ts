@@ -26,7 +26,6 @@ class Youtube {
       document.body.appendChild(script);
       this.loadState.value = true;
             
-            
     });
   }
 
@@ -43,9 +42,7 @@ class Youtube {
   
   }
 
-
 }
-
 
 const youtubePlugin = new Youtube();
 const plugin = {
@@ -60,7 +57,6 @@ window.onYouTubeIframeAPIReady = () => {
   youtubePlugin.youtubeApiState.value = true;
   
 };
-
   
 function useYoutube () {
       

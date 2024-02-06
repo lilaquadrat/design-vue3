@@ -32,7 +32,6 @@ const notEmpty = computed(() => !!props.quote);
 
 function setTextSize (): void {
 
-
   nextTick().then(() => {
 
     if (props.quote?.length && props.variant?.includes('small')) {
@@ -46,7 +45,6 @@ function setTextSize (): void {
       else if (props.quote?.length <= 170) textSize.value = 'headline_S';
 
     } else if (props.quote?.length) {
-
 
       if (props.quote?.length <= 45) textSize.value = 'headline_XL';
 
@@ -70,7 +68,6 @@ const linkExists = computed(() => props.link?.text && props.link?.link);
 
 </script>
 <style lang="less" scoped>
-
 
 .lila-quote {
 

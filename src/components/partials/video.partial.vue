@@ -5,10 +5,11 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import dom from '@/functions/lila-dom';
 import { useYoutube } from '@/plugins/youtube';
 import { onBeforeMount } from 'vue';
+import type Video from '@/interfaces/video.interface';
 
 const props = withDefaults(
-  defineProps<{
-    trigger: boolean;
+  defineProps<Video & {
+    trigger?: boolean;
     poster?: string;
     src: string;
     attributes?: string[];
@@ -47,7 +48,6 @@ const youtubeId = computed(() => {
 
 });
 
-
 watch(() => media.value, () => start());
 watch(() => props.src, () => start());
 watch(() => props.source, () => start());
@@ -58,7 +58,6 @@ watch(() => state.value, () => emit('loading', state.value === 'loading'));
 * used if preload is set to none to start the video after the element is loaded
 */
 watch(() => videoElement.value, () => {
-
 
   //if the watcher is called in the init process we wont force start playing
   start(state.value !== 'init');
@@ -85,7 +84,6 @@ onBeforeMount(() => {
   if(props.preload === 'auto') loadVideo.value = true;
 
 })
-
 
 onMounted(() => {
 
@@ -177,7 +175,6 @@ function toggle () {
 
   }
 
-
 }
 
 /**
@@ -199,7 +196,6 @@ function startYoutube () {
   return
 
 }
-
 
 async function start (forcePlaying?: boolean) {
 
@@ -251,7 +247,6 @@ async function start (forcePlaying?: boolean) {
 }
 
 function play () {
-
 
   if(youtubePlayer.value) {
 
@@ -344,7 +339,6 @@ function createYoutubePlayer () {
   &:hover {
     cursor: pointer;
   }
-
 
   .youtube-container, .preload-placeholder {
     position: relative;

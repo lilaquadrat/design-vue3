@@ -11,7 +11,6 @@ const props = withDefaults(
 );
 const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ? `rotate${props.rotate}` : undefined); 
 
-
 </script>
 <template>
   <span class="lila-icons-partial" :class="[type, colorScheme, size, rotateClass, {animate}]">

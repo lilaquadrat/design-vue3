@@ -13,7 +13,7 @@ onMounted(() => {
   editorStore.availableModulesWithRevision = { revision: 2, modules: getAvailableModules(modules.modules) };
 
   const currentUrl = new URL(window.location.toString());
-  const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
+  const ISLOCAL = currentUrl.port === '5173';
 
   if (ISLOCAL) {
 
@@ -26,7 +26,6 @@ onMounted(() => {
       company: process.env.company,
       project: process.env.project,
     };
-
 
   } else {
 
@@ -42,8 +41,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <lila-mediadetection-partial />
   <RouterView />
+  <lila-mediadetection-partial />
 </template>
 
 <style lang="less">

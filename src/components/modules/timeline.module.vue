@@ -13,7 +13,6 @@ const props = defineProps<{
     date?: string;
     variant?: string[]
 }>();
-
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
@@ -47,7 +46,6 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 <style scoped lang="less">
 .lila-module.timeline-module 
 .content-container {
-     
         
         border: dotted 2px red
     

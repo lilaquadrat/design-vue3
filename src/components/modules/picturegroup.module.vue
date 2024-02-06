@@ -34,7 +34,6 @@ const linkVariant = computed(() => {
 const fitVariant = computed(() => props.variant.includes('fit'));
 const brightText = computed(() => props.variant.includes('color1') || props.variant.includes('color3') ? 'bright' : '');
 
-
 </script>
 <template>
   <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-picturegroup-module lila-module">
@@ -58,9 +57,7 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
 </template>
 <style lang="less" scoped>
 
-
 .lila-picturegroup-module {
-
 
   width: 100%;
 
@@ -110,7 +107,6 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
 
     display: grid;
     gap: 60px;
-    
 
     .elements-container {
       

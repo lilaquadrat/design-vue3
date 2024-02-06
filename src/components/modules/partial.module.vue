@@ -24,7 +24,6 @@ onMounted(() => {
 
 });
 
-
 </script>
 <style lang="less" scoped>
 .lila-partial-container {

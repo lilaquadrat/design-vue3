@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import type { ParsedError } from '@/libs/ActionNotice';
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { defineProps, computed, defineEmits } from 'vue';
 
 const props = defineProps<{
   modelValue: string;

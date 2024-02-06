@@ -58,7 +58,6 @@ onMounted(() => {
 
 });
 
-
 function calcVisibilty () {
 
   const cookies = getCookies();
@@ -79,9 +78,7 @@ function calcVisibilty () {
 
   }
 
-
 }
-
 
 function updateSelection () {
 
@@ -104,7 +101,6 @@ function updateSelection () {
   }
 
 }
-
 
 function consent (type: 'all' | 'selection') {
 
@@ -208,7 +204,6 @@ function getCookies () {
   </section>
 </template>
 <style lang="less" scoped>
-
 
 .lila-cookies-module-dialog,
 .lila-cookies-module.lila-module {

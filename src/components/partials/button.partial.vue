@@ -39,7 +39,6 @@ const state = computed(() => {
 
 })
 
-
 function check () {
 
   if (!showCheck.value) {

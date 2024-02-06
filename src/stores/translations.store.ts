@@ -26,5 +26,4 @@ export const useTranslationsStore = defineStore('translations', () => {
 
 })
 
-
 export default useTranslationsStore;

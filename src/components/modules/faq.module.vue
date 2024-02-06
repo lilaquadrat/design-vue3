@@ -26,7 +26,6 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 </template>
 <style lang="less" scoped>
 
-
 .lila-faq-module {
   .module;
 

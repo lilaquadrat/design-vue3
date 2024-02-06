@@ -1,5 +1,5 @@
 <template>
-  <section :id="id" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]" class="lila-picture-module lila-module">
+  <section :id="id" v-if="props.picture" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]" class="lila-picture-module lila-module">
     <lila-picture-partial v-bind="picture" />
 
     <div v-if="showText" class="position-container">
@@ -145,7 +145,6 @@ function toggleFullscreenOverlay () {
       .multi(padding, 0, 8);
     }
   }
-
 
   &.fullscreenOverlay.fullscreenOverlayEnabled {
     .multi(padding, 8);

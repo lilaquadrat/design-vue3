@@ -29,7 +29,6 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
     </header>
 
-
     <section class="category-container">
 
       <lila-menu-category-partial v-for="(category, index) in categories" v-bind="category" :key="`single-category-${index}`" />

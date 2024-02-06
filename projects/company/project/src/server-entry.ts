@@ -20,7 +20,6 @@ export async function render (url: string, manifest: Record<string, string[]>) {
   await router.push('/');
   await router.isReady();
 
-
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers
   // itself on ctx.modules. After the render, ctx.modules would contain all the

@@ -104,7 +104,6 @@ function setElements (elements: AccordionElement[], resetVisible = false) {
     });
   });
 
-
   useElements.value = newElements;
 
   nextTick(() => {
