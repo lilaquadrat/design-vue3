@@ -47,7 +47,7 @@ export default {
             picture: {
                 source   : [],
                 alt      : 'IMAGE ALT',
-                src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+                src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/rectangle1.png',
                 copyright: '© lilaquadrat',
             },
         },

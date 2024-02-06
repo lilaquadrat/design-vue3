@@ -14,7 +14,7 @@ import cookies from './viewData/cookies';
 import faq from './viewData/faq';
 import gallery from './viewData/gallery';
 import picture from './viewData/picture';
-import picturegroup from './viewData/picturegroup';
+import pictureGroup from './viewData/picture-group';
 import pictureandtext from './viewData/pictureandtext';
 import quote from './viewData/quote';
 import text from './viewData/text';
@@ -39,7 +39,7 @@ const modules: Record<string, Partial<Content>> = {
   index,
   picture,
   pictureandtext,
-  picturegroup,
+  'picture-group':pictureGroup,
   quote,
   text,
   compare,

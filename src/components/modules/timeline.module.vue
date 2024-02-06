@@ -17,21 +17,23 @@ const props = defineProps<{
 
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
-const formattedYear = computed(() =>  {
-    
+const formattedDate = computed(() =>  {
     if(props.date) {
-         const currentYear = dayjs(props.date).year();
-         return currentYear
+         const formattedYear =   dayjs(props.date).year();
+         const formattedDayMont = dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase();
+         return {
+        year: formattedYear,
+        dayMonth: formattedDayMont
+        
+        }
+    } else {
+        return {
+            year: '',
+            dayMonth: ''
+        };
     }
+   
 });
-const formattedDayMonth = computed(() =>  {
-    if(props.date) {
-        const dayMonth = dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase();
-        dayjs(dayMonth);
-        console.log('dayMonth', dayMonth)
-        return dayMonth
-    }
-})
 </script>
 <template>
     <section  
@@ -42,15 +44,14 @@ const formattedDayMonth = computed(() =>  {
    
     <!-- hier habe ich die Kontrolle über den Inhalt -->
     <section class="elements-container">
+        <span class="middleLine"></span>
         <div class="date-container">
             <time v-if="date" class="year" >
-                {{ formattedYear }} 
-        
+                {{ formattedDate.year }} 
             </time>
             <br /> 
             <time v-if="date" class="dayMonth" >
-        
-                {{ formattedDayMonth }}
+                {{ formattedDate.dayMonth }}
             </time>
         </div>
 
@@ -64,7 +65,7 @@ const formattedDayMonth = computed(() =>  {
 
         <!--  hier drüber wird der Inhalt aller Elemente angepasst -->
             <section class="text-container">
-                
+                <span></span>
                 <lila-textblock-partial v-bind="textblock" />
                 <lila-list-partial v-if="list" v-bind="list" class="list-container"></lila-list-partial>
             </section>
@@ -74,17 +75,20 @@ const formattedDayMonth = computed(() =>  {
 </template>
 <style lang="less" scoped>
 .lila-content-module .container .lila-module:first-child {
-    margin-top: 0;
+    // margin-top: 0;
 }
 .lila-module.timeline-module {
      
     margin: 0 auto;
     width: @moduleWidth_L;
+    height: 650px;
+    .font-light();
     // height: calc(575px, 80px);
 }
  .elements-container {
     display: grid;
     row-gap: 50px;
+    height: 427px;
     //  height: 575px; 
      grid-template-columns: repeat(2, auto);
      grid-template-rows:  repeat(3, auto);
@@ -97,20 +101,31 @@ const formattedDayMonth = computed(() =>  {
  }
 
 &.date-container {
+    display: grid;
     grid-area: date-container;
-    border: dotted 2px red;
-    width: auto;
+    // border: dotted 2px red;
+    
     
     }
-
+&.year {
+    font-size: 60px;
+    color:@color4;
+    line-height: 62px;
+    font-weight: 800;
+}
 &.media-container{
     grid-area: media-container;
-    padding: 0 40px
-}
-&.text-cotainer {
     padding: 0 40px;
-    border-left: solid 8px black; 
+    // width:344px;
+}
+&.text-container {
+    padding: 0 40px;
+    border-left: solid 8px @color4; 
     grid-area: text-container;
+    width: 778px; 
+    border-radius: 20px;
+    
+    
 }
 </style>
 
