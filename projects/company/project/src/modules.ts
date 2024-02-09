@@ -243,7 +243,7 @@ export default
       component: () => import('@/components/modules/pictureandtext.module.vue'),
     },
     {
-      name    : 'picture-group',
+      name    : 'picturegroup',
       variants: [
         {
           key        : 'fit',
@@ -281,7 +281,7 @@ export default
           description: 'Variante um Kontakte darzustellen',
         },
       ],
-      component: () => import('@/components/modules/picture-group.module.vue'),
+      component: () => import('@/components/modules/picturegroup.module.vue'),
     },
     {
       name     : 'prices',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type Textblock from '@interfaces/textblock.interface';
-import type CompareElement from '@interfaces/CompareElement.interface';
+import type CompareElement from '../../interfaces/CompareElement.interface';
 import type CompareStructure from '@interfaces/CompareStructure.interface';
 import type CompareModified from '@interfaces/CompareModified.interface';
 import type { CompareHeadline } from '@interfaces/CompareModified.interface';
