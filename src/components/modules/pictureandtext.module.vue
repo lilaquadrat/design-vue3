@@ -3,7 +3,7 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
 import type Link from '@interfaces/link.interface';
 import type Picture from '@interfaces/picture.interface';
-import type Textblock from '@interfaces/textblock.interface';
+import type Textblock from '../../interfaces/textblock.interface';
 import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });

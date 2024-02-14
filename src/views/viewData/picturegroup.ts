@@ -8,7 +8,7 @@ export default {
   state  : 'publish',
   modules: [
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['fourColumns'],
       textblock: {
         headline: 'Picturegroup: fourColumns',
@@ -55,7 +55,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['fit'],
       textblock: {
         headline: 'with fit',
@@ -119,7 +119,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['fit', 'fourColumns'],
       textblock: {
         headline: 'four columns with fit',
@@ -166,7 +166,7 @@ export default {
       
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['small'],
       textblock: {
         headline: 'small without fit',
@@ -210,7 +210,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['small', 'fit'],
       textblock: {
         headline: 'small with fit',
@@ -254,7 +254,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : [ 'align'],
       textblock: {
         headline: 'three pics aligned',
@@ -298,7 +298,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['color1'],
       textblock: {
         headline: 'Backgroundcolor: color1',
@@ -353,7 +353,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['contact'],
       textblock: {
         headline: 'three pics + contact',
@@ -421,7 +421,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['color3'],
       textblock: {
         headline: 'Backgroundcolor: color3',
@@ -476,7 +476,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['fourColumns', 'fit', 'align'],
       textblock: {
         headline: 'four columns with fit and links, description and small',
@@ -555,7 +555,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['color1', 'align', 'fit'],
       textblock: {
         headline: '6 Pics with fit of links, description with Backgroundcolor and aligned',
@@ -635,7 +635,7 @@ export default {
      
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['small', 'fit'],
       textblock: {
         headline: 'small with fit and links and description',
@@ -696,7 +696,7 @@ export default {
       ],
     },
     {
-      type     : 'picture-group-module',
+      type     : 'picturegroup-module',
       variant  : ['align', 'fit'],
       textblock: {
         headline: 'align with fit and links and description',

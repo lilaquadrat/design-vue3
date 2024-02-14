@@ -7,9 +7,13 @@ import type Textblock from './textblock.interface';
 export default interface PicturegroupElement {
 
     picture?: Picture;
+
     link?: Link;
+
     textblock?: Textblock;
-    list?: ListWithTitle
+
+    list?: ListWithTitle;
+    
     links?: LinkListWithTitle;
 
   }

@@ -5,7 +5,6 @@ export interface PictureMedia {
 export default interface Picture {
   src: string,
   alt: string
-
-  source?: PictureMedia[]
+  source?: PictureMedia[],
 
 }

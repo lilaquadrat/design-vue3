@@ -21,7 +21,6 @@ const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props
   <section :id="id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
     <h1 v-if="headline">{{ headline }}</h1>
     <h2 v-if="subline">{{ subline }}</h2>
-
     <h3 v-if="intro">{{ intro }}</h3>
     <p v-for="(singleText, index) in text" :key="`text-${index}`">
       {{ singleText }}
@@ -49,6 +48,7 @@ const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props
 
   h2 + h3 {
     .multi(margin-top, 2);
+    
   }
 
   &.bright {
