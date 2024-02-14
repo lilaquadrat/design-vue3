@@ -37,9 +37,32 @@ async function getContent () {
 
 onBeforeMount(async () => await getContent());
 
+const useData = computed(() => {
+
+  if(data?.value?.data?.modules) return data.value?.data;
+
+  if(store.staticData) {
+
+    if(props.hint) {
+  
+      return store.staticData[props.hint];
+  
+    }
+  
+    if(props.status > 0) {
+  
+      return store.staticData[props.status];
+  
+    }
+
+  }
+
+  return undefined;
+
+});
 const contentMerged = computed(() => {
 
-  if(data.value) return prepareContent(data.value?.data);
+  if(useData.value) return prepareContent(useData.value);
   return prepareContent({})
 
 }); 

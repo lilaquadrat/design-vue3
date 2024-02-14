@@ -4,13 +4,19 @@ import type { BasicData, Content } from '@lilaquadrat/interfaces';
 import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
 import type ApiConfig from '@/interfaces/ApiConfig';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
+import { type Auth0ClientOptions } from '@auth0/auth0-spa-js';
+import { useAuth } from '@/plugins/auth';
+import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 
 export const useMainStore = defineStore('main', () => {
 
+  const startupDone = ref<boolean>(false);
   const data = ref<Partial<Content>>({});
   const layout = ref<Partial<Content>>({});
   const configuration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
+  const config = ref<FrontendConfig>();
+  const auth0Options = ref<Auth0ClientOptions>();
   const apiConfig = ref<ApiConfig>({
     mode           : 'custom',
     customEndpoints: {
@@ -19,7 +25,8 @@ export const useMainStore = defineStore('main', () => {
     },
     company: 'company',
     project: 'project',
-  })
+  });
+  const staticData = ref<Record<string, Partial<Content>>>();
 
   function setData (value: Partial<Content>) {
 
@@ -68,8 +75,9 @@ export const useMainStore = defineStore('main', () => {
   async function getContent (params: { latest: true, predefined: true, categories: string[] }): Promise<SDKResponse<BasicData<Content>>>
   async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }): Promise<SDKResponse<BasicData<Content>>> {
 
-    const data = ref<SDKResponse<BasicData<Content>>>();
-    const sdk = new StudioSDK('design', apiConfig.value);
+    const {authToken} = useAuth(); 
+    const data = ref<Partial<SDKResponse<BasicData<Content>>>>();
+    const sdk = new StudioSDK(config.value?.name as string, {...apiConfig.value, authToken});
 
     try {
 
@@ -93,7 +101,16 @@ export const useMainStore = defineStore('main', () => {
 
     } catch (error) {
 
-      data.value = {status: error.response.status};
+      console.log(error);
+
+      if('code' in error) {
+
+        data.value = {status: 401}
+
+      } else {
+
+        data.value = {status: error?.response?.status};
+      }
       
     }
 
@@ -111,7 +128,11 @@ export const useMainStore = defineStore('main', () => {
     setConfiguration,
     configuration,
     apiConfig,
-    getContent
+    getContent,
+    startupDone,
+    auth0Options,
+    config,
+    staticData
   }
 
 });

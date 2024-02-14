@@ -1,3 +1,4 @@
+import logger from '@/mixins/logger';
 import { ref } from 'vue';
 
 class Youtube {
@@ -48,7 +49,7 @@ const youtubePlugin = new Youtube();
 const plugin = {
   install: (): void => {
     // this exists only for initialization purposes
-    console.log('youtube plugin installed');
+    logger.plugins('youtube installed');
   },
 };
 

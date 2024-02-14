@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type SelectOption from '@/interfaces/selectOption.interface';
 import type { ParsedError } from '@/libs/ActionNotice';
-import hardCopy from '@/mixins/hardCopy';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
 import { useTranslations } from '@/plugins/translations';
+import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch } from 'vue';
 

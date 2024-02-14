@@ -4,6 +4,7 @@ import useEditorStore from '@/stores/editor.store';
 import { onMounted } from 'vue';
 import modules from './modules';
 import useMainStore from '@/stores/main.store';
+import staticData from './staticData';
 
 const editorStore = useEditorStore();
 const mainStore = useMainStore();
@@ -34,6 +35,12 @@ onMounted(() => {
       company: process.env.company,
       project: process.env.project,
     };
+
+  }
+
+  if(staticData) {
+
+    mainStore.staticData = staticData;
 
   }
 

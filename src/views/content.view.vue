@@ -30,6 +30,7 @@ function getContentId (contentType: 'public' | 'member', pathMatch?: string) {
 async function getContent () {
 
   loading.value = 0;
+  error.value = false;
 
   const contentId = getContentId(contentType.value, route.params.pathMatch as string);
 
@@ -76,6 +77,7 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
+    {{ error }} {{ loading }}
         <lila-error-partial v-if="error" :status="loading" :hint="loading === 404 ? 'error404' : undefined" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>

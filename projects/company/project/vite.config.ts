@@ -4,7 +4,8 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-// https://vitejs.dev/config/
+import config from './config';
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -33,6 +34,7 @@ export default defineConfig({
   define: {
     'process.env.company': JSON.stringify('company'),
     'process.env.project': JSON.stringify('project'),
+    '__FRONTEND_CONFIG__': JSON.stringify(config)
     // 'process.env.apiMode': JSON.stringify('https://api.example.com')
   }
 });

@@ -56,7 +56,7 @@ async function getContent () {
 
       data.value = undefined;
       error.value = true;
-      loading.value = e.response.status;
+      loading.value = e?.response?.status;
         
     }
 

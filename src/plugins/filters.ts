@@ -1,3 +1,4 @@
+import logger from '@/mixins/logger';
 import type { App } from 'vue';
 
 const HelpersPlugin = {
@@ -11,7 +12,7 @@ const plugin = {
   install: (vue: App): void => {
 
     vue.config.globalProperties.$helpers = HelpersPlugin;
-    console.log('helpers plugin installed');
+    logger.plugins('helpers installed')
   },
 };
 

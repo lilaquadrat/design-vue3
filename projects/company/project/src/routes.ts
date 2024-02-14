@@ -3,6 +3,7 @@ import PreviewView from '@/views/preview.view.vue';
 import ContentView from '@/views/content.view.vue';
 import EditorView from '@/views/editor.view.vue';
 import MainView from '@/views/main.view.vue';
+import LoginView from '@/views/login.view.vue';
 
 const routes: readonly RouteRecordRaw[] = [
   {
@@ -34,6 +35,11 @@ const routes: readonly RouteRecordRaw[] = [
         }
       },
     ]
+  },
+  {
+    path     : '/login-callback',
+    name     : 'login-callback',
+    component: LoginView
   },
   {
     path     : '/preview/:pathMatch(.*)?',

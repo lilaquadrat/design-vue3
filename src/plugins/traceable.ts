@@ -1,9 +1,10 @@
+import logger from '@/mixins/logger';
 import useCallStore from '@/stores/calls.store';
 import type { Ref } from 'vue';
 
 const plugin = {
   install: (): void => {
-    console.log('traceable plugin installed');
+    logger.plugins('traceable installed')
   },
 };
 const useTraceable = () => {

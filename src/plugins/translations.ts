@@ -1,3 +1,4 @@
+import logger from '@/mixins/logger';
 import useTranslationsStore from '@/stores/translations.store';
 import type { App } from 'vue';
 
@@ -100,7 +101,8 @@ const plugin = {
     vue.config.globalProperties.$translate = (value: string, values?: string[]) => translationPlugin.translate(value, values);
     vue.config.globalProperties.$translateWithDiff = (key: string, value: number) => translationPlugin.translateWithDiff(key, value);
 
-    console.log('translate plugin installed');
+    logger.plugins('translate installed');
+    
   },
 };
 const useTranslations = () => {

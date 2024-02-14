@@ -11,9 +11,11 @@ import de from '@/translations/de';
 import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
 import traceablePlugin from '@/plugins/traceable';
+import authPlugin from '@/plugins/auth';
 import './models';
 import modules from './modules';
 import partials from './partials';
+import hooks from '@/mixins/hooks';
 
 // const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
 // const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
@@ -31,15 +33,21 @@ const currentUrl = new URL(window.location.toString());
 const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
 
 app.use(createPinia());
-app.use(createRouter(ISLOCAL ? editorRoutes : routes));
+
+const router = createRouter(ISLOCAL ? editorRoutes : routes);
+
+app.use(router);
 
 app.use(translations);
 app.use(HelpersPlugin);
 app.use(resizePlugin);
 app.use(youtubePlugin);
 app.use(traceablePlugin);
+app.use(authPlugin);
 
 app.config.globalProperties.$translations.add(de, 'de');
 app.config.globalProperties.$translations.select('de');
 
 app.mount('#app');
+
+hooks(router);

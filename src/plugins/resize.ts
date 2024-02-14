@@ -1,3 +1,4 @@
+import logger from '@/mixins/logger';
 import { ref, type App } from 'vue';
 
 class Resize {
@@ -95,7 +96,7 @@ const resize = new Resize();
 const plugin = {
   install: (): void => {
     // this exists only for initialization purposes
-    console.log('resize plugin installed');
+    logger.plugins('resize installed');
   },
 };
 

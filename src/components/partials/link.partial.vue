@@ -2,6 +2,7 @@
 import type IconsPartial from '@/interfaces/IconsPartial';
 import { onBeforeMount } from 'vue';
 import { computed, getCurrentInstance, inject, ref } from 'vue';
+import triggerEvent from '@/plugins/events';
 
 const props = defineProps<{
   link: string
@@ -19,12 +20,9 @@ const linkBase = inject('linkBase');
 const linkWithBase = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
 const isWhite = computed(() => props.variant?.includes('white'));
 const isStatic = computed(() => props.attributes?.includes('static'));
-const isEvent = computed(() => props.attributes?.includes('static'));
+const isEvent = computed(() => props.attributes?.includes('event'));
 const type = computed(() => linkMode !== 'event' && !isStatic.value && !isEvent.value && !isExternal.value ? 'router-link': 'a');
 const isExternal = ref<boolean>(false);
-const emit = defineEmits<{
-  (e: string, id: string): void;
-}>();
 
 onBeforeMount(() => {
 
@@ -42,24 +40,12 @@ function analyse (link: string) {
 
 function event ($event: MouseEvent) {
 
-  if (props.attributes?.includes('event') || linkMode === 'event') {
+  if (isEvent.value || linkMode === 'event') {
 
     $event.preventDefault();
 
-    const instance = getCurrentInstance();
+    triggerEvent(props.link);
 
-    if (linkMode === 'event') {
-
-      instance?.emit('integratedLink', { link: props.link.slice(1), text: props.text });
-      // this.$root.$emit('integratedLink', { link: this.link, text: this.text });
-    } else {
-
-      emit(props.link.slice(1), props.text as string);
-      instance?.emit(props.link.slice(1), props.text);
-
-      // this.$emit(this.link.slice(1), this.text);
-      // this.$root.$emit(this.link.slice(1), this.text);
-    }
   }
 
 }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import hardCopy from '@/mixins/hardCopy';
 import useEditorStore from '@/stores/editor.store';
-import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
+import { hardCopy, prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { nextTick, onMounted, ref } from 'vue';
 import { type Content, type ContentWithPositions, type EditorActiveModule, type StudioIframeMessage } from '@lilaquadrat/interfaces';
 import { onBeforeUnmount } from 'vue';
