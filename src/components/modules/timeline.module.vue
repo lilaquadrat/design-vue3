@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ inheritAttrs: false }); //
 
 const props = defineProps<
   ModuleBaseProps & {
@@ -15,13 +15,6 @@ const props = defineProps<
 >();
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
-
-// watch(() => props.elements, () => {
-
-//     console.log('watch:',setElements(elementsExtended))
-
-// });
-
 onBeforeMount(() => {
   console.log('onBeforeMount:', props.elements);
 
@@ -30,7 +23,6 @@ onBeforeMount(() => {
     // console.log('onBeforeMount:', elementsExtended)
   }
 });
-
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
   let lastElementPosition: string;
@@ -58,15 +50,16 @@ function setElements (elements: TimelineElement[]) {
       ...item,
       position,
     });
-
+    lastElementPosition = position;
   });
 
   elementsExtended.value = positionedItem;
 }
 
+
+
+
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-// kürzere Schreibweise des oberen Codes
-// wenn props.date existiert, dann bitte damit erstellen
 const formattedDate = computed(() => {
   // null als spezielle Art
   const date = props.date ? dayjs(props.date) : null;
@@ -94,11 +87,12 @@ const formattedDate = computed(() => {
             <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
               <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
               <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
-              <lila-quote-partial v-if="item.type === 'quote'" v-bind="item" />
+              <!-- <lila-quote-partial v-if="item.type === 'quote'" v-bind="item" /> -->
             </template>
         </section>
-        <section v-if="element.textblock" class="text-container">
+        <section v-if="element" class="text-container">
             <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
+            <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
         </section>
       </section>
     </section>
@@ -117,15 +111,16 @@ const formattedDate = computed(() => {
 
         display: grid;
         grid-template-columns: 2fr 8px 4fr;
-        grid-template-rows: 75px max-content max-content 75px;
+        grid-template-rows: max-content max-content;
         // 424px minmax(auto, 1fr) minmax(auto, 1fr);
-        gap: 40px;
+        gap: 50px 0;
 
         .time-container {
             display: grid;
             justify-self: end;
             justify-items: end;
             .font-head;
+            padding:0 40px;
 
             grid-template-rows: max-content max-content;
             gap: 5px;
@@ -147,8 +142,9 @@ const formattedDate = computed(() => {
 
         .media-container {
             display: grid;
-
-            gap: 40px 0;
+          
+            gap: 27px 0 ;
+            padding:0 40px;
 
             grid-column-start: 1;
 
@@ -160,56 +156,79 @@ const formattedDate = computed(() => {
             :deep(.lila-figure) {
                 grid-template-columns: auto;
                 justify-content: left;
+                
             }
 
         }
         .text-container {
             grid-row-start: 3;
             grid-row-end: 4;
+            padding:0 40px;
         }
 
         .timeline-container {
 
-            grid-row-start: 1;
-            grid-row-end: 5;
+            grid-row: 1/5;
             grid-column-start: 2;
-
+            
             position: relative;
-
             background-color: @color4;
 
-        }
-
-        &.noMedia {
-
-            grid-template-rows: 50px 1fr 50px;
-
-            .text-container {
-                grid-column-start: 3;
-                grid-row-start: 2;
+            &::after,
+            &::before {
+                content: '';
+                position: absolute;
+                width: 8px;
+                background: @color4;
+                border-radius: 99px;
+                
             }
-
-            .timeline-container {
-                grid-column-start: 2;
-                grid-row-start: 1;
+            &::after {
+                top: 0;
+                bottom: -1px;
             }
-
+            &::before {
+                top: -1px;
+                bottom: 0;
+            }
         }
 
         &.right {
             .text-container {
                 grid-column-start: 1;
+               
             }
 
             .media-container, .time-container  {
                 grid-column-start: 3;
+                
             }
-
             .time-container {
                 justify-self: start;
                 justify-items: start;
+               
             }
         }
+        &.noMedia {
+
+          grid-template-rows: 50px 1fr 50px;
+
+          .text-container {
+              grid-column-start: 3;
+              grid-row-start: 2;
+          }
+
+          .timeline-container {
+              grid-column-start: 2;
+              grid-row-start: 1;
+          }
+
+          .media-container {
+            border: red 2px solid;
+          }
+
+        }
+
     }
 
   }
