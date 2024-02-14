@@ -7,6 +7,7 @@ import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import { type Auth0ClientOptions } from '@auth0/auth0-spa-js';
 import { useAuth } from '@/plugins/auth';
 import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
+import type { AxiosError } from 'node_modules/axios/index.cjs';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -70,46 +71,50 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  async function getContent (params: { id: string }): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { internalId: string }): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { latest: true, predefined: true, categories: string[] }): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }): Promise<SDKResponse<BasicData<Content>>> {
+  async function getContent (params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
 
     const {authToken} = useAuth(); 
     const data = ref<Partial<SDKResponse<BasicData<Content>>>>();
     const sdk = new StudioSDK(config.value?.name as string, {...apiConfig.value, authToken});
+    const targetWithType = sdk[type === 'members' ? 'apps' : 'public'];
 
     try {
 
-      if (params.predefined && !params.latest && params.id) {
+      if (params.predefined && !params.latest && params.id && type === 'public') {
 
         data.value = await sdk.public.content.predefined(params.id);
   
-      } else if (params.predefined && params.latest && params.categories) {
+      } else if (params.predefined && params.latest && params.categories && type === 'public') {
   
         data.value = await sdk.public.content.predefinedLatest(params.categories);
   
       } else if(params.internalId) {
   
-        data.value = await sdk.public.content.getByInternalId(params.internalId);
+        data.value = await targetWithType.content.getByInternalId(params.internalId);
   
       } else if(params.id) {
   
-        data.value = await sdk.public.content.getById(params.id);
+        data.value = await targetWithType.content.getById(params.id);
   
       }
 
-    } catch (error) {
+    } catch (e) {
+
+      const error = e as AxiosError;
 
       console.log(error);
 
-      if('code' in error) {
+      if(!error.response?.status) {
 
-        data.value = {status: 401}
+        data.value = {status: 400}
 
       } else {
 
         data.value = {status: error?.response?.status};
+
       }
       
     }

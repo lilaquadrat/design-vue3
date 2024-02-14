@@ -62,6 +62,12 @@ class Auth {
 
   }
 
+  triggerLogout () {
+
+    this.auth0.logout();
+
+  }
+
   async handleCallback () {
 
     const result = await this.auth0.handleRedirectCallback();

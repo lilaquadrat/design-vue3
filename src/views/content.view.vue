@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import type { BasicData, Content } from '@lilaquadrat/interfaces';
+import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
+import type { BasicData, Content, GenericData } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
@@ -17,9 +17,9 @@ const error = ref<boolean>(false);
 watch(route, () => getContent());
 onBeforeMount(() => getContent());
 
-const contentType = computed(() => route.meta.contentType as 'public' | 'member');
+const contentType = computed(() => route.meta.contentType as 'public' | 'members');
 
-function getContentId (contentType: 'public' | 'member', pathMatch?: string) {
+function getContentId (contentType: 'public' | 'members', pathMatch?: string) {
 
   const name = pathMatch ? pathMatch : 'home';
 
@@ -34,7 +34,7 @@ async function getContent () {
 
   const contentId = getContentId(contentType.value, route.params.pathMatch as string);
 
-  data.value = await store.getContent({id: contentId});
+  data.value = await store.getContent({id: contentId}, contentType.value);
 
   if(data.value.status === 200) {
 
@@ -42,7 +42,7 @@ async function getContent () {
 
     if(data.value.data.settings.useLayout) {
 
-      layout.value = await store.getContent({internalId: data.value.data.settings.useLayout.toString()});
+      layout.value = await store.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
       loading.value = 200;
 
     } else {
@@ -52,7 +52,7 @@ async function getContent () {
 
     }
 
-  } else if (data.value.status === 403 || data.value.status === 401) {
+  } else if (data.value.status === 403 || data.value.status === 401 || data.value.status === 400) {
 
     error.value = true;
     loading.value = data.value.status;
@@ -68,7 +68,17 @@ async function getContent () {
 
 const contentMerged = computed(() => {
 
-  if(loading.value === 200 && data.value) return prepareContent(data.value?.data, layout.value?.data);
+  if(loading.value === 200 && data.value) {
+
+    const safeData = hardCopy(data.value?.data);
+  
+    distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
+
+    console.log(safeData);
+  
+    return prepareContent(safeData, layout.value?.data);
+  }
+
   return prepareContent({})
 
 }); 
@@ -77,7 +87,6 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
-    {{ error }} {{ loading }}
         <lila-error-partial v-if="error" :status="loading" :hint="loading === 404 ? 'error404' : undefined" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>

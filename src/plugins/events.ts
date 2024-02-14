@@ -8,6 +8,8 @@ const events = {
   },
   logout: (params?: Record<string, unknown>) => {
 
+    auth.triggerLogout();
+
   }
 }
 

@@ -39,7 +39,19 @@ const emit = defineEmits<{
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
-const list = computed<BasicData<List>>(() => props.genericData.data[props.genericData.lists[0]] as BasicData<List>);
+const list = computed<BasicData<List>>(() => {
+
+  console.log(props.genericData, props);
+
+  if(props.genericData.data) {
+
+    return props.genericData.data[props.genericData.lists[0]] as BasicData<List>
+
+  }
+
+  return undefined;
+
+});
 
 /**
  * fills the categoriesExtended with the categories
@@ -111,7 +123,7 @@ const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
  ** state is sucess
  ** editor modes inlcudes feedback
  */
-const showFeedback = computed(() => state.value && (state.value === 'success' || props.editor?.modes?.includes('feedback')));
+const showFeedback = computed(() => state.value && state.value === 'success' || props.editor?.modes?.includes('feedback'));
 const feedbackContent = computed(() => {
 
   if(feedback.value) {
@@ -379,6 +391,8 @@ const handleForm = async (event: Event) => {
 </script>
 <template>
   <section class="lila-contact-module lila-module">
+
+    {{ props.editor }} {{ state }}
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />

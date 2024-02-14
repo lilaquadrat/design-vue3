@@ -15,6 +15,7 @@ const data = ref<SDKResponse<BasicData<Content>>>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 const typeCache = ref<string>();
+const contentType = computed(() => route.meta.contentType as 'public' | 'members');
 
 watch(route, () => getContent());
 
@@ -32,7 +33,7 @@ function getId (contentType: string, type: 'navigation' | 'footer') {
 
 async function getContent () {
     
-  const contentId = getId(route.meta.contentType as string, props.type);
+  const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
 
   if(route.meta.contentType !== typeCache.value) {
 
@@ -49,7 +50,7 @@ async function getContent () {
         
     try {
         
-      data.value = await store.getContent({id: contentId});
+      data.value = await store.getContent({id: contentId}, contentType.value);
       loading.value = data.value.status;
 
     } catch (e) {

@@ -15,9 +15,9 @@ const changeHandler = (selected: string) => {
   emits('update:modelValue', selected);
 };
 const hasError = computed(() => !!props.error?.error);
-const highlight = computed(() => props.variant.includes('categoriesHighlight'));
-const usePercent = computed(() => props.variant.includes('categoriesPercent'));
-const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'));
+const highlight = computed(() => props.variant?.includes('categoriesHighlight'));
+const usePercent = computed(() => props.variant?.includes('categoriesPercent'));
+const hideFreeSlots = computed(() => props.variant?.includes('hide-free-slots'));
 
 </script>
 <template>
