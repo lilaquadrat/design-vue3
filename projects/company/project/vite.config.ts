@@ -32,9 +32,6 @@ export default defineConfig({
     }
   },
   define: {
-    'process.env.company': JSON.stringify('company'),
-    'process.env.project': JSON.stringify('project'),
     '__FRONTEND_CONFIG__': JSON.stringify(config)
-    // 'process.env.apiMode': JSON.stringify('https://api.example.com')
   }
 });

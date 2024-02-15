@@ -1,7 +1,16 @@
 import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 
 const config: FrontendConfig = {
-  name        : 'company-project',
+  name   : 'company-project',
+  company: 'company',
+  project: 'project',
+  api    : {
+    mode           : 'custom',
+    customEndpoints: {
+      api  : 'http://localhost:9090',
+      media: 'http://localhost:9091',
+    },
+  },
   auth0Options: {
     domain             : 'lilaquadrat-test-tennant.eu.auth0.com',
     clientId           : 'kEztwgahBVhKE95egUczBDBpo7DzhmCC',

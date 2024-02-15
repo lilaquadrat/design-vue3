@@ -13,31 +13,6 @@ onMounted(() => {
 
   editorStore.availableModulesWithRevision = { revision: 2, modules: getAvailableModules(modules.modules) };
 
-  const currentUrl = new URL(window.location.toString());
-  const ISLOCAL = currentUrl.port === '5173';
-
-  if (ISLOCAL) {
-
-    mainStore.apiConfig = {
-      mode           : 'custom',
-      customEndpoints: {
-        api  : 'http://localhost:9090',
-        media: 'http://localhost:9091',
-      },
-      company: process.env.company,
-      project: process.env.project,
-    };
-
-  } else {
-
-    mainStore.apiConfig = {
-      mode   : process.env.apiMode,
-      company: process.env.company,
-      project: process.env.project,
-    };
-
-  }
-
   if(staticData) {
 
     mainStore.staticData = staticData;

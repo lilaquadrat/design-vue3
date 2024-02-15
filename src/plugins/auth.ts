@@ -1,5 +1,7 @@
+import type AppState from '@/interfaces/AppState.interface';
+import type IdTokenExtended from '@/interfaces/IdTokenExtended.interface';
 import logger from '@/mixins/logger';
-import { Auth0Client, type Auth0ClientOptions } from '@auth0/auth0-spa-js';
+import { Auth0Client, type Auth0ClientOptions, type IdToken } from '@auth0/auth0-spa-js';
 import { ref, type App } from 'vue';
 
 class Auth {
@@ -50,15 +52,30 @@ class Auth {
 
   }
 
-  getTokenContent () {
+  async refreshToken () {
 
-    return this.auth0.getIdTokenClaims();
+    console.log('refresh token');
+    
+    this.token.value = await this.auth0.getTokenSilently({authorizationParams: {scope: 'openid profile email offline_access', audience: 'https://testapi.lilaquadrat.de'}});
+    
+    console.log(this.token.value, await this.getTokenContent());
+  }
+
+  getTokenContent (): Promise<IdTokenExtended | undefined> {
+
+    return this.auth0.getIdTokenClaims() as Promise<IdTokenExtended | undefined>;
 
   }
 
   triggerLogin (customerId?: string) {
 
-    this.auth0.loginWithRedirect({appState: {customerId}});
+    this.auth0.loginWithRedirect<AppState>({appState: {customerId}});
+
+  }
+
+  triggerRegister (customerId?: string) {
+
+    this.auth0.loginWithRedirect<AppState>({appState: {customerId}, authorizationParams: {screen_hint: 'signup'}});
 
   }
 
@@ -70,11 +87,13 @@ class Auth {
 
   async handleCallback () {
 
-    const result = await this.auth0.handleRedirectCallback();
+    const result = await this.auth0.handleRedirectCallback<AppState>();
 
     console.log(result);
     await this.updateAuthStatus();
     await this.getToken();
+
+    return result;
 
   }
 

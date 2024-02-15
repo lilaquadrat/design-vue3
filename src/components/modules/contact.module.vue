@@ -130,7 +130,7 @@ const feedbackContent = computed(() => {
     return prepareContent(feedback.value);
   }
 
-  return {}
+  return undefined;
 
 });
 const limited = computed(() => list.value?.participants?.max || null);
@@ -236,7 +236,7 @@ const getparticipantsState = async () => {
     return;
   }
 
-  const sdk = new StudioSDK('design', mainStore.apiConfig);
+  const sdk = new StudioSDK(mainStore.apiConfig);
 
   try {
    
@@ -301,10 +301,11 @@ const handleForm = async (event: Event) => {
 
   try {
     
-    const sdk = new StudioSDK('design', mainStore.apiConfig);
+    const sdk = new StudioSDK(mainStore.apiConfig);
     const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
+    const customerResponse = await traceable(call, traceId);
 
-    await traceable(call, traceId);
+    mainStore.setCustomer(customerResponse.data);
 
     //   await props.$traceable(call);
 

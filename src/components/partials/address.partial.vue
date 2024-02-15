@@ -134,7 +134,7 @@ async function update () {
 
     loading.value = true;
 
-    const sdk = new StudioSDK('design', mainStore.apiConfig);
+    const sdk = new StudioSDK(mainStore.apiConfig);
     const call = sdk.public.lists.address(search.value!);
     let response: SDKResponse<ListOfModels<Location>>;
 

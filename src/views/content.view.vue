@@ -6,9 +6,11 @@ import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
 import type { SDKResponse } from '@lilaquadrat/sdk';
+import useUserStore from '@/stores/user.store';
 
 const route = useRoute();
-const store = useMainStore();
+const mainStore = useMainStore();
+const {locked} = useUserStore();
 const data = ref<SDKResponse<BasicData<Content>>>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
@@ -18,6 +20,22 @@ watch(route, () => getContent());
 onBeforeMount(() => getContent());
 
 const contentType = computed(() => route.meta.contentType as 'public' | 'members');
+const isLocked = computed(() => contentType.value == 'members' && locked?.length);
+const hint = computed(() => {
+
+  if(loading.value === 404) {
+    return 'error404'
+  }
+
+  if(isLocked.value) {
+
+    return `error-${locked}-${contentType.value}`;
+
+  }
+
+  return undefined;
+
+});
 
 function getContentId (contentType: 'public' | 'members', pathMatch?: string) {
 
@@ -32,17 +50,30 @@ async function getContent () {
   loading.value = 0;
   error.value = false;
 
+  console.log('TRY LOCK IT', isLocked.value, locked);
+
+  if(isLocked.value) {
+
+    console.log('LOCK IT', locked);
+    error.value = true;
+    loading.value = 403;
+    return;
+
+  } 
+
   const contentId = getContentId(contentType.value, route.params.pathMatch as string);
 
-  data.value = await store.getContent({id: contentId}, contentType.value);
+  data.value = await mainStore.getContent({id: contentId}, contentType.value);
 
-  if(data.value.status === 200) {
+  const status = data.value.status;
+
+  if(status === 200) {
 
     error.value = false;
 
     if(data.value.data.settings.useLayout) {
 
-      layout.value = await store.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
+      layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
       loading.value = 200;
 
     } else {
@@ -52,12 +83,12 @@ async function getContent () {
 
     }
 
-  } else if (data.value.status === 403 || data.value.status === 401 || data.value.status === 400) {
+  } else if (status === 403 || status === 401 || status === 400) {
 
     error.value = true;
-    loading.value = data.value.status;
+    loading.value = status;
 
-  } else if (data.value.status === 204 || data.value.status === 404) {
+  } else if (status === 204 || status === 404) {
 
     error.value = true;
     loading.value = 404;
@@ -73,10 +104,8 @@ const contentMerged = computed(() => {
     const safeData = hardCopy(data.value?.data);
   
     distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
-
-    console.log(safeData);
-  
     return prepareContent(safeData, layout.value?.data);
+
   }
 
   return prepareContent({})
@@ -87,7 +116,7 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
-        <lila-error-partial v-if="error" :status="loading" :hint="loading === 404 ? 'error404' : undefined" :type="contentType" />
+        <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>
 </template>
