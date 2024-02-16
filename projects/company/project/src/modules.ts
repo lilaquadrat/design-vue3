@@ -22,6 +22,11 @@ export default
       component: () => import('@/components/modules/content.module.vue'),
     },
     {
+      name     : 'connect-user',
+      variants : [],
+      component: () => import('@/components/modules/connect-user.module.vue'),
+    },
+    {
       name     : 'blog-intro',
       variants : [],
       component: () => import('@/components/modules/blog-intro.module.vue'),
@@ -287,6 +292,11 @@ export default
       name     : 'prices',
       variants : [],
       component: () => import('@/components/modules/prices.module.vue'),
+    },
+    {
+      name     : 'placeholder',
+      variants : [],
+      component: () => import('@/components/modules/placeholder.module.vue'),
     },
     {
       name    : 'quellcode',

@@ -82,6 +82,7 @@ class Auth {
   triggerLogout () {
 
     this.auth0.logout();
+    localStorage.removeItem('lila-customer');
 
   }
 

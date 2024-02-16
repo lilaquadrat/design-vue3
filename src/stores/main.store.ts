@@ -17,6 +17,7 @@ export const useMainStore = defineStore('main', () => {
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
   const staticData = ref<Record<string, Partial<Content>>>();
+  const customModules = ref<any>();
 
   function setData (value: Partial<Content>) {
 
@@ -81,7 +82,7 @@ export const useMainStore = defineStore('main', () => {
 
     const data = ref<Partial<SDKResponse<BasicData<Content>>>>();
     const sdk = new StudioSDK(apiConfig.value);
-    const targetWithType = sdk[type === 'members' ? 'apps' : 'public'];
+    const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
 
     try {
 
@@ -138,7 +139,8 @@ export const useMainStore = defineStore('main', () => {
     startupDone,
     config,
     staticData,
-    apiConfig
+    apiConfig,
+    customModules
   }
 
 });

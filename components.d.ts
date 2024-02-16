@@ -36,13 +36,14 @@ import type textareaPartialVue from '@/components/partials/textarea.partial.vue'
 import type blogIntroModuleVue from '@/components/modules/blog-intro.module.vue';
 import type compareModuleVue from '@/components/modules/compare.module.vue';
 import type contentModuleVue from '@/components/modules/content.module.vue';
+import type actionNoticePartialVue from '@/components/partials/action-notice.partial.vue';
 
 declare module 'vue' {
     export interface GlobalComponents {
         RouterLink: typeof import('vue-router')['RouterLink']
         RouterView: typeof import('vue-router')['RouterView']
         'lila-accordion-partial': typeof accordionPartialVue
-        'lila-action-notice-partial': typeof accordionPartialVue
+        'lila-action-notice-partial': typeof actionNoticePartialVue
         'lila-address-partial': typeof addressPartialVue
         'lila-agreement-partial': typeof agreementPartialVue
         'lila-appcomponent-partial': typeof appcomponentPartialVue

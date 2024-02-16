@@ -5,6 +5,7 @@ import { onMounted } from 'vue';
 import modules from './modules';
 import useMainStore from '@/stores/main.store';
 import staticData from './staticData';
+import customModules from './customModules';
 
 const editorStore = useEditorStore();
 const mainStore = useMainStore();
@@ -16,6 +17,12 @@ onMounted(() => {
   if(staticData) {
 
     mainStore.staticData = staticData;
+
+  }
+
+  if(customModules.length) {
+
+    mainStore.customModules = customModules;
 
   }
 

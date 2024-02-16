@@ -153,6 +153,18 @@ export default class ActionNotice {
 
     }
 
+    if (error.keyword === 'invalidId') {
+
+      message = translate.translate(
+        `validation-error-${error.keyword}`,
+        [error.params.invalid],
+      );
+
+      translatedPath = '';
+      path = error.params.invalid;
+
+    }
+
     if (error.keyword === 'DOCUMENT_ALREADY_EXISTS') {
 
       message = translate.translate(

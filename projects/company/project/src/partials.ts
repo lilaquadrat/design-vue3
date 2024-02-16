@@ -36,6 +36,10 @@ export default [
     component: () => import('@/components/partials/content-head.partial.vue'),
   },
   {
+    name     : 'connect-user',
+    component: () => import('@/components/partials/connect-user.partial.vue'),
+  },
+  {
     name     : 'description',
     component: () => import('@/components/partials/description.partial.vue'),
   },

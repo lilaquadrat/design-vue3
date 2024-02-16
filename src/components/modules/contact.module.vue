@@ -13,11 +13,13 @@ import StudioSDK from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
 import { useTraceable } from '@/plugins/traceable';
+import useUserStore from '@/stores/user.store';
 
 defineOptions({ inheritAttrs: false });
 
 const {traceable} = useTraceable();
 const mainStore = useMainStore();
+const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
     categoryTextblock: Textblock;
@@ -305,7 +307,7 @@ const handleForm = async (event: Event) => {
     const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
     const customerResponse = await traceable(call, traceId);
 
-    mainStore.setCustomer(customerResponse.data);
+    setCustomer(customerResponse.data);
 
     //   await props.$traceable(call);
 

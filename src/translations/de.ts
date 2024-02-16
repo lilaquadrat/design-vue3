@@ -18,6 +18,8 @@ export default {
   'validation-error-contains'                                                                             : 'muss mindestens %s valide(s) Element(e) besitzen',
   'validation-error-required'                                                                             : 'muss gesetzt sein',
   'validation-error-accepted'                                                                             : 'Vereinbarungen müssen akzeptiert werden',
+  'validation-error-invalidId'                                                                            : 'ist keine valide ID',
+  'validation-error-USER_ALREADY_CONNECTED'                                                               : 'Der Benutzer ist bereits mit einem Account verbunden',
   city                                                                                                    : 'Stadt',
   zipcode                                                                                                 : 'Postleitzahl',
   'street & number'                                                                                       : 'Straße & Hausnummer',
@@ -119,5 +121,7 @@ export default {
   'Something went wrong'                                                                                  : 'Hier ist etwas schief gelaufen',
   'The content is missing'                                                                                : 'Der Inhalt wurde nicht gefunden',
   'CONTENT_NOT_FOUND'                                                                                     : 'Inhalt wurde nicht gefunden',
-  'CONTENT_LOADING'                                                                                       : 'Wird geladen'
+  'CONTENT_LOADING'                                                                                       : 'Wird geladen',
+  'customerId'                                                                                            : 'Kunden ID',
+  'connect-to-user'                                                                                       : 'Account verbinden'
 };

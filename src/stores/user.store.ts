@@ -19,7 +19,6 @@ export const useUserStore = defineStore('user', () => {
 
   async function initCustomer () {
 
-    const mainStore = useMainStore();
     const customerData = localStorage.getItem('lila-customer');
 
     logger.userstore('init');
@@ -29,10 +28,22 @@ export const useUserStore = defineStore('user', () => {
       customer.value = JSON.parse(customerData);
 
     }
-    
+
+    await updateLock();
+
+    logger.userstore('done');
+
+  }
+
+  async function updateLock () {
+
+    const mainStore = useMainStore();
+
     if(auth.isAuth.value) {
       
       const token = await auth.getTokenContent();
+
+      locked.value = undefined;
 
       /**
       * check if a customerId is given and user is not connected
@@ -49,7 +60,7 @@ export const useUserStore = defineStore('user', () => {
 
         try {
           
-          isConnected = (await sdk.apps.me.isConnected()).status === 200;
+          isConnected = (await sdk.members.me.isConnected()).status === 200;
 
         } catch (error) {
 
@@ -67,15 +78,14 @@ export const useUserStore = defineStore('user', () => {
       }
 
     }
-
-    logger.userstore('done');
-
+    
   }
 
   return {
     locked,
     setCustomer,
     initCustomer,
+    updateLock,
     customer
   }
 

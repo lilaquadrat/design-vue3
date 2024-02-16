@@ -1,8 +1,6 @@
-import useMainStore from '@/stores/main.store';
 import { auth } from './auth';
 import useUserStore from '@/stores/user.store';
 
-const mainStore = useMainStore();
 const userStore = useUserStore();
 const events = {
   login: (params?: Record<string, unknown>) => {

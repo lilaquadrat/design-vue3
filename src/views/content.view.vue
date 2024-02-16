@@ -10,17 +10,18 @@ import useUserStore from '@/stores/user.store';
 
 const route = useRoute();
 const mainStore = useMainStore();
-const {locked} = useUserStore();
+const userStore = useUserStore();
 const data = ref<SDKResponse<BasicData<Content>>>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 
 watch(route, () => getContent());
+watch(() => userStore.locked, () => getContent());
 onBeforeMount(() => getContent());
 
 const contentType = computed(() => route.meta.contentType as 'public' | 'members');
-const isLocked = computed(() => contentType.value == 'members' && locked?.length);
+const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 const hint = computed(() => {
 
   if(loading.value === 404) {
@@ -29,7 +30,7 @@ const hint = computed(() => {
 
   if(isLocked.value) {
 
-    return `error-${locked}-${contentType.value}`;
+    return `error-${userStore.locked}-${contentType.value}`;
 
   }
 
@@ -50,11 +51,8 @@ async function getContent () {
   loading.value = 0;
   error.value = false;
 
-  console.log('TRY LOCK IT', isLocked.value, locked);
-
   if(isLocked.value) {
 
-    console.log('LOCK IT', locked);
     error.value = true;
     loading.value = 403;
     return;
@@ -116,6 +114,7 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
+      {{ userStore.locked }}
         <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>

@@ -11,17 +11,17 @@ const props = defineProps<{
     type: 'footer' | 'navigation'
 }>();
 const store = useMainStore();
-const {locked} = useUserStore();
+const userStore = useUserStore();
 const route = useRoute();
 const data = ref<SDKResponse<BasicData<Content>>>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 const typeCache = ref<string>();
 const contentType = computed(() => route.meta.contentType as 'public' | 'members');
-const isLocked = computed(() => contentType.value == 'members' && locked?.length);
+const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 
 watch(route, () => getContent());
-watch(() => locked, () => getContent());
+watch(() => userStore.locked, () => getContent());
 
 onMounted(() => {
 
