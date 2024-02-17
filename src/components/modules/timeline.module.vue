@@ -35,6 +35,9 @@ function setElements (elements: TimelineElement[]) {
 
       console.log(lastElementPosition);
       if(lastElementPosition === 'left') position = 'right';
+      else if(index >0 && !item.media?.length && lastElementPosition === 'left') {
+        position = 'noMedia'
+      }
 
     }
 
@@ -93,6 +96,8 @@ const formattedDate = computed(() => {
         <section v-if="element" class="text-container">
             <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
             <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
+            <lila-list-partial  v-if="element.list" v-bind="element.list"/>
+            <lila-list-partial v-if="element.links" v-bind="element.links" />
         </section>
       </section>
     </section>
@@ -103,7 +108,11 @@ const formattedDate = computed(() => {
 .lila-timeline-module {
   .module; // zentriert alles
   max-width: @moduleWidth_L;
-
+  
+  @media @smartphone {
+    padding: 0;
+  }
+  
   .elements-container {
     display: grid;
 
@@ -111,23 +120,31 @@ const formattedDate = computed(() => {
 
         display: grid;
         grid-template-columns: 2fr 8px 4fr;
-        grid-template-rows: max-content max-content;
+        // grid-template-rows: 75px max-content max-content 75px;
+        grid-template-rows:25px  max-content max-content 25px;
         // 424px minmax(auto, 1fr) minmax(auto, 1fr);
-        gap: 50px 0;
+        gap:50px 0;
 
+        @media @smartphone {
+          // grid-gap: 200px;
+          grid: auto / auto-flow max-content  auto 330px; 
+          overflow:auto;
+          gap: 25px 0;
+        }
+       
         .time-container {
             display: grid;
             justify-self: end;
             justify-items: end;
-            .font-head;
             padding:0 40px;
-
+            .font-head;
             grid-template-rows: max-content max-content;
             gap: 5px;
 
             grid-row-start: 2;
             grid-row-end: 3;
 
+            
             .year {
                 font-size: 60px;
                 line-height: 62px;
@@ -138,8 +155,20 @@ const formattedDate = computed(() => {
                 color: @color1;
                 grid-row-start: 2;
             }
+            @media @smartphone {
+              grid-column-start: 3;
+              justify-self: start;
+              justify-items: start;
+              padding: 0 20px; 
+              .year {
+                font-size: @headline_XL;
+              }
+              .dayMonth {
+                .font-bold;
+                font-size: 25px;
+              }
+            }
         }
-
         .media-container {
             display: grid;
           
@@ -158,19 +187,49 @@ const formattedDate = computed(() => {
                 justify-content: left;
                 
             }
+            @media @smartphone {
+              padding: 0 20px; 
+             
+            }
+           
 
         }
         .text-container {
             grid-row-start: 3;
             grid-row-end: 4;
             padding:0 40px;
+
+            @media @smartphone {
+              
+              padding: 0 20px; 
+
+              :deep(.lila-textblock){
+                
+                  h1 {
+                    font-size: 25px;
+                    line-height: 27px;
+                    .font-bold;
+                  }
+                  
+                  h2 {
+                    font-size: 22px;
+                  }
+
+                  h3 {
+                    .font-bold;
+                    font-size: @fontText;
+                    color: @textColor;
+                  }
+                  h2 + h3 {
+                  .multi(margin-top, 0);
+                  }
+              }
+            }
         }
 
         .timeline-container {
-
+            grid-column-start: 2;;
             grid-row: 1/5;
-            grid-column-start: 2;
-            
             position: relative;
             background-color: @color4;
 
@@ -181,14 +240,18 @@ const formattedDate = computed(() => {
                 width: 8px;
                 background: @color4;
                 border-radius: 99px;
+
+                @media @smartphone {
+                  width: 5px;
+                } 
                 
             }
             &::after {
                 top: 0;
-                bottom: -1px;
+                bottom: -5px;
             }
             &::before {
-                top: -1px;
+                top: -5px;
                 bottom: 0;
             }
         }
@@ -196,7 +259,7 @@ const formattedDate = computed(() => {
         &.right {
             .text-container {
                 grid-column-start: 1;
-               
+
             }
 
             .media-container, .time-container  {
@@ -208,27 +271,38 @@ const formattedDate = computed(() => {
                 justify-items: start;
                
             }
+            @media @smartphone {
+              .text-container {
+                grid-column-start: 3;
+              }
+              .media-container {
+                grid-column-start: 1;
+              }
+            }
         }
         &.noMedia {
-
-          grid-template-rows: 50px 1fr 50px;
-
+          // grid-template-rows: 50px 1fr 50px;
           .text-container {
               grid-column-start: 3;
               grid-row-start: 2;
           }
 
-          .timeline-container {
-              grid-column-start: 2;
+          // .timeline-container {
+          //     // grid-column-start: 2;
+          //     // grid-row-start: 1;
+          // }
+          @media @smartphone {
+            .text-container {
+              grid-column-start: 3;
+              grid-row-start: 3;
+            }
+            .timeline-container{
+              grid-column-start: 3;
               grid-row-start: 1;
+              width: 5px;
           }
-
-          .media-container {
-            border: red 2px solid;
           }
-
         }
-
     }
 
   }

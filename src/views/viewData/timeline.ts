@@ -121,9 +121,19 @@ export default {
             ],
           },
         },
+        {
+          links: {
+            title: 'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            value: [
+              {
+                link: '/test',
+                text: 'Please find more here!'
+              },
+            ]
+          }
+        },
         { 
           textblock: {
-            headline: 'JEDES ANLIEGEN VERDIENT GEHÖR.',
             subline : 'Der Support ist inklusive.',
             intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
             text    : [
@@ -148,6 +158,18 @@ export default {
 
         //   ]
         // },
+        {
+          list: {
+            value: [
+              'Entry with some longer text',
+              'Normal entry',
+              'entry 3',
+              'entry 4',
+              'entry 5',
+            ],
+            title: 'some nice list',
+          },
+        },
         { 
           quote: 
              {
@@ -190,18 +212,18 @@ export default {
             ],
           },
           media: [
-            // {
-            //   type  : 'picture',
-            //   source: [],
-            //   alt   : 'IMAGE ALT',
-            //   src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/rectangle1.png',
-            // }, 
             {
-              type      : 'video',
-              src       : 'https://www.youtube.com/watch?v=TZE9gVF1QbA',
-              attributes: [],
-              preload   : 'auto',
-            }
+              type  : 'picture',
+              source: [],
+              alt   : 'IMAGE ALT',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/rectangle1.png',
+            }, 
+            // {
+            //   type      : 'video',
+            //   src       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
+            //   attributes: [],
+            //   preload   : 'auto',
+            // }
           ],
         },
       ],
