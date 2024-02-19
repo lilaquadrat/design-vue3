@@ -7,7 +7,7 @@ import type Quote from "./Quote.interfaces";
 
 
 export interface TimelineElement {
-    media: ((Video | Picture )&{type: string})[]
+    media: ((Video |Quote| Picture )&{type: string})[]
     textblock?: Textblock;
     list?: ListWithTitle;
     links?: LinkListWithTitle;
