@@ -11,7 +11,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
-  rules: {
+  ignorePatterns: ['node_modules/'],
+  rules         : {
     semi                            : 0,
     'brace-style'                   : ['error', '1tbs', { allowSingleLine: true }],
     'multiline-ternary'             : ['error', 'always-multiline'],

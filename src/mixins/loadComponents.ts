@@ -1,3 +1,4 @@
+import type { Content } from '@lilaquadrat/interfaces';
 import { defineAsyncComponent, type App, type Component, type AsyncComponentLoader } from 'vue';
 
 function getName (name: string, type: 'module' | 'partial', namespace?: string) {
@@ -44,7 +45,7 @@ function loadViaDeclaration (components: {name: string, component: AsyncComponen
 
 function getAvailableModules (modules: any[]) {
 
-  return modules.map((single) => ({
+  return modules.filter((single) => single.availableInEditor !== false).map((single) => ({
     name    : `${single.name}-module`,
     variants: single.variants || [],
     editor  : single.editor || {},
@@ -52,8 +53,47 @@ function getAvailableModules (modules: any[]) {
 
 }
 
+function createModulesArray (modules: any[]) {
+
+  const modulesArray: any[] = [];
+
+  modules.forEach((singleModule) => {
+
+    if(!singleModule.target) return;
+
+    const foundModule = modulesArray.find((single) => single.name === singleModule.name);
+    const useModule = foundModule
+      ? foundModule
+      : {
+        name   : singleModule.name,
+        targets: {}
+      }
+
+    singleModule.target.forEach((target: string) => {
+
+      useModule.targets[target] = {
+        variants  : singleModule.variants,
+        components: singleModule.component,
+        name      : singleModule.name
+      };
+
+    });
+
+    if(!foundModule) {
+
+      modulesArray.push(useModule);
+
+    }
+
+  });
+
+  return modulesArray;
+
+}
+
 export {
   loadViaGlob,
   loadViaDeclaration,
-  getAvailableModules
+  getAvailableModules,
+  createModulesArray,
 }

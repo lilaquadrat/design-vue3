@@ -100,8 +100,11 @@ const contentMerged = computed(() => {
   if(loading.value === 200 && data.value) {
 
     const safeData = hardCopy(data.value?.data);
-  
+
+    console.log(safeData.genericData, generateDataWithContent(safeData.genericData as GenericData));
+    
     distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
+    console.log(safeData.modules);
     return prepareContent(safeData, layout.value?.data);
 
   }
@@ -114,7 +117,6 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
-      {{ userStore.locked }}
         <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>

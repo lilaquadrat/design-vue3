@@ -3,28 +3,16 @@ export default
   revision: 2,
   modules : [
     {
-      name    : 'text',
-      variants: [ 
-        {
-          key : 'center',
-          name: 'Text zentriert',
-        },
-        {
-          key : 'notice',
-          name: 'Module ist mit der Hauptfarbe hinterlegt',
-        },
-      ],
-      component: () => import('@/components/modules/text.module.vue'),
+      name             : 'content',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/content.module.vue'),
     },
     {
-      name     : 'content',
-      variants : [],
-      component: () => import('@/components/modules/content.module.vue'),
-    },
-    {
-      name     : 'connect-user',
-      variants : [],
-      component: () => import('@/components/modules/connect-user.module.vue'),
+      name             : 'connect-user',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/connect-user.module.vue'),
     },
     {
       name     : 'blog-intro',
@@ -39,6 +27,7 @@ export default
     {
       name    : 'contact',
       variants: [],
+      target  : ['browser'],
       editor  : {
         modes: [
           {
@@ -61,6 +50,7 @@ export default
           name: 'Overlay wird rechts unten angezeigt',
         },
       ],
+      
       component: () => import('@/components/modules/cookies.module.vue'),
     },
     {
@@ -98,6 +88,7 @@ export default
           description: 'Die maximale Breite des Modules wird erhöht',
         },
       ],
+      
       component: () => import('@/components/modules/faq.module.vue'),
     },
     {
@@ -134,6 +125,7 @@ export default
           description: 'Deaktiviert die Steuerelemente.',
         },
       ],
+      
       component: () => import('@/components/modules/gallery.module.vue'),
     },
     {

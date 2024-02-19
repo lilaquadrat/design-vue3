@@ -11,16 +11,17 @@ export default defineConfig({
     vue(),
   ],
   build: {
-    cssCodeSplit: true
+    cssCodeSplit: false,
+    cssMinify   : true,
   },
   css: {
     devSourcemap       : true,
     preprocessorOptions: {
       less: {
         globalVars: {
-          globalVariables: 'true; @import "./projects/company/project/src/assets/less/variables.less";',
-          globalMixins   : 'true; @import "./projects/company/project/src/assets/less/mixins.less";',
-          globalFonts    : 'true; @import "./projects/company/project/src/assets/less/fonts.less";',
+          globalVariables: 'true; @import (reference) "./projects/company/project/src/assets/less/variables.less";',
+          globalMixins   : 'true; @import (reference) "./projects/company/project/src/assets/less/mixins.less";',
+          globalFonts    : 'true; @import (reference) "./projects/company/project/src/assets/less/fonts.less";',
         },
       }
     }

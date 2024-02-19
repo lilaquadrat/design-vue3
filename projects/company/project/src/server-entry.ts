@@ -2,7 +2,6 @@ import { basename } from 'path';
 import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
 
-import loadComponents from '@/mixins/loadComponents';
 import type { Component } from 'vue';
 
 const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', { eager: true });
@@ -12,9 +11,9 @@ const localComponents: Record<string, Record<'default', Component>> = import.met
 export async function render (url: string, manifest: Record<string, string[]>) {
   const { app, router } = createApp();
 
-  loadComponents(localComponents, 'lila', app);
-  loadComponents(globalModules, 'lila', app);
-  loadComponents(globalPartials, 'lila', app);
+  // loadComponents(localComponents, 'lila', app);
+  // loadComponents(globalModules, 'lila', app);
+  // loadComponents(globalPartials, 'lila', app);
 
   // set the router to the desired URL before rendering
   await router.push('/');

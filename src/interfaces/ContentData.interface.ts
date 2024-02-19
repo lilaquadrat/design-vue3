@@ -1,4 +1,4 @@
-import { ContentWithPositions } from '@lilaquadrat/studio/lib/interfaces';
+import { type ContentWithPositions } from '@lilaquadrat/interfaces';
 
 export default interface ContentData {
     content: ContentWithPositions
