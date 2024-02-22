@@ -17,7 +17,7 @@ const props = defineProps<
 >();
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
-const movingElement = ref<HTMLElement>();
+const active = ref<boolean>(false);
 const emit = defineEmits<{(e: string, event?: Event): void}>();
 onBeforeMount(() => {
   console.log('onBeforeMount:', props.elements);
@@ -30,11 +30,12 @@ onBeforeMount(() => {
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
   let lastElementPosition: string;
+  
 
   elements.map((item, index: number) => {
 
     let position: string = 'left';
-
+    
     if (index > 0 && item.media?.length) {
 
       if(lastElementPosition === 'left') position = 'right';
@@ -75,47 +76,36 @@ const formattedDate = computed(() => {
   };
 });
 
-let isLeft = false;
-
-const move = (event: Event): void => {
-  event.preventDefault();
-
-
-  // console.log('parentContainer:', parentContainer);
-  // const timelineContainer = document.querySelector('.timeline-container') as HTMLElement;
-  // console.log('timelineContainer:', timelineContainer);
-
-  // const coordinates = parentContainer.getBoundingClientRect();
-  // console.log('parentCoordinates:', coordinates)
-  // const timelineCoordinates = parentContainer.getBoundingClientRect();
-  // console.log('timelineCoordinates:', coordinates)
-  // const xMediaPosition = parentContainer.querySelector('.media-container')
-  const getPosition  = elementsExtended.value
-  if (!getPosition)  {
-    return 
-  }
-  getPosition.map(item => {
-    const sides:any[]=[]
-    let changedPosition: string;
-    const parentContainer = document.querySelector('.lila-timeline-module') as HTMLElement;
-   
-    if(item.position === 'left') {
-      
-      if(isLeft) return
-      parentContainer.style.left = parentContainer.offsetLeft + 70 + 'px' 
-     
-      isLeft = true
-    } else if(item.position === 'right') {
-      if(!isLeft) return
-      parentContainer.offsetLeft - 10 + 'px'
-      isLeft = false;
-    }
-  })
-
-
-  emit('click',);
+function activeMedia(event: Event) {
+  
  
-};
+  const mediaContainer = <HTMLElement> document.querySelector('.lila-figure')
+  let mediaActive: boolean  = false;
+  if(mediaActive) active.value = true
+  const parentContainer = <HTMLElement>document.querySelector('.lila-timeline-module');
+     if(mediaContainer) {    
+      mediaContainer.classList.add('.active')
+      parentContainer.style.transform = 'translateX(0%)'
+     } 
+     emit('click', event); 
+}
+
+function activeNonMedia(event: Event) {
+  const mediaContainer = <HTMLElement> document.querySelector('.lila-figure')
+  const parentContainer = <HTMLElement>document.querySelector('.lila-timeline-module');
+  const timeContainer = <HTMLElement> document.querySelector('.time-container');
+  const textContainer = <HTMLElement> document.querySelector('.text-container');
+    let medianonActive: boolean  = true;
+  if(medianonActive) active.value = false
+  if(timeContainer || textContainer) {
+    mediaContainer.classList.remove('.active')
+    timeContainer.classList.add('.active');
+    textContainer.classList.add('.active');
+    parentContainer.style.transform = 'translateX(-70%)'
+  }
+  emit('click', event); 
+}
+
 
 
 </script>
@@ -123,19 +113,19 @@ const move = (event: Event): void => {
   <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant]">
     <section class="elements-container">
       <section class="singleElement-container" v-for="(element, index) in elementsExtended" :class="[element.position, {noMedia: !element.media}]" :key="`timeline-withpositions${index}`">
-        <section class="time-container">
+        <section class="time-container" @click="activeNonMedia">
           <time v-if="date" class="year">{{ formattedDate.year }}</time>
           <time v-if="date" class="dayMonth">{{ formattedDate.dayMonth }}</time>
         </section>
         <section class="timeline-container"></section>
-        <section v-if="element.media" class="media-container" @click="move">
+        <section v-if="element.media" class="media-container" @click="activeMedia">
             <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
               <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
               <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
               <!-- <lila-quote-partial v-if="item.type === 'quote'" v-bind="item" /> -->
             </template>
         </section>
-        <section v-if="element" class="text-container" @click="move" >
+        <section v-if="element" class="text-container" @click="activeNonMedia" >
             <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
             <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
             <lila-list-partial  v-if="element.list" v-bind="element.list"/>
@@ -150,18 +140,19 @@ const move = (event: Event): void => {
 .lila-timeline-module {
   .module; // zentriert alles
   max-width: @moduleWidth_L;
-  position: relative;
   
   @media @smartphone {
     padding: 0;
-   
+    transition: .95s ease .2s;
+    transition-delay: .15s;
   }
   
   .elements-container {
     display: grid;
     
     @media @smartphone {
-      width: 170dvw
+      width: 170dvw;
+      
     }
 
     .singleElement-container {
@@ -172,11 +163,13 @@ const move = (event: Event): void => {
         // 424px minmax(auto, 1fr) minmax(auto, 1fr);
         gap:50px 0;
        
+       
 
         @media @smartphone {
           grid-template-columns:  1fr auto 1fr;
+          grid-template-rows: max-content max-content;
           gap: 25px 0;
-         
+          overflow: auto;
         }
         .time-container {
           .font-head;
@@ -205,7 +198,7 @@ const move = (event: Event): void => {
               justify-items: start;
               padding: 0 20px;
               gap:0; 
-              cursor: pointer;
+              height: 100%;
               .year {
                 font-size: @headline_XL;
               }
@@ -216,35 +209,44 @@ const move = (event: Event): void => {
             }
         }
         .media-container {
-            display: grid;
-            gap: 27px 0 ;
-            padding:0 40px;
-            grid-column-start: 1;
-            grid-row-start: 3;
-            grid-row-end: 4;
-
-            grid-auto-rows: max-content;
+          display: grid;
+          gap: 27px 0 ;
+          padding:0 40px;
+          grid-column-start: 1;
+          grid-row-start: 3;
+          grid-row-end: 4;
+          
+          grid-auto-rows: max-content;
+        
 
             :deep(.lila-figure) {
-                grid-template-columns: auto;
-                justify-content: left;
+              grid-template-columns: auto;
+              justify-content: left;
+
+              @media @smartphone {
+                justify-content: right;
+              }
             }
+
             @media @smartphone {
               padding: 0 20px;
-              transform: translate3d(0, 0, 0)
+              border: red solid 2px;
+              position: sticky;
+              top: 1rem;
               }
-           
-
+                
         }
+        
         .text-container {
             grid-row-start: 3;
-            grid-row-end: 4;
+            grid-row-end: 5;
             padding:0 40px;
+            align-items: start;
 
             @media @smartphone {
               
               padding: 0 25px; 
-
+              
               :deep(.lila-textblock){
                 
                   h1 {
@@ -266,6 +268,7 @@ const move = (event: Event): void => {
                   .multi(margin-top, 0);
                   }
               }
+              
             }
         }
 
