@@ -4,7 +4,6 @@ import { useInview } from '../../plugins/inview';
 import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
-import { isTemplateSpan } from 'typescript';
 
 defineOptions({ inheritAttrs: false }); //
 
@@ -12,7 +11,6 @@ const props = defineProps<
   ModuleBaseProps & {
     elements: TimelineElement[];
     date: string;
-    type: 'left'
   }
 >();
 const element = ref<HTMLElement>();
@@ -169,7 +167,6 @@ function activeNonMedia(event: Event) {
           grid-template-columns:  1fr auto 1fr;
           grid-template-rows: max-content max-content;
           gap: 25px 0;
-          overflow: auto;
         }
         .time-container {
           .font-head;
@@ -215,8 +212,7 @@ function activeNonMedia(event: Event) {
           grid-column-start: 1;
           grid-row-start: 3;
           grid-row-end: 4;
-          
-          grid-auto-rows: max-content;
+           grid-auto-rows: max-content;
         
 
             :deep(.lila-figure) {
@@ -230,11 +226,10 @@ function activeNonMedia(event: Event) {
 
             @media @smartphone {
               padding: 0 20px;
-              border: red solid 2px;
               position: sticky;
               top: 1rem;
               }
-                
+    
         }
         
         .text-container {
