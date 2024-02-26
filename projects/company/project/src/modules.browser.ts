@@ -54,8 +54,41 @@ export default
       component: () => import('@/components/modules/cookies.module.vue'),
     },
     {
-      name     : 'emotion',
-      variants : [],
+      name    : 'emotion',
+      variants: [
+        {
+          key : 'centerContent',
+          name: 'Inhalte vertikal und horizontal zentriert',
+        },
+        {
+          key : 'bright',
+          name: 'Heller Text',
+        },
+        {
+          key : 'dark',
+          name: 'Dunkler Text',
+        },
+        {
+          key        : 'picture-switch',
+          name       : 'Text und Bild tauschen',
+          description: 'Wenn ein Bild hinterlegt ist, wird der Text im Vordergrund angezeigt',
+        },
+        {
+          key        : 'height50',
+          name       : 'Modul 50%',
+          description: 'Modulhöhe 50%',
+        },
+        {
+          key        : 'height80',
+          name       : 'Modul 80%',
+          description: 'Modulhöhe 80%',
+        },
+        {
+          key        : 'content-inline',
+          name       : 'Modulgröße an Text angepasst',
+          description: 'Modulhöhe ist abhängig von den Inhalten',
+        },
+      ],
       component: () => import('@/components/modules/emotion.module.vue'),
     },
     {

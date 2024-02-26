@@ -564,26 +564,26 @@
     open "^8.4.2"
     typescript "^5.0.4"
 
-"@lilaquadrat/interfaces@^1.0.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.1.2.tgz#f5cc60d104428edf5a6789ec0730739502542be5"
-  integrity sha512-rpIIyVH6hb5b6Ban9JHscQqaYrU/2Z7cGXGbbn1zQbOeaGoYAe1UBCUZq8jNNWuvcKPtIZ/BF9shGoccCjMypw==
+"@lilaquadrat/interfaces@^1.3.1", "@lilaquadrat/interfaces@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.4.0.tgz#0fa088abf22cef3cb5b09dba4c613c2f94db0ba0"
+  integrity sha512-zL075PVPsxULxV0WM70bIPyui6Quf1tE1dk+hgOXfPJZpkw1OOBv4l0pufSCI01i8HmQONPPP24tcoZNNp2beg==
   dependencies:
     typescript "^5.3.3"
 
-"@lilaquadrat/sdk@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/sdk/-/sdk-0.0.4.tgz#e137b0257a534b48a9dc030411d9a22c8547f632"
-  integrity sha512-nc+Yd93YNPtsVmfW5M7aCXgI7Ek0aDsGXIE5upP/YPS0Og8CdyUgIZl1btXcuYsgk344LAqphB9W875IgjhDCw==
+"@lilaquadrat/sdk@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/sdk/-/sdk-0.0.5.tgz#4921566c51ca7acec67368e70c4160c5545cd227"
+  integrity sha512-f+7hYZYwRfYQUcXklwfWfKoys0beIMQTLzVH4wKftnsk67FRYOYNF4spxjScpifjRD8FHOfPPawpGJf6pvKQGw==
   dependencies:
-    "@lilaquadrat/interfaces" "^1.0.2"
-    "@lilaquadrat/studio" "^6.1.0"
+    "@lilaquadrat/interfaces" "^1.3.1"
+    "@lilaquadrat/studio" "^8.1.1"
     axios "^1.6.7"
 
-"@lilaquadrat/studio@^6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/studio/-/studio-6.1.0.tgz#914cfd670389453be585814b3c106dfb929c6faf"
-  integrity sha512-qmizcmLrv3OESRXvhbT7Zy54ZxAeiFXlY9Sz4LLBHW/WpQ3+XBos/Ggr06BqEIbnMDV1vZv9vRbZypnSADvagg==
+"@lilaquadrat/studio@^8.1.1", "@lilaquadrat/studio@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/studio/-/studio-8.2.0.tgz#5c670dad49e796d42ef4ed44fc9232a4517e66c5"
+  integrity sha512-zyrAjHJkBrT/4U78vuHsAAFkAlfsOUnF/M9b74BOgBF++TFuuEUfPFmCJsRWWfSnG+g0BejWEsvYPxI04YHyPw==
   dependencies:
     "@azure/arm-dns" "^5.0.0"
     "@azure/identity" "^4.0.0"
@@ -593,7 +593,7 @@
     "@azure/storage-blob" "^12.17.0"
     "@azure/storage-file-share" "^12.17.0"
     "@azure/storage-queue" "^12.16.0"
-    "@lilaquadrat/interfaces" "^1.0.2"
+    "@lilaquadrat/interfaces" "^1.4.0"
     "@root/acme" "^3.1.0"
     "@root/csr" "^0.8.1"
     "@root/keypairs" "^0.10.0"
@@ -4536,10 +4536,10 @@ vite-tsconfig-paths@^4.2.3:
     globrex "^0.1.2"
     tsconfck "^3.0.1"
 
-vite@^5.0.10:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-5.1.3.tgz#dd072653a80225702265550a4700561740dfde55"
-  integrity sha512-UfmUD36DKkqhi/F75RrxvPpry+9+tTkrXfMNZD+SboZqBCMsxKtO52XeGzzuh7ioz+Eo/SYDBbdb0Z7vgcDJew==
+vite@^5.1.4:
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.1.4.tgz#14e9d3e7a6e488f36284ef13cebe149f060bcfb6"
+  integrity sha512-n+MPqzq+d9nMVTKyewqw6kSt+R3CkvF9QAKY8obiQn8g1fwTscKxyfaYnC632HtBXAQGc1Yjomphwn1dtwGAHg==
   dependencies:
     esbuild "^0.19.3"
     postcss "^8.4.35"

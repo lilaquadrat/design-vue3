@@ -4,12 +4,19 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-import config from './config';
+// Process command line arguments
+const args = process.argv.slice(2);
+const target = args[2] as 'local' | 'next' | 'live' || 'local';
+
+import configObject from './config';
+
+const config = configObject[target];
 
 export default defineConfig({
   plugins: [
     vue(),
   ],
+  base : config.base || '/',
   build: {
     cssCodeSplit: false,
     cssMinify   : true,

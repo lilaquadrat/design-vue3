@@ -262,7 +262,7 @@ const filteredLinks = computed(() => {
 
   }
 
-  &.variant1 {
+  &.centerContent {
     text-align: center;
 
     .position-container {

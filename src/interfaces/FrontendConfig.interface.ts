@@ -18,4 +18,6 @@ export default interface FrontendConfig {
         customEndpoints?: StudioSDK['customEndpoints']
     }
 
+    base?: string
+
 }

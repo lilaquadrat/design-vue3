@@ -17,12 +17,16 @@ const live = ref<boolean>(false);
 const contentCache = ref<Content['modules']>();
 const settingsCache = ref<AppEditorConfiguration>();
 const active = ref<EditorActiveModule>();
+const targetCache = ref<'browser'|'mail'>();
 
-watch(siteSettings, (newContent, oldContent) => {
+watch(siteSettings, () => {
   /**
   * if the target type changes we need to update the available modules
   */
-  if(oldContent?.target !== newContent?.target || !oldContent) {
+
+  const useTarget = siteSettings.value?.target || 'browser';
+
+  if(useTarget !== targetCache.value) {
 
     const target = siteSettings.value?.target === 'browser' || !siteSettings.value?.target 
       ? 'browser' 
@@ -39,14 +43,14 @@ watch(siteSettings, (newContent, oldContent) => {
       '*',
     );
     
-    console.log('LOAD IT', currentInstance);
-
     if (currentInstance) {
 
       loadViaDeclaration(target === 'browser' ? editorStore.modulesBrowser : editorStore.modulesMail, 'lila', 'module', currentInstance.appContext.app);
       loadViaDeclaration(target === 'browser' ? editorStore.partialsBrowser : editorStore.partialsMail, 'lila', 'partial', currentInstance.appContext.app);
 
     }
+
+    targetCache.value = useTarget;
 
   }
     
@@ -79,6 +83,7 @@ function messageHandler (message: StudioIframeMessage) {
     console.groupEnd();
 
     siteSettings.value = message.data.data;
+    updateContent();
 
   }
 

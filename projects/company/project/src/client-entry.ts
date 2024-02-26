@@ -23,12 +23,9 @@ const app = createApp(App);
 loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
 
-const currentUrl = new URL(window.location.toString());
-const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
-
 app.use(createPinia());
 
-const router = createRouter(ISLOCAL ? editorRoutes : routes);
+const router = createRouter(window !== window.top ? editorRoutes : routes);
 
 app.use(router);
 

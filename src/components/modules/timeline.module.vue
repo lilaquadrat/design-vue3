@@ -15,6 +15,7 @@ const props = defineProps<
 >();
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
+
 onBeforeMount(() => {
   console.log('onBeforeMount:', props.elements);
 
@@ -23,6 +24,7 @@ onBeforeMount(() => {
     // console.log('onBeforeMount:', elementsExtended)
   }
 });
+
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
   let lastElementPosition: string;
@@ -34,6 +36,7 @@ function setElements (elements: TimelineElement[]) {
     if (index > 0 && item.media?.length) {
 
       console.log(lastElementPosition);
+
       if(lastElementPosition === 'left') position = 'right';
       else if(index >0 && !item.media?.length && lastElementPosition === 'left') {
         position = 'noMedia'
@@ -58,9 +61,6 @@ function setElements (elements: TimelineElement[]) {
 
   elementsExtended.value = positionedItem;
 }
-
-
-
 
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const formattedDate = computed(() => {
@@ -143,7 +143,6 @@ const formattedDate = computed(() => {
 
             grid-row-start: 2;
             grid-row-end: 3;
-
             
             .year {
                 font-size: 60px;
@@ -191,7 +190,6 @@ const formattedDate = computed(() => {
               padding: 0 20px; 
              
             }
-           
 
         }
         .text-container {
