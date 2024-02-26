@@ -81,8 +81,8 @@ export const useMainStore = defineStore('main', () => {
   async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
 
     const data = ref<Partial<SDKResponse<BasicData<Content>>>>();
-    const sdk = new StudioSDK(apiConfig.value);
-    const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
+    const sdk = new StudioSDK(apiConfig.value, true);
+    const targetWithType = sdk[type === 'members' ? 'app' : 'public'];
 
     try {
 
