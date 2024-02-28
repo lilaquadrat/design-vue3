@@ -1,25 +1,44 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import type { BasicData, Content } from '@lilaquadrat/interfaces';
+import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
+import type { BasicData, Content, GenericData } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
 import type { SDKResponse } from '@lilaquadrat/sdk';
+import useUserStore from '@/stores/user.store';
 
 const route = useRoute();
-const store = useMainStore();
+const mainStore = useMainStore();
+const userStore = useUserStore();
 const data = ref<SDKResponse<BasicData<Content>>>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 
 watch(route, () => getContent());
+watch(() => userStore.locked, () => getContent());
 onBeforeMount(() => getContent());
 
-const contentType = computed(() => route.meta.contentType as 'public' | 'member');
+const contentType = computed(() => route.meta.contentType as 'public' | 'members');
+const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
+const hint = computed(() => {
 
-function getContentId (contentType: 'public' | 'member', pathMatch?: string) {
+  if(loading.value === 404) {
+    return 'error404'
+  }
+
+  if(isLocked.value) {
+
+    return `error-${userStore.locked}-${contentType.value}`;
+
+  }
+
+  return undefined;
+
+});
+
+function getContentId (contentType: 'public' | 'members', pathMatch?: string) {
 
   const name = pathMatch ? pathMatch : 'home';
 
@@ -32,17 +51,27 @@ async function getContent () {
   loading.value = 0;
   error.value = false;
 
+  if(isLocked.value) {
+
+    error.value = true;
+    loading.value = 403;
+    return;
+
+  } 
+
   const contentId = getContentId(contentType.value, route.params.pathMatch as string);
 
-  data.value = await store.getContent({id: contentId});
+  data.value = await mainStore.getContent({id: contentId}, contentType.value);
 
-  if(data.value.status === 200) {
+  const status = data.value.status;
+
+  if(status === 200) {
 
     error.value = false;
 
     if(data.value.data.settings.useLayout) {
 
-      layout.value = await store.getContent({internalId: data.value.data.settings.useLayout.toString()});
+      layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
       loading.value = 200;
 
     } else {
@@ -52,12 +81,12 @@ async function getContent () {
 
     }
 
-  } else if (data.value.status === 403 || data.value.status === 401) {
+  } else if (status === 403 || status === 401 || status === 400) {
 
     error.value = true;
-    loading.value = data.value.status;
+    loading.value = status;
 
-  } else if (data.value.status === 204 || data.value.status === 404) {
+  } else if (status === 204 || status === 404) {
 
     error.value = true;
     loading.value = 404;
@@ -68,7 +97,18 @@ async function getContent () {
 
 const contentMerged = computed(() => {
 
-  if(loading.value === 200 && data.value) return prepareContent(data.value?.data, layout.value?.data);
+  if(loading.value === 200 && data.value) {
+
+    const safeData = hardCopy(data.value?.data);
+
+    console.log(safeData.genericData, generateDataWithContent(safeData.genericData as GenericData));
+    
+    distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
+    console.log(safeData.modules);
+    return prepareContent(safeData, layout.value?.data);
+
+  }
+
   return prepareContent({})
 
 }); 
@@ -77,8 +117,7 @@ const contentMerged = computed(() => {
 
 <template>
     <article class="content-screen screen">
-    {{ error }} {{ loading }}
-        <lila-error-partial v-if="error" :status="loading" :hint="loading === 404 ? 'error404' : undefined" :type="contentType" />
+        <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>
 </template>

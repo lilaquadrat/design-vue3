@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, type Ref, nextTick } from 'vue';
 import type AccordionElement from '@interfaces/AccordionElement.interface';
-import hardCopy from '@/mixins/hardCopy';
 import type { AccordionElementWithSettings } from '@interfaces/AccordionElement.interface';
 import { useResize } from '@/plugins/resize';
 import { watch } from 'vue';
+import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 
 const { resized } = useResize();
 const items: Ref<HTMLElement[]> = ref([]);

@@ -31,7 +31,7 @@ function getContentId () {
 
 async function getContent () {
 
-  data.value = await store.getContent({id: getContentId()});
+  data.value = await store.getContent({id: getContentId()}, 'public');
 
 }
 

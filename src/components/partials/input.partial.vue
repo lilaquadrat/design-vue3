@@ -13,7 +13,7 @@ const props = defineProps<{
 }>();
 const inputElement = ref<HTMLInputElement>();
 let tempValue: string = '';
-const debounceTime: number = 500;
+const debounceTime: number = 50;
 const timeout = ref<ReturnType<typeof setTimeout>>();
 const emit = defineEmits(['update:modelValue', 'focus', 'enter', 'keydown', 'blur']);
 

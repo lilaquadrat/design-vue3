@@ -61,7 +61,7 @@ const getContent = async () => {
       latest    : props.latest, 
       categories: props.categories as string[], 
       predefined: props.predefined
-    });
+    }, 'public');
 
   } catch (e) {
 

@@ -57,7 +57,7 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
 </template>
 <style lang="less" scoped>
 
-.lila-picturegroup-module {
+.lila-picture-group-module {
 
   width: 100%;
 
@@ -117,8 +117,7 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
       width: 100%;
       max-width: @moduleWidth_M;
 
-      @media @tablet,
-      @desktop {
+      @media @tablet, @desktop {
         grid-template-rows: max-content max-content;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 40px 2%;

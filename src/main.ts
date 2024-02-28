@@ -7,7 +7,7 @@ import routes from './routes';
 import type { Component } from 'vue';
 
 import createRouter from './mixins/createRouter';
-import loadComponents from './mixins/loadComponents';
+// import loadComponents from './mixins/loadComponents';
 
 const components: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
 
@@ -15,7 +15,7 @@ console.log(components);
 
 const app = createApp(App);
 
-loadComponents(components, undefined, app);
+// loadComponents(components, undefined, app);
 
 app.use(createPinia());
 app.use(createRouter(routes));

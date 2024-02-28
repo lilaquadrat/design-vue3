@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import type { ModuleGeneric } from '@lilaquadrat/interfaces';
 import { onMounted, ref } from 'vue';
-import checkInview from '../../mixins/checkin';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineProps<ModuleBaseProps & {
@@ -17,12 +16,6 @@ defineProps<ModuleBaseProps & {
 }>();
 
 const el = ref(null);
-
-onMounted(() => {
-
-  checkInview(el);
-
-});
 
 </script>
 <style lang="less" scoped>

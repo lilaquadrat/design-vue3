@@ -1,36 +1,79 @@
 <script setup lang="ts">
 import useEditorStore from '@/stores/editor.store';
 import { hardCopy, prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { nextTick, onMounted, ref } from 'vue';
+import { getCurrentInstance, nextTick, onMounted, ref } from 'vue';
 import { type Content, type ContentWithPositions, type EditorActiveModule, type StudioIframeMessage } from '@lilaquadrat/interfaces';
 import { onBeforeUnmount } from 'vue';
+import { watch } from 'vue';
+import type { AppEditorConfiguration } from '@lilaquadrat/interfaces';
+import { loadViaDeclaration } from '@/mixins/loadComponents';
 
+const currentInstance = getCurrentInstance();
 const editorStore = useEditorStore();
 const content = ref<ContentWithPositions>({ settings: {}, top: [], content: [], bottom: [], additional: {} });
-const siteSettings = ref<Content['settings']>();
+const siteSettings = ref<Omit<Content, 'modules'|'genericData'|'childData'>>();
 const live = ref<boolean>(false);
 // const parentUrl = ref<string>(`${window.location.protocol}//${window.location.host}/editor`);
 const contentCache = ref<Content['modules']>();
-const settingsCache = ref<Content['settings']>();
+const settingsCache = ref<AppEditorConfiguration>();
 const active = ref<EditorActiveModule>();
+const targetCache = ref<'browser'|'mail'>();
 
-function messageHandler (message: StudioIframeMessage<Content['modules'] | Content['settings'] | EditorActiveModule>) {
+watch(siteSettings, () => {
+  /**
+  * if the target type changes we need to update the available modules
+  */
+
+  const useTarget = siteSettings.value?.target || 'browser';
+
+  if(useTarget !== targetCache.value) {
+
+    const target = siteSettings.value?.target === 'browser' || !siteSettings.value?.target 
+      ? 'browser' 
+      : siteSettings.value?.target
+    const modules = target === 'browser'
+      ? editorStore.availableModulesWithRevision 
+      : editorStore.availableModulesWithRevisionMail
+
+    window.parent.postMessage(
+      {
+        type: 'studio-design-modules-with-revision',
+        data: hardCopy(modules),
+      },
+      '*',
+    );
+    
+    if (currentInstance) {
+
+      loadViaDeclaration(target === 'browser' ? editorStore.modulesBrowser : editorStore.modulesMail, 'lila', 'module', currentInstance.appContext.app);
+      loadViaDeclaration(target === 'browser' ? editorStore.partialsBrowser : editorStore.partialsMail, 'lila', 'partial', currentInstance.appContext.app);
+
+    }
+
+    targetCache.value = useTarget;
+
+  }
+    
+})
+
+function messageHandler (message: StudioIframeMessage) {
 
   if (message.data.type === 'studio-content') {
     console.groupCollapsed('MESSAGE_STUDIO_CONTENT');
     console.log(message.data.data);
     console.groupEnd();
 
-    contentCache.value = message.data.data as Content['modules'];
+    contentCache.value = message.data.data;
     updateContent();
   }
 
+  //editor main configuration
   if (message.data.type === 'studio-editor-settings') {
     console.groupCollapsed('MESSAGE_STUDIO_EDITOR_SETTINGS');
     console.log(message.data.data);
     console.groupEnd();
 
-    settingsCache.value = message.data.data as Content['settings'];
+    settingsCache.value = message.data.data;
     updateContent();
   }
 
@@ -39,8 +82,9 @@ function messageHandler (message: StudioIframeMessage<Content['modules'] | Conte
     console.log(message.data.data);
     console.groupEnd();
 
-    // this.$store.commit('setSettings', message.data.data);
-    siteSettings.value = message.data.data as Content['settings'];
+    siteSettings.value = message.data.data;
+    updateContent();
+
   }
 
   if (message.data.type === 'studio-active') {
@@ -48,7 +92,7 @@ function messageHandler (message: StudioIframeMessage<Content['modules'] | Conte
     console.log(message.data.data);
     console.groupEnd();
 
-    active.value = message.data.data as EditorActiveModule;
+    active.value = message.data.data;
 
     if (active.value) {
 
@@ -77,14 +121,7 @@ onMounted(() => {
   removeListeners()
   addListeners();
 
-  window.parent.postMessage(
-    {
-      type: 'studio-design-modules-with-revision',
-      data: hardCopy(editorStore.availableModulesWithRevision),
-    },
-    '*',
-  );
-
+  window.parent.postMessage('studio-design-settings', '*');
   window.parent.postMessage('studio-design-ready', '*');
 });
 
@@ -99,7 +136,7 @@ function addListeners () {
 }
 
 function updateContent () {
-  content.value = prepareContent({ modules: contentCache.value, ...settingsCache.value });
+  content.value = prepareContent({ modules: contentCache.value, ...siteSettings.value });
 }
 
 function resetCookies () {

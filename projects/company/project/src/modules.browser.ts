@@ -3,23 +3,16 @@ export default
   revision: 2,
   modules : [
     {
-      name    : 'text',
-      variants: [ 
-        {
-          key : 'center',
-          name: 'Text zentriert',
-        },
-        {
-          key : 'notice',
-          name: 'Module ist mit der Hauptfarbe hinterlegt',
-        },
-      ],
-      component: () => import('@/components/modules/text.module.vue'),
+      name             : 'content',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/content.module.vue'),
     },
     {
-      name     : 'content',
-      variants : [],
-      component: () => import('@/components/modules/content.module.vue'),
+      name             : 'connect-user',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/connect-user.module.vue'),
     },
     {
       name     : 'blog-intro',
@@ -34,6 +27,7 @@ export default
     {
       name    : 'contact',
       variants: [],
+      target  : ['browser'],
       editor  : {
         modes: [
           {
@@ -56,11 +50,45 @@ export default
           name: 'Overlay wird rechts unten angezeigt',
         },
       ],
+      
       component: () => import('@/components/modules/cookies.module.vue'),
     },
     {
-      name     : 'emotion',
-      variants : [],
+      name    : 'emotion',
+      variants: [
+        {
+          key : 'centerContent',
+          name: 'Inhalte vertikal und horizontal zentriert',
+        },
+        {
+          key : 'bright',
+          name: 'Heller Text',
+        },
+        {
+          key : 'dark',
+          name: 'Dunkler Text',
+        },
+        {
+          key        : 'picture-switch',
+          name       : 'Text und Bild tauschen',
+          description: 'Wenn ein Bild hinterlegt ist, wird der Text im Vordergrund angezeigt',
+        },
+        {
+          key        : 'height50',
+          name       : 'Modul 50%',
+          description: 'Modulhöhe 50%',
+        },
+        {
+          key        : 'height80',
+          name       : 'Modul 80%',
+          description: 'Modulhöhe 80%',
+        },
+        {
+          key        : 'content-inline',
+          name       : 'Modulgröße an Text angepasst',
+          description: 'Modulhöhe ist abhängig von den Inhalten',
+        },
+      ],
       component: () => import('@/components/modules/emotion.module.vue'),
     },
     {
@@ -93,6 +121,7 @@ export default
           description: 'Die maximale Breite des Modules wird erhöht',
         },
       ],
+      
       component: () => import('@/components/modules/faq.module.vue'),
     },
     {
@@ -129,6 +158,7 @@ export default
           description: 'Deaktiviert die Steuerelemente.',
         },
       ],
+      
       component: () => import('@/components/modules/gallery.module.vue'),
     },
     {
@@ -287,6 +317,11 @@ export default
       name     : 'prices',
       variants : [],
       component: () => import('@/components/modules/prices.module.vue'),
+    },
+    {
+      name     : 'placeholder',
+      variants : [],
+      component: () => import('@/components/modules/placeholder.module.vue'),
     },
     {
       name    : 'quellcode',

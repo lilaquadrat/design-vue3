@@ -4,7 +4,6 @@ import { useInview } from '../../plugins/inview';
 import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
-import { textSpanContainsTextSpan } from 'typescript';
 
 defineOptions({ inheritAttrs: false });
 
@@ -18,19 +17,16 @@ const props = defineProps<
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
 const active = ref<number>(0);
-const activeElements = ref<(TimelineElement & { active: boolean })[]>([]);
 const mediaContainer = ref<HTMLElement>();
 const textContainer = ref<HTMLElement>();
 const timeContainer = ref<HTMLElement>();
 const isVisible =ref<Boolean>()
-  const style = ref();
-  const emit = defineEmits<{(e: string, event?: Event): void}>();
+const emit = defineEmits<{(e: string, event?: Event): void}>();
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
   }
 });
-// onBeforeMount((): void => setActives());
 onBeforeMount(():void =>  disableScroll())
 
 function setElements (elements: TimelineElement[]) {
@@ -43,7 +39,7 @@ function setElements (elements: TimelineElement[]) {
 
     if (index > 0 && item.media?.length) {
 
-      // console.log(lastElementPosition);
+      console.log(lastElementPosition);
       if(lastElementPosition === 'left') position = 'right';
 
     }
@@ -66,14 +62,15 @@ function setElements (elements: TimelineElement[]) {
   elementsExtended.value = positionedItem;
 }
 
-// nimm die Scrollfunktionalität weg
 function disableScroll() {
   if(!isVisible) return;
   if(isVisible) {
-    document.documentElement.style.overflowX = 'hidden'
+    document.documentElement.style.overflowX = 'hidden';
+    
     return 
   }
   document.documentElement.style.overflowX = 'clip'
+  document.body.classList.add("disableScroll");
 }
 
 function activeText(event: Event,  index: number) {

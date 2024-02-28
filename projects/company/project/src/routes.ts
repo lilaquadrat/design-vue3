@@ -49,7 +49,7 @@ const routes: readonly RouteRecordRaw[] = [
 ];
 const editorRoutes: readonly RouteRecordRaw[] = [
   {
-    path     : '/editor',
+    path     : '/:pathMatch(.*)*',
     name     : 'editor',
     component: EditorView
   },

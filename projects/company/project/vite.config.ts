@@ -4,23 +4,31 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-import config from './config';
+// Process command line arguments
+const args = process.argv.slice(2);
+const target = args[2] as 'local' | 'next' | 'live' || 'local';
+
+import configObject from './config';
+
+const config = configObject[target];
 
 export default defineConfig({
   plugins: [
     vue(),
   ],
+  base : config.base || '/',
   build: {
-    cssCodeSplit: true
+    cssCodeSplit: false,
+    cssMinify   : true,
   },
   css: {
     devSourcemap       : true,
     preprocessorOptions: {
       less: {
         globalVars: {
-          globalVariables: 'true; @import "./projects/company/project/src/assets/less/variables.less";',
-          globalMixins   : 'true; @import "./projects/company/project/src/assets/less/mixins.less";',
-          globalFonts    : 'true; @import "./projects/company/project/src/assets/less/fonts.less";',
+          globalVariables: 'true; @import (reference) "./projects/company/project/src/assets/less/variables.less";',
+          globalMixins   : 'true; @import (reference) "./projects/company/project/src/assets/less/mixins.less";',
+          globalFonts    : 'true; @import (reference) "./projects/company/project/src/assets/less/fonts.less";',
         },
       }
     }
@@ -32,9 +40,6 @@ export default defineConfig({
     }
   },
   define: {
-    'process.env.company': JSON.stringify('company'),
-    'process.env.project': JSON.stringify('project'),
     '__FRONTEND_CONFIG__': JSON.stringify(config)
-    // 'process.env.apiMode': JSON.stringify('https://api.example.com')
   }
 });

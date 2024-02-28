@@ -1,4 +1,3 @@
-import { Store } from 'vuex';
 import type GenericState from './GenericState.interface';
 
 export default interface GenericStore<T extends GenericState> {

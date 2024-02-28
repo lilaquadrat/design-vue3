@@ -1,10 +1,10 @@
-import { createApp, type Component } from 'vue';
+import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import {routes, editorRoutes} from './routes';
 import createRouter from '@/mixins/createRouter';
-import {loadViaGlob, loadViaDeclaration, getAvailableModules} from '@/mixins/loadComponents';
+import {loadViaDeclaration} from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
 import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
@@ -13,28 +13,19 @@ import youtubePlugin from '@/plugins/youtube';
 import traceablePlugin from '@/plugins/traceable';
 import authPlugin from '@/plugins/auth';
 import './models';
-import modules from './modules';
-import partials from './partials';
+import modules from './modules.browser';
+import partials from './partials.browser';
 import hooks from '@/mixins/hooks';
 
-// const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', {eager: true});
-// const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', {eager: true});
 // const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
 const app = createApp(App);
-
-// loadViaGlob(localComponents, 'lila', app);
-// loadViaGlob(globalModules, 'lila', app);
-// loadViaGlob(globalPartials, 'lila', app);
 
 loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
 
-const currentUrl = new URL(window.location.toString());
-const ISLOCAL = currentUrl.port === '5173' && window !== window.top;
-
 app.use(createPinia());
 
-const router = createRouter(ISLOCAL ? editorRoutes : routes);
+const router = createRouter(window !== window.top ? editorRoutes : routes);
 
 app.use(router);
 

@@ -8,20 +8,22 @@ import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, onBeforeMount, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
-import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, type ErrorObject, type GenericData, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
+import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, type ErrorObject, type GenericData, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
 import { useTraceable } from '@/plugins/traceable';
+import useUserStore from '@/stores/user.store';
 
 defineOptions({ inheritAttrs: false });
 
 const {traceable} = useTraceable();
 const mainStore = useMainStore();
+const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
     categoryTextblock: Textblock;
-    genericData: GenericData;
+    genericData: GenericDataWithContent;
     editor: {modes: string[]},
     agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
@@ -39,7 +41,19 @@ const emit = defineEmits<{
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
-const list = computed<BasicData<List>>(() => props.genericData.data[props.genericData.lists[0]] as BasicData<List>);
+const list = computed<BasicData<List> | undefined>(() => {
+
+  console.log(props.genericData, props);
+
+  if(props.genericData.data) {
+
+    return props.genericData.data[props.genericData.lists[0]] as BasicData<List>
+
+  }
+
+  return undefined;
+
+});
 
 /**
  * fills the categoriesExtended with the categories
@@ -47,6 +61,8 @@ const list = computed<BasicData<List>>(() => props.genericData.data[props.generi
  * if participantState exists the categories get extendend
  */
 function updateCategories () {
+
+  if(!list.value) return
 
   // only show categories if there is more than one and the user has a choice
   if (list.value?.categories.length > 1) {
@@ -82,6 +98,7 @@ function updateCategories () {
  * if more than one category exists returns an array for selection
  */
 const selectCategories = computed(() => {
+  if(!list.value) return
 
   if(list.value?.categories.length > 1) {
     
@@ -111,14 +128,14 @@ const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
  ** state is sucess
  ** editor modes inlcudes feedback
  */
-const showFeedback = computed(() => state.value && (state.value === 'success' || props.editor?.modes?.includes('feedback')));
+const showFeedback = computed(() => state.value && state.value === 'success' || props.editor?.modes?.includes('feedback'));
 const feedbackContent = computed(() => {
 
   if(feedback.value) {
     return prepareContent(feedback.value);
   }
 
-  return {}
+  return undefined;
 
 });
 const limited = computed(() => list.value?.participants?.max || null);
@@ -143,7 +160,7 @@ const mainErrors = computed(() => {
   const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
   if(errors.value && validErrors.includes(errors.value.message)) {
-    return `${errors.value.message}_${list.value.mode}`;
+    return `${errors.value.message}_${list.value?.mode}`;
   }
 
   return null;
@@ -224,7 +241,7 @@ const getparticipantsState = async () => {
     return;
   }
 
-  const sdk = new StudioSDK('design', mainStore.apiConfig);
+  const sdk = new StudioSDK(mainStore.apiConfig);
 
   try {
    
@@ -252,7 +269,7 @@ const handleForm = async (event: Event) => {
   console.log('handle form');
   event.preventDefault();
 
-  console.log(addressModel.value);
+  if(!list.value?._id) return
   
   const address = ModelsClass.save(addressModel.value as Address, 'address');
   const customer = ModelsClass.save<Contact>({...model.value, ...address}, 'contact');
@@ -289,10 +306,11 @@ const handleForm = async (event: Event) => {
 
   try {
     
-    const sdk = new StudioSDK('design', mainStore.apiConfig);
+    const sdk = new StudioSDK(mainStore.apiConfig);
     const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
+    const customerResponse = await traceable(call, traceId);
 
-    await traceable(call, traceId);
+    setCustomer(customerResponse.data);
 
     //   await props.$traceable(call);
 
@@ -379,6 +397,8 @@ const handleForm = async (event: Event) => {
 </script>
 <template>
   <section class="lila-contact-module lila-module">
+
+    {{ props.editor }} {{ state }}
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />

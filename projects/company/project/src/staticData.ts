@@ -1,4 +1,24 @@
 export default {
+  '400': {
+    modules: [
+      {
+        type    : 'text-module',
+        variant : ['center'],
+        headline: 'Something went wrong',
+        links   : {
+          'value': [
+            {
+              'text'   : 'back to home',
+              'link'   : '/',
+              'variant': [
+                'callToAction'
+              ],
+            }
+          ]
+        }
+      }
+    ]
+  },
   '401': {
     modules: [
       {

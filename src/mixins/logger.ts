@@ -19,7 +19,7 @@ const logger = new Proxy<Logger>({}, {
   get: function (target, propKey, receiver) {
     // Method to log messages with dynamic category-based styling and optional color for the category
     const log = (category: string, message: string, color?: string): void => {
-      const categoryStyle = color ? `color: ${color}` : categoryColors[category.toLowerCase()] || 'color: #333';
+      const categoryStyle = color ? `color: ${color}` : categoryColors[category.toLowerCase()] || 'color: #FFF';
 
       // Log the category with style and message without style
 

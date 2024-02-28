@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useMainStore from '@/stores/main.store';
+import useUserStore from '@/stores/user.store';
 import type { BasicData, Content } from '@lilaquadrat/interfaces';
 import type { SDKResponse } from '@lilaquadrat/sdk';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
@@ -10,13 +11,17 @@ const props = defineProps<{
     type: 'footer' | 'navigation'
 }>();
 const store = useMainStore();
+const userStore = useUserStore();
 const route = useRoute();
 const data = ref<SDKResponse<BasicData<Content>>>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 const typeCache = ref<string>();
+const contentType = computed(() => route.meta.contentType as 'public' | 'members');
+const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 
 watch(route, () => getContent());
+watch(() => userStore.locked, () => getContent());
 
 onMounted(() => {
 
@@ -32,9 +37,17 @@ function getId (contentType: string, type: 'navigation' | 'footer') {
 
 async function getContent () {
     
-  const contentId = getId(route.meta.contentType as string, props.type);
+  const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
 
-  if(route.meta.contentType !== typeCache.value) {
+  if(isLocked.value) {
+
+    loading.value = 0;
+    error.value = true;
+
+    return;
+  }
+
+  if(contentType.value !== typeCache.value) {
 
     loading.value = 0;
     error.value = false;
@@ -49,7 +62,7 @@ async function getContent () {
         
     try {
         
-      data.value = await store.getContent({id: contentId});
+      data.value = await store.getContent({id: contentId}, contentType.value);
       loading.value = data.value.status;
 
     } catch (e) {
