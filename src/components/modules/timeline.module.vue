@@ -21,6 +21,7 @@ const mediaContainer = ref<HTMLElement>();
 const textContainer = ref<HTMLElement>();
 const timeContainer = ref<HTMLElement>();
 const isVisible =ref<Boolean>()
+const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const emit = defineEmits<{(e: string, event?: Event): void}>();
 onBeforeMount(() => {
   if (props.elements) {
@@ -62,15 +63,22 @@ function setElements (elements: TimelineElement[]) {
   elementsExtended.value = positionedItem;
 }
 
+// function disableScroll() {
+//   if(!isVisible) return;
+//   if(isVisible && window.innerWidth < 650) {
+//     let hiddenBody = document.body.style.overflowX = 'hidden';
+//     hiddenBody = document.body.style.overflowX = 'clip'
+//     document.body.classList.add("disableScroll");
+//   }
+  
+// }
 function disableScroll() {
   if(!isVisible) return;
   if(isVisible) {
-    document.documentElement.style.overflowX = 'hidden';
-    
+    document.documentElement.style.overflowX = 'hidden'
     return 
   }
-  document.documentElement.style.overflowX = 'clip'
-  document.body.classList.add("disableScroll");
+  document.documentElement.style.overflowX = 'visible'
 }
 
 function activeText(event: Event,  index: number) {
@@ -88,20 +96,14 @@ function activeText(event: Event,  index: number) {
 
 function activeMedia(event: Event,  index: number) {
   active.value = index
-
   if(!element.value || !mediaContainer.value) return
-  if(mediaContainer.value || timeContainer.value) {
+  if(mediaContainer.value) {
       mediaContainer.value.className = 'active';
       element.value.style.transform = 'translateX(0%)'
   } 
   console.log('was clicked')
   emit('click')
 }
-
-
-
-
-const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
 const formattedDate = computed(() => {
   const date = props.date ? dayjs(props.date) : null;
