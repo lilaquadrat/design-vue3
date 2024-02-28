@@ -8,9 +8,9 @@ import type Quote from "./Quote.interfaces";
 import type Link from "./link.interface";
 
 export interface TimelineElement {
-    media: ((Video | Quote | Picture )&{type: string})[]
+    media: ((Video | Picture )&{type: string})[]
     textblock?: Textblock;
     list?: ListWithTitle;
     links?: LinkListWithTitle;
-    // quote?: Quote;
+    quote?: Quote;
 }

@@ -23,7 +23,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 const attachTo = ref<HTMLElement>();
 const overlay = ref<HTMLElement>();
 const linksContainer = ref<HTMLElement>();
-const logoContainer = ref<HTMLElement>();
+const logoContainer = ref<HTMLElement>(); 
 const links = ref<HTMLElement>();
 const triggerMenuOverlay = ref<HTMLElement>();
 const elementsArray = ref<(LinkGroupElement & { active: boolean })[]>([]);
@@ -108,7 +108,7 @@ function updateElements () {
     newElements.push(newElement);
     
   });
-
+  console.log('setActiveElements in updateElements:', elementsArray.value)
   elementsArray.value = newElements;
 }
 
