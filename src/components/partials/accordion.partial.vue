@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, type Ref, nextTick } from 'vue';
+import { ref, onMounted, type Ref, nextTick, onServerPrefetch } from 'vue';
 import type AccordionElement from '@interfaces/AccordionElement.interface';
 import type { AccordionElementWithSettings } from '@interfaces/AccordionElement.interface';
 import { useResize } from '@/plugins/resize';
@@ -22,11 +22,8 @@ watch(() => props.elements, () => setElements(props.elements));
 watch(() => props.openOnStart, () => setElements(props.elements, true));
 watch(resized, () => setElements(props.elements));
 
-onMounted(() => {
-
-  setElements(props.elements, true);
-
-});
+onServerPrefetch(() => setElements(props.elements, true));
+onMounted(() => setElements(props.elements, true));
 
 /**
  * get the real size of the hidden placeholder to create a correct open animation

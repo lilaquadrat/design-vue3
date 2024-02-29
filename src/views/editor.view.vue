@@ -23,7 +23,6 @@ watch(siteSettings, () => {
   /**
   * if the target type changes we need to update the available modules
   */
-
   const useTarget = siteSettings.value?.target || 'browser';
 
   if(useTarget !== targetCache.value) {
@@ -68,8 +67,8 @@ function messageHandler (message: StudioIframeMessage) {
   }
 
   //editor main configuration
-  if (message.data.type === 'studio-editor-settings') {
-    console.groupCollapsed('MESSAGE_STUDIO_EDITOR_SETTINGS');
+  if (message.data.type === 'studio-settings') {
+    console.groupCollapsed('MESSAGE_STUDIO_SETTINGS');
     console.log(message.data.data);
     console.groupEnd();
 
@@ -77,13 +76,14 @@ function messageHandler (message: StudioIframeMessage) {
     updateContent();
   }
 
-  if (message.data.type === 'studio-settings') {
-    console.groupCollapsed('MESSAGE_STUDIO_SETTINGS');
+  if (message.data.type === 'studio-editor-settings') {
+    console.groupCollapsed('MESSAGE_STUDIO_EDITOR_SETTINGS');
     console.log(message.data.data);
     console.groupEnd();
 
     siteSettings.value = message.data.data;
     updateContent();
+    updateContext();
 
   }
 
@@ -137,6 +137,15 @@ function addListeners () {
 
 function updateContent () {
   content.value = prepareContent({ modules: contentCache.value, ...siteSettings.value });
+}
+
+function updateContext () {
+
+  editorStore.context = {
+    sitetitle  : siteSettings?.value?.settings?.title,
+    description: siteSettings?.value?.settings?.description
+  }
+
 }
 
 function resetCookies () {

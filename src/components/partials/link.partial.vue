@@ -2,7 +2,7 @@
 import type IconsPartial from '@/interfaces/IconsPartial';
 import { onBeforeMount } from 'vue';
 import { computed, getCurrentInstance, inject, ref } from 'vue';
-import triggerEvent from '@/plugins/events';
+// import triggerEvent from '@/plugins/events';
 
 const props = defineProps<{
   link: string
@@ -44,7 +44,7 @@ function event ($event: MouseEvent) {
 
     $event.preventDefault();
 
-    triggerEvent(props.link);
+    // triggerEvent(props.link);
 
   }
 

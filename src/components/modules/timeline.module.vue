@@ -13,7 +13,6 @@ const props = defineProps<
     date: string;
   }
 >();
-
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
 const active = ref<number>(0);
@@ -23,12 +22,13 @@ const timeContainer = ref<HTMLElement>();
 const isVisible =ref<Boolean>()
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const emit = defineEmits<{(e: string, event?: Event): void}>();
+
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
   }
 });
-onBeforeMount(():void =>  disableScroll())
+onBeforeMount(():void => disableScroll())
 
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
@@ -63,36 +63,37 @@ function setElements (elements: TimelineElement[]) {
   elementsExtended.value = positionedItem;
 }
 
-function disableScroll() {
-  if(!isVisible) return;
-  if(isVisible && window.innerWidth < 650) {
+function disableScroll () {
+  if(!isVisible.value) return;
+
+  if(isVisible.value && window.innerWidth < 650) {
     document.documentElement.style.overflowX = 'hidden';
     return 
   }
+
   document.documentElement.style.overflowX = 'visible'
-  document.documentElement.classList.add("disableScroll");
+  document.documentElement.classList.add('disableScroll');
 }
 
-function activeText(event: Event,  index: number) {
+function activeText (event: Event, index: number) {
   active.value = index
 
   if(!element.value || !textContainer.value || !timeContainer.value) return
-      textContainer.value.className = 'active';
-      timeContainer.value.className = 'active';
-      element.value.style.transform = 'translateX(-60%)'
+  textContainer.value.className = 'active';
+  timeContainer.value.className = 'active';
+  element.value.style.transform = 'translateX(-60%)'
   emit('click')
 }
 
-function activeMedia(event: Event,  index: number) {
+function activeMedia (event: Event, index: number) {
   active.value = index
 
   if(!element.value || !mediaContainer.value) return
-      mediaContainer.value.className = 'active';
-      element.value.style.transform = 'translateX(0%)'
+  mediaContainer.value.className = 'active';
+  element.value.style.transform = 'translateX(0%)'
 
   emit('click')
 }
-
 
 const formattedDate = computed(() => {
   const date = props.date ? dayjs(props.date) : null;
@@ -150,7 +151,6 @@ const formattedDate = computed(() => {
         // 424px minmax(auto, 1fr) minmax(auto, 1fr);
         gap: 25px 0;
         width: 100%;
-        
         
         @media @desktop {
         
@@ -217,8 +217,6 @@ const formattedDate = computed(() => {
             height: min-content;
             position: sticky;
             top: 10px;
-           
-    
 
             :deep(.lila-figure) {
               grid-template-columns: auto;
@@ -325,7 +323,6 @@ const formattedDate = computed(() => {
                   grid-row-start: 1;
               }
             }
-            
 
         }
 

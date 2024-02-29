@@ -20,7 +20,7 @@ const changeHandler = (checked: boolean) => {
   <section class="lila-agreement-partial">
     <lila-checkbox-partial name="agreement" :required="required" :error="error" :modelValue="modelValue" @change="changeHandler"><slot /></lila-checkbox-partial>
 
-    <lila-content-container-partial :predefined="predefined" :id="contentId" overlay>{{$translate('show content')}}</lila-content-container-partial>
+    <lila-content-container-partial :predefined="predefined" :id="predefined ? contentId : undefined" :internalId="!predefined ? contentId : undefined" overlay>{{$translate('show content')}}</lila-content-container-partial>
 
   </section>
 </template>

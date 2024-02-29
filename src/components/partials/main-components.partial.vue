@@ -29,9 +29,11 @@ onMounted(() => {
 
 });
 
-function getId (contentType: string, type: 'navigation' | 'footer') {
+function getId (contentType: 'public' | 'members', type: 'navigation' | 'footer') {
   
-  return `${contentType}-${type}`;
+  return contentType !== 'public' 
+    ? `${contentType}-${type}` 
+    : type;
 
 }
 

@@ -30,7 +30,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 <template>
 
   <section class="lila-list-links" v-if="notEmpty" :class="variant">
-    <h4 v-if="title">{{ title }}</h4>
+    <h4 v-if="title">{{ $replacer(title) }}</h4>
 
     <ul v-if="!actions || mode === 'list'">
       <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`">
@@ -38,7 +38,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
         <lila-icons-partial v-if="!isNumbered && !noStyle" size="small" :type="'arrow-right'"/>
 
         <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" />
-        <template v-if="typeof(single) === 'string'">{{ single }}</template>
+        <template v-if="typeof(single) === 'string'">{{ $replacer(single) }}</template>
 
       </li>
     </ul>

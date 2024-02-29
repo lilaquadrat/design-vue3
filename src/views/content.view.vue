@@ -7,11 +7,12 @@ import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
 import type { SDKResponse } from '@lilaquadrat/sdk';
 import useUserStore from '@/stores/user.store';
+import { onServerPrefetch } from 'vue';
 
 const route = useRoute();
 const mainStore = useMainStore();
 const userStore = useUserStore();
-const data = ref<SDKResponse<BasicData<Content>>>();
+const data = ref<SDKResponse<BasicData<Partial<Content>>>>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
@@ -19,13 +20,14 @@ const error = ref<boolean>(false);
 watch(route, () => getContent());
 watch(() => userStore.locked, () => getContent());
 onBeforeMount(() => getContent());
+onServerPrefetch(() => getStoreContent());
 
 const contentType = computed(() => route.meta.contentType as 'public' | 'members');
 const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 const hint = computed(() => {
 
   if(loading.value === 404) {
-    return 'error404'
+    return 'error-404'
   }
 
   if(isLocked.value) {
@@ -42,8 +44,21 @@ function getContentId (contentType: 'public' | 'members', pathMatch?: string) {
 
   const name = pathMatch ? pathMatch : 'home';
 
-  return `${contentType}-${name}`;
+  return contentType !== 'public' ? `${contentType}-${name}` : name;
   
+}
+
+async function getStoreContent () {
+
+  const storeContent = mainStore.data;
+
+  data.value = {
+    status: 200,
+    data  : storeContent,
+  };
+
+  loading.value = 200;
+
 }
 
 async function getContent () {
@@ -101,10 +116,7 @@ const contentMerged = computed(() => {
 
     const safeData = hardCopy(data.value?.data);
 
-    console.log(safeData.genericData, generateDataWithContent(safeData.genericData as GenericData));
-    
     distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
-    console.log(safeData.modules);
     return prepareContent(safeData, layout.value?.data);
 
   }

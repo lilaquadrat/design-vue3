@@ -11,6 +11,7 @@ export const useEditorStore = defineStore('editor', () => {
   const modulesMail = ref<any>();
   const partialsBrowser = ref<any>();
   const partialsMail = ref<any>();
+  const context = ref<Record<string, string | undefined>>();
 
   return { 
     active, 
@@ -20,6 +21,7 @@ export const useEditorStore = defineStore('editor', () => {
     modulesMail,
     partialsBrowser,
     partialsMail,
+    context
   }
 
 })

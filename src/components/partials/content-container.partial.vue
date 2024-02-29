@@ -11,6 +11,7 @@ const { translate } = useTranslations();
 const props = defineProps<{
   overlay?: boolean
   id?: string
+  internalId?: string
   type: string
   categories?: string[]
   latest?: boolean
@@ -44,8 +45,6 @@ watch(visible, (newVisible) => {
 
 const getContent = async () => {
 
-  console.log('get content', props.id);
-
   if (loading.value) return false;
 
   error.value = false;
@@ -53,15 +52,18 @@ const getContent = async () => {
   loading.value = 100;
 
   let data: SDKResponse<Content> | null = null;
+  const params: Record<string, string|string[]|boolean|undefined> = {
+    latest    : props.latest, 
+    categories: props.categories as string[], 
+  };
+
+  if(props.predefined) params.predefined = true;
+  if(props.id) params.id = props.id;
+  if(props.internalId) params.internalId = props.internalId;
 
   try {
 
-    data = await mainStore.getContent({
-      id        : props.id as string, 
-      latest    : props.latest, 
-      categories: props.categories as string[], 
-      predefined: props.predefined
-    }, 'public');
+    data = await mainStore.getContent(params, 'public');
 
   } catch (e) {
 

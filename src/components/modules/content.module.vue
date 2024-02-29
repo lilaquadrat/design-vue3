@@ -3,7 +3,7 @@ import type { ChildData, ContentWithPositions } from '@lilaquadrat/interfaces';
 import { computed, provide } from 'vue';
 
 const props = defineProps<{
-  content: ContentWithPositions
+  content?: ContentWithPositions
   inline?: boolean
   sub?: boolean
   routeBase?: string
@@ -16,12 +16,12 @@ const props = defineProps<{
 provide('linkMode', props.linkMode);
 provide('linkBase', props.linkBase);
 
-const mode = computed(() => props.content.settings.mode || 'presentation');
+const mode = computed(() => props.content?.settings.mode || 'presentation');
 
 </script>
 
 <template>
-  <section class="lila-content-module" :class="{sub}">
+  <section class="lila-content-module" v-if="content" :class="{sub}">
 
     <article class="top container" :class="{inline, sub}"  v-if="!!content.top.length">
       <component v-for="single in content.top" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" />

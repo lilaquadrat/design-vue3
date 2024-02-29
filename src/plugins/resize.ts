@@ -1,5 +1,5 @@
 import logger from '@/mixins/logger';
-import { ref, type App } from 'vue';
+import { ref, type App, computed } from 'vue';
 
 class Resize {
 
@@ -22,36 +22,45 @@ class Resize {
   */
   triggerStart = ref<boolean>(true); 
 
+  safeWindow = computed(() => {
+
+    if(typeof window === 'undefined') return null;
+    return window;
+
+  });
+
   constructor () {
 
     this.resizedEvent = new Event('resized');
     this.mediaEvent = new Event('media');
-    this.realHeight.value = window.innerHeight;
+    this.realHeight.value = this.safeWindow.value?.innerHeight || 0;
 
     this.getMediaQuery();
 
-    window.addEventListener('resize', () => this.debounce());
+    this.safeWindow.value?.addEventListener('resize', () => this.debounce());
 
   }
 
   trigger (isStart?: boolean) {
 
     this.getMediaQuery();
-    this.realHeight.value = window.innerHeight;
+    this.realHeight.value = this.safeWindow.value?.innerHeight;
     this.resized.value = Date.now();
-    window.dispatchEvent(this.resizedEvent);
+    this.safeWindow.value?.dispatchEvent(this.resizedEvent);
 
     if(!isStart) this.triggerStart.value = true;
 
   }
 
   getMediaQuery (): void {
+
+    if(typeof document === 'undefined') return;
     
     const element = document.getElementById('mediadetection');
     
     if (!element) return;
 
-    const child = Array.from(element.children).find(child => window.getComputedStyle(child).display === 'block');
+    const child = Array.from(element.children).find(child => this.safeWindow.value?.getComputedStyle(child).display === 'block');
 
     if (child) {
       const childClass = child.getAttribute('class') as string;
@@ -59,7 +68,7 @@ class Resize {
       if (this.media.value !== childClass) {
 
         this.media.value = childClass;
-        window.dispatchEvent(this.mediaEvent);
+        this.safeWindow.value?.dispatchEvent(this.mediaEvent);
 
       } else {
 

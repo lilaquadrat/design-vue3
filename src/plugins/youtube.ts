@@ -53,12 +53,16 @@ const plugin = {
   },
 };
 
-window.onYouTubeIframeAPIReady = () => {
+if(typeof window !== 'undefined') {
 
-  youtubePlugin.youtubeApiState.value = true;
+  window.onYouTubeIframeAPIReady = () => {
   
-};
-  
+    youtubePlugin.youtubeApiState.value = true;
+    
+  };
+    
+}
+
 function useYoutube () {
       
   return {

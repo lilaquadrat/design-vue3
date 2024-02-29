@@ -30,7 +30,7 @@ const props = defineProps<ModuleBaseProps & {
 const state = ref<string>();
 const traceId = ref<string>();
 const model = ref<Contact>();
-const addressModel = ref<Address>();
+const addressModel = ref<Address>({});
 const errors = ref<ResponseError>();
 const errorsObject = ref<ErrorsObject>({});
 const translationPre = '';
@@ -88,9 +88,15 @@ function updateCategories () {
 
     categoriesExtended.value = categories;
 
+  } else if(list.value.mode !== 'contact') {
+    
+    categoriesExtended.value = list.value.categories;
+
+  } else {
+
+    categoriesExtended.value = undefined;
   }
 
-  categoriesExtended.value = list.value.categories;
 
 }
 
@@ -157,7 +163,7 @@ const disabled = computed(() => {
  */
 const mainErrors = computed(() => {
 
-  const validErrors = ['LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
+  const validErrors = ['EMAIL_INVALID', 'LIST_CANNOT_JOIN', 'LIST_UNIQUE_CUSTOMER_CONFIRMED', 'LIST_NOT_FOUND', 'LIST_NO_SPOT_AVAILABLE']
 
   if(errors.value && validErrors.includes(errors.value.message)) {
     return `${errors.value.message}_${list.value?.mode}`;
@@ -397,8 +403,6 @@ const handleForm = async (event: Event) => {
 </script>
 <template>
   <section class="lila-contact-module lila-module">
-
-    {{ props.editor }} {{ state }}
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />

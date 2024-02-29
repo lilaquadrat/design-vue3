@@ -6,9 +6,11 @@ import dom from '@/functions/lila-dom';
 import { ref, watch, type Ref, nextTick, computed, onMounted } from 'vue';
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
+import { useResize } from '@/plugins/resize';
 
 defineOptions({ inheritAttrs: false });
 
+const {resized} = useResize();
 const store = useMainStore();
 const props = defineProps<{
   textblock?: Textblock;
@@ -162,13 +164,14 @@ onMounted(() => {
   setControlsTop();
 });
 
+watch(resized, () => {
+
+  elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
+  setControlsTop();
+
+});
+
 function init (): void {
-  window.addEventListener('resized', () => {
-
-    elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
-    setControlsTop();
-
-  });
 
   elementsWidth.value = elementsContainer.value?.getBoundingClientRect().width || 0;
 
@@ -178,7 +181,6 @@ function init (): void {
     dom.onElement('touchmove mousemove', element.value, drag as EventListener);
   }
 
-  // if(mainElement.value) dom.onElement('touchmove', mainElement.value, touchmove as EventListener);
 }
 
 /** updates the current headline for variant2 */

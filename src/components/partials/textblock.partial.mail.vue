@@ -20,18 +20,18 @@ const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props
 <template >
   <table :id="id" :class="[variant]" v-if="notEmpty">
     <tr v-if="headline">
-      <td><h1 style="text-transform: uppercase;  font-weight: bold; color: #3f2d56; font-size: 28px; line-height: 30px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;">{{ headline }}</h1></td>
+      <td><h1 style="text-transform: uppercase;  font-weight: bold; color: #3f2d56; font-size: 28px; line-height: 30px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;">{{ $replacer(headline) }}</h1></td>
     </tr>
     <tr v-if="subline">
-      <td><h2 style="color: #3f2d56; font-size: 28px;  font-weight: bold; line-height: 30px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;" v-if="subline">{{ subline }}</h2></td>
+      <td><h2 style="color: #3f2d56; font-size: 28px;  font-weight: bold; line-height: 30px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;" v-if="subline">{{ $replacer(subline) }}</h2></td>
     </tr>
     <tr v-if="intro">
-      <td><h3 style="color: #555; font-weight: bold; font-size: 15px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif;" v-if="intro">{{ intro }}</h3></td>
+      <td><h3 style="color: #555; font-weight: bold; font-size: 15px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif;" v-if="intro">{{ $replacer(intro) }}</h3></td>
     </tr>
     <tr>
       <td>    
         <p style="color: #555; font-size: 15px; padding-bottom: 5px; font-family: Arial, Helvetica, sans-serif;" v-for="(singleText, index) in text" :key="`text-${index}`">
-          {{ singleText }}
+          {{ $replacer(singleText) }}
         </p>
       </td>
     </tr>

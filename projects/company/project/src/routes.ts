@@ -27,6 +27,11 @@ const routes: readonly RouteRecordRaw[] = [
         }
       },
       {
+        path     : '/preview/:pathMatch(.*)?',
+        name     : 'preview',
+        component: PreviewView
+      },
+      {
         path     : '/:pathMatch(.*)*', // Catch-all route
         name     : 'public-content', // Ensured unique name
         component: ContentView,
@@ -40,11 +45,6 @@ const routes: readonly RouteRecordRaw[] = [
     path     : '/login-callback',
     name     : 'login-callback',
     component: LoginView
-  },
-  {
-    path     : '/preview/:pathMatch(.*)?',
-    name     : 'preview',
-    component: PreviewView
   },
 ];
 const editorRoutes: readonly RouteRecordRaw[] = [

@@ -28,7 +28,6 @@ const props = withDefaults(
     multiple: true
   }
 );
-const { translate } = useTranslations();
 const { media, resized } = useResize();
 const { scrolled } = useInview();
 const emit = defineEmits(['update:modelValue']);
@@ -117,6 +116,7 @@ function setSelected () {
 
 function updateSelectedText () {
 
+  const { translate } = useTranslations();
   const textArray: string[] = [];
 
   if (props.multiple) {

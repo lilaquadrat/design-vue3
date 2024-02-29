@@ -2,12 +2,15 @@ import { createMemoryHistory, createRouter, createWebHistory, type RouteRecordRa
 
 export default (routes: readonly RouteRecordRaw[]) => {
 
+  const historyMode = import.meta.env.SSR
+    ? createMemoryHistory('/')
+    : createWebHistory('/');
   const router = createRouter({
-    history: import.meta.env.SSR
-      ? createMemoryHistory('/')
-      : createWebHistory('/'),
+    history: historyMode,
     routes
   });
+
+  console.log(historyMode);
   
   return router;
 

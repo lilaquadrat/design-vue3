@@ -1,29 +1,26 @@
 <script setup lang="ts">
 import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
 import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
-import { computed, type ComputedRef } from 'vue';
+import type Textblock from '@/interfaces/textblock.interface';
+import { computed } from 'vue';
 
-const props = defineProps<{
-  headline?: string
-  subline?: string
-  intro?: string
-  text?: string[]
+const props = defineProps<Textblock & {
   links?: LinkListWithTitle
   list?: ListWithTitle
   variant?: string[],
   id?: string
 }>();
-const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
+const notEmpty = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
 
 </script>
 
 <template >
   <section :id="id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
-    <h1 v-if="headline">{{ headline }}</h1>
-    <h2 v-if="subline">{{ subline }}</h2>
-    <h3 v-if="intro">{{ intro }}</h3>
+    <h1 v-if="headline">{{ $replacer(headline) }}</h1>
+    <h2 v-if="subline">{{ $replacer(subline) }}</h2>
+    <h3 v-if="intro">{{ $replacer(intro) }}</h3>
     <p v-for="(singleText, index) in text" :key="`text-${index}`">
-      {{ singleText }}
+      {{ $replacer(singleText) }}
     </p>
 
     <slot></slot>

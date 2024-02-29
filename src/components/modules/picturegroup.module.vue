@@ -10,7 +10,6 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
   elements: PictureGroupElement[];
-
   textblock: Textblock;
 }>();
 const element = ref<HTMLElement>();
@@ -26,13 +25,13 @@ function componentType (link?: Link): 'lila-link-partial' | 'section' {
 
 const linkVariant = computed(() => {
 
-  if (props.variant.includes('product')) return ['actions', 'center'];
+  if (props.variant?.includes('product')) return ['actions', 'center'];
 
   return ['noStyle'];
 
 });
-const fitVariant = computed(() => props.variant.includes('fit'));
-const brightText = computed(() => props.variant.includes('color1') || props.variant.includes('color3') ? 'bright' : '');
+const fitVariant = computed(() => props.variant?.includes('fit'));
+const brightText = computed(() => props.variant?.includes('color1') || props.variant?.includes('color3') ? 'bright' : '');
 
 </script>
 <template>
@@ -71,26 +70,12 @@ const brightText = computed(() => props.variant.includes('color1') || props.vari
     }
   }
 
-  .lila-textblock {
+  :deep(.lila-textblock) {
     justify-self: center;
 
     width: 100%;
-    max-width: @moduleWidth_M;
+    max-width: @moduleWidth_S;
     text-align: left;
-  }
-
-  &.noText {
-
-    .lila-textblock {
-      display: none;
-    }
-  }
-
-  &.centerText {
-
-    .lila-textblock {
-      text-align: center;
-    }
   }
 
   &.color1 {

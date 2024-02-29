@@ -81,8 +81,6 @@ store.setConfiguration({preloadImages: true})
 
 const contentMerged = computed(() => {
 
-  console.log(route.params);
-
   const content = modules[route.params.pathMatch as keyof typeof modules];
 
   if(!content) return prepareContent(baseContent);

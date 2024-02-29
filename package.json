@@ -8,9 +8,11 @@
   },
   "scripts": {
     "dev": "vite projects/company/project local",
-    "build": "vite build projects/company/project live",
-    "build-next": "vite build projects/company/project next",
-    "preview": "vite preview projects/company/project",
+    "build": "rm -rf dist/app && vite build projects/company/project live",
+    "build-next": "rm -rf dist/app && vite build projects/company/project next",
+    "build-ssr": "rm -rf dist/server && vite build projects/company/project live --ssr",
+    "build-next-ssr": "rm -rf dist/server && vite build projects/company/project next --ssr",
+    "preview": "vite preview projects/company/project local",
     "type-check": "vue-tsc --build --force",
     "cli": "node node_modules/@lilaquadrat/cli/lib/src/index.js",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
@@ -46,6 +48,7 @@
     "postcss-html": "^1.6.0",
     "postcss-less": "^6.0.0",
     "prettier-eslint": "^16.2.0",
+    "rollup-plugin-visualizer": "^5.12.0",
     "stylelint": "^16.1.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended": "^14.0.0",

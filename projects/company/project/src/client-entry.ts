@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, createSSRApp } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
@@ -12,13 +12,14 @@ import HelpersPlugin from '@/plugins/filters';
 import youtubePlugin from '@/plugins/youtube';
 import traceablePlugin from '@/plugins/traceable';
 import authPlugin from '@/plugins/auth';
+import replacerPlugin from '@/plugins/replacer';
 import './models';
 import modules from './modules.browser';
 import partials from './partials.browser';
 import hooks from '@/mixins/hooks';
 
 // const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
-const app = createApp(App);
+const app = createSSRApp(App);
 
 loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
@@ -35,6 +36,7 @@ app.use(resizePlugin);
 app.use(youtubePlugin);
 app.use(traceablePlugin);
 app.use(authPlugin);
+app.use(replacerPlugin);
 
 app.config.globalProperties.$translations.add(de, 'de');
 app.config.globalProperties.$translations.select('de');

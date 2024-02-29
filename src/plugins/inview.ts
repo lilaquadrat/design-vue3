@@ -1,4 +1,4 @@
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { ref } from 'vue';
 import { type Ref } from 'vue';
 
@@ -12,7 +12,7 @@ class Inview {
 
   scrolledEvent: Event;
 
-  scrolled = ref<number>(window.scrollY); 
+  scrolled = ref<number>(0); 
 
   scrollDirection = ref<'up'|'down'>();
 
@@ -21,16 +21,27 @@ class Inview {
   */
   triggerStart = ref<boolean>(true); 
 
+  safeWindow = computed(() => {
+
+    if(typeof window === 'undefined') return null;
+    return window;
+
+  });
+
   constructor () {
 
     this.scrolledEvent = new Event('scrolled');
     this.checkIsTop();
 
-    window.addEventListener('scroll', () => {
+    if(this.safeWindow.value) {
 
-      this.debounce();
-
-    });
+      this.safeWindow.value?.addEventListener('scroll', () => {
+  
+        this.debounce();
+  
+      });
+      
+    }
 
   }
 
@@ -47,19 +58,19 @@ class Inview {
   trigger (isStart?: boolean) {
 
     this.checkIsTop();
-    this.scrollDirection.value = this.scrolled.value > window.scrollY 
+    this.scrollDirection.value = this.scrolled.value > this.safeWindow.value?.scrollY 
       ? 'down'
       : 'up'
-    this.scrolled.value = window.scrollY;
+    this.scrolled.value = this.safeWindow.value?.scrollY;
 
-    window.dispatchEvent(this.scrolledEvent);
+    this.safeWindow.value?.dispatchEvent(this.scrolledEvent);
     if(!isStart) this.triggerStart.value = true;
 
   }
 
   checkIsTop () {
 
-    this.isTop = window.scrollY > 0
+    this.isTop = this.safeWindow.value?.scrollY > 0
 
   }
 
@@ -90,8 +101,8 @@ class Inview {
 
     if (typeof element?.getBoundingClientRect !== 'function') return;
 
-    const viewportHeight = window.outerHeight;
-    const height = window.outerHeight / 2;
+    const viewportHeight = this.safeWindow.value?.outerHeight;
+    const height = this.safeWindow.value?.outerHeight / 2;
     const rect = element.getBoundingClientRect();
     const top = rect.top - height + 10;
     const bottom = rect.bottom - height + 10;
@@ -132,7 +143,7 @@ class Inview {
 
   checkPreload (component: HTMLElement, state: Ref<boolean>) {
 
-    const preloadRange = window.outerHeight * 2;
+    const preloadRange = window?.outerHeight * 2;
     const rect = component.getBoundingClientRect();
 
     if(rect.bottom > -preloadRange && rect.top < preloadRange) {
@@ -145,7 +156,7 @@ class Inview {
 
   adjustScrolling (component: HTMLElement, top: number) {
 
-    const offset = window.outerHeight / 10;
+    const offset = window?.outerHeight / 10;
 
     if (top < offset && top > (offset * -1)) {
 

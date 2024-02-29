@@ -15,7 +15,6 @@ const props = defineProps<ModuleBaseProps & {
   childData: ChildData;
 }>();
 const { resized } = useResize();
-const {translate} = useTranslations();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
 const currentContentContainer = ref<HTMLElement>();
@@ -40,6 +39,8 @@ const currentContent = computed(() => {
   return prepareContent(currentContent);
 });
 const indexTeaser = computed(() => {
+
+  const {translate} = useTranslations();
 
   if (!props.childData?.data) return [];
 

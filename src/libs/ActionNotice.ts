@@ -1,8 +1,6 @@
 import { useTranslations } from '@/plugins/translations';
 import type { ErrorObject } from 'ajv';
 
-const {translate} = useTranslations();
-
 export interface TranslatedPath {
   path?: string,
   values?: string[]|number[]
@@ -85,6 +83,7 @@ export default class ActionNotice {
     let message: string = '';
     let path = usePath;
     let translatedPath: string = '';
+    const {translate} = useTranslations();
 
     if (error.keyword === 'type') {
 

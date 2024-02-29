@@ -1,7 +1,7 @@
+import type replaceVariables from '@/mixins/replaceVariables'
 import type { HelpersPlugin } from '@/plugins/filters'
 import type { TranslationPlugin } from '@/plugins/translations'
 
-// Works correctly
 export {}
 
 declare module 'vue' {
@@ -10,5 +10,6 @@ declare module 'vue' {
     $translate: TranslationPlugin['translate']
     $translateWithDiff: TranslationPlugin['translateWithDiff']
     $helpers: typeof HelpersPlugin
+    $replacer: (content: string) => string | undefined
   }
 }
