@@ -73,32 +73,26 @@ function disableScroll() {
   document.documentElement.classList.add("disableScroll");
 }
 
-function isaActive(event: Event,  index: number) {
+function activeText(event: Event,  index: number) {
   active.value = index
 
-  if(!element.value || !textContainer.value || !timeContainer.value || !mediaContainer.value) return
-  if(textContainer.value || timeContainer.value) {
+  if(!element.value || !textContainer.value || !timeContainer.value) return
       textContainer.value.className = 'active';
       timeContainer.value.className = 'active';
       element.value.style.transform = 'translateX(-60%)'
-  } else if(mediaContainer.value) {
-      mediaContainer.value.className = 'active';
-      element.value.style.transform = 'translateX(0%)'
-  }
-  console.log('was clicked')
   emit('click')
 }
 
-// function isaActive(event: Event,  index: number) {
-//   active.value = index
-//   if(!element.value || !mediaContainer.value) return
-//   if(mediaContainer.value) {
-//       mediaContainer.value.className = 'active';
-//       element.value.style.transform = 'translateX(0%)'
-//   } 
-//   console.log('was clicked')
-//   emit('click')
-// }
+function activeMedia(event: Event,  index: number) {
+  active.value = index
+
+  if(!element.value || !mediaContainer.value) return
+      mediaContainer.value.className = 'active';
+      element.value.style.transform = 'translateX(0%)'
+
+  emit('click')
+}
+
 
 const formattedDate = computed(() => {
   const date = props.date ? dayjs(props.date) : null;
@@ -114,21 +108,21 @@ const formattedDate = computed(() => {
   <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant]">
     <section class="elements-container">
       <section class="singleElement-container" v-for="(element, index) in elementsExtended" :class="[element.position, {noMedia: !element.media}]" :key="`timeline-withpositions${index}`">
-        <section ref="timeContainer" class="time-container" @click="isaActive($event, index)">
+        <section ref="timeContainer" class="time-container" @click="activeText($event, index)">
           <time v-if="date" class="year">{{ formattedDate.year }}</time>
           <time v-if="date" class="dayMonth">{{ formattedDate.dayMonth }}</time>
         </section>
 
         <section class="timeline-container"></section>
 
-        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="isaActive($event, index)">
+        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeMedia($event, index)">
             <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
               <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
               <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
             </template>
         </section>
 
-        <section ref="textContainer" v-if="element" class="text-container" @click="isaActive($event, index)">
+        <section ref="textContainer" v-if="element" class="text-container" @click="activeText($event, index)">
             <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
             <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
             <lila-list-partial  v-if="element.list" v-bind="element.list"/>
