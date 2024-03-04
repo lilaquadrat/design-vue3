@@ -53,6 +53,7 @@ const cssElementsLength = computed((): { [key: string]: string | number } => ({
 }));
 const cssWidth = computed((): { [key: string]: string } => ({
   '--width': `${100 / props.elements.length}%`,
+
 }));
 const controlsTop = computed((): { [key: string]: string } => ({
   '--top': `${controlsOffset.value / 2}px`,
@@ -105,6 +106,7 @@ function swipe (event: TouchEvent): void {
   const length = props.elements.length - 1;
   // Calculate the horizontal distance of the swipe
   const currentSwipeX = getEvent(event).clientX - swipeX.value;
+  console.log('swipe:', currentSwipeX)
   // Get the unified touch or mouse event
   const unifiedEvent = getEvent(event);
   const target = unifiedEvent.target as HTMLElement;
@@ -128,7 +130,7 @@ function swipe (event: TouchEvent): void {
   // Ensure the current index is not less than 0 or more than the total number of elements
   if (currentOptionIndex.value < 0) currentOptionIndex.value = 0;
   if (currentOptionIndex.value > length) currentOptionIndex.value = length;
-
+  console.log('width:', `${100 / props.elements.length}%`,)
   emit('change', props.elements[currentOptionIndex.value]);
 }
 
@@ -143,7 +145,7 @@ function change (direction: string): void {
 
   if (currentOptionIndex.value < 0) currentOptionIndex.value = 0;
   if (currentOptionIndex.value > length) currentOptionIndex.value = length;
-
+  console.log('change:', length)
   emit('change', props.elements[currentOptionIndex.value]);
 }
 

@@ -203,6 +203,7 @@ const calculateOptionsStyle = () => {
   }
 
   const bounds = overlayElement.getBoundingClientRect();
+
   const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
 
   if(!targetBounds) return;
@@ -240,7 +241,7 @@ const calculateOptionsStyle = () => {
 
 </script>
 <template>
-  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module">
+  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module"> {{ useTriggerMenu}}
     <section class="placeholder"></section>
 
     <section class="overflow-container">
@@ -252,7 +253,7 @@ const calculateOptionsStyle = () => {
           </a>
         </section>
 
-        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle">
+        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle"> {{ open }}
           <div class="placeholder"></div>
           <div class="trigger-container">
             <span></span>
@@ -264,7 +265,7 @@ const calculateOptionsStyle = () => {
         <section ref="links" class="links">
           <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
 
-            <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
+            <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" /> 
 
             <lila-button-partial v-if="element.links" class="rotate90" colorScheme="white" v-bind="element" icon="arrow-right"  @click="openElement($event, element)">
               {{ element.text }}

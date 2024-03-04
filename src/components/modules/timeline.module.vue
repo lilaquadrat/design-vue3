@@ -1,34 +1,46 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeMount } from 'vue';
+import { ref, computed, onBeforeMount, watch } from 'vue';
 import { useInview } from '../../plugins/inview';
 import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
+import { AccessService } from '@lilaquadrat/studio/lib/services';
 
-defineOptions({ inheritAttrs: false });
-
-const props = defineProps<
-  ModuleBaseProps & {
+defineOptions({ inheritAttrs: false }); // atri
+const props = defineProps<ModuleBaseProps & {
     elements: TimelineElement[];
     date: string;
+<<<<<<< Updated upstream
   }
 >();
+=======
+    disabled?: boolean;
+
+  }>();
+const active = ref<boolean>(false)
+>>>>>>> Stashed changes
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
-const active = ref<number>(0);
 const mediaContainer = ref<HTMLElement>();
 const textContainer = ref<HTMLElement>();
 const timeContainer = ref<HTMLElement>();
-const isVisible =ref<Boolean>()
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
+<<<<<<< Updated upstream
 const emit = defineEmits<{(e: string, event?: Event): void}>();
 
+=======
+// const emit = defineEmits<{(e: string, event?: Event): void}>();
+const emit = defineEmits(['click']);
+>>>>>>> Stashed changes
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
   }
 });
+<<<<<<< Updated upstream
 onBeforeMount(():void => disableScroll())
+=======
+>>>>>>> Stashed changes
 
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
@@ -56,13 +68,15 @@ function setElements (elements: TimelineElement[]) {
     positionedItem.push({
       ...item,
       position,
+      active: false
     });
-
+    lastElementPosition = position;
   });
 
   elementsExtended.value = positionedItem;
 }
 
+<<<<<<< Updated upstream
 function disableScroll () {
   if(!isVisible.value) return;
 
@@ -95,6 +109,27 @@ function activeMedia (event: Event, index: number) {
   emit('click')
 }
 
+=======
+
+function activeText(event:Event, element: TimelineElement): void {
+  active.value = true
+ 
+  emit('click', event.target)
+}
+
+function activeMedia(event:Event, element: TimelineElement) {
+  const target = element.media
+  if(!target){
+    active.value = false
+  } else if(target) {
+    console.log(target)
+    active.value = false
+  }
+  
+  emit('click', event.target)
+}
+
+>>>>>>> Stashed changes
 const formattedDate = computed(() => {
   const date = props.date ? dayjs(props.date) : null;
 
@@ -106,24 +141,24 @@ const formattedDate = computed(() => {
 
 </script>
 <template>
-  <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant]">
-    <section class="elements-container">
-      <section class="singleElement-container" v-for="(element, index) in elementsExtended" :class="[element.position, {noMedia: !element.media}]" :key="`timeline-withpositions${index}`">
-        <section ref="timeContainer" class="time-container" @click="activeText($event, index)">
+  <section ref="element" :id="id" class="lila-timeline-module lila-module" :disabled="disabled" :class="[inviewState, variant, { active: active }]">
+    <section   class="elements-container">
+      <section  class="singleElement-container" v-for="(element, index) in elementsExtended" :class="[element.position, {noMedia: !element.media} ]" :key="`timeline-withpositions${index}`"> 
+        <section ref="timeContainer" class="time-container" @click="activeMedia($event, element)">
           <time v-if="date" class="year">{{ formattedDate.year }}</time>
           <time v-if="date" class="dayMonth">{{ formattedDate.dayMonth }}</time>
         </section>
 
         <section class="timeline-container"></section>
 
-        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeMedia($event, index)">
+        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeText($event, element)" :active="active"> 
             <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
               <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
               <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
             </template>
         </section>
 
-        <section ref="textContainer" v-if="element" class="text-container" @click="activeText($event, index)">
+        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia($event, element)">
             <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
             <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
             <lila-list-partial  v-if="element.list" v-bind="element.list"/>
@@ -135,37 +170,42 @@ const formattedDate = computed(() => {
 </template>
 
 <style lang="less" scoped>
-.lila-timeline-module {
-  .module; // zentriert alles
-  // max-width: @moduleWidth_L;
-  transition: @aType @aTimeMedium;
 
+.lila-timeline-module {
+  .module;
+  display: grid;
+  
+
+  transition: @aType @aTimeMedium;
+  transform: translate(-70%);// default, so dass man zuerst den Text sieht und nicht das Bild
+   
+  @media @desktop {
+      transform: translate(0%);
+    }
   .elements-container {
     display: grid;
-
     .singleElement-container {
-
         display: grid;
-        grid-template-columns: 80% 5px 90%;
-        grid-template-rows:35px max-content max-content 35px;
-        // 424px minmax(auto, 1fr) minmax(auto, 1fr);
+        grid-template-columns: 90% 5px 90%;
+        //grid-template-rows:35px min-content min-content 35px;
+        
+<<<<<<< Updated upstream
+=======
         gap: 25px 0;
-        width: 100%;
         
+>>>>>>> Stashed changes
         @media @desktop {
-        
-        max-width:@desktopWidthWide;
+        display: grid;
         grid-template-columns: 2fr 8px 4fr;
-         grid-template-rows: 20px max-content max-content 20px;
-        // 424px minmax(auto, 1fr) minmax(auto, 1fr);
+        grid-template-rows:20px min-content min-content 20px;
         gap: 50px 0;
-       
         }
 
         .time-container {
             display: grid;
             grid-template-rows: max-content max-content;
             padding: 0 20px;
+            
             justify-self: start;
             justify-items: start;
             grid-column-start: 3;
@@ -203,39 +243,45 @@ const formattedDate = computed(() => {
                   line-height: @headlineLineHeight_L;
               }
             }
-            
         }
 
         .media-container {
-            padding: 0 20px;
             gap:25px 0;
+            padding: 0 20px;
             display: grid;
             grid-column-start: 1;
             grid-row-start: 3;
             grid-row-end: 4;
+            height: auto;
             grid-auto-rows: min-content;
-            height: min-content;
             position: sticky;
+<<<<<<< Updated upstream
             top: 10px;
 
             :deep(.lila-figure) {
               grid-template-columns: auto;
                 // justify-content: right;
             }
+=======
+            top: 20px;
+            border: red 2px solid;
+>>>>>>> Stashed changes
             @media @desktop {
               gap: 40px 0;
               padding: 0 40px;
+              position: inherit;
               :deep(.lila-figure) {
-                
                 justify-content: left;
             }
             }
 
         }
+        
         .text-container {
-            padding: 0 20px;
             grid-row-start: 3;
-            grid-row-end: 5;
+            grid-row-end: 6;
+            grid-column-start: 3;
+            padding: 0 20px;
 
             :deep(.lila-textblock){
                 
@@ -258,6 +304,8 @@ const formattedDate = computed(() => {
             }
             @media @desktop {
               padding: 0 40px;
+              grid-row-start: 3;
+              grid-row-end: 4;
               .font-head;
               :deep(.lila-textblock){
                 
@@ -279,42 +327,45 @@ const formattedDate = computed(() => {
                   font-size: 16px;
                   color: @textColor;
                 }
-            }
+              }
             }
         }
 
         .timeline-container {
-
-            grid-row-start: 1;
-            grid-row-end: 5;
-            grid-column-start: 2;
-
-            position: relative;
-
-            background-color: @color4;
-
-        }
+          grid-row-start: 1;
+          grid-row-end: 6;
+          grid-column-start: 2;
+          position: relative;
+          background-color: @color4;
+          }
 
         &.noMedia {
+          gap: 0;
+          //grid-template-rows:auto;
           .time-container,
           .text-container {
             grid-column-start: 3;
+           
           }
           .time-container {
             justify-items: start;
             justify-self: start;
           }
             @media @desktop {
+            grid-template-rows: 70px auto 70px;
+            
               .time-container {
                 grid-column-start: 1;
                 justify-items: end;
                 justify-self: end;
+               
                 padding: 0 40px
               }
 
               .text-container {
                   grid-column-start: 3;
                   grid-row-start: 2;
+                  grid-row-end: 3;
                   padding: 0 40px
               }
 
@@ -322,8 +373,12 @@ const formattedDate = computed(() => {
                   grid-column-start: 2;
                   grid-row-start: 1;
               }
+<<<<<<< Updated upstream
             }
 
+=======
+           }
+>>>>>>> Stashed changes
         }
 
         &.right {
@@ -341,10 +396,17 @@ const formattedDate = computed(() => {
                 justify-self: start;
                 justify-items: start;
             }
-            }
-        }
+          }
+       }
     }
-
-  }
+ 
+   }
+  
+    &.active {
+      transform: translate(0%)
+    }
+   
+   
 }
+
 </style>
