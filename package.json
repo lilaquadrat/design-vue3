@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite projects/company/project local",
     "build": "rm -rf dist/app && vite build projects/company/project live",
-    "build-next": "rm -rf dist/app && vite build projects/company/project next",
+    "build-next": "rm -rf dist/app && vite build projects/company/project next --mode staging",
     "build-ssr": "rm -rf dist/server && vite build projects/company/project live --ssr",
     "build-next-ssr": "rm -rf dist/server && vite build projects/company/project next --ssr",
     "preview": "vite preview projects/company/project local",
@@ -49,6 +49,7 @@
     "postcss-less": "^6.0.0",
     "prettier-eslint": "^16.2.0",
     "rollup-plugin-visualizer": "^5.12.0",
+    "serve": "^14.2.1",
     "stylelint": "^16.1.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended": "^14.0.0",

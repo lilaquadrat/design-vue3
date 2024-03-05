@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { ref } from 'vue';
 import { type Ref } from 'vue';
 
@@ -8,44 +8,44 @@ class Inview {
 
   debounceTime: number = 50;
 
-  isTop = false;
+  isTop = ref<boolean>(false);
 
   scrolledEvent: Event;
 
-  scrolled = ref<number>(0); 
+  scrolled = ref<number>(0);
 
-  scrollDirection = ref<'up'|'down'>();
+  scrollDirection = ref<'up' | 'down'>();
 
   /**
   * if true we fire an inital scroll event to indicate that scrolling has started without waiting for the debounce
   */
-  triggerStart = ref<boolean>(true); 
+  triggerStart = ref<boolean>(true);
 
   safeWindow = computed(() => {
 
-    if(typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') return null;
     return window;
 
   });
 
-  constructor () {
+  constructor() {
 
     this.scrolledEvent = new Event('scrolled');
     this.checkIsTop();
 
-    if(this.safeWindow.value) {
+    if (this.safeWindow.value) {
 
       this.safeWindow.value?.addEventListener('scroll', () => {
-  
+
         this.debounce();
-  
+
       });
-      
+
     }
 
   }
 
-  addScrollListener (element: Element) {
+  addScrollListener(element: Element) {
 
     element.addEventListener('scroll', () => {
 
@@ -55,36 +55,36 @@ class Inview {
 
   }
 
-  trigger (isStart?: boolean) {
+  trigger(isStart?: boolean) {
 
     this.checkIsTop();
-    this.scrollDirection.value = this.scrolled.value > this.safeWindow.value?.scrollY 
+    this.scrollDirection.value = this.scrolled.value > this.safeWindow.value?.scrollY
       ? 'down'
       : 'up'
     this.scrolled.value = this.safeWindow.value?.scrollY;
 
     this.safeWindow.value?.dispatchEvent(this.scrolledEvent);
-    if(!isStart) this.triggerStart.value = true;
+    if (!isStart) this.triggerStart.value = true;
 
   }
 
-  checkIsTop () {
+  checkIsTop() {
 
-    this.isTop = this.safeWindow.value?.scrollY > 0
+    this.isTop.value = this.safeWindow.value?.scrollY <= 0
 
   }
 
-  debounce () {
+  debounce() {
 
     /**
      * indicates that the scrolling has begun and fire an inital scrolling event without waiting for the debounce
      */
-    if(this.triggerStart.value) {
+    if (this.triggerStart.value) {
 
       this.triggerStart.value = false;
       this.trigger(true);
 
-    } 
+    }
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
@@ -95,9 +95,10 @@ class Inview {
 
   }
 
-  check (component: HTMLElement, state: Ref<string[]>, options?: {align?: boolean}) {
+  check(component: HTMLElement, state: Ref<string[]>, options?: { align?: boolean }) {
 
     const element = component;
+    const newState = [];
 
     if (typeof element?.getBoundingClientRect !== 'function') return;
 
@@ -112,41 +113,44 @@ class Inview {
 
     if (top > 0) {
 
-      state.value = ['inview-after'];
+      newState.push('inview-after');
 
     }
 
     if (top <= 0 && bottom >= 0) {
 
-      state.value = ['inview-current'];
+      newState.push('inview-current');
 
     }
 
     if (bottom < 0) {
 
-      state.value = ['inview-before'];
+      newState.push('inview-before');
 
     }
 
     // check if more than 30% of the element is visible
     if (visibleHeight / rect.height >= 0.3) {
 
-      state.value.push('inview-visible');
+      newState.push('inview-visible');
 
     }
 
-    if(state.value.includes('inview-current') && options?.align) {
+    if (state.value.includes('inview-current') && options?.align) {
       requestAnimationFrame(() => this.adjustScrolling(element, rect.top));
     }
 
+    state.value.length = 0;
+    state.value.push(...newState);
+
   }
 
-  checkPreload (component: HTMLElement, state: Ref<boolean>) {
+  checkPreload(component: HTMLElement, state: Ref<boolean>) {
 
     const preloadRange = window?.outerHeight * 2;
     const rect = component.getBoundingClientRect();
 
-    if(rect.bottom > -preloadRange && rect.top < preloadRange) {
+    if (rect.bottom > -preloadRange && rect.top < preloadRange) {
 
       state.value = true;
 
@@ -154,7 +158,7 @@ class Inview {
 
   }
 
-  adjustScrolling (component: HTMLElement, top: number) {
+  adjustScrolling(component: HTMLElement, top: number) {
 
     const offset = window?.outerHeight / 10;
 
@@ -182,51 +186,51 @@ const inview = new Inview();
  ** inview-visible - more than 30% of the element are visible in the current viewport, regardless if it is centered or nor
  */
 
-export function useInview (element?: Ref<HTMLElement | undefined>, options?: {align?: boolean, preload?: boolean}) {
+export function useInview(element?: Ref<HTMLElement | undefined>, options?: { align?: boolean, preload?: boolean }) {
 
-  const state = ref<string[]>(['inview']);
+  const state = ref<string[]>([]);
   const preload = ref<boolean>(false);
 
-  if(element) {
+  if (element) {
 
     watch(element, () => {
-  
-      if(element.value) {
-  
-        if(options?.preload) {
-  
+
+      if (element.value) {
+
+        if (options?.preload) {
+
           inview.checkPreload(element.value, preload);
-  
+
           const unwatchPreload = watch(inview.scrolled, () => {
-  
-            if(!element.value) return;
-  
+
+            if (!element.value) return;
+
             inview.checkPreload(element.value as HTMLElement, preload);
-  
+
             //unwatch when the preload value is true
-            if(preload.value) unwatchPreload();
-  
+            if (preload.value) unwatchPreload();
+
           })
-  
+
         } else {
-  
+
           inview.check(element.value, state, options);
-    
+
           watch(inview.scrolled, () => {
-    
+
             inview.check(element.value as HTMLElement, state, options)
-    
+
           })
-  
+
         }
-    
+
       }
-  
+
     })
-    
+
   }
 
-  return {inviewState: state, scrolled: inview.scrolled, scrollDirection: inview.scrollDirection, preload};
+  return { inviewState: state, scrolled: inview.scrolled, scrollDirection: inview.scrollDirection, preload };
 
 }
 

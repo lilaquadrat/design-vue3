@@ -1,9 +1,9 @@
-import { createSSRApp } from 'vue';
+import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import {routes} from './routes';
+import { routes } from './routes';
 import createRouter from '@/mixins/createRouter';
-import {loadViaDeclaration} from '@/mixins/loadComponents';
+import { loadViaDeclaration } from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
 import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
@@ -19,13 +19,13 @@ import partials from './partials.browser';
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
-export function createApp () {
+export function getAppInstance() {
 
-  const app = createSSRApp(App);
+  const app = createApp(App);
   const pinia = createPinia();
 
   app.use(pinia);
-  
+
   loadViaDeclaration(modules.modules, 'lila', 'module', app);
   loadViaDeclaration(partials, 'lila', 'partial', app);
 

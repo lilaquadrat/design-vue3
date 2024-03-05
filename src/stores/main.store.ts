@@ -11,21 +11,21 @@ import { computed } from 'vue';
 export const useMainStore = defineStore('main', () => {
 
   const startupDone = ref<boolean>(false);
-  const data = ref<Partial<Content>>({});
-  const layout = ref<Partial<Content>>({});
+  const data = ref<Partial<BasicData<Content>>>({});
+  const layout = ref<Partial<BasicData<Content>>>({});
   const editorConfiguration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
-  const staticData = ref<Record<string, Partial<Content>>>();
+  const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
   const customModules = ref<any>();
 
-  function setData (value: Partial<Content>) {
+  function setData(value: Partial<Content>) {
 
     data.value = value;
 
   }
 
-  function setFullscreen (value: boolean) {
+  function setFullscreen(value: boolean) {
 
     fullscreen.value = value;
 
@@ -45,17 +45,17 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  function checkFullscreen () {
+  function checkFullscreen() {
 
     const elements = document.querySelectorAll('.overlay-background:not(.inactive)');
 
-    if(!elements.length) setFullscreen(false);
+    if (!elements.length) setFullscreen(false);
 
     console.log(elements.length);
-    
+
   }
 
-  function setConfiguration (value: EditorConfiguration) {
+  function setConfiguration(value: EditorConfiguration) {
 
     editorConfiguration.value = value;
 
@@ -63,45 +63,63 @@ export const useMainStore = defineStore('main', () => {
 
   const apiConfig = computed(() => {
 
-    const {authToken} = useAuth(); 
+    const { authToken } = useAuth();
 
     return {
       authToken,
       ...config.value?.api,
       company: config.value?.company,
       project: config.value?.project,
-      app    : config.value?.name as string
+      app: config.value?.name as string
     }
 
   });
 
-  async function getContent (params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
+  async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
+  async function getContent(params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
 
-    const data = ref<Partial<SDKResponse<BasicData<Content>>>>();
+    const returnData = ref<Partial<SDKResponse<BasicData<Content>>>>();
     const sdk = new StudioSDK(apiConfig.value);
-    const targetWithType = sdk[type === 'members' ? 'app' : 'public'];
+    const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
+
+    if (params.id && data.value?.id === params.id) {
+
+      console.log('match1', data.value);
+      returnData.value = { data: data.value, status: 200 };
+
+    }
+
+    if (params.internalId && data.value?._id === params.internalId) {
+
+      console.log('match2', data.value);
+      returnData.value = { data: data.value, status: 200 }
+
+    }
+
+    console.log('make the call', data.value);
+
+    if (returnData.value) return returnData.value;
 
     try {
 
       if (params.predefined && !params.latest && params.id && type === 'public') {
 
-        data.value = await sdk.public.content.predefined(params.id);
-  
+        returnData.value = await sdk.public.content.predefined(params.id);
+
       } else if (params.predefined && params.latest && params.categories && type === 'public') {
-  
-        data.value = await sdk.public.content.predefinedLatest(params.categories);
-  
-      } else if(params.internalId) {
-  
-        data.value = await targetWithType.content.getByInternalId(params.internalId);
-  
-      } else if(params.id) {
-  
-        data.value = await targetWithType.content.getById(params.id);
-  
+
+        returnData.value = await sdk.public.content.predefinedLatest(params.categories);
+
+      } else if (params.internalId) {
+
+        returnData.value = await targetWithType.content.getByInternalId(params.internalId);
+
+      } else if (params.id) {
+
+        returnData.value = await targetWithType.content.getById(params.id);
+
       }
 
     } catch (e) {
@@ -110,27 +128,27 @@ export const useMainStore = defineStore('main', () => {
 
       console.log(error);
 
-      if(!error.response?.status) {
+      if (!error.response?.status) {
 
-        data.value = {status: 400}
+        returnData.value = { status: 400 }
 
       } else {
 
-        data.value = {status: error?.response?.status};
+        returnData.value = { status: error?.response?.status };
 
       }
-      
+
     }
 
-    return data.value;
+    return returnData.value;
 
   }
 
-  return { 
-    setData, 
-    data, 
-    layout, 
-    fullscreen, 
+  return {
+    setData,
+    data,
+    layout,
+    fullscreen,
     setFullscreen,
     checkFullscreen,
     setConfiguration,

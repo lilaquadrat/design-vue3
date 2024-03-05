@@ -1,19 +1,24 @@
 import { auth } from './auth';
 import useUserStore from '@/stores/user.store';
 
-const userStore = useUserStore();
 const events = {
   login: (params?: Record<string, unknown>) => {
+    
+    const userStore = useUserStore();
 
     auth.triggerLogin(userStore.customer?._id);
-
+    
   },
   logout: (params?: Record<string, unknown>) => {
+    
+    const userStore = useUserStore();
 
     auth.triggerLogout();
-
+    
   },
   register: (params?: Record<string, unknown>) => {
+    
+    const userStore = useUserStore();
 
     auth.triggerRegister(userStore.customer?._id);
 

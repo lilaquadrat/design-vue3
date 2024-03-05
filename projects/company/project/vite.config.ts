@@ -11,40 +11,45 @@ const args = process.argv.slice(2);
 const target = args[2] as 'local' | 'next' | 'live' || 'local';
 const isSSR = args[3] == '--ssr';
 
+console.log(args);
+
 import configObject from './config';
 
 const config = configObject[target];
 const viteConfig: UserConfig = {
   plugins: [
-    vue(),
+    vue({ isProduction: false }),
     visualizer()
   ],
-  base : config.base || '/',
+  base: config.base || '/',
   build: {
-    cssCodeSplit : false,
-    cssMinify    : true,
-    sourcemap    : true,
+    cssCodeSplit: false,
+    cssMinify: true,
+    sourcemap: true,
     rollupOptions: {
       output: {
-        dir           : 'dist/app',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name?.endsWith('woff')) {
-            return 'assets/[name][extname]';
-          }
+        dir: 'dist/app',
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+        // assetFileNames: (assetInfo) => {
+        //   if (assetInfo.name?.endsWith('woff')) {
+        //     return 'assets/[name][extname]';
+        //   }
 
-          return 'assets/[name]-[hash][extname]';
-        },
+        //   return 'assets/[name]-[hash][extname]';
+        // },
       }
     }
   },
   css: {
-    devSourcemap       : true,
+    devSourcemap: true,
     preprocessorOptions: {
       less: {
         globalVars: {
           globalVariables: 'true; @import (reference) "./projects/company/project/src/assets/less/variables.less";',
-          globalMixins   : 'true; @import (reference) "./projects/company/project/src/assets/less/mixins.less";',
-          globalFonts    : 'true; @import (reference) "./projects/company/project/src/assets/less/fonts.less";',
+          globalMixins: 'true; @import (reference) "./projects/company/project/src/assets/less/mixins.less";',
+          globalFonts: 'true; @import (reference) "./projects/company/project/src/assets/less/fonts.less";',
         },
       }
     }
@@ -52,32 +57,34 @@ const viteConfig: UserConfig = {
   resolve: {
     alias: {
       '~fonts': fileURLToPath(new URL('src/assets/fonts', import.meta.url)),
-      '@'     : path.resolve(__dirname, '../../../src/'),
+      '@': path.resolve(__dirname, '../../../src/'),
     }
   },
   define: {
-    '__FRONTEND_CONFIG__': JSON.stringify(config)
+    '__FRONTEND_CONFIG__': JSON.stringify(config),
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true',
+    __VUE_PROD_DEVTOOLS__: 'true'
   }
 };
 
-if(isSSR) {
+if (isSSR) {
 
   viteConfig.build = {
-    ...viteConfig.build, 
+    ...viteConfig.build,
     rollupOptions: {
-      input : '/src/server-entry.ts', 
+      input: '/src/server-entry.ts',
       output: {
         ...viteConfig.build?.rollupOptions?.output,
         inlineDynamicImports: true,
-        dir                 : 'dist/server',
+        dir: 'dist/server',
       }
     },
     ssrManifest: true,
   }
   viteConfig.ssr = {
-    target    : 'webworker',
+    target: 'node',
     noExternal: true,
-    external  : ['node:stream', 'axios', 'http', 'https', 'crypto', 'path'],
+    external: ['node:stream', 'axios', 'http', 'https', 'crypto', 'path', 'highlight.js'],
   }
 
 }

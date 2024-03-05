@@ -32,7 +32,7 @@ onMounted(() => {
 function getId (contentType: 'public' | 'members', type: 'navigation' | 'footer') {
   
   return contentType !== 'public' 
-    ? `${contentType}-${type}` 
+    ? `m-${type}` 
     : type;
 
 }

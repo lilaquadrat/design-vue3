@@ -20,7 +20,7 @@ import text from './viewData/text';
 import index from './viewData/index';
 import compare from './viewData/compare';
 import prices from './viewData/prices';
-import quellcode from './viewData/quellcode';
+// import quellcode from './viewData/quellcode';
 import video from './viewData/video';
 import navigation from './viewData/navigation';
 import contact from './viewData/contact';
@@ -43,7 +43,7 @@ const modules: Record<string, Partial<Content>> = {
   text,
   compare,
   prices,
-  quellcode,
+  // quellcode,
   video,
   navigation,
   'blog-intro': blogIntro,

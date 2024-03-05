@@ -3,7 +3,7 @@ import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
 import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -17,7 +17,7 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
-const listVariant = (type: 'list' | 'links') => {
+const listVariant = computed(() => {
 
   const base = [];
 
@@ -28,7 +28,21 @@ const listVariant = (type: 'list' | 'links') => {
 
   }
 
-  if (props.variant?.includes('actions') && type !== 'list') {
+  return base;
+
+});
+const linkVariant = computed(() => {
+
+  const base = [];
+
+  if (props.variant?.includes('center')) {
+
+    base.push('noStyle');
+    base.push('center');
+
+  }
+
+  if (props.variant?.includes('actions')) {
 
     base.push('actions');
 
@@ -36,15 +50,15 @@ const listVariant = (type: 'list' | 'links') => {
 
   return base;
 
-}; 
+});
 
 </script>
 <template>
   <article :id="id" ref="element" class="lila-text-module lila-module" :class="[inviewState, variant, {sub}]">
 
     <lila-textblock-partial v-bind="props" />
-    <lila-list-partial v-bind="list" mode="list" :variant="listVariant('list')"></lila-list-partial>
-    <lila-list-partial v-bind="links" mode="links" :variant="listVariant('links')"></lila-list-partial>
+    <lila-list-partial v-bind="list" mode="list" :variant="listVariant" />
+    <lila-list-partial v-bind="links" mode="links" :variant="linkVariant" />
     
   </article>
 </template>

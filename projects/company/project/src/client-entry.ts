@@ -2,9 +2,9 @@ import { createApp, createSSRApp } from 'vue';
 import { createPinia } from 'pinia';
 
 import App from './App.vue';
-import {routes, editorRoutes} from './routes';
+import { routes, editorRoutes } from './routes';
 import createRouter from '@/mixins/createRouter';
-import {loadViaDeclaration} from '@/mixins/loadComponents';
+import { loadViaDeclaration } from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
 import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
@@ -24,7 +24,16 @@ const app = createSSRApp(App);
 loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
 
-app.use(createPinia());
+const pinia = createPinia();
+
+// Check if the server provided initial state and hydrate the stores if so
+if (window.__INITIAL_STATE__) {
+
+  console.log('LOAD SSR PINIA STATE', window.__INITIAL_STATE__, window !== window.top);
+  pinia.state.value = window.__INITIAL_STATE__;
+}
+
+app.use(pinia);
 
 const router = createRouter(window !== window.top ? editorRoutes : routes);
 
@@ -41,6 +50,10 @@ app.use(replacerPlugin);
 app.config.globalProperties.$translations.add(de, 'de');
 app.config.globalProperties.$translations.select('de');
 
-app.mount('#app');
-
 hooks(router);
+
+router.isReady().then(() => {
+
+  app.mount('#app')
+
+});

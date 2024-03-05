@@ -12,7 +12,7 @@ export default {
   'validation-error-type-string'                                                                          : 'muss Text sein',
   'validation-error-minLength'                                                                            : 'muss mindestens %s Zeichen lang sein',
   'validation-error-maxLength'                                                                            : 'darf maximal %s Zeichen lang sein',
-  'validation-error-additionalProperties'                                                                 : 'Das zusätzliche Attribut "%s" ist nicht erlaubt',
+  'validation-error-additionalProperties'                                                                 : 'Das zusätzliche Attribut %s ist nicht erlaubt',
   'validation-error-maxItems'                                                                             : 'darf maximal %s Elemente besitzen',
   'validation-error-minItems'                                                                             : 'muss mindestens %s Elemente besitzen',
   'validation-error-contains'                                                                             : 'muss mindestens %s valide(s) Element(e) besitzen',

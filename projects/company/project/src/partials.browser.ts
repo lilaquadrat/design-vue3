@@ -55,10 +55,10 @@ export default [
     name     : 'fieldset',
     component: () => import('@/components/partials/fieldset.partial.vue'),
   },
-  {
-    name     : 'highlight',
-    component: () => import('@/components/partials/highlight.partial.vue'),
-  },
+  // {
+  //   name     : 'highlight',
+  //   component: () => import('@/components/partials/highlight.partial.vue'),
+  // },
   {
     name     : 'icons',
     component: () => import('@/components/partials/icons.partial.vue'),

@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import type { ChildData, ContentWithPositions } from '@lilaquadrat/interfaces';
-import { computed, provide } from 'vue';
+// import type { ChildData, ContentWithPositions } from '@lilaquadrat/interfaces';
+// import { computed, provide } from 'vue';
 
-const props = defineProps<{
-  content: ContentWithPositions
-  inline?: boolean
-  sub?: boolean
-  routeBase?: string
-  linkEvents?: boolean
-  linkBase?: string
-  linkMode?: string
-  contentChildData?: ChildData
-}>();
+// const props = defineProps<{
+//   content: ContentWithPositions
+//   inline?: boolean
+//   sub?: boolean
+//   routeBase?: string
+//   linkEvents?: boolean
+//   linkBase?: string
+//   linkMode?: string
+//   contentChildData?: ChildData
+// }>();
 
-provide('linkMode', props.linkMode);
-provide('linkBase', props.linkBase);
+// provide('linkMode', props.linkMode);
+// provide('linkBase', props.linkBase);
 
 </script>
 
 <template>
-  <table style="width: 100%;">
+  table content
+  <!-- <table style="width: 100%;">
     <tr>
       <td align="center" style="padding: 40px;">
         <table style="width: 100%; max-width: 600px;" class="lila-content-module" :class="{sub}">
@@ -43,7 +44,7 @@ provide('linkBase', props.linkBase);
   </table>
       </td>
     </tr>
-  </table>
+  </table> -->
 
 </template>
 
