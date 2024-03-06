@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import useContentStore from '@/stores/content.store';
 import useMainStore from '@/stores/main.store';
 import useUserStore from '@/stores/user.store';
-import type { BasicData, Content } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, ContentWithPositions, GenericData } from '@lilaquadrat/interfaces';
 import type { SDKResponse } from '@lilaquadrat/sdk';
-import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { ref, computed, onMounted, watch } from 'vue';
+import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
+import { ref, computed, watch, onServerPrefetch, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{
@@ -12,8 +13,10 @@ const props = defineProps<{
 }>();
 const store = useMainStore();
 const userStore = useUserStore();
+const contentStore = useContentStore(); 
 const route = useRoute();
 const data = ref<SDKResponse<BasicData<Content>>>();
+const dataMerged = ref<ContentWithPositions>();
 const loading = ref<number>(0);
 const error = ref<boolean>(false);
 const typeCache = ref<string>();
@@ -23,11 +26,8 @@ const isLocked = computed(() => contentType.value == 'members' && userStore.lock
 watch(route, () => getContent());
 watch(() => userStore.locked, () => getContent());
 
-onMounted(() => {
-
-  getContent();
-
-});
+onBeforeMount(async () => await getContent());
+onServerPrefetch(() => getStoreContent());
 
 function getId (contentType: 'public' | 'members', type: 'navigation' | 'footer') {
   
@@ -37,9 +37,35 @@ function getId (contentType: 'public' | 'members', type: 'navigation' | 'footer'
 
 }
 
+function getStoreContent () {
+
+  const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
+  const storeContent = contentStore.findById(contentId);
+
+  console.log(contentId, storeContent);
+
+  data.value = {
+    data  : storeContent,
+    status: 200,
+  };
+
+  loading.value = 200;
+
+  dataMerged.value = mergeContent(data.value.data);
+
+}
+
 async function getContent () {
     
+  getStoreContent();
+
   const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
+
+  if(data.value?.data?.id === contentId) {
+
+    return;
+
+  }
 
   if(isLocked.value) {
 
@@ -54,6 +80,16 @@ async function getContent () {
     loading.value = 0;
     error.value = false;
     data.value = undefined;
+
+  }
+
+  const storeData = contentStore.findById(contentId);
+
+  if(storeData) {
+
+    data.value = {data: storeData, status: 200};
+    loading.value = 200;
+    return;
 
   }
     
@@ -87,16 +123,29 @@ async function getContent () {
 
   }
 
+  dataMerged.value = mergeContent(data.value?.data);
+
 }
 
-const contentMerged = computed(() => {
+function mergeContent (baseContent: Partial<BasicData<Content>>) {
 
-  if(data.value && loading.value === 200) return prepareContent(data.value?.data);
-  return prepareContent({})
+  if(baseContent) {
+  
+    const safeData = hardCopy(baseContent);
 
-}); 
+    if(safeData.modules) {
+      distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
+    }
+
+    return prepareContent(safeData);
+
+  }
+
+  return undefined;
+
+} 
 
 </script>
 <template>
-    <lila-content-module v-if="contentMerged" :content="contentMerged" />
+    <lila-content-module v-if="dataMerged" :content="dataMerged" />
 </template>

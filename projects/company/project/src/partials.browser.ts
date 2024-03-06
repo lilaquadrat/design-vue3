@@ -1,58 +1,62 @@
 export default [
   {
-    name     : 'accordion',
+    name: 'accordion',
     component: () => import('@/components/partials/accordion.partial.vue'),
   },
   {
-    name     : 'action-notice',
+    name: 'action-notice',
     component: () => import('@/components/partials/action-notice.partial.vue'),
   },
   {
-    name     : 'address',
+    name: 'address',
     component: () => import('@/components/partials/address.partial.vue'),
   },
   {
-    name     : 'agreement',
+    name: 'agreement',
     component: () => import('@/components/partials/agreement.partial.vue'),
   },
   {
-    name     : 'button-group',
+    name: 'button-group',
     component: () => import('@/components/partials/button-group.partial.vue'),
   },
   {
-    name     : 'button',
+    name: 'button',
     component: () => import('@/components/partials/button.partial.vue'),
   },
   {
-    name     : 'checkbox',
+    name: 'checkbox',
     component: () => import('@/components/partials/checkbox.partial.vue'),
   },
   {
-    name     : 'content-container',
+    name: 'client-only',
+    component: () => import('@/components/partials/client-only.partial.vue'),
+  },
+  {
+    name: 'content-container',
     component: () => import('@/components/partials/content-container.partial.vue'),
   },
   {
-    name     : 'content-head',
+    name: 'content-head',
     component: () => import('@/components/partials/content-head.partial.vue'),
   },
   {
-    name     : 'description',
+    name: 'description',
     component: () => import('@/components/partials/description.partial.vue'),
   },
   {
-    name     : 'dialog',
+    name: 'dialog',
     component: () => import('@/components/partials/dialog.partial.vue'),
   },
   {
-    name     : 'error',
+    name: 'error',
     component: () => import('@/components/partials/error.partial.vue'),
   },
   {
-    name     : 'fact',
+    name: 'fact',
     component: () => import('@/components/partials/fact.partial.vue'),
   },
   {
-    name     : 'fieldset',
+    name: 'fieldset',
     component: () => import('@/components/partials/fieldset.partial.vue'),
   },
   // {
@@ -60,92 +64,91 @@ export default [
   //   component: () => import('@/components/partials/highlight.partial.vue'),
   // },
   {
-    name     : 'icons',
+    name: 'icons',
     component: () => import('@/components/partials/icons.partial.vue'),
   },
   {
-    name     : 'indicator',
+    name: 'indicator',
     component: () => import('@/components/partials/indicator.partial.vue'),
   },
   {
-    name     : 'input-labels',
+    name: 'input-labels',
     component: () => import('@/components/partials/input-labels.partial.vue'),
   },
   {
-    name     : 'input',
+    name: 'input',
     component: () => import('@/components/partials/input.partial.vue'),
   },
   {
-    name     : 'legend',
+    name: 'legend',
     component: () => import('@/components/partials/legend.partial.vue'),
   },
   {
-    name     : 'link-group',
+    name: 'link-group',
     component: () => import('@/components/partials/link-group.partial.vue'),
   },
   {
-    name     : 'link',
+    name: 'link',
     component: () => import('@/components/partials/link.partial.vue'),
   },
   {
-    name     : 'list',
+    name: 'list',
     component: () => import('@/components/partials/list.partial.vue'),
   },
   {
-    name     : 'main-components',
+    name: 'main-components',
     component: () => import('@/components/partials/main-components.partial.vue'),
   },
   {
-    name     : 'mediadetection',
+    name: 'mediadetection',
     component: () => import('@/components/partials/mediadetection.partial.vue'),
   },
   {
-    name     : 'menu-allergens',
+    name: 'menu-allergens',
     component: () => import('@/components/partials/menu-allergens.partial.vue'),
   },
   {
-    name     : 'menu-category',
+    name: 'menu-category',
     component: () => import('@/components/partials/menu-category.partial.vue'),
   },
   {
-    name     : 'menu-item',
+    name: 'menu-item',
     component: () => import('@/components/partials/menu-item.partial.vue'),
   },
   {
-    name     : 'menu-navigation',
+    name: 'menu-navigation',
     component: () => import('@/components/partials/menu-navigation.partial.vue'),
   },
   {
-    name     : 'overlay-background',
+    name: 'overlay-background',
     component: () => import('@/components/partials/overlay-background.partial.vue'),
   },
   {
-    name     : 'picture',
+    name: 'picture',
     component: () => import('@/components/partials/picture.partial.vue'),
   },
   {
-    name     : 'quote',
+    name: 'quote',
     component: () => import('@/components/partials/quote.partial.vue'),
   },
   {
-    name     : 'select-category',
+    name: 'select-category',
     component: () => import('@/components/partials/select-category.partial.vue'),
   },
   {
-    name     : 'select',
+    name: 'select',
     component: () => import('@/components/partials/select.partial.vue'),
   },
   {
-    name     : 'textarea',
+    name: 'textarea',
     component: () => import('@/components/partials/textarea.partial.vue'),
   },
   {
-    name     : 'textblock',
+    name: 'textblock',
     component: () => import('@/components/partials/textblock.partial.vue'),
   },
   {
-    name     : 'video',
+    name: 'video',
     component: () => import('@/components/partials/video.partial.vue'),
   }
 ]
-  

@@ -43,9 +43,6 @@ function loadViaDeclarationSync(components: { name: string, component: AsyncComp
   return components.map(async (single) => {
 
     const name = getName(single.name, type, namespace);
-
-    console.log('SYNC', single);
-
     const component = await single.component();
 
     app.component(name, component);

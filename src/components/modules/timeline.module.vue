@@ -1,46 +1,33 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeMount, watch } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import { useInview } from '../../plugins/inview';
 import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
-import { AccessService } from '@lilaquadrat/studio/lib/services';
 
 defineOptions({ inheritAttrs: false }); // atri
+
 const props = defineProps<ModuleBaseProps & {
     elements: TimelineElement[];
     date: string;
-<<<<<<< Updated upstream
-  }
->();
-=======
     disabled?: boolean;
 
   }>();
 const active = ref<boolean>(false)
->>>>>>> Stashed changes
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
 const mediaContainer = ref<HTMLElement>();
 const textContainer = ref<HTMLElement>();
 const timeContainer = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-<<<<<<< Updated upstream
-const emit = defineEmits<{(e: string, event?: Event): void}>();
-
-=======
 // const emit = defineEmits<{(e: string, event?: Event): void}>();
 const emit = defineEmits(['click']);
->>>>>>> Stashed changes
+
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
   }
 });
-<<<<<<< Updated upstream
-onBeforeMount(():void => disableScroll())
-=======
->>>>>>> Stashed changes
 
 function setElements (elements: TimelineElement[]) {
   const positionedItem: any[] = [];
@@ -76,49 +63,15 @@ function setElements (elements: TimelineElement[]) {
   elementsExtended.value = positionedItem;
 }
 
-<<<<<<< Updated upstream
-function disableScroll () {
-  if(!isVisible.value) return;
-
-  if(isVisible.value && window.innerWidth < 650) {
-    document.documentElement.style.overflowX = 'hidden';
-    return 
-  }
-
-  document.documentElement.style.overflowX = 'visible'
-  document.documentElement.classList.add('disableScroll');
-}
-
-function activeText (event: Event, index: number) {
-  active.value = index
-
-  if(!element.value || !textContainer.value || !timeContainer.value) return
-  textContainer.value.className = 'active';
-  timeContainer.value.className = 'active';
-  element.value.style.transform = 'translateX(-60%)'
-  emit('click')
-}
-
-function activeMedia (event: Event, index: number) {
-  active.value = index
-
-  if(!element.value || !mediaContainer.value) return
-  mediaContainer.value.className = 'active';
-  element.value.style.transform = 'translateX(0%)'
-
-  emit('click')
-}
-
-=======
-
-function activeText(event:Event, element: TimelineElement): void {
+function activeText (event:Event, element: TimelineElement): void {
   active.value = true
  
   emit('click', event.target)
 }
 
-function activeMedia(event:Event, element: TimelineElement) {
+function activeMedia (event:Event, element: TimelineElement) {
   const target = element.media
+
   if(!target){
     active.value = false
   } else if(target) {
@@ -129,7 +82,6 @@ function activeMedia(event:Event, element: TimelineElement) {
   emit('click', event.target)
 }
 
->>>>>>> Stashed changes
 const formattedDate = computed(() => {
   const date = props.date ? dayjs(props.date) : null;
 
@@ -174,7 +126,6 @@ const formattedDate = computed(() => {
 .lila-timeline-module {
   .module;
   display: grid;
-  
 
   transition: @aType @aTimeMedium;
   transform: translate(-70%);// default, so dass man zuerst den Text sieht und nicht das Bild
@@ -189,11 +140,8 @@ const formattedDate = computed(() => {
         grid-template-columns: 90% 5px 90%;
         //grid-template-rows:35px min-content min-content 35px;
         
-<<<<<<< Updated upstream
-=======
         gap: 25px 0;
         
->>>>>>> Stashed changes
         @media @desktop {
         display: grid;
         grid-template-columns: 2fr 8px 4fr;
@@ -255,17 +203,8 @@ const formattedDate = computed(() => {
             height: auto;
             grid-auto-rows: min-content;
             position: sticky;
-<<<<<<< Updated upstream
-            top: 10px;
-
-            :deep(.lila-figure) {
-              grid-template-columns: auto;
-                // justify-content: right;
-            }
-=======
             top: 20px;
             border: red 2px solid;
->>>>>>> Stashed changes
             @media @desktop {
               gap: 40px 0;
               padding: 0 40px;
@@ -373,12 +312,7 @@ const formattedDate = computed(() => {
                   grid-column-start: 2;
                   grid-row-start: 1;
               }
-<<<<<<< Updated upstream
-            }
-
-=======
            }
->>>>>>> Stashed changes
         }
 
         &.right {
@@ -405,7 +339,6 @@ const formattedDate = computed(() => {
     &.active {
       transform: translate(0%)
     }
-   
    
 }
 

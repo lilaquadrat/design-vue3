@@ -4,21 +4,25 @@ import { getAppInstance } from './main';
 import { basename } from 'path';
 import type { Content } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
+import useContentStore from '@/stores/content.store';
 
 // const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', { eager: true });
 // const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', { eager: true });
 // const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', { eager: true });
 
-export async function render(url: string, context: any, manifest: Record<string, string[]>) {
+export async function render(url: string, context: any, contextData: Content[], manifest: Record<string, string[]>) {
   const { app, router, pinia } = getAppInstance();
 
   await router.push(url);
   await router.isReady();
 
   const mainStore = useMainStore();
+  const contentStore = useContentStore();
 
   mainStore.setData(context.data);
   mainStore.configuration = context.settings;
+
+  contentStore.addMulti(contextData);
 
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers

@@ -10,8 +10,6 @@ export default (routes: readonly RouteRecordRaw[]) => {
     routes
   });
 
-  console.log(historyMode);
-  
   return router;
 
 };

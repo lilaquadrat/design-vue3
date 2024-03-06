@@ -71,7 +71,6 @@ function check () {
 
 const confirm = (event: MouseEvent): void => {
 
-  console.log('confirm');
   event.preventDefault();
 
   if (props.doublecheck) {

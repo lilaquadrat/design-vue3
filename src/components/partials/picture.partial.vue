@@ -4,7 +4,7 @@ import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
 import type Picture from '@interfaces/picture.interface';
 import type { PictureMedia } from '@interfaces/picture.interface';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onServerPrefetch } from 'vue';
 import { computed, ref, watch, type Ref } from 'vue';
 
 const store = useMainStore();
@@ -36,13 +36,18 @@ watch(image, () => {
 
   const imageElement = image.value as HTMLImageElement;
 
-  imageElement.onload = () => {
-
+  if(imageElement.complete) {
     emit('loaded');
+  }
 
+  imageElement.onload = () => {
+    emit('loaded');
   }
 });
 
+onServerPrefetch(() => {
+  if(store.configuration.preloadImages) loading.value = true;
+})
 onBeforeMount(() => {
 
   if(store.configuration.preloadImages) loading.value = true;

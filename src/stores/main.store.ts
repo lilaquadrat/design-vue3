@@ -7,6 +7,7 @@ import { useAuth } from '@/plugins/auth';
 import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 import type { AxiosError } from 'node_modules/axios/index.cjs';
 import { computed } from 'vue';
+import { hardCopy } from '@lilaquadrat/studio';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -80,45 +81,45 @@ export const useMainStore = defineStore('main', () => {
   async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
   async function getContent(params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
 
-    const returnData = ref<Partial<SDKResponse<BasicData<Content>>>>();
+    let returnData: SDKResponse<BasicData<Content>>;
     const sdk = new StudioSDK(apiConfig.value);
     const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
 
     if (params.id && data.value?.id === params.id) {
 
       console.log('match1', data.value);
-      returnData.value = { data: data.value, status: 200 };
+      returnData = hardCopy({ data: data.value, status: 200 });
 
     }
 
     if (params.internalId && data.value?._id === params.internalId) {
 
       console.log('match2', data.value);
-      returnData.value = { data: data.value, status: 200 }
+      returnData = hardCopy({ data: data.value, status: 200 });
 
     }
 
-    console.log('make the call', data.value);
+    console.log('make the call', returnData);
 
-    if (returnData.value) return returnData.value;
+    if (returnData) return returnData;
 
     try {
 
       if (params.predefined && !params.latest && params.id && type === 'public') {
 
-        returnData.value = await sdk.public.content.predefined(params.id);
+        returnData = await sdk.public.content.predefined(params.id);
 
       } else if (params.predefined && params.latest && params.categories && type === 'public') {
 
-        returnData.value = await sdk.public.content.predefinedLatest(params.categories);
+        returnData = await sdk.public.content.predefinedLatest(params.categories);
 
       } else if (params.internalId) {
 
-        returnData.value = await targetWithType.content.getByInternalId(params.internalId);
+        returnData = await targetWithType.content.getByInternalId(params.internalId);
 
       } else if (params.id) {
 
-        returnData.value = await targetWithType.content.getById(params.id);
+        returnData = await targetWithType.content.getById(params.id);
 
       }
 
@@ -130,17 +131,23 @@ export const useMainStore = defineStore('main', () => {
 
       if (!error.response?.status) {
 
-        returnData.value = { status: 400 }
+        returnData = { status: 400 }
 
       } else {
 
-        returnData.value = { status: error?.response?.status };
+        returnData = { status: error?.response?.status };
 
       }
 
     }
 
-    return returnData.value;
+    return returnData;
+
+  }
+
+  async function getContent1() {
+
+    return Promise.resolve({ data: {}, status: 200 });
 
   }
 
@@ -154,6 +161,7 @@ export const useMainStore = defineStore('main', () => {
     setConfiguration,
     configuration: editorConfiguration,
     getContent,
+    getContent1,
     startupDone,
     config,
     staticData,

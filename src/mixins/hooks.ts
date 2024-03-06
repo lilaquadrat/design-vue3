@@ -1,4 +1,4 @@
-import {useMainStore} from '@/stores/main.store'
+import { useMainStore } from '@/stores/main.store'
 import type { Router } from 'vue-router';
 import logger from './logger';
 import { auth } from '@/plugins/auth';
@@ -11,29 +11,27 @@ export default (router: Router) => {
     const mainStore = useMainStore();
     const userStore = useUserStore();
 
-    if(!mainStore.startupDone) {
+    if (!mainStore.startupDone) {
 
       logger.startup('start');
 
       mainStore.config = __FRONTEND_CONFIG__;
 
-      if(mainStore.config?.auth0Options) {
+      if (mainStore.config?.auth0Options) {
 
         await auth.init(mainStore.config.auth0Options);
-        
+
       }
-      
+
       await userStore.initCustomer();
-      
+
       mainStore.startupDone = true;
-      
+
       logger.startup('done');
     }
 
-    console.log(to, mainStore.fullscreen);
-      
     next();
-      
+
   });
 
 };

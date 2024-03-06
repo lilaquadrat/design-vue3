@@ -1,5 +1,5 @@
 import { createApp, createSSRApp } from 'vue';
-import { createPinia } from 'pinia';
+import { createPinia, type StateTree } from 'pinia';
 
 import App from './App.vue';
 import { routes, editorRoutes } from './routes';
@@ -17,20 +17,21 @@ import './models';
 import modules from './modules.browser';
 import partials from './partials.browser';
 import hooks from '@/mixins/hooks';
+import logger from '@/mixins/logger';
 
-// const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', {eager: true});
-const app = createSSRApp(App);
+const isSSR = !!window.__INITIAL_STATE__;
+const app = isSSR
+  ? createSSRApp(App)
+  : createApp(App);
 
 loadViaDeclaration(modules.modules, 'lila', 'module', app);
 loadViaDeclaration(partials, 'lila', 'partial', app);
 
 const pinia = createPinia();
 
-// Check if the server provided initial state and hydrate the stores if so
-if (window.__INITIAL_STATE__) {
-
-  console.log('LOAD SSR PINIA STATE', window.__INITIAL_STATE__, window !== window.top);
-  pinia.state.value = window.__INITIAL_STATE__;
+if (isSSR) {
+  logger.ssr('set initial state');
+  pinia.state.value = window.__INITIAL_STATE__ as Record<string, StateTree>;
 }
 
 app.use(pinia);

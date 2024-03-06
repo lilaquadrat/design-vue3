@@ -23,8 +23,6 @@ onMounted(() => {
   editorStore.partialsBrowser = partialsBrowser;
   editorStore.partialsMail = partialsMail;
 
-  if(mainStore.startupDone)console.log('startup donw');
-
   if(staticData) {
 
     mainStore.staticData = staticData;

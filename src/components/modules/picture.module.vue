@@ -38,7 +38,7 @@ const showText = computed((): boolean => {
     return props.textblock[singleTyped]?.length;
   });
 });
-const fullscreenOverlayEnabled = computed(() => props.variant.includes('fullscreenOverlayEnabled'));
+const fullscreenOverlayEnabled = computed(() => props.variant?.includes('fullscreenOverlayEnabled'));
 
 function toggleFullscreenOverlay () {
   fullscreenOverlay.value = !fullscreenOverlay.value;

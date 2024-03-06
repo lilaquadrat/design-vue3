@@ -97,7 +97,7 @@ async function getContent () {
 
     error.value = false;
 
-    if(data.value.data.settings.useLayout) {
+    if(data.value?.data?.settings?.useLayout) {
 
       layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
       loading.value = 200;
