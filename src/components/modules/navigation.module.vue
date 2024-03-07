@@ -114,7 +114,7 @@ function updateElements () {
     newElements.push(newElement);
     
   });
-  console.log('setActiveElements in updateElements:', elementsArray.value)
+  
   elementsArray.value = newElements;
 }
 

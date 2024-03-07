@@ -31,20 +31,20 @@ const linkVariant = computed(() => {
 
 });
 const fitVariant = computed(() => props.variant?.includes('fit'));
-const brightText = computed(() => props.variant?.includes('color1') || props.variant?.includes('color3') ? 'bright' : '');
+const brightText = computed(() => props.variant?.includes('color1') || props.variant?.includes('color3') ? ['bright'] : []);
 
 </script>
 <template>
   <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
 
     <section class="content-container">
-      <lila-textblock-partial :variant="[brightText]" v-if="textblock" v-bind="textblock" />
+      <lila-textblock-partial :variant="brightText" v-if="textblock" v-bind="textblock" />
 
       <section class="elements-container">
 
-        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link">
+        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="element">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
-          <lila-textblock-partial :variant="[brightText]" v-if="element.textblock" v-bind="element.textblock" />
+          <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
           <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
           <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
         </component>

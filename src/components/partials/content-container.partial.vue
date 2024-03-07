@@ -118,26 +118,28 @@ onBeforeMount(() => {
   <section class="content-container-full" :class="{ overlay, inline: !overlay, full, visible }">
     <button v-if="overlay" class="preview-text" type="button" @click="open"><slot /></button>
 
-    <Teleport :disabled="!overlay" to="body">
-      <transition>
-        <lila-overlay-background-partial v-if="visible || !overlay" background="desktop" @close="close">
-          <section class="content-container" ref="container">
-            <section class="content-position-container">
-              <lila-content-head-partial @close="close" :hideButton="!overlay">
-                <template v-if="content && loading > 100">{{ content.settings.title }}</template>
-                <template v-if="loading > 400">{{$translate('CONTENT_NOT_FOUND')}}</template>
-                <template v-if="loading === 100">{{$translate('CONTENT_LOADING')}}</template>
-              </lila-content-head-partial>
-
-              <section class="scroll-container">
-                <lila-indicator-partial v-if="loading === 100">{{$translate('LOADING')}}</lila-indicator-partial>
-                <lila-content-module v-if="contentOrError" :content="error ? errorContent : content" :inline="!overlay" />
+    <lila-client-only-partial>
+      <Teleport :disabled="!overlay" to="body">
+        <transition>
+          <lila-overlay-background-partial v-if="visible || !overlay" background="desktop" @close="close">
+            <section class="content-container" ref="container">
+              <section class="content-position-container">
+                <lila-content-head-partial @close="close" :hideButton="!overlay">
+                  <template v-if="content && loading > 100">{{ content.settings.title }}</template>
+                  <template v-if="loading > 400">{{$translate('CONTENT_NOT_FOUND')}}</template>
+                  <template v-if="loading === 100">{{$translate('CONTENT_LOADING')}}</template>
+                </lila-content-head-partial>
+  
+                <section class="scroll-container">
+                  <lila-indicator-partial v-if="loading === 100">{{$translate('LOADING')}}</lila-indicator-partial>
+                  <lila-content-module v-if="contentOrError" :content="error ? errorContent : content" :inline="!overlay" />
+                </section>
               </section>
             </section>
-          </section>
-        </lila-overlay-background-partial>
-      </transition>
-    </Teleport>
+          </lila-overlay-background-partial>
+        </transition>
+      </Teleport>
+    </lila-client-only-partial>
   </section>
 </template>
 <style lang="less" scoped>

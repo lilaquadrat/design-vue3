@@ -7,50 +7,50 @@ import LoginView from '@/views/login.view.vue';
 
 const routes: readonly RouteRecordRaw[] = [
   {
-    path     : '/',
+    path: '/',
     component: MainView,
-    children : [
+    children: [
       {
-        path     : '/m/:pathMatch(.*)?',
-        name     : 'members',
+        path: '/m/:pathMatch(.*)?',
+        name: 'members',
         component: ContentView,
-        meta     : {
+        meta: {
           contentType: 'members'
         }
       },
       {
-        path     : '',
-        name     : 'public-home', // Changed to 'home' for uniqueness
+        path: '',
+        name: 'public-home', // Changed to 'home' for uniqueness
         component: ContentView,
-        meta     : {
+        meta: {
           contentType: 'public'
         }
       },
       {
-        path     : '/preview/:pathMatch(.*)?',
-        name     : 'preview',
+        path: '/preview/:pathMatch(.*)?',
+        name: 'preview',
         component: PreviewView
       },
       {
-        path     : '/:pathMatch(.*)*', // Catch-all route
-        name     : 'public-content', // Ensured unique name
+        path: '/:pathMatch(.*)*', // Catch-all route
+        name: 'public-content', // Ensured unique name
         component: ContentView,
-        meta     : {
+        meta: {
           contentType: 'public'
         }
       },
     ]
   },
   {
-    path     : '/login-callback',
-    name     : 'login-callback',
+    path: '/login-callback',
+    name: 'login-callback',
     component: LoginView
   },
 ];
 const editorRoutes: readonly RouteRecordRaw[] = [
   {
-    path     : '/:pathMatch(.*)*',
-    name     : 'editor',
+    path: '/:pathMatch(.*)*',
+    name: 'editor',
     component: EditorView
   },
 ];

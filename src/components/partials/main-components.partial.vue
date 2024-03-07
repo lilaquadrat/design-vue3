@@ -42,7 +42,7 @@ function getStoreContent () {
   const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
   const storeContent = contentStore.findById(contentId);
 
-  console.log(contentId, storeContent);
+  if(!storeContent) return;
 
   data.value = {
     data  : storeContent,

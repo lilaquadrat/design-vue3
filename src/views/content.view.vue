@@ -132,7 +132,11 @@ function mergeContent (baseContent: Partial<BasicData<Content>>) {
     const safeData = hardCopy(baseContent);
 
     if(safeData.modules) {
+
       distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
+
+      console.log(safeData);
+
     }
 
     return prepareContent(safeData);

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type Textblock from '@interfaces/textblock.interface';
-import type { ChildData, Content } from '@lilaquadrat/interfaces';
+import { type ContentWithPositions, type Content, type GenericData } from '@lilaquadrat/interfaces';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { computed, inject, onMounted, ref, watch } from 'vue';
+import { inject, onBeforeMount, onMounted, onServerPrefetch, ref, watch, computed } from 'vue';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
 import { useTranslations } from '@/plugins/translations';
@@ -12,7 +12,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
-  childData: ChildData;
+  genericData: GenericData & {data: Record<string, Content>};
 }>();
 const { resized } = useResize();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
@@ -23,43 +23,65 @@ const currentIndex = ref<number>(0);
 const headIndexOpen = ref<boolean>(false);
 const forceMobileIndex = ref<boolean>(false);
 const element = ref<HTMLElement>();
+const currentContent = ref<ContentWithPositions>();
+const indexTeaser = ref<Partial<Content>[]>([{settings: {title: 'sdasdas'}}]);
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 
 watch(resized, () => checkRealWidth());
 onMounted(() => checkRealWidth());
+onBeforeMount(() => {
 
-const contentCount = computed(() => props.childData?.index.length);
-const currentContent = computed(() => {
-  if (!props.childData?.data) return null;
+  updateIndexTeaser();
+  updateCurrentContent();
 
-  const currentContent = props.childData.data[props.childData.index[currentIndex.value]] ?? null;
-
-  if (!currentContent) return null;
-
-  return prepareContent(currentContent);
 });
-const indexTeaser = computed(() => {
+onServerPrefetch(() => {
+
+  updateIndexTeaser();
+  updateCurrentContent();
+
+});
+
+const contentCount = computed(() => props.genericData?.editor.length);
+
+function updateCurrentContent () {
+
+  if (!props.genericData?.data) return;
+
+  const newContent = props.genericData.data[props.genericData.editor[currentIndex.value]] ?? null;
+
+  if(currentContent.value?.id === newContent.id) return;
+
+  currentContent.value = newContent 
+    ? prepareContent(newContent)
+    : undefined;
+}
+
+function updateIndexTeaser () {
 
   const {translate} = useTranslations();
 
-  if (!props.childData?.data) return [];
+  if (!props.genericData?.data) return [];
 
-  const mapped = props.childData?.index.map((index) => {
-    const singleData: Partial<Content> = props.childData?.data[index] ?? {};
+  let mapped = props.genericData?.editor.map((index) => {
+    const singleData: Partial<Content> = props.genericData?.data[index] ?? {};
 
-    if (!singleData.settings) {
+    if (!singleData.settings?.title) {
+
       singleData.settings = {
         title      : translate.translate('training-module-no-title'),
         description: '',
       };
+
     }
 
     return singleData;
 
   });
 
-  return mapped.filter((single) => single) ?? [];
-});
+  mapped = mapped.filter((single) => single) ?? [];
+  indexTeaser.value = mapped;
+}
 
 function checkRealWidth () {
   const element = mainGridContainer.value as HTMLElement;
@@ -71,6 +93,7 @@ function setIndex (index: number) {
 
   currentIndex.value = index;
   toggleIndex(null, false);
+  updateCurrentContent();
 
 }
 
@@ -95,13 +118,13 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 
         <section class="content-head">
           <div class="grid-container">
-            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }}</lila-button-partial>
+            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }} 11</lila-button-partial>
             <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
           </div>
 
           <div :class="{ open: headIndexOpen }" class="headIndex">
             <ul>
-              <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`">
+              <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`" v-memo="[teaser.id]">
                 <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
               </li>
             </ul>
