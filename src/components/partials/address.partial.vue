@@ -257,7 +257,7 @@ async function update () {
 
     .input-container {
 
-      .lila-input::v-deep {
+      :deep(.lila-input) {
 
         input {
           position: relative;

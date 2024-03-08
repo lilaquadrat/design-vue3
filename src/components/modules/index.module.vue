@@ -18,7 +18,7 @@ const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const useLinks = computed(() => {
 
-  if (props.variant.includes('auto')) {
+  if (props.variant?.includes('auto')) {
 
     return {
       title: props.links?.title,
@@ -38,8 +38,8 @@ const listVariant = computed(() => {
 
   const variants = [];
 
-  if (props.variant.includes('backgroundColor1') || props.variant.includes('backgroundColor3')) variants.push('white');
-  if (props.variant.includes('numbered')) variants.push('numbered');
+  if (props.variant?.includes('backgroundColor1') || props.variant?.includes('backgroundColor3')) variants.push('white');
+  if (props.variant?.includes('numbered')) variants.push('numbered');
 
   return variants;
 

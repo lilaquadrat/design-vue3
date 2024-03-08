@@ -8,6 +8,11 @@ export default
       component: () => import('@/components/modules/text.module.mail.vue'),
     },
     {
+      name     : 'picture',
+      variants : [],
+      component: () => import('@/components/modules/picture.module.mail.vue'),
+    },
+    {
       name             : 'content',
       variants         : [],
       availableInEditor: false,

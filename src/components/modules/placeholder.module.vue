@@ -11,7 +11,7 @@ const useModule = computed(() => {
 
   if(!props.hint || !customModules?.length) return undefined;
 
-  const module = customModules.find((single) => single.hint === props.hint);
+  const module = customModules?.find((single) => single.hint === props.hint);
 
   if(module) {
 
@@ -28,5 +28,5 @@ const useModule = computed(() => {
 
 </script>
 <template>
-    <component :is="useModule.module" :hint="useModule.hint" :hintData="useModule.hintData" />
+    <component v-if="useModule?.module" :is="useModule.module" :hint="useModule.hint" :hintData="useModule.hintData" />
 </template>

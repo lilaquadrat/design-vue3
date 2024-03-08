@@ -10,8 +10,8 @@ import useContentStore from '@/stores/content.store';
 // const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', { eager: true });
 // const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', { eager: true });
 
-export async function render(url: string, context: any, contextData: Content[], manifest: Record<string, string[]>) {
-  const { app, router, pinia } = getAppInstance();
+export async function render (url: string, context: any, contextData: Content[], manifest: Record<string, string[]>) {
+  const { app, router, pinia } = getAppInstance(context);
 
   await router.push(url);
   await router.isReady();
@@ -39,7 +39,7 @@ export async function render(url: string, context: any, contextData: Content[], 
   return { html, preloadLinks, initialState };
 }
 
-function renderPreloadLinks(modulesSet: Set<string>, manifest: Record<string, string[]>) {
+function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>) {
   let links = '';
   const seen = new Set();
   // const modules = Array.from(modulesSet);
@@ -78,7 +78,7 @@ function renderPreloadLinks(modulesSet: Set<string>, manifest: Record<string, st
 
 }
 
-function renderPreloadLink(file: string) {
+function renderPreloadLink (file: string) {
   if (file?.endsWith('.js')) {
     return `<link rel="modulepreload" crossorigin href="${file}">`;
   } else if (file.endsWith('.css')) {

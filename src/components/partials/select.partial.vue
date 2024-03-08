@@ -252,24 +252,27 @@ function toggleOptions () {
       <lila-icons-partial type="chevron-down" size="small" />
     </button>
 
-    <teleport to="body">
-
-      <lila-overlay-background-partial v-if="open" background="none" ref="options" @mounted="calculateOptionsStyle" @close="closeOptions">
-        <section ref="options" class="options-container content-container" :style="optionsStyle">
-          
-          <section class="select-options">
-            <button class="single-option-button" type="button" v-for="(option, index) in filteredOptions" :title="$translate(option.text)" :key="`option-index-${index}`" :value="option.value" :class="[{ selected: isSelected(option.value), hasDescription: option.description, disabled: option.disabled }]" @click="toggle(option)">
-              <span v-if="!isSelected(option.value)" class="box"></span>
-              <lila-icons-partial v-if="isSelected(option.value)" type="checked" size="small" />
-              <span v-if="option.text" class="text">{{$translate(option.text)}}</span>
-              <p v-if="option.description" class="description">{{$translate(option.description)}}</p>
-            </button>
-          </section>
+    <lila-client-only-partial>
+      <teleport to="body">
   
-        </section>
-      </lila-overlay-background-partial>
+        <lila-overlay-background-partial v-if="open" background="none" ref="options" @mounted="calculateOptionsStyle" @close="closeOptions">
+          <section ref="options" class="options-container content-container" :style="optionsStyle">
+            
+            <section class="select-options">
+              <button class="single-option-button" type="button" v-for="(option, index) in filteredOptions" :title="$translate(option.text)" :key="`option-index-${index}`" :value="option.value" :class="[{ selected: isSelected(option.value), hasDescription: option.description, disabled: option.disabled }]" @click="toggle(option)">
+                <span v-if="!isSelected(option.value)" class="box"></span>
+                <lila-icons-partial v-if="isSelected(option.value)" type="checked" size="small" />
+                <span v-if="option.text" class="text">{{$translate(option.text)}}</span>
+                <p v-if="option.description" class="description">{{$translate(option.description)}}</p>
+              </button>
+            </section>
+    
+          </section>
+        </lila-overlay-background-partial>
+  
+      </teleport>
+    </lila-client-only-partial>
 
-    </teleport>
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled"><slot /></lila-input-labels-partial>
 
     <notice-partial v-if="errorMessage" type="error">

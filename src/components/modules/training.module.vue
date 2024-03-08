@@ -271,7 +271,7 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
         grid-column-start: 2;
       }
 
-      .lila-content-module::v-deep {
+      :deep(.lila-content-module) {
         position: relative;
         display: grid;
 

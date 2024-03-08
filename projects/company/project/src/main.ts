@@ -15,19 +15,30 @@ import replacerPlugin from '@/plugins/replacer';
 import './models';
 import modules from './modules.browser';
 import partials from './partials.browser';
+import modulesMail from './modules.mail';
+import partialsMail from './partials.mail';
 
 // SSR requires a fresh app instance per request, therefore we export a function
 // that creates a fresh app instance. If using Vuex, we'd also be creating a
 // fresh store here.
-export function getAppInstance() {
+export function getAppInstance (context: any) {
 
   const app = createApp(App);
   const pinia = createPinia();
 
   app.use(pinia);
 
-  loadViaDeclaration(modules.modules, 'lila', 'module', app);
-  loadViaDeclaration(partials, 'lila', 'partial', app);
+  if(context.data.target === 'mail') {
+
+    loadViaDeclaration(modulesMail.modules, 'lila', 'module', app);
+    loadViaDeclaration(partialsMail, 'lila', 'partial', app);
+
+  } else {
+
+    loadViaDeclaration(modules.modules, 'lila', 'module', app);
+    loadViaDeclaration(partials, 'lila', 'partial', app);
+
+  }
 
   const router = createRouter(routes);
 

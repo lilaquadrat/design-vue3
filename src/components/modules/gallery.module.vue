@@ -77,8 +77,6 @@ function toggleFullscreenOverlay () {
 
 function pictureLoaded (): void {
 
-  console.log('fired catched');
-
   firstLoad.value = true;
   setControlsTop();
 }

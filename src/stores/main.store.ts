@@ -40,7 +40,9 @@ export const useMainStore = defineStore('main', () => {
 
     } else {
 
-      body.classList.remove('fullscreen');
+      if (body.classList.contains('fullscreen')) {
+        body.classList.remove('fullscreen');
+      }
 
     }
 
@@ -51,8 +53,6 @@ export const useMainStore = defineStore('main', () => {
     const elements = document.querySelectorAll('.overlay-background:not(.inactive)');
 
     if (!elements.length) setFullscreen(false);
-
-    console.log(elements.length);
 
   }
 

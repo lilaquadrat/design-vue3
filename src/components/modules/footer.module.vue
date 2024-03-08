@@ -121,7 +121,7 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
       gap: 10px;
 
-      .lila-link::v-deep {
+      :deep(.lila-link) {
 
         display: grid;
 

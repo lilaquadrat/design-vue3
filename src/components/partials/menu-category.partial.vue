@@ -26,7 +26,7 @@ const anchor = computed(() => getAnchor(props.textblock.headline as string));
 .lila-menu-category {
   .module;
 
-  .lila-textblock::v-deep {
+  :deep(.lila-textblock) {
     border-bottom: solid 2px @color2;
     .multi(padding-bottom, 2);
     .multi(margin-bottom, 6);

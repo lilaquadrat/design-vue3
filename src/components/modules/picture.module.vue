@@ -141,7 +141,7 @@ function toggleFullscreenOverlay () {
       background: transparent;
     }
 
-    .lila-textblock::v-deep {
+    :deep(.lila-textblock) {
       .multi(padding, 0, 8);
     }
   }

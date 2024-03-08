@@ -5,7 +5,7 @@ import type Textblock from '@/interfaces/textblock.interface';
 import type Address from '@/models/Address.model'; 
 import { type ErrorsObject, type ParsedError } from '../../libs/ActionNotice';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { computed, onBeforeMount, ref} from 'vue';
+import { computed, onBeforeMount, onServerPrefetch, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, type ErrorObject, type GenericData, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
@@ -42,8 +42,6 @@ const emit = defineEmits<{
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
 const list = computed<BasicData<List> | undefined>(() => {
-
-  console.log(props.genericData, props);
 
   if(props.genericData.data) {
 
@@ -96,7 +94,6 @@ function updateCategories () {
 
     categoriesExtended.value = undefined;
   }
-
 
 }
 
@@ -182,6 +179,13 @@ onBeforeMount(() => {
   updateAgreements();
   getparticipantsState();
 }) 
+
+onServerPrefetch(() => {
+  model.value = ModelsClass.add<Contact>({}, 'contact');
+  addressModel.value = ModelsClass.add({}, 'address');
+
+  updateAgreements();
+})
 
 function resetForm () {
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getAvailableModules } from '@/mixins/loadComponents';
+import { getAvailableModules, loadViaDeclaration } from '@/mixins/loadComponents';
 import useEditorStore from '@/stores/editor.store';
-import { onMounted } from 'vue';
+import { getCurrentInstance, onMounted, onServerPrefetch } from 'vue';
 import modulesBrowser from './modules.browser';
 import modulesMail from './modules.mail';
 import useMainStore from '@/stores/main.store';
@@ -36,6 +36,21 @@ onMounted(() => {
   }
 
 });
+onServerPrefetch(() => {
+
+  if(staticData) {
+
+    mainStore.staticData = staticData;
+
+  }
+
+  if(customModules.length) {
+
+    mainStore.customModules = customModules;
+
+  }
+
+})
 </script>
 
 <template>

@@ -135,8 +135,6 @@ function mergeContent (baseContent: Partial<BasicData<Content>>) {
 
       distributeGenericData(safeData.modules, generateDataWithContent(safeData.genericData as GenericData));
 
-      console.log(safeData);
-
     }
 
     return prepareContent(safeData);

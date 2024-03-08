@@ -14,6 +14,8 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
+const titleVariants = ['center', 'font-extra', 'horizontalLine'];
+const introVariants = ['center'];
 
 </script>
 <template>
@@ -21,11 +23,11 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
     <header>
 
-      <lila-textblock-partial class="title" :variant="['center', 'font-extra', 'horizontalLine']" v-bind="textblock" />
+      <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" />
 
       <lila-menu-navigation-partial :categories="categories" />
 
-      <lila-textblock-partial class="intro" :variant="['center']" v-bind="intro" />
+      <lila-textblock-partial class="intro" :variant="introVariants" v-bind="intro" />
 
     </header>
 
