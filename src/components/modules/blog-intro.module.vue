@@ -20,6 +20,7 @@ const props = defineProps<ModuleBaseProps & {
   author: string;
 
   date: string;
+
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
@@ -40,7 +41,7 @@ const hasLink = computed(() => !!props.link?.link);
     <header>
       <template v-if="!hasLink">
         <time v-if="date">{{ date }}</time>
-        <lila-textblock-partial class="top" v-bind="textTop" />
+        <lila-textblock-partial class="top" v-bind="textTop" /> 
       </template>
 
       <lila-link-partial v-if="hasLink" v-bind="link">

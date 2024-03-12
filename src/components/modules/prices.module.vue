@@ -134,7 +134,7 @@ function highlight (element: { variant: string | string[] }) {
       }
 
       &.highlight {
-        grid-row-start: 1;
+        grid-row-start: 2;
 
         @media @tablet, @desktop {
           grid-row-start: auto;

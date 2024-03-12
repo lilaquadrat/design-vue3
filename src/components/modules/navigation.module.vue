@@ -246,10 +246,10 @@ const calculateOptionsStyle = () => {
 
 </script>
 <template>
-  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module">
+  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module"> {{ useTriggerMenu}}
     <section class="placeholder"></section>
 
-    <section class="overflow-container">
+    <section class="overflow-container"> 
       <section ref="linksContainer" class="links-container">
         <section ref="logoContainer" class="logo-container">
           <a class="logo" href="/">
@@ -258,7 +258,7 @@ const calculateOptionsStyle = () => {
           </a>
         </section>
 
-        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle"> {{ open }}
+        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle"> 
           <div class="placeholder"></div>
           <div class="trigger-container">
             <span></span>
@@ -379,6 +379,7 @@ const calculateOptionsStyle = () => {
 
   .placeholder {
     height: 40px;
+  
   }
 
   &.overlay {
@@ -418,7 +419,7 @@ const calculateOptionsStyle = () => {
       align-content: center;
       align-self: center;
       justify-self: end;
-      width: 20px;
+      width: 25px;
       height: 40px;
     }
 
@@ -498,6 +499,7 @@ const calculateOptionsStyle = () => {
     position: fixed;
     top: 0;
     left: 0;
+    
 
     .trans(transform);
 

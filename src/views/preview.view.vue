@@ -27,6 +27,7 @@ import contact from './viewData/contact';
 import menu from './viewData/menu';
 import training from './viewData/training';
 import timeline from './viewData/timeline';
+import events from'./viewData/events'
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -50,7 +51,8 @@ const modules: Record<string, Partial<Content>> = {
   contact,
   menu,
   training,
-  timeline
+  timeline, 
+  events
 };
 const route = useRoute();
 const store = useMainStore();

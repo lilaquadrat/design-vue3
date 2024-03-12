@@ -437,7 +437,7 @@ const handleForm = async (event: Event) => {
         <lila-select-partial v-if="list.mode === 'contact'" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
-      <lila-fieldset-partial legend="personal">
+      <lila-fieldset-partial legend="personal"> 
 
         <lila-input-partial :error="errorsObject.prename" required v-model="model.prename">
           {{$translate('prename')}}

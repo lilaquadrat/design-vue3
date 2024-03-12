@@ -38,8 +38,14 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
   <svg v-if="type === 'warning'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
   </svg>
+  <svg v-if="type === 'location'" xmlns="http://www.w3.org/2000/svg" fill="none" class="w-6 h-6" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+  </svg>
+
   </span>
 </template>
+ <!-- https://heroicons.com/ -->
 <style lang="less" scoped>
 
 .lila-icons-partial {
@@ -222,6 +228,16 @@ const rotateClass: ComputedRef<string|undefined> = computed(() => props.rotate ?
       }
     }
 
+  }
+  &.green {
+    svg {
+      stroke: @success;
+
+      &.useFill {
+        fill: @success;
+        stroke-width: 0;
+      }
+    }
   }
 
 }

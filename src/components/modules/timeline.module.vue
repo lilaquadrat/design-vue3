@@ -22,7 +22,6 @@ const timeContainer = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 // const emit = defineEmits<{(e: string, event?: Event): void}>();
 const emit = defineEmits(['click']);
-
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
@@ -63,7 +62,8 @@ function setElements (elements: TimelineElement[]) {
   elementsExtended.value = positionedItem;
 }
 
-function activeText (event:Event, element: TimelineElement): void {
+
+function activeText(event:Event): void {
   active.value = true
  
   emit('click', event.target)
@@ -93,7 +93,7 @@ const formattedDate = computed(() => {
 
 </script>
 <template>
-  <section ref="element" :id="id" class="lila-timeline-module lila-module" :disabled="disabled" :class="[inviewState, variant, { active: active }]">
+  <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
     <section   class="elements-container">
       <section  class="singleElement-container" v-for="(element, index) in elementsExtended" :class="[element.position, {noMedia: !element.media} ]" :key="`timeline-withpositions${index}`"> 
         <section ref="timeContainer" class="time-container" @click="activeMedia($event, element)">
@@ -138,7 +138,7 @@ const formattedDate = computed(() => {
     .singleElement-container {
         display: grid;
         grid-template-columns: 90% 5px 90%;
-        //grid-template-rows:35px min-content min-content 35px;
+        grid-template-rows:35px min-content min-content 35px;
         
         gap: 25px 0;
         

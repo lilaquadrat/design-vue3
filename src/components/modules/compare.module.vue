@@ -23,7 +23,7 @@ const modifiedElements = computed(() => {
   });
 
   data.push(headline);
-
+  console.log('data:', data)
   props.structure?.forEach((structure, index) => {
     data.push([{ headline: structure.headline, description: structure.description, structure: true }]);
 
@@ -42,11 +42,11 @@ const modifiedElements = computed(() => {
             value = newValue;
           }
         }
-
         newLine.push(value);
       });
 
       data.push(newLine);
+      console.log('data2:', data)
     });
   });
 

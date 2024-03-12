@@ -40,7 +40,7 @@ const brightText = computed(() => props.variant?.includes('color1') || props.var
     <section class="content-container">
       <lila-textblock-partial :variant="brightText" v-if="textblock" v-bind="textblock" />
 
-      <section class="elements-container">
+      <section class="elements-container"> 
 
         <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="element">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />

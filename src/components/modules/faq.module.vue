@@ -2,7 +2,7 @@
 import type Textblock from '@interfaces/textblock.interface';
 import type Accordion from '@interfaces/Accordion.interface';
 import { useInview } from '@/plugins/inview';
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
@@ -14,7 +14,9 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
-
+onBeforeMount(() => {
+  console.log(props.accordion);
+});
 </script>
 <template>
   <section :id="id" ref="element" :class="[variant, inviewState]" class="lila-faq-module lila-module">

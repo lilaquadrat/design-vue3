@@ -150,5 +150,9 @@ export default [
   {
     name: 'video',
     component: () => import('@/components/partials/video.partial.vue'),
+  },
+  {
+    name     : 'events',
+    component: () => import('@/components/partials/events.partial.vue'),
   }
 ]
