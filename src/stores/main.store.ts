@@ -20,13 +20,13 @@ export const useMainStore = defineStore('main', () => {
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
   const customModules = ref<any>();
 
-  function setData(value: Partial<Content>) {
+  function setData (value: Partial<Content>) {
 
     data.value = value;
 
   }
 
-  function setFullscreen(value: boolean) {
+  function setFullscreen (value: boolean) {
 
     fullscreen.value = value;
 
@@ -48,7 +48,7 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  function checkFullscreen() {
+  function checkFullscreen () {
 
     const elements = document.querySelectorAll('.overlay-background:not(.inactive)');
 
@@ -56,7 +56,7 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  function setConfiguration(value: EditorConfiguration) {
+  function setConfiguration (value: EditorConfiguration) {
 
     editorConfiguration.value = value;
 
@@ -71,7 +71,7 @@ export const useMainStore = defineStore('main', () => {
       ...config.value?.api,
       company: config.value?.company,
       project: config.value?.project,
-      app: config.value?.name as string
+      app    : config.value?.name as string
     }
 
   });
@@ -79,7 +79,7 @@ export const useMainStore = defineStore('main', () => {
   async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
   async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
   async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent(params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
+  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
 
     let returnData: SDKResponse<BasicData<Content>>;
     const sdk = new StudioSDK(apiConfig.value);
@@ -87,19 +87,15 @@ export const useMainStore = defineStore('main', () => {
 
     if (params.id && data.value?.id === params.id) {
 
-      console.log('match1', data.value);
       returnData = hardCopy({ data: data.value, status: 200 });
 
     }
 
     if (params.internalId && data.value?._id === params.internalId) {
 
-      console.log('match2', data.value);
       returnData = hardCopy({ data: data.value, status: 200 });
 
     }
-
-    console.log('make the call', returnData);
 
     if (returnData) return returnData;
 
@@ -145,12 +141,6 @@ export const useMainStore = defineStore('main', () => {
 
   }
 
-  async function getContent1() {
-
-    return Promise.resolve({ data: {}, status: 200 });
-
-  }
-
   return {
     setData,
     data,
@@ -161,7 +151,6 @@ export const useMainStore = defineStore('main', () => {
     setConfiguration,
     configuration: editorConfiguration,
     getContent,
-    getContent1,
     startupDone,
     config,
     staticData,

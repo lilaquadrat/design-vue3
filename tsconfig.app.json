@@ -13,10 +13,12 @@
     "src/components/partials/*.vue",
     "projects/**/*",
     "projects/**/*.vue",
-    "projects/company/project/src/modules/*.vue",
+    "src/src/modules/*.vue",
     "components.d.ts",
     "customs.ts",
-    "src/views/viewData/*"
+    "src/views/viewData/*",
+    "config.ts",
+    "vite.config.ts"
   ],
   "exclude": [
     "src/**/__tests__/*"

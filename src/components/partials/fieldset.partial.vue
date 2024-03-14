@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
 
-const props = defineProps<{
+defineProps<{
     extendedGap?: boolean
     legend?: string
 

@@ -1,9 +1,10 @@
-export default (template?: string, variables?: { [key: string]: string | undefined }) => template?.replace(/\$(\w+)/g, (match, name) => {
-  // Check if the placeholder's name exists in the variables object
+import objectPath from 'object-path';
 
+export default (template?: string, variables?: Record<string, string | undefined | Record<string, string>>) => template?.replace(/\$([\w.]+)/g, (match, name) => {
+  // Check if the placeholder's name exists in the variables object
   if(!variables) return '';
 
-  const returnString = variables[name] as string;
+  const returnString = objectPath.get(variables as Record<string, string>, name);
       
   return returnString || '';
 });

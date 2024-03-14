@@ -22,7 +22,7 @@ export async function render (url: string, context: any, contextData: Content[],
   mainStore.setData(context.data);
   mainStore.configuration = context.settings;
 
-  contentStore.addMulti(contextData);
+  if(contextData) contentStore.addMulti(contextData);
 
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers

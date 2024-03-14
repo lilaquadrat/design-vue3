@@ -1,33 +1,96 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { defineConfig, type UserConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-  ],
-  resolve: {
-    alias: {
-      '~fonts'     : fileURLToPath(new URL('src/assets/fonts', import.meta.url)),
-      '@src'       : path.resolve(__dirname, './src'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@screens'   : path.resolve(__dirname, './src/screens'),
-      '@partials'  : path.resolve(__dirname, './src/components/partials'),
-      '@modules'   : path.resolve(__dirname, './src/components/modules'),
-      '@libs'      : path.resolve(__dirname, './src/libs'),
-      '@plugins'   : path.resolve(__dirname, './src/plugins'),
-      '@apps'      : path.resolve(__dirname, './src/apps'),
-      '@store'     : path.resolve(__dirname, './src/store'),
-      '@mixins'    : path.resolve(__dirname, './src/mixins'),
-      '@classes'   : path.resolve(__dirname, './src/classes'),
-      '@interfaces': path.resolve(__dirname, './src/interfaces'),
-      '@data'      : path.resolve(__dirname, './src/data'),
-      '@models'    : path.resolve(__dirname, './src/models'),
-      '@mock'      : path.resolve(__dirname, './test/mock'),
-      '@worker'    : path.resolve(__dirname, './src/worker'),
+import { visualizer } from 'rollup-plugin-visualizer';
+
+import configObject from './config';
+
+export default defineConfig((settings) => {
+
+  let target: 'local' | 'next' | 'live' = 'local';
+
+  if(settings.mode === 'production') target = 'live';
+  if(settings.mode === 'next') target = 'next';
+
+  const isProduction = target === 'live';
+  const config = configObject[target];
+  const viteConfig: UserConfig = {
+    plugins: [
+      vue(),
+      visualizer()
+    ],
+    base : config.base || '/',
+    build: {
+      cssCodeSplit : false,
+      cssMinify    : isProduction,
+      sourcemap    : !isProduction,
+      rollupOptions: {
+        output: {
+          dir           : 'dist/app',
+          entryFileNames: 'assets/[name].js',
+          chunkFileNames: 'assets/[name].js',
+          assetFileNames: 'assets/[name].[ext]'
+          // assetFileNames: (assetInfo) => {
+          //   if (assetInfo.name?.endsWith('woff')) {
+          //     return 'assets/[name][extname]';
+          //   }
+  
+          //   return 'assets/[name]-[hash][extname]';
+          // },
+        }
+      }
+    },
+    css: {
+      devSourcemap       : true,
+      preprocessorOptions: {
+        less: {
+          sourceMap : true,
+          globalVars: {
+            globalVariables: 'true; @import (reference) "./src/assets/less/variables.less";',
+            globalMixins   : 'true; @import (reference) "./src/assets/less/mixins.less";',
+            globalFonts    : 'true; @import (reference) "./src/assets/less/fonts.less";',
+          },
+        }
+      }
+    },
+    resolve: {
+      alias: {
+        '~fonts': fileURLToPath(new URL('src/assets/fonts', import.meta.url)),
+        '@'     : path.resolve(__dirname, './src/'),
+      }
+    },
+    define: {
+      '__FRONTEND_CONFIG__'                  : JSON.stringify(config),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: isProduction ? 'false' : 'true',
+      __VUE_PROD_DEVTOOLS__                  : isProduction ? 'false' : 'true'
     }
+  };
+  
+  if (settings.isSsrBuild) {
+
+    viteConfig.build = {
+      ...viteConfig.build,
+      rollupOptions: {
+        input : '/src/server-entry.ts',
+        output: {
+          ...viteConfig.build?.rollupOptions?.output,
+          inlineDynamicImports: true,
+          dir                 : 'dist/server',
+        }
+      },
+      ssrManifest: true,
+    }
+    viteConfig.ssr = {
+      target    : 'node',
+      noExternal: true,
+      external  : ['node:stream', 'axios', 'http', 'https', 'crypto', 'path', 'highlight.js'],
+    }
+  
   }
-})
+
+  return viteConfig;
+
+});

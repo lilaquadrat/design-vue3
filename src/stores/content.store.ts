@@ -6,25 +6,25 @@ export const useContentStore = defineStore('content', () => {
 
   const content = ref<BasicData<Content>[]>([]);
 
-  function add(contentToAdd: Content) {
+  function add (contentToAdd: Content) {
 
     content.value.push(contentToAdd)
 
   }
 
-  function addMulti(contentToAdd: Content[]) {
+  function addMulti (contentToAdd: Content[]) {
 
     content.value.push(...contentToAdd);
 
   }
 
-  function findById(id: string) {
+  function findById (id: string) {
 
     return content.value.find((single) => single.id === id);
 
   }
 
-  function findByinternalId(internalId: string) {
+  function findByinternalId (internalId: string) {
 
   }
 

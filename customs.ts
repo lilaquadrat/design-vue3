@@ -1,4 +1,3 @@
-import type replaceVariables from '@/mixins/replaceVariables'
 import type { HelpersPlugin } from '@/plugins/filters'
 import type { TranslationPlugin } from '@/plugins/translations'
 

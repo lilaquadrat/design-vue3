@@ -143,7 +143,8 @@ function updateContext () {
 
   editorStore.context = {
     sitetitle  : siteSettings?.value?.settings?.title,
-    description: siteSettings?.value?.settings?.description
+    description: siteSettings?.value?.settings?.description,
+    customer   : { prename: 'PRENAME', lastname: 'LASTNAME' }
   }
 
 }

@@ -1,12 +1,61 @@
 import type { RouteRecordRaw } from 'vue-router';
-import ContentView from './views/content.view.vue';
+import PreviewView from '@/views/preview.view.vue';
+import ContentView from '@/views/content.view.vue';
+import EditorView from '@/views/editor.view.vue';
+import MainView from '@/views/main.view.vue';
+import LoginView from '@/views/login.view.vue';
 
 const routes: readonly RouteRecordRaw[] = [
   {
-    path     : '/:pathMatch(.*)*',
-    name     : 'editor',
-    component: ContentView
+    path: '/',
+    component: MainView,
+    children: [
+      {
+        path: '/m/:pathMatch(.*)?',
+        name: 'members',
+        component: ContentView,
+        meta: {
+          contentType: 'members'
+        }
+      },
+      {
+        path: '',
+        name: 'public-home', // Changed to 'home' for uniqueness
+        component: ContentView,
+        meta: {
+          contentType: 'public'
+        }
+      },
+      {
+        path: '/preview/:pathMatch(.*)?',
+        name: 'preview',
+        component: PreviewView
+      },
+      {
+        path: '/:pathMatch(.*)*', // Catch-all route
+        name: 'public-content', // Ensured unique name
+        component: ContentView,
+        meta: {
+          contentType: 'public'
+        }
+      },
+    ]
+  },
+  {
+    path: '/login-callback',
+    name: 'login-callback',
+    component: LoginView
+  },
+];
+const editorRoutes: readonly RouteRecordRaw[] = [
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'editor',
+    component: EditorView
   },
 ];
 
-export default routes;
+export {
+  routes,
+  editorRoutes
+};

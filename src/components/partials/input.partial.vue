@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
 import type { ParsedError } from '../../libs/ActionNotice';
-import { defineProps, computed, watch, ref, defineSlots, defineEmits } from 'vue';
+import { computed, watch, ref } from 'vue';
 
 const props = defineProps<{
   modelValue?: string;

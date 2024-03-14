@@ -10,7 +10,7 @@
   
 <script setup lang="ts">
 import type { ParsedError } from '@/libs/ActionNotice';
-import { computed, defineProps, useSlots } from 'vue';
+import { computed, useSlots } from 'vue';
   
 defineProps<{
     required?: boolean;

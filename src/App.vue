@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getAvailableModules, loadViaDeclaration } from '@/mixins/loadComponents';
+import { getAvailableModules } from '@/mixins/loadComponents';
 import useEditorStore from '@/stores/editor.store';
-import { getCurrentInstance, onMounted, onServerPrefetch } from 'vue';
+import { onMounted, onServerPrefetch } from 'vue';
 import modulesBrowser from './modules.browser';
 import modulesMail from './modules.mail';
 import useMainStore from '@/stores/main.store';
@@ -59,7 +59,9 @@ onServerPrefetch(() => {
 </template>
 
 <style lang="less">
-@import "./projects/company/project/src/assets/less/loadFonts.less";
+
+@import "./src/assets/less/loadFonts.less";
+
 body {
   .font-normal;
 
@@ -97,4 +99,4 @@ body {
 
   text-decoration: none;
 }
-</style>
+</style>../projects/company/project/src/modules.browser../projects/company/project/src/modules.mail../projects/company/project/src/staticData../projects/company/project/src/customModules../projects/company/project/src/partials.browser../projects/company/project/src/partials.mail

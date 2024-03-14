@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onBeforeMount, defineProps, defineEmits, computed } from 'vue';
+import { ref, watch, onBeforeMount, computed } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { useTranslations } from '@/plugins/translations';
 import type { Content, ContentWithPositions } from '@lilaquadrat/interfaces';
