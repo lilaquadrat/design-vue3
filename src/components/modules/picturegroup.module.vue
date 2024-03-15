@@ -30,8 +30,17 @@ const linkVariant = computed(() => {
   return ['noStyle'];
 
 });
-const fitVariant = computed(() => props.variant?.includes('fit'));
-const brightText = computed(() => props.variant?.includes('color1') || props.variant?.includes('color3') ? ['bright'] : []);
+const fitVariant = computed(() => props.variant?.some(single => ['fit', 'cards'].includes(single)));
+const brightText = computed(() => {
+
+  const variantsArray = [];
+
+  if(props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
+  if(props.variant?.includes('cards')) variantsArray.push('content');
+
+  return variantsArray;
+
+});
 
 </script>
 <template>
@@ -44,9 +53,11 @@ const brightText = computed(() => props.variant?.includes('color1') || props.var
 
         <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="element">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
-          <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
-          <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
-          <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
+          <section class="text-container">
+            <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
+            <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
+            <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
+          </section>
         </component>
 
       </section>
@@ -199,6 +210,92 @@ const brightText = computed(() => props.variant?.includes('color1') || props.var
 
       }
 
+    }
+
+  }
+
+  &.cards {
+    
+    .content-container {
+      .elements-container {
+        .element {
+
+          display: grid;
+          align-content: end;
+          position: relative;
+          overflow: hidden;
+
+          border-radius: 20px;
+          aspect-ratio: 2 / 3;
+          border: solid 3px rgba(204, 204, 204, 0.6);
+
+          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.13);
+
+          .trans(border);
+
+          .lila-figure {
+            position: absolute;
+            width: 100%;
+            height: 105%;
+            
+            picture {
+              position: absolute;
+              width: 100%;
+              height: 105%;
+              .index(2);
+
+            }
+          }
+
+          .text-container {
+            background-image: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0) 100%);
+            .index(3);
+            display: grid;
+          }
+
+          .lila-textblock, .lila-list-links{
+            .multi(padding, 0, 4, 4, 4);
+          }
+
+          .lila-textblock, .lila-figure, .lila-list-links {
+            .trans(transform);
+          }
+
+          .lila-list-links {
+            opacity: 0;
+            .trans(all);
+            pointer-events: none;
+          }
+          
+          .lila-textblock {
+
+            .multi(padding, 4);
+            .multi(padding-top, 16);
+            .multi(padding-bottom, 4);
+
+            text-align: left;
+            .trans(transform);
+          }
+
+          &:hover {
+
+            opacity: 1;
+
+            border-color: @color1;
+            .lila-figure {
+              transform: translateY(-5.5%);
+            }
+            .lila-textblock, .lila-list-links {
+              transform: translateY(-15px);
+            }
+            .lila-list-links {
+              opacity: 1;
+            }
+
+          }
+
+        }
+      }
     }
 
   }

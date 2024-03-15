@@ -1,9 +1,13 @@
-export default {
+import type { Content } from '@lilaquadrat/interfaces';
+
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'FAQ',
+    description: 'Display question with matching answers'
   },
   state  : 'publish',
   modules: [
@@ -120,3 +124,5 @@ export default {
     },
   ],
 };
+
+export default content;

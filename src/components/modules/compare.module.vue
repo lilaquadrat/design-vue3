@@ -9,11 +9,13 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ModuleBaseProps & {
+type compareModuleProps = ModuleBaseProps & {
   textblock?: Textblock;
   elements: CompareElement[];
   structure: CompareStructure[];
-}>();
+};
+
+const props = withDefaults(defineProps<compareModuleProps>(), {variant: () => []})
 const modifiedElements = computed(() => {
   const data: CompareModified[] = [];
   const headline: CompareHeadline[] = [{}];

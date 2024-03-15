@@ -7,19 +7,20 @@ defineOptions({
   inheritAttrs: false
 })
 
+type buttonProps = {
+  doublecheck?: string,
+  disabled?: boolean,
+  icon?: IconsPartial['type'],
+  noPadding?: boolean,
+  colorScheme?: string,
+  save?: boolean,
+  active?: boolean,
+  type?: 'submit' | 'button'
+  callId?: string
+} 
+
 const callStore = useCallStore();
-const props = withDefaults(
-  defineProps<{
-        doublecheck?: string,
-        disabled?: boolean,
-        icon?: IconsPartial['type'],
-        noPadding?: boolean,
-        colorScheme?: string,
-        save?: boolean,
-        active?: boolean,
-        type?: 'submit' | 'button'
-        callId?: string
-    }>(),
+const props = withDefaults(defineProps<buttonProps>(),
   {
     type       : 'button',
     colorScheme: 'colorScheme1'

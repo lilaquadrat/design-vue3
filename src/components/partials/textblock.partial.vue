@@ -35,7 +35,13 @@ const notEmpty = computed(() => !!(props.headline || props.subline || props.intr
   word-break: break-word;
   grid-template-rows: max-content;
 
-  .headlines;
+  &:not(.content) {
+    .headlines;
+  }
+
+  &.content {
+    .headlines-content;
+  }
 
   p {
     .font-normal;

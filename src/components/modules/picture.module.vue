@@ -21,11 +21,13 @@ import { computed, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const store = useMainStore();
-const props = defineProps<ModuleBaseProps & {
+type pictureModuleProps = ModuleBaseProps & {
   picture: Picture
-  textblock: Textblock
-}>();
+  textblock?: Textblock
+};
+
+const props = withDefaults(defineProps<pictureModuleProps>(), {variant: () => []})
+const store = useMainStore();
 const fullscreenOverlay = ref(false);
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
@@ -33,6 +35,9 @@ const showText = computed((): boolean => {
   if (!props.textblock) return false;
 
   return Object.keys(props.textblock).some((single) => {
+    
+    if (!props.textblock) return false;
+    
     const singleTyped = single as keyof Textblock;
 
     return props.textblock[singleTyped]?.length;

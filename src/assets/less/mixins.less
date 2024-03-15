@@ -220,3 +220,55 @@
   }
 
 }
+
+.headlines-content {
+
+  h1,
+  h2 {
+    color: @color1;
+
+    font-size: @headline_S;
+    line-height: @headlineLineHeight_S;
+
+  }
+
+  h3 {
+    .font-normal;
+    font-size: @fontText;
+    color: @textColor;
+  }
+
+  h4 {
+    .font-bold;
+    color: @color1;
+    font-size: @fontTextSmaller;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    .font-head;
+
+    text-transform: uppercase;
+
+    @media @tablet,
+      @desktop {
+      font-size: @headline_S;
+      line-height: @headlineLineHeight_S;
+    }
+  }
+
+  h2 {
+
+    .font-bold;
+
+    color: @color3;
+
+    @media @tablet,
+      @desktop {
+      font-size: @headline_S;
+      line-height: @headlineLineHeight_S;
+    }
+
+  }
+
+}

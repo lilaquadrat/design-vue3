@@ -1,7 +1,9 @@
+import type { Content } from '@lilaquadrat/interfaces';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/de'
-export default {
+
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
@@ -11,45 +13,46 @@ export default {
   state  : 'publish',
   modules: [
     {
-      type    : 'events-module',
-      variant : ['hjadshjsdg'],
-      textblock:{ 
-        headline:'EVENT SCHEDULE'
+      type     : 'events-module',
+      variant  : ['hjadshjsdg'],
+      textblock: { 
+        headline: 'EVENT SCHEDULE'
       },
-      date    :   dayjs(),
+      date    : dayjs(),
       elements: [
         {
-          date    :   '2345678',
+          date     : '2345678',
           textblock: {
-              headline: 'Macy Gray and The California Jet Club',
-              subline: 'Until 16 March 2024',
-              intro: '17:00 - 19:00',
-              text   : [
-                'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-              ],
-             },
+            headline: 'Macy Gray and The California Jet Club',
+            subline : 'Until 16 March 2024',
+            intro   : '17:00 - 19:00',
+            text    : [
+              'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
+            ],
+          },
           link: [
             {text: 'Eventslocation', link: 'https://www.google.de/?hl=de'},
-            ],
-            moreText: 
+          ],
+          moreText: 
               [{
-                  text:'more Text', link:'/somemoreText', target: 'blank'
+                text: 'more Text', link: '/somemoreText', target: 'blank'
               }]
           ,
           icon: 'location',
           picture: 
               {
-                  source: [],
-                  alt   : 'IMAGE ALT',
-                  src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/smalltrompet.png',
-                },
-      }],
+                source: [],
+                alt   : 'IMAGE ALT',
+                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/smalltrompet.png',
+              },
+        }],
     }, 
   ].map((dayItem, index) => ({
     ...dayItem,
     date: 
        dayjs().add(index, 'day') 
-      //  dayjs().add(index, 'day').format('DD) + dayjs().add(index, 'day').locale('de').format('dddd').slice(0,2).toUpperCase()
+    //  dayjs().add(index, 'day').format('DD) + dayjs().add(index, 'day').locale('de').format('dddd').slice(0,2).toUpperCase()
   })),
 };
     
+export default content;

@@ -7,7 +7,7 @@ const content: Content = {
   settings: {
     mode       : 'presentation',
     title      : 'Picture and Text',
-    description: 'Text with Picture'
+    description: 'Text with as single picture'
   },
   state  : 'publish',
   modules: [

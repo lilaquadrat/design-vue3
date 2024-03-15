@@ -59,28 +59,6 @@ const modules: Record<string, Partial<Content>> = {
 };
 const route = useRoute();
 const store = useMainStore();
-const baseContent: Content = {
-  id      : 'home',
-  company : 'company',
-  project : 'project',
-  settings: {
-    mode: 'presentation'
-  },
-  state  : 'publish',
-  modules: [
-    {
-      type    : 'text-module',
-      headline: 'Available Modules',
-      links   : {
-        title: 'content sites',
-        value: Object.keys(modules).sort((a, b) => a.localeCompare(b)).map((single) => ({
-          link: `/${single}`,
-          text: single
-        }))
-      }
-    },
-  ],
-}
 
 function getBaseContent () {
 
@@ -92,9 +70,6 @@ function getBaseContent () {
     const singleModule = modules[single];
 
     elements.push({
-      picture: {
-        src: 'https://cdn3.lilaquadrat.de/lilaquadrat/homepage/quadrat-outlines.png',
-      },
       link: {
         link: `/${single}`
       },
@@ -110,7 +85,8 @@ function getBaseContent () {
     uuid   : '9a081157-eaf8-419d-a534-244ad69d3012',
     type   : 'picturegroup-module',
     variant: [
-      'fourColumns'
+      'fourColumns',
+      'cards'
     ],
     elements: elements,
       

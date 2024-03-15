@@ -9,19 +9,15 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ModuleBaseProps & {
-
+type blogIntroProps = ModuleBaseProps & {
   textblock: Textblock;
-
   picture?: Picture;
-
   link?: Link;
-
   author: string;
-
   date: string;
+}
 
-}>();
+const props = withDefaults(defineProps<blogIntroProps>(), {variant: () => []})
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const textTop = computed(() => ({

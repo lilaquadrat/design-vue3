@@ -1,12 +1,111 @@
-export default {
+import type { Content } from '@lilaquadrat/interfaces';
+import { title } from 'process';
+
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'Picturegroup',
+    description: 'Multipe pictures with text'
   },
   state  : 'publish',
   modules: [
+    {
+      type     : 'picturegroup-module',
+      variant  : ['cards'],
+      textblock: {
+        headline: 'Picturegroup: fourColumns',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.'
+      },
+      elements: [
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+          textblock: {
+            headline: 'Picturegroup: fourColumns',
+            text    : ['Lorem ipsum dolor sit amet, consectetur adipis.']
+          },
+          links: {
+            value: [
+              {
+                text: 'more details',
+                link: '/test'
+              }
+            ]
+          },
+          link: {
+            link: '/test'
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          },
+          textblock: {
+            headline: 'consectetur adipiscing',
+            text    : ['etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.']
+          },
+          links: {
+            value: [
+              {
+                text: 'more details',
+                link: '/test'
+              }
+            ]
+          },
+          link: {
+            link: '/test'
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+          textblock: {
+            headline: 'incididunt',
+            text    : ['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.']
+          },
+          links: {
+            value: [
+              {
+                text: 'more details',
+                link: '/test'
+              }
+            ]
+          },
+          link: {
+            link: '/test'
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+          textblock: {
+            headline: 'incididunt',
+            text    : ['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.']
+          },
+          link: {
+            link: '/test'
+          }
+        },
+      ],
+    },
     {
       type     : 'picturegroup-module',
       variant  : ['fourColumns'],
@@ -758,3 +857,5 @@ export default {
     },      
   ],
 };
+
+export default content;

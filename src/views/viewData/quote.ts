@@ -1,9 +1,13 @@
-export default {
+import type { Content } from '@lilaquadrat/interfaces';
+
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'Quote',
+    description: 'Single quote with source'
   },
   state  : 'publish',
   modules: [
@@ -59,3 +63,5 @@ export default {
     // },
   ],
 };
+
+export default content;

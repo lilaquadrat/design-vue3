@@ -12,15 +12,15 @@ import { hardCopy } from '@lilaquadrat/studio';
 export const useMainStore = defineStore('main', () => {
 
   const startupDone = ref<boolean>(false);
-  const data = ref<Partial<BasicData<Content>>>({});
-  const layout = ref<Partial<BasicData<Content>>>({});
+  const data = ref<BasicData<Content>>();
+  const layout = ref<BasicData<Content>>();
   const editorConfiguration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
   const customModules = ref<any>();
 
-  function setData (value: Partial<Content>) {
+  function setData (value: BasicData<Content>) {
 
     data.value = value;
 
@@ -76,24 +76,24 @@ export const useMainStore = defineStore('main', () => {
 
   });
 
-  async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>>
-  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>>> {
+  async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
+  async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
+  async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
+  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>> {
 
-    let returnData: SDKResponse<BasicData<Content>>;
+    let returnData: SDKResponse<BasicData<Content>|undefined>;
     const sdk = new StudioSDK(apiConfig.value);
     const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
 
     if (params.id && data.value?.id === params.id) {
 
-      returnData = hardCopy({ data: data.value, status: 200 });
+      returnData = hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
 
     }
 
-    if (params.internalId && data.value?._id === params.internalId) {
+    if (params.internalId && data.value?._id?.toString() === params.internalId) {
 
-      returnData = hardCopy({ data: data.value, status: 200 });
+      returnData = hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
 
     }
 
@@ -127,7 +127,7 @@ export const useMainStore = defineStore('main', () => {
 
       if (!error.response?.status) {
 
-        returnData = { status: 400 }
+        returnData = { status: 400 } 
 
       } else {
 

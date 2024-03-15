@@ -1,11 +1,14 @@
+import type { Content } from '@lilaquadrat/interfaces';
 import dayjs from 'dayjs';
 
-export default {
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'Blog Intro',
+    description: 'As intro for a bigger blog post'
   },
   state  : 'publish',
   modules: [
@@ -44,3 +47,5 @@ export default {
     },
   ],
 };
+
+export default content;
