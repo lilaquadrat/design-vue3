@@ -14,6 +14,7 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
 import { useTraceable } from '@/plugins/traceable';
 import useUserStore from '@/stores/user.store';
+import type SelectOption from '@/interfaces/selectOption.interface';
 
 defineOptions({ inheritAttrs: false });
 
@@ -24,8 +25,8 @@ const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
     categoryTextblock: Textblock;
     genericData: GenericDataWithContent;
-    editor: {modes: string[]},
-    agreements: Record<string, Agreement & { value: boolean, error: boolean }> | {};
+    editor?: {modes: string[]},
+    agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
 const state = ref<string>();
 const traceId = ref<string>();
@@ -100,8 +101,9 @@ function updateCategories () {
 /**
  * if more than one category exists returns an array for selection
  */
-const selectCategories = computed(() => {
-  if(!list.value) return
+const selectCategories = computed<SelectOption[] | null>(() => {
+
+  if(!list.value) return null;
 
   if(list.value?.categories.length > 1) {
     
@@ -434,7 +436,7 @@ const handleForm = async (event: Event) => {
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
         <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject.category" :variant="variant" :categories="categoriesExtended" />
-        <lila-select-partial v-if="list.mode === 'contact'" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
+        <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
       <lila-fieldset-partial legend="personal"> 

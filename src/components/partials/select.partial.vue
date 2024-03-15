@@ -10,17 +10,17 @@ import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    type: string;
-    placeholder: string;
-    name: string;
-    description: string;
+    type?: string;
+    placeholder?: string;
+    name?: string;
+    description?: string;
     modelValue: string[] | string | number
-    error: ParsedError
-    required: boolean
-    disabled: boolean
-    allowEmpty: boolean
-    mode: string
-    multiple: boolean
+    error?: ParsedError
+    required?: boolean
+    disabled?: boolean
+    allowEmpty?: boolean
+    mode?: string
+    multiple?: boolean
     options: SelectOption[]
   }>(),
   {
@@ -245,7 +245,7 @@ function toggleOptions () {
 <template>
   <section :class="{ error: error, options: open, disabled }" class="lila-select-input label-replacement" tabindex="">
     <button type="button" ref="triggerElement" class="options-trigger" @click="toggleOptions">
-      <span class="selected-container" v-if="selected.length === 0 || selected === 0">{{$translate(placeholder)}}</span>
+      <span class="selected-container" v-if="(selected.length === 0 || selected === 0) && placeholder">{{$translate(placeholder)}}</span>
       <span class="selected-container" v-if="(selected.length > 0 || selected > 0)">
        {{ selectedText }}
       </span>
@@ -275,11 +275,11 @@ function toggleOptions () {
 
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled"><slot /></lila-input-labels-partial>
 
-    <notice-partial v-if="errorMessage" type="error">
+    <lila-description-partial v-if="errorMessage" :background="false" type="error">
       {{errorMessage}}
-    </notice-partial>
+    </lila-description-partial>
 
-    <description-partial class="input-description" v-if="description">{{$translate(description)}}</description-partial>
+    <lila-description-partial class="input-description" v-if="description">{{$translate(description)}}</lila-description-partial>
 
   </section>
 </template>

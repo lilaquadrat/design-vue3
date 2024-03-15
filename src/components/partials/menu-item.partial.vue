@@ -8,7 +8,7 @@ const props = defineProps<{
   description: string;
   allergens: string[];
   properties: string[];
-  price: string;
+  price?: string;
 }>();
 const showAllergensText = ref<boolean>();
 const allergensNumbers = computed(() => {

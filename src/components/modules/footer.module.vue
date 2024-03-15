@@ -9,10 +9,10 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
-  contact: FooterContact;
-  social: FooterSocial;
-  legal: string;
-  sitemap: Sitemap[];
+  contact?: FooterContact;
+  social?: FooterSocial;
+  legal?: string;
+  sitemap?: Sitemap[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});

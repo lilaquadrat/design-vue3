@@ -2,7 +2,7 @@
 
 withDefaults(
   defineProps<{
-    label: string
+    label?: string
     padding?: boolean
     margin?: boolean
     type?: string
@@ -13,7 +13,7 @@ withDefaults(
 
 </script>
 <template>
-  <section class="lila-description-partial" :class="[type, { padding: padding, margin: margin, background: background }]">
+  <section class="lila-description-partial" :class="[type, { padding, margin, background }]">
     <h4 v-if="label">{{ $translate(label) }}</h4>
     <p>
       <slot />
@@ -47,25 +47,25 @@ withDefaults(
 
   &.background {
     background-color: @grey1;
-  }
 
-  &.success {
-    border-left-color: @success;
-    background-color: @success;
-    color: @white;
-
-    h4 {
+    &.success {
+      border-left-color: @success;
+      background-color: @success;
       color: @white;
+  
+      h4 {
+        color: @white;
+      }
     }
-  }
-
-  &.error {
-    border-left-color: @error;
-    background-color: @error;
-    color: @white;
-
-    h4 {
+  
+    &.error {
+      border-left-color: @error;
+      background-color: @error;
       color: @white;
+  
+      h4 {
+        color: @white;
+      }
     }
   }
 

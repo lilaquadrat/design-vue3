@@ -33,6 +33,7 @@ const modifiedElements = computed(() => {
       newLine.push(list);
 
       props.elements?.forEach((element) => {
+        
         let value = '';
 
         if (element.elements?.[index]) {
@@ -42,11 +43,12 @@ const modifiedElements = computed(() => {
             value = newValue;
           }
         }
+
         newLine.push(value);
+
       });
 
       data.push(newLine);
-      console.log('data2:', data)
     });
   });
 

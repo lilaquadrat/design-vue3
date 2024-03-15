@@ -1,13 +1,3 @@
-<template>
-    <div v-if="slotUsed || required || disabled" class="label-container" :class="{error, hideLabel}">
-      <span class="label" v-if="!hideLabel">
-        <slot />
-      </span>
-      <span class="required" v-if="required && !disabled">{{ $translate('required') }}</span>
-      <span class="disabled" v-if="disabled">{{ $translate('disabled') }}</span>
-    </div>
-  </template>
-  
 <script setup lang="ts">
 import type { ParsedError } from '@/libs/ActionNotice';
 import { computed, useSlots } from 'vue';
@@ -16,14 +6,22 @@ defineProps<{
     required?: boolean;
     disabled?: boolean;
     hideLabel?: boolean;
-    error?: ParsedError;
+    error?: boolean;
   }>();
   
 const slotUsed = computed(() => !!useSlots().default);
   
 </script>
-  
-  <style lang="less" scoped>
+<template>
+  <div v-if="slotUsed || required || disabled" class="label-container" :class="{error, hideLabel}">
+    <span class="label" v-if="!hideLabel">
+      <slot />
+    </span>
+    <span class="required" v-if="required && !disabled">{{ $translate('required') }}</span>
+    <span class="disabled" v-if="disabled">{{ $translate('disabled') }}</span>
+  </div>
+</template>
+<style lang="less" scoped>
   
   .label-container {
   

@@ -1,9 +1,13 @@
-export default {
+import type { Content } from '@lilaquadrat/interfaces';
+
+const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'Contact',
+    description: 'Form used for Contact or Reservations'
   },
   state  : 'publish',
   modules: [
@@ -21,7 +25,7 @@ export default {
       genericData: {
         data: {
           1: {
-            _id        : '6464c12d074ca92142352b64',
+            _id        : '65e0ae26c4c9c66e3cfe47b6',
             name       : 'Neue Liste Test',
             description: 'gute beschreibung1212',
             payment    : 'optional',
@@ -74,8 +78,9 @@ export default {
                 required : true,
               },
               {
-                text     : 'sdrtfgrfgh',
-                contentId: '648839a1406f871021a3d874',
+                text     : 'this is required',
+                contentId: '65d4b32a8494352892750f1d',
+                required : true
               },
             ],
           },
@@ -138,7 +143,7 @@ export default {
       genericData: {
         data: {
           1: {
-            _id         : '6464c12d074ca92142352b64',
+            _id         : '65e0ae26c4c9c66e3cfe47b6',
             name        : 'Liste 12',
             description : 'fasfdd',
             payment     : 'free',
@@ -231,3 +236,5 @@ export default {
     }
   ],
 };
+
+export default content;

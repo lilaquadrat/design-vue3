@@ -7,7 +7,7 @@ const props = defineProps<{
   modelValue: string;
   categories: ListCategoryExtended[];
   required: boolean;
-  error: ParsedError;
+  error?: ParsedError;
   variant: string[]
 }>();
 const emits = defineEmits(['update:modelValue']);

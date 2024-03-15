@@ -2,7 +2,6 @@ import { createApp, createSSRApp } from 'vue';
 import { createPinia, type StateTree } from 'pinia';
 
 import App from './App.vue';
-import { routes, editorRoutes } from './routes';
 import createRouter from '@/mixins/createRouter';
 import { loadViaDeclaration } from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
@@ -18,6 +17,7 @@ import modules from './modules.browser';
 import partials from './partials.browser';
 import hooks from '@/mixins/hooks';
 import logger from '@/mixins/logger';
+import getRoutes from './mixins/getRoutes';
 
 const isSSR = !!window.__INITIAL_STATE__;
 const app = isSSR
@@ -30,13 +30,17 @@ loadViaDeclaration(partials, 'lila', 'partial', app);
 const pinia = createPinia();
 
 if (isSSR) {
+
   logger.ssr('set initial state');
   pinia.state.value = window.__INITIAL_STATE__ as Record<string, StateTree>;
+  
 }
+
+console.log(import.meta.env);
 
 app.use(pinia);
 
-const router = createRouter(window !== window.top ? editorRoutes : routes);
+const router = createRouter(getRoutes());
 
 app.use(router);
 

@@ -18,12 +18,11 @@ const emit = defineEmits<{
   'update:modelValue': [value?: Address]
 }>();
 const props = defineProps<{
-  name: string
   modelValue: Address
-  placeholder: string
-  disabled: boolean
-  required: boolean
-  error: ParsedError
+  placeholder?: string
+  disabled?: boolean
+  required?: boolean
+  error?: ParsedError
 }>();
 const model = ref<Address>();
 const selectedAddress = ref<Address>();

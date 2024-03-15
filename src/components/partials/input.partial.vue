@@ -112,9 +112,9 @@ const hasError = computed(() => !!props.error?.error);
       <slot />
     </lila-input-labels-partial>
 
-    <notice-partial v-if="errorMessage" type="error">
+    <lila-description-partial v-if="errorMessage" :background="false" type="error">
       {{ errorMessage }}
-    </notice-partial>
+    </lila-description-partial>
   </label>
 </template>
 

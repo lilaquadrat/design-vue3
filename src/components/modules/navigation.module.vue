@@ -16,7 +16,7 @@ const { media, resized } = useResize();
 const props = defineProps<ModuleBaseProps & {
   name?: string;
   picture?: Picture;
-  elements: (LinkGroupElement & { active: boolean })[];
+  elements?: (LinkGroupElement & { active: boolean })[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
@@ -499,7 +499,6 @@ const calculateOptionsStyle = () => {
     position: fixed;
     top: 0;
     left: 0;
-    
 
     .trans(transform);
 

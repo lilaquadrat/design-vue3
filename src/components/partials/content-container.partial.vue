@@ -12,7 +12,6 @@ const props = defineProps<{
   overlay?: boolean
   id?: string
   internalId?: string
-  type: string
   categories?: string[]
   latest?: boolean
   predefined?: boolean

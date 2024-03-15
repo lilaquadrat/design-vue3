@@ -4,6 +4,9 @@ import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import type { Content } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
+import { hardCopy } from '@lilaquadrat/studio';
+
+import preview from './viewData/preview';
 
 import emotion from './viewData/emotion';
 import blogIntro from './viewData/blog-intro';
@@ -71,12 +74,54 @@ const baseContent: Content = {
       links   : {
         title: 'content sites',
         value: Object.keys(modules).sort((a, b) => a.localeCompare(b)).map((single) => ({
-          link: `/preview/${single}`,
+          link: `/${single}`,
           text: single
         }))
       }
     },
   ],
+}
+
+function getBaseContent () {
+
+  const baseContent = hardCopy(preview);
+  const elements: Object[] = [];
+
+  Object.keys(modules).sort((a, b) => a.localeCompare(b)).forEach((single) => {
+
+    const singleModule = modules[single];
+
+    elements.push({
+      picture: {
+        src: 'https://cdn3.lilaquadrat.de/lilaquadrat/homepage/quadrat-outlines.png',
+      },
+      link: {
+        link: `/${single}`
+      },
+      textblock: {
+        headline: singleModule.settings?.title || single,
+        intro   : singleModule.settings?.description
+      }
+    })
+
+  });
+
+  baseContent.modules.push({
+    uuid   : '9a081157-eaf8-419d-a534-244ad69d3012',
+    type   : 'picturegroup-module',
+    variant: [
+      'fourColumns'
+    ],
+    elements: elements,
+      
+    textblock: {
+      headline: 'Explore the Modules'
+    }
+  }
+  );
+
+  return baseContent;
+
 }
 
 store.setConfiguration({preloadImages: true})
@@ -85,7 +130,7 @@ const contentMerged = computed(() => {
 
   const content = modules[route.params.pathMatch as keyof typeof modules];
 
-  if(!content) return prepareContent(baseContent);
+  if(!content) return prepareContent(getBaseContent());
   return prepareContent(content);
 
 }); 

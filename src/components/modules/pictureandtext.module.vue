@@ -35,7 +35,7 @@ const fitVariant = computed(() => props.variant?.includes('fit'));
       <lila-list-partial v-if="list" v-bind="list" />
       <lila-list-partial v-if="links" v-bind="links" />
 
-      <lila-legend-partial v-if="legend" v-bind="legend" /> {{ legend }}
+      <lila-legend-partial v-if="legend" :text="legend" />
 
     </section>
 

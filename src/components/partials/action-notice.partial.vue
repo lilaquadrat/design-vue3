@@ -11,7 +11,7 @@ const emit = defineEmits<{
   'update': [value?: ErrorsObject]
 }>();
 const props = defineProps<{
-  errors: {message: string, errors: ErrorObject[]}
+  errors?: {message: string, errors: ErrorObject[]}
   preparsedErrors?: ErrorsObject,
   translationPre?: string
 }>();

@@ -18,6 +18,15 @@ export default interface FrontendConfig {
         customEndpoints?: StudioSDK['customEndpoints']
     }
 
+    /**
+     * base path for loading files
+     */
     base?: string
+
+    /**
+     * indicates that this project is dynamic. e.g. an app or an website with at least one dynamic part
+     * 
+     */
+    dynamic?: boolean
 
 }

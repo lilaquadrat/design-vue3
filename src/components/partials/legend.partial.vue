@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const props = defineProps<{
+  text: string[];
+}>();
+
+</script>
 <template>
   <section class="lila-legend">
     <p v-for="(single, index) in props.text" :key="`legend-${index}`">
@@ -5,12 +11,6 @@
     </p>
   </section>
 </template>
-<script setup lang="ts">
-const props = defineProps < {
-  text: string[];
-}> ();
-
-</script>
 <style lang="less" scoped>
 
 .lila-legend {

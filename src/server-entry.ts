@@ -6,10 +6,6 @@ import type { Content } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import useContentStore from '@/stores/content.store';
 
-// const globalModules: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/modules/*', { eager: true });
-// const globalPartials: Record<string, Record<'default', Component>> = import.meta.glob('../../../../src/components/partials/*', { eager: true });
-// const localComponents: Record<string, Record<'default', Component>> = import.meta.glob('./components/modules/*', { eager: true });
-
 export async function render (url: string, context: any, contextData: Content[], manifest: Record<string, string[]>) {
   const { app, router, pinia } = getAppInstance(context);
 
@@ -34,7 +30,7 @@ export async function render (url: string, context: any, contextData: Content[],
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const initialState = JSON.stringify(pinia.state.value).replace(/</g, '\\u003c');
-  const preloadLinks = renderPreloadLinks(ctx.modules, manifest);
+  const preloadLinks = renderPreloadLinks(ctx.modules as Set<string>, manifest);
 
   return { html, preloadLinks, initialState };
 }
@@ -42,7 +38,6 @@ export async function render (url: string, context: any, contextData: Content[],
 function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>) {
   let links = '';
   const seen = new Set();
-  // const modules = Array.from(modulesSet);
 
   modulesSet?.forEach((id) => {
 
