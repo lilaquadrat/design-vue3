@@ -5,8 +5,9 @@ import type EventsElement  from '../../interfaces/EventsElement.interface';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
 import dayjs from 'dayjs';
-import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
+
 import type { EventsElementWithSettings } from '../../interfaces/EventsElement.interface';
+import hardCopy from '@lilaquadrat/studio/lib/esm/src/helpers/hardCopy';
 
 
 defineOptions({ inheritAttrs: false }); 
@@ -30,7 +31,7 @@ const variants = [];
 if(props.variant?.includes('moreText')) variants.push('moreText');
 watch(() => props.elements, () => {
     if (props.elements) {
-        setElements(props.elements);
+        console.log(setElements(props.elements));
     }
 });
 onBeforeMount(() => {
@@ -50,7 +51,7 @@ function removeSpacing() {
 //1.leeres Objekt für jedes eindeutige datum
 //elements nach datum sortieren
 // hier muss die gesamte Logik rein, wie die Elemente gesettet weerden
-// die Logik von funktion removeSpacing muss auch hier mit rein
+// die Logik von funktion removeSpacing sollte auch hier mit rein
 function setElements (elements: EventsElement[], getVisible =  false) {
   const newElements: any[] = [];
   let elementsCopy = hardCopy(elements);
@@ -122,111 +123,111 @@ function setElements (elements: EventsElement[], getVisible =  false) {
 </template>
 
 <style  lang="less" scoped>
-.lila-events-module {
-    .module;
-    max-width: @moduleWidth_S;
-    gap: 0 14px;
-   .elementsContainer {
-    display: grid;
-    .header {
-        padding:40px 60px;
-    }
+// .lila-events-module {
+//     .module;
+//     max-width: @moduleWidth_S;
+//     gap: 0 14px;
+//    .elementsContainer {
+//     display: grid;
+//     .header {
+//         padding:40px 60px;
+//     }
     
-      .singleElementContainer {
-        display:grid;
-        grid-template-columns:min-content 1fr;
-        grid-template-rows: 2 
-        span;
-        gap:0 40px;
+//       .singleElementContainer {
+//         display:grid;
+//         grid-template-columns:min-content 1fr;
+//         grid-template-rows: 2 
+//         span;
+//         gap:0 40px;
 
-        .timeContainer {
-            .font-head;
-            display: grid;
-            grid-template-rows: auto auto;
-            width: 64px;
-            height: 87px;
-            grid-column-start:1;
-            justify-self: end;
-            justify-items: end;
-            font-size: @headline_L;
-            line-height:@headlineLineHeight_L ;   
-        }
-         .sameDay {
-                .timeContainer {
-                    display: none
-                }
-            }
-        .pictureContainer {
-            grid-column-start: 2;
+//         .timeContainer {
+//             .font-head;
+//             display: grid;
+//             grid-template-rows: auto auto;
+//             width: 64px;
+//             height: 87px;
+//             grid-column-start:1;
+//             justify-self: end;
+//             justify-items: end;
+//             font-size: @headline_L;
+//             line-height:@headlineLineHeight_L ;   
+//         }
+//          .sameDay {
+//                 .timeContainer {
+//                     display: none
+//                 }
+//             }
+//         .pictureContainer {
+//             grid-column-start: 2;
             
-        }
-        .eventContainer {
-            display:grid;
-            grid-column-start: 2;
-            // gap: 0 40px;
+//         }
+//         .eventContainer {
+//             display:grid;
+//             grid-column-start: 2;
+//             // gap: 0 40px;
 
-            .eventInfo{
-                :deep(.lila-textblock){
-                    padding-top: 15px;
-                    padding-bottom: 13px;
-                    grid-template-rows: min-content;
-                    gap: 0;
-                    margin: 0;
+//             .eventInfo{
+//                 :deep(.lila-textblock){
+//                     padding-top: 15px;
+//                     padding-bottom: 13px;
+//                     grid-template-rows: min-content;
+//                     gap: 0;
+//                     margin: 0;
 
-                    h1,p {
-                        display: none;
-                        color:red
-                    }
-                    h2,
-                    h3{
-                        font-size: @headline_S;
-                        line-height: @headlineLineHeight_S;
-                        color: @textColor;
-                        .font-head;
-                    }
-                    h3{
-                        margin-top: 13px;
-                    }
-                }
-            }
-            .eventContent {
-                :deep(.lila-textblock){
-                    gap:0;
+//                     h1,p {
+//                         display: none;
+//                         color:red
+//                     }
+//                     h2,
+//                     h3{
+//                         font-size: @headline_S;
+//                         line-height: @headlineLineHeight_S;
+//                         color: @textColor;
+//                         .font-head;
+//                     }
+//                     h3{
+//                         margin-top: 13px;
+//                     }
+//                 }
+//             }
+//             .eventContent {
+//                 :deep(.lila-textblock){
+//                     gap:0;
 
-                    h1 {
-                        height: 100px;
-                        font-size: @headline_S;
-                        line-height: @headlineLineHeight_S;
-                    } 
-                    p {
-                        .font-bold;
-                    }
-                    h2,h3{
-                        display: none;
-                    } 
-                } 
-            }
+//                     h1 {
+//                         height: 100px;
+//                         font-size: @headline_S;
+//                         line-height: @headlineLineHeight_S;
+//                     } 
+//                     p {
+//                         .font-bold;
+//                     }
+//                     h2,h3{
+//                         display: none;
+//                     } 
+//                 } 
+//             }
             
-        }
-        .seperator {
-            grid-column: 1/-1;
-            border:0;
-            border-bottom: @grey 1px solid;
-            padding-top: 40px;
-        }
-        .linkContainer {
-            display:grid;
-            grid-template-columns: min-content  min-content;
-            font-size: @headline_XS;
-            padding-bottom: 15px;
-            .locationLink {
-                padding: 0 5px;
-                .font-bold;
-            }
-        }
-       }
-   }
-}
+//         }
+//         .seperator {
+//             grid-column: 1/-1;
+//             border:0;
+//             border-bottom: @grey 1px solid;
+//             padding-top: 40px;
+//         }
+//         .linkContainer {
+//             display:grid;
+//             grid-template-columns: min-content  min-content;
+//             font-size: @headline_XS;
+//             padding-bottom: 15px;
+//             .locationLink {
+//                 padding: 0 5px;
+//                 .font-bold;
+//             }
+//         }
+//        }
+// //    }
+// }
 </style>
 
 

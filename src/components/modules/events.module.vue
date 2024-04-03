@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, defineProps, withDefaults } from "vue";
 import type EventsElement from "../../interfaces/EventsElement.interface";
 import type ModuleBaseProps from "../../interfaces/ModuleBaseProps.interface";
 import type Textblock from "../../interfaces/textblock.interface";
 import { useInview } from "../../plugins/inview";
 
 defineOptions({ inheritAttrs: false });
-const props = defineProps<ModuleBaseProps & {
-  elements: EventsElement[];
-  textblock: Textblock;
-}>();
+// const props = defineProps<ModuleBaseProps & {
+//   elements: EventsElement[];
+//   textblock: Textblock;
+// }>();
+type eventProps = ModuleBaseProps & {
+  header: Textblock;
+  event: EventsElement[];
+  date: string;
+};
+
+const props = withDefaults(defineProps<eventProps>(), {variant: () => []})
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 onBeforeMount(() => {
-  console.log(props.elements);
+  console.log(props.event);
 });
 /**
  * 
@@ -58,17 +65,18 @@ export default {
  */
 </script>
 <template>
-  <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-events-module">
-    <lila-textblock-partial v-if="props.textblock" v-bind="props.textblock"></lila-textblock-partial>
-    <template v-for="(event, index) in props.elements" :key="`event-${index}`">
-      <lila-events-partial class="event" v-bind="event"/> 
+  <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-events-module lila-module">
+    <lila-textblock-partial v-if="props.header" v-bind="props.header"></lila-textblock-partial> {{ props.}}
+    <template v-for="(event, index) in props.elements" :key="`event-${index}`"> {{ props.element }}
+      <lila-events-partial class="event" v-if="event" v-bind="event" /> 
       <!-- {{ event }} -->
     </template>
   </section>
 </template>
-<style scoped lang="less">
+<style  lang="less" scoped>
 .lila-events-module {
     .module;
+    background-color: red;
     display:grid
 
 }

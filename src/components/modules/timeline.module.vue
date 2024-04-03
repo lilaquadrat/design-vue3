@@ -11,7 +11,6 @@ const props = defineProps<ModuleBaseProps & {
     elements: TimelineElement[];
     date: string;
     disabled?: boolean;
-
   }>();
 const active = ref<boolean>(false)
 const element = ref<HTMLElement>();
@@ -204,7 +203,7 @@ const formattedDate = computed(() => {
             grid-auto-rows: min-content;
             position: sticky;
             top: 20px;
-            border: red 2px solid;
+            
             @media @desktop {
               gap: 40px 0;
               padding: 0 40px;

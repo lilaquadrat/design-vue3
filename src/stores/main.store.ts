@@ -7,7 +7,7 @@ import { useAuth } from '@/plugins/auth';
 import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 import type { AxiosError } from 'node_modules/axios/index.cjs';
 import { computed } from 'vue';
-import { hardCopy } from '@lilaquadrat/studio';
+import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 
 export const useMainStore = defineStore('main', () => {
 
