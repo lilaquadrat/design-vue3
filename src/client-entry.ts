@@ -36,8 +36,6 @@ if (isSSR) {
   
 }
 
-console.log(import.meta.env);
-
 app.use(pinia);
 
 const router = createRouter(getRoutes());

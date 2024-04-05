@@ -310,6 +310,10 @@ export default
           name       : 'Kontaktdarstellung',
           description: 'Variante um Kontakte darzustellen',
         },
+        {
+          key : 'cards',
+          name: 'cards',
+        },
       ],
       component: () => import('@/components/modules/picturegroup.module.vue'),
     },

@@ -4,11 +4,14 @@ import StudioSDK from '@lilaquadrat/sdk';
 import useMainStore from './main.store';
 import { auth } from '@/plugins/auth';
 import logger from '@/mixins/logger';
+import { type Me } from '@lilaquadrat/interfaces';
 
 export const useUserStore = defineStore('user', () => {
 
   const locked = ref<string>();
   const customer = ref<{_id: string, id: string}>();
+  const userData = ref<Me>();
+  const isUser = ref<boolean>(false);
 
   function setCustomer (customerData: {_id: string, id: string}) {
 
@@ -30,6 +33,12 @@ export const useUserStore = defineStore('user', () => {
     }
 
     await updateLock();
+
+    if(auth.isAuth.value) {
+
+      await getUser();
+      isUser.value = true;
+    }
 
     logger.userstore('done');
 
@@ -81,12 +90,33 @@ export const useUserStore = defineStore('user', () => {
     
   }
 
+  async function getUser () {
+    
+    const mainStore = useMainStore();
+    const sdk = new StudioSDK(mainStore.apiConfig);
+
+    try {
+      
+      const me = await sdk.members.me.get();
+
+      userData.value = me.data;
+
+    } catch (error) {
+
+      console.error(error);
+      
+    }
+
+  }
+
   return {
     locked,
     setCustomer,
     initCustomer,
     updateLock,
-    customer
+    customer,
+    userData,
+    isUser
   }
 
 })

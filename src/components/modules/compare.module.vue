@@ -25,7 +25,6 @@ const modifiedElements = computed(() => {
   });
 
   data.push(headline);
-  console.log('data:', data)
   props.structure?.forEach((structure, index) => {
     data.push([{ headline: structure.headline, description: structure.description, structure: true }]);
 

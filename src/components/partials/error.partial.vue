@@ -17,7 +17,7 @@ const data = ref<SDKResponse<BasicData<Content>>>();
 
 watch(props, () => getContent());
 
-function getContentId () {
+function getFilename () {
 
   if(props.hint) return props.hint;
 
@@ -31,7 +31,7 @@ function getContentId () {
 
 async function getContent () {
 
-  data.value = await store.getContent({id: getContentId()}, 'public');
+  data.value = await store.getContent({filename: getFilename()}, 'public') as SDKResponse<BasicData<Content>>;
 
 }
 

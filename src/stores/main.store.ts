@@ -76,46 +76,48 @@ export const useMainStore = defineStore('main', () => {
 
   });
 
+  async function getContent(params: { filename: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
-  async function getContent (params: { predefined?: boolean, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>> {
+  async function getContent (params: { predefined?: boolean, filename?: string, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>> {
 
-    let returnData: SDKResponse<BasicData<Content>|undefined>;
     const sdk = new StudioSDK(apiConfig.value);
     const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
 
     if (params.id && data.value?.id === params.id) {
 
-      returnData = hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
+      return hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
 
     }
 
     if (params.internalId && data.value?._id?.toString() === params.internalId) {
 
-      returnData = hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
+      return hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
 
     }
-
-    if (returnData) return returnData;
 
     try {
 
       if (params.predefined && !params.latest && params.id && type === 'public') {
 
-        returnData = await sdk.public.content.predefined(params.id);
+        return sdk.public.content.predefined(params.id);
 
       } else if (params.predefined && params.latest && params.categories && type === 'public') {
 
-        returnData = await sdk.public.content.predefinedLatest(params.categories);
+        return sdk.public.content.predefinedLatest(params.categories);
 
       } else if (params.internalId) {
 
-        returnData = await targetWithType.content.getByInternalId(params.internalId);
+        return targetWithType.content.getByInternalId(params.internalId);
 
       } else if (params.id) {
 
-        returnData = await targetWithType.content.getById(params.id);
+        return targetWithType.content.getById(params.id);
+
+      } else if (params.filename) {
+
+        return targetWithType.content.getByFilename(params.filename);
 
       }
 
@@ -127,17 +129,17 @@ export const useMainStore = defineStore('main', () => {
 
       if (!error.response?.status) {
 
-        returnData = { status: 400 } 
+        return { status: 400, data: undefined} 
 
       } else {
 
-        returnData = { status: error?.response?.status };
+        return { status: error?.response?.status, data: undefined };
 
       }
 
     }
 
-    return returnData;
+    return { status: 400, data: undefined};
 
   }
 

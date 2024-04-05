@@ -7,9 +7,11 @@ import { onBeforeUnmount } from 'vue';
 import { watch } from 'vue';
 import type { AppEditorConfiguration } from '@lilaquadrat/interfaces';
 import { loadViaDeclaration } from '@/mixins/loadComponents';
+import useContentStore from '@/stores/content.store';
 
 const currentInstance = getCurrentInstance();
 const editorStore = useEditorStore();
+const contentStore = useContentStore();
 const content = ref<ContentWithPositions>({ settings: {}, top: [], content: [], bottom: [], additional: {} });
 const siteSettings = ref<Omit<Content, 'modules'|'genericData'|'childData'>>();
 const live = ref<boolean>(false);
@@ -141,11 +143,10 @@ function updateContent () {
 
 function updateContext () {
 
-  editorStore.context = {
+  contentStore.setContext({
     sitetitle  : siteSettings?.value?.settings?.title,
     description: siteSettings?.value?.settings?.description,
-    customer   : { prename: 'PRENAME', lastname: 'LASTNAME' }
-  }
+  })
 
 }
 

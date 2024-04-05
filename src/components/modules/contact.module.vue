@@ -8,18 +8,21 @@ import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, onBeforeMount, onServerPrefetch, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
-import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, type ErrorObject, type GenericData, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
+import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
+  type ErrorObject, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
 import { useTraceable } from '@/plugins/traceable';
 import useUserStore from '@/stores/user.store';
 import type SelectOption from '@/interfaces/selectOption.interface';
+import { auth } from '@/plugins/auth';
 
 defineOptions({ inheritAttrs: false });
 
 const {traceable} = useTraceable();
 const mainStore = useMainStore();
+const userStore = useUserStore();
 const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
@@ -76,11 +79,17 @@ function updateCategories () {
         if (stateCategory) {
      
           single.used = stateCategory.used;
-          single.available = (single.amount || 0) - single.used;
-          single.percentUsed = (single.used / (single.amount || 0)) * 100;
-          single.percentAvailable = 100 - (single.used / (single.amount || 0)) * 100;
+
+          if(single.amount) {
+            
+            single.available = (single.amount || 0) - single.used;
+            single.percentUsed = (single.used / (single.amount || 0)) * 100;
+            single.percentAvailable = 100 - (single.used / (single.amount || 0)) * 100;
+
+          }
 
         }
+
       });
 
     }
@@ -127,7 +136,7 @@ const feedback = computed<BasicData<Content>|undefined>(() => {
   return undefined
   
 });
-const hideFreeSlots = computed(() => props.variant.includes('hide-free-slots'))
+const hideFreeSlots = computed(() => props.variant?.includes('hide-free-slots'))
 /**
  * decides if the feedback or the form will be shown. feedback will be show if:
  ** state is sucess
@@ -288,8 +297,6 @@ const handleForm = async (event: Event) => {
   const agreements: ContactAgreement[] = [];
   let category: string;
 
-  console.log(address, customer);
-
   customer.type = 'person';
 
   const message = customer.message;
@@ -319,10 +326,17 @@ const handleForm = async (event: Event) => {
   try {
     
     const sdk = new StudioSDK(mainStore.apiConfig);
-    const call = sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
+
+    console.log(auth.isAuth);
+
+    const call = auth.isAuth 
+      ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements)
+      : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
     const customerResponse = await traceable(call, traceId);
 
-    setCustomer(customerResponse.data);
+    if(!auth.isAuth) {
+      setCustomer(customerResponse.data);
+    }
 
     //   await props.$traceable(call);
 
@@ -439,31 +453,45 @@ const handleForm = async (event: Event) => {
         <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
-      <lila-fieldset-partial legend="personal"> 
+      <template v-if="!userStore.isUser">
 
-        <lila-input-partial :error="errorsObject.prename" required v-model="model.prename">
-          {{$translate('prename')}}
-        </lila-input-partial>
+        <lila-fieldset-partial legend="personal"> 
+  
+          <lila-input-partial :error="errorsObject.prename" required v-model="model.prename">
+            {{$translate('prename')}}
+          </lila-input-partial>
+  
+          <lila-input-partial :error="errorsObject.name" required v-model="model.name">
+            {{$translate('name')}}
+          </lila-input-partial>
+  
+        </lila-fieldset-partial>
+  
+        <lila-address-partial v-model="addressModel" :error="errorsObject.address" required />
+  
+        <lila-fieldset-partial legend="contact">
+  
+          <lila-input-partial :error="errorsObject.email" required v-model="model.email">
+            {{$translate('email')}}
+          </lila-input-partial>
+  
+          <lila-input-partial v-model="model.phone">
+            {{$translate('phone')}}
+          </lila-input-partial>
+  
+        </lila-fieldset-partial>
 
-        <lila-input-partial :error="errorsObject.name" required v-model="model.name">
-          {{$translate('name')}}
-        </lila-input-partial>
+      </template>
 
-      </lila-fieldset-partial>
+      <template v-if="userStore.isUser">
 
-      <lila-address-partial v-model="addressModel" :error="errorsObject.address" required />
+        <lila-fieldset-partial legend="personal"> 
+  
+          <h3>Eingeloggt als {{ userStore.userData?.prename }} {{ userStore.userData?.name }}</h3>
 
-      <lila-fieldset-partial legend="contact">
+        </lila-fieldset-partial>
 
-        <lila-input-partial :error="errorsObject.email" required v-model="model.email">
-          {{$translate('email')}}
-        </lila-input-partial>
-
-        <lila-input-partial v-model="model.phone">
-          {{$translate('phone')}}
-        </lila-input-partial>
-
-      </lila-fieldset-partial>
+      </template>
 
       <lila-fieldset-partial v-if="list" class="agreements">
 

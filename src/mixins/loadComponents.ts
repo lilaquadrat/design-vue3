@@ -1,13 +1,12 @@
-import type { Content } from '@lilaquadrat/interfaces';
 import { defineAsyncComponent, type App, type Component, type AsyncComponentLoader } from 'vue';
 
-function getName(name: string, type: 'module' | 'partial', namespace?: string) {
+function getName (name: string, type: 'module' | 'partial', namespace?: string) {
 
   return namespace ? `${namespace}-${name}-${type}` : `${name}-${type}`;
 
 }
 
-function loadViaGlob(components: Record<string, Record<'default', Component>>, namespace: string | undefined, app: App<Element>) {
+function loadViaGlob (components: Record<string, Record<'default', Component>>, namespace: string | undefined, app: App<Element>) {
 
   Object.entries(components).forEach(([filename, definition]) => {
 
@@ -26,7 +25,7 @@ function loadViaGlob(components: Record<string, Record<'default', Component>>, n
 
 }
 
-function loadViaDeclaration(components: { name: string, component: AsyncComponentLoader<Component> }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
+function loadViaDeclaration (components: { name: string, component: AsyncComponentLoader<Component> }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
 
   components.forEach((single) => {
 
@@ -38,7 +37,7 @@ function loadViaDeclaration(components: { name: string, component: AsyncComponen
 
 }
 
-function loadViaDeclarationSync(components: { name: string, component: AsyncComponentLoader<Component> }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
+function loadViaDeclarationSync (components: { name: string, component: AsyncComponentLoader<Component> }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
 
   return components.map(async (single) => {
 
@@ -51,17 +50,17 @@ function loadViaDeclarationSync(components: { name: string, component: AsyncComp
 
 }
 
-function getAvailableModules(modules: any[]) {
+function getAvailableModules (modules: any[]) {
 
   return modules.filter((single) => single.availableInEditor !== false).map((single) => ({
-    name: `${single.name}-module`,
+    name    : `${single.name}-module`,
     variants: single.variants || [],
-    editor: single.editor || {},
+    editor  : single.editor || {},
   }));
 
 }
 
-function createModulesArray(modules: any[]) {
+function createModulesArray (modules: any[]) {
 
   const modulesArray: any[] = [];
 
@@ -73,16 +72,16 @@ function createModulesArray(modules: any[]) {
     const useModule = foundModule
       ? foundModule
       : {
-        name: singleModule.name,
+        name   : singleModule.name,
         targets: {}
       }
 
     singleModule.target.forEach((target: string) => {
 
       useModule.targets[target] = {
-        variants: singleModule.variants,
+        variants  : singleModule.variants,
         components: singleModule.component,
-        name: singleModule.name
+        name      : singleModule.name
       };
 
     });

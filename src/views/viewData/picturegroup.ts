@@ -1,5 +1,4 @@
 import type { Content } from '@lilaquadrat/interfaces';
-import { title } from 'process';
 
 const content: Content = {
   id      : 'home',

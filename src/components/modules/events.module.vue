@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from "vue";
-import type EventsElement from "../../interfaces/EventsElement.interface";
-import type ModuleBaseProps from "../../interfaces/ModuleBaseProps.interface";
-import type Textblock from "../../interfaces/textblock.interface";
-import { useInview } from "../../plugins/inview";
+import { computed, onBeforeMount, ref } from 'vue';
+import type EventsElement from '../../interfaces/EventsElement.interface';
+import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
+import type Textblock from '../../interfaces/textblock.interface';
+import { useInview } from '../../plugins/inview';
 
 defineOptions({ inheritAttrs: false });
+
 const props = defineProps<ModuleBaseProps & {
   elements: EventsElement[];
   textblock: Textblock;
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
+
 onBeforeMount(() => {
   console.log(props.elements);
 });
@@ -53,7 +55,6 @@ export default {
     date: dayjs().add(index, 'day').format('YYYY-MM-DD'), // Formatieren Sie das Datum für den einfacheren Zugriff
   })),
 };
-
 
  */
 </script>

@@ -2,11 +2,11 @@ import { renderToString } from 'vue/server-renderer';
 import { getAppInstance } from './main';
 
 import { basename } from 'path';
-import type { Content } from '@lilaquadrat/interfaces';
+import type { Content, Customers } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import useContentStore from '@/stores/content.store';
 
-export async function render (url: string, context: any, contextData: Content[], manifest: Record<string, string[]>) {
+export async function render (url: string, context: any, contextData: Content[], recipientData: Customers, manifest: Record<string, string[]>) {
   const { app, router, pinia } = getAppInstance(context);
 
   await router.push(url);
@@ -19,6 +19,7 @@ export async function render (url: string, context: any, contextData: Content[],
   mainStore.configuration = context.settings;
 
   if(contextData) contentStore.addMulti(contextData);
+  if(recipientData) contentStore.recipient = recipientData;
 
   // passing SSR context object which will be available via useSSRContext()
   // @vitejs/plugin-vue injects code into a component's setup() that registers

@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import { routes } from './routes';
+import { dynamicRoutes } from './routes';
 import createRouter from '@/mixins/createRouter';
 import { loadViaDeclaration } from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
@@ -37,7 +37,7 @@ export function getAppInstance (context: any) {
 
   }
 
-  const router = createRouter(routes);
+  const router = createRouter(dynamicRoutes);
 
   app.use(router);
 

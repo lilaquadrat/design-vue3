@@ -53,7 +53,7 @@ function event ($event: MouseEvent) {
 </script>
 <template>
   <component v-if="link" :class="[variant, classes, { hasIcon: icon, callToAction: props.callToAction, button: props.button }]" class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase" @click="event">
-    {{ text }}
+    {{ $replacer(text) }}
     <slot v-if="!text"></slot>
     <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'color1'" :type="icon" size="smaller" />
   </component>

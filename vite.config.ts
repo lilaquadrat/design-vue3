@@ -27,19 +27,17 @@ export default defineConfig((settings) => {
       cssCodeSplit : false,
       cssMinify    : isProduction,
       sourcemap    : !isProduction,
+      minify       : isProduction,
       rollupOptions: {
         output: {
           dir           : 'dist/app',
-          entryFileNames: 'assets/[name].js',
-          chunkFileNames: 'assets/[name].js',
-          assetFileNames: 'assets/[name].[ext]'
-          // assetFileNames: (assetInfo) => {
-          //   if (assetInfo.name?.endsWith('woff')) {
-          //     return 'assets/[name][extname]';
-          //   }
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name?.endsWith('woff') || assetInfo.name?.endsWith('png')) {
+              return 'assets/[name][extname]';
+            }
   
-          //   return 'assets/[name]-[hash][extname]';
-          // },
+            return 'assets/[name]-[hash][extname]';
+          },
         }
       }
     },

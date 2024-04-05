@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { HelpersPlugin } from '@/plugins/filters';
 import useContentStore from '@/stores/content.store';
 import useMainStore from '@/stores/main.store';
 import useUserStore from '@/stores/user.store';
@@ -29,18 +30,10 @@ watch(() => userStore.locked, () => getContent());
 onBeforeMount(async () => await getContent());
 onServerPrefetch(() => getStoreContent());
 
-function getId (contentType: 'public' | 'members', type: 'navigation' | 'footer') {
-  
-  return contentType !== 'public' 
-    ? `m-${type}` 
-    : type;
-
-}
-
 function getStoreContent () {
 
-  const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
-  const storeContent = contentStore.findById(contentId);
+  const contentId = HelpersPlugin.getFilename(route.meta.contentType as 'public' | 'members', props.type);
+  const storeContent = contentStore.findByFilename(contentId);
 
   if(!storeContent) return;
 
@@ -59,7 +52,7 @@ async function getContent () {
     
   getStoreContent();
 
-  const contentId = getId(route.meta.contentType as 'public' | 'members', props.type);
+  const contentId = HelpersPlugin.getFilename(route.meta.contentType as 'public' | 'members', props.type);
 
   if(data.value?.data?.id === contentId) {
 
@@ -83,7 +76,7 @@ async function getContent () {
 
   }
 
-  const storeData = contentStore.findById(contentId);
+  const storeData = contentStore.findByFilename(contentId);
 
   if(storeData) {
 
@@ -100,10 +93,10 @@ async function getContent () {
         
     try {
         
-      data.value = await store.getContent({id: contentId}, contentType.value);
+      data.value = await store.getContent({filename: contentId}, contentType.value) as SDKResponse<BasicData<Content>>;
       loading.value = data.value.status;
 
-    } catch (e) {
+    } catch (e: any) {
 
       data.value = undefined;
       error.value = true;
@@ -123,11 +116,19 @@ async function getContent () {
 
   }
 
-  dataMerged.value = mergeContent(data.value?.data);
+  if(data.value) {
+
+    dataMerged.value = mergeContent(data.value?.data);
+
+  } else {
+
+    dataMerged.value = undefined;
+
+  }
 
 }
 
-function mergeContent (baseContent: Partial<BasicData<Content>>) {
+function mergeContent (baseContent: BasicData<Content>) {
 
   if(baseContent) {
   

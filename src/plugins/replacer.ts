@@ -1,14 +1,16 @@
 import logger from '@/mixins/logger';
 import replaceVariables from '@/mixins/replaceVariables';
-import useEditorStore from '@/stores/editor.store';
+import useContentStore from '@/stores/content.store';
+import useUserStore from '@/stores/user.store';
 import type { App } from 'vue';
 
 const plugin = {
   install: (vue: App): void => {
 
-    const editorStore = useEditorStore();
+    const contentStore = useContentStore();
+    const userStore = useUserStore();
 
-    vue.config.globalProperties.$replacer = (content: string) => replaceVariables(content, editorStore.context);
+    vue.config.globalProperties.$replacer = (content: string) => replaceVariables(content, {...contentStore.context, recipient: contentStore.recipient, user: userStore.userData });
     logger.plugins('replacer installed')
   },
 };

@@ -1,7 +1,7 @@
 import type AppState from '@/interfaces/AppState.interface';
 import type IdTokenExtended from '@/interfaces/IdTokenExtended.interface';
 import logger from '@/mixins/logger';
-import { Auth0Client, type Auth0ClientOptions, type IdToken } from '@auth0/auth0-spa-js';
+import { Auth0Client, type Auth0ClientOptions } from '@auth0/auth0-spa-js';
 import { ref, type App } from 'vue';
 
 class Auth {
@@ -14,7 +14,7 @@ class Auth {
 
   token = ref<string>();
 
-  async init(auth0: Auth0ClientOptions, options?: { dev: boolean }) {
+  async init (auth0: Auth0ClientOptions, options?: { dev: boolean }) {
 
     logger.auth('init')
     this.auth0 = new Auth0Client(auth0);
@@ -31,18 +31,28 @@ class Auth {
 
     }
 
-    if (this.isAuth.value && !this.token.value) await this.getToken();
+    console.log(this.isAuth.value);
+
+    try {
+      
+      if (this.isAuth.value && !this.token.value) await this.getToken();
+
+    } catch (error) {
+      
+      console.error(error);
+
+    }
 
     logger.auth('init done')
   }
 
-  async updateAuthStatus() {
+  async updateAuthStatus () {
 
     this.isAuth.value = await this.auth0.isAuthenticated();
 
   }
 
-  async getToken() {
+  async getToken () {
 
     console.log('get token');
 
@@ -50,7 +60,7 @@ class Auth {
 
   }
 
-  async refreshToken() {
+  async refreshToken () {
 
     console.log('refresh token');
 
@@ -59,32 +69,32 @@ class Auth {
     console.log(this.token.value, await this.getTokenContent());
   }
 
-  getTokenContent(): Promise<IdTokenExtended | undefined> {
+  getTokenContent (): Promise<IdTokenExtended | undefined> {
 
     return this.auth0.getIdTokenClaims() as Promise<IdTokenExtended | undefined>;
 
   }
 
-  triggerLogin(customerId?: string) {
+  triggerLogin (customerId?: string) {
 
     this.auth0.loginWithRedirect<AppState>({ appState: { customerId } });
 
   }
 
-  triggerRegister(customerId?: string) {
+  triggerRegister (customerId?: string) {
 
     this.auth0.loginWithRedirect<AppState>({ appState: { customerId }, authorizationParams: { screen_hint: 'signup' } });
 
   }
 
-  triggerLogout() {
+  triggerLogout () {
 
     this.auth0.logout();
     localStorage.removeItem('lila-customer');
 
   }
 
-  async handleCallback() {
+  async handleCallback () {
 
     const result = await this.auth0.handleRedirectCallback<AppState>();
 

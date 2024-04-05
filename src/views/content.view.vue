@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
-import type { BasicData, Content, ContentWithPositions, GenericData } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, ContentWithPositions, GenericData, HttpStatusCode } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
 import type { SDKResponse } from '@lilaquadrat/sdk';
 import useUserStore from '@/stores/user.store';
 import { onServerPrefetch } from 'vue';
+import useContentStore from '@/stores/content.store';
+import { HelpersPlugin } from '@/plugins/filters';
+import type { AxiosError } from 'node_modules/axios/index.cjs';
 
 const route = useRoute();
 const userStore = useUserStore();
 const mainStore = useMainStore();
-const data = ref<SDKResponse<BasicData<Partial<Content>>>>();
+const contentStore = useContentStore();
+const data = ref<SDKResponse<BasicData<Partial<Content>> | undefined>>();
 const dataMerged = ref<ContentWithPositions>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
@@ -41,17 +45,11 @@ const hint = computed(() => {
 
 });
 
-function getContentId (contentType: 'public' | 'members', pathMatch?: string) {
-
-  const name = pathMatch ? pathMatch : 'home';
-
-  return contentType !== 'public' ? `m-${name}` : name;
-  
-}
-
 function getStoreContent () {
 
   const storeContent = mainStore.data;
+
+  if(!storeContent) return;
 
   data.value = {
     data  : storeContent,
@@ -60,7 +58,26 @@ function getStoreContent () {
 
   loading.value = 200;
 
-  dataMerged.value = mergeContent(data.value.data);
+  updateContext();
+
+  if(data.value.data) {
+
+    dataMerged.value = mergeContent(data.value.data);
+
+  } else {
+
+    dataMerged.value = undefined;
+
+  }
+
+}
+
+function updateContext () {
+
+  contentStore.setContext({
+    sitetitle  : mainStore.data?.settings?.title,
+    description: mainStore.data?.settings?.description,
+  })
 
 }
 
@@ -68,13 +85,13 @@ async function getContent () {
 
   getStoreContent();
 
-  const contentId = getContentId(contentType.value, 'home');
+  console.log(route.path);
 
-  if(data.value?.data?.id === contentId) {
+  const filename = HelpersPlugin.getFilename(contentType.value, route.path);
 
-    return;
+  if(data.value?.data?.settings?.filename?.includes(filename)) return;
 
-  }
+  let content: SDKResponse<BasicData<Content>>;
 
   loading.value = 0;
   error.value = false;
@@ -85,21 +102,31 @@ async function getContent () {
     loading.value = 403;
     return;
 
-  } 
+  }
 
-  data.value = await mainStore.getContent({id: contentId}, contentType.value);
+  try {
+    
+    content = await mainStore.getContent({filename}, contentType.value) as SDKResponse<BasicData<Content>>;
+    data.value = content;
   
-  const status = data.value.status;
+  } catch (error) {
+
+    const typedError = error as AxiosError;
+
+    console.log(error);
+    data.value = {data: undefined, status: typedError.response?.status as HttpStatusCode}
+    
+  } 
 
   loading.value = 200;
 
-  if(status === 200) {
+  if(data.value.status === 200) {
 
     error.value = false;
 
     if(data.value?.data?.settings?.useLayout) {
 
-      layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value);
+      layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value) as SDKResponse<BasicData<Content>>;
       loading.value = 200;
 
     } else {
@@ -109,19 +136,29 @@ async function getContent () {
 
     }
 
-  } else if (status === 403 || status === 401 || status === 400) {
+  } 
+
+  if ([400, 401, 403].includes(data.value.status)) {
 
     error.value = true;
-    loading.value = status;
+    loading.value = data.value.status;
 
-  } else if (status === 204 || status === 404) {
+  } else if ([204, 404].includes(data.value.status) || !data.value.status) {
 
     error.value = true;
     loading.value = 404;
 
   }
 
-  dataMerged.value = mergeContent(data.value.data);
+  if(data.value.data) {
+
+    dataMerged.value = mergeContent(data.value.data);
+
+  } else {
+
+    dataMerged.value = undefined;
+
+  }
 
 }
 

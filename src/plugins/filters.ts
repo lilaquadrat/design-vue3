@@ -5,6 +5,20 @@ const HelpersPlugin = {
 
   leadingZero (value: string | number, minLength: number) {
     return value.toString().padStart(minLength, '0');
+  },
+
+  getFilename (contentType: 'public' | 'members', path?: string) {
+
+    const contentIdArray = [];
+
+    if(!path || path === '/') return 'home';
+
+    if(contentType === 'members' && path !== '/m' && !path.startsWith('/m/')) contentIdArray.push('m');
+
+    contentIdArray.push(...path.split('/'));
+
+    return contentIdArray.filter((single) => single.length).join('/');
+  
   }
 
 }
