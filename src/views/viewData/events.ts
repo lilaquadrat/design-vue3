@@ -19,9 +19,17 @@ const content: Content = {
         headline: 'EVENT SCHEDULE'
       },
       date    : dayjs(),
+      header: {
+        headline: 'Macy Gray and The California Jet Club',
+        subline : 'Until 16 March 2024',
+        intro   : '17:00 - 19:00',
+        text    : [
+          'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
+        ],
+      },
       elements: [
         {
-          date     : '2345678',
+          // date     : '2345678',
           textblock: {
             headline: 'Macy Gray and The California Jet Club',
             subline : 'Until 16 March 2024',
@@ -30,22 +38,23 @@ const content: Content = {
               'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
             ],
           },
-          link: [
-            {text: 'Eventslocation', link: 'https://www.google.de/?hl=de'},
-          ],
-          moreText: 
-              [{
-                text: 'more Text', link: '/somemoreText', target: 'blank'
-              }]
-          ,
-          icon: 'location',
-          picture: 
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/smalltrompet.png',
-              },
-        }],
+          // link: [
+          //   {text: 'Eventslocation', link: 'https://www.google.de/?hl=de'},
+          // ],
+          // moreText: 
+          //     [{
+          //       text: 'more Text', link: '/somemoreText', target: 'blank'
+          //     }]
+          // ,
+          // icon: 'location',
+          // picture: 
+          //     {
+          //       source: [],
+          //       alt   : 'IMAGE ALT',
+          //       src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/smalltrompet.png',
+          //     },
+        }
+      ],
     }, 
   ].map((dayItem, index) => ({
     ...dayItem,
