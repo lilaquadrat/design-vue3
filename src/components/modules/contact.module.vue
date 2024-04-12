@@ -42,8 +42,10 @@ const agreementsExtended = ref<Record<string, Agreement & { value: boolean, erro
 const categoriesExtended = ref<ListCategoryExtended[]>();
 const participantsState = ref<ListPartiticpantsDetails>();
 const emit = defineEmits<{
+    (e: string): void;
     (e: string, i:boolean): void;
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
+    (e: 'event', data: 'success' | 'reset'): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
 const list = computed<BasicData<List> | undefined>(() => {
 
@@ -189,6 +191,7 @@ onBeforeMount(() => {
 
   updateAgreements();
   getparticipantsState();
+
 }) 
 
 onServerPrefetch(() => {
@@ -205,6 +208,7 @@ function resetForm () {
   model.value = ModelsClass.add({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
   errorsObject.value = {};
+  emit('event', 'reset');
    
 }
 
@@ -342,7 +346,8 @@ const handleForm = async (event: Event) => {
 
     //   //this.state = 'success';
     state.value = 'success';
-    //   emit('state', 'success')
+    StudioSDK.flushCache('lists', 'state');
+    emit('event', 'success');
 
   } catch (e) {
 

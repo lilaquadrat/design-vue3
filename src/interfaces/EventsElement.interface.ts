@@ -1,10 +1,8 @@
-import type IconsPartial from "./IconsPartial.interface";
-import type Link from "./link.interface";
-import type Picture from "./picture.interface";
-import type Textblock from "./textblock.interface";
-import type Video from "./video.interface";
-
-
+import type IconsPartial from './IconsPartial.interface';
+import type Link from './link.interface';
+import type Picture from './picture.interface';
+import type Textblock from './textblock.interface';
+import type Video from './video.interface';
 
 export default interface EventsElement{
     link: Link[];

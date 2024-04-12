@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
 import type { BasicData, Content, ContentWithPositions, GenericData, HttpStatusCode } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';

@@ -12,11 +12,21 @@ const props = defineProps<{
   linkMode?: string
   contentChildData?: ChildData
 }>();
+const emit = defineEmits<{
+    (e: 'event', data: string): void;
+}>();
 
 provide('linkMode', props.linkMode);
 provide('linkBase', props.linkBase);
 
 const mode = computed(() => props.content?.settings.mode || 'presentation');
+
+function handleEvents (event: string, data?: unknown) {
+
+  console.log('handleEvent', event);
+  emit('event', event);
+
+}
 
 </script>
 
@@ -24,17 +34,17 @@ const mode = computed(() => props.content?.settings.mode || 'presentation');
   <section class="lila-content-module" v-if="content" :class="{sub}">
 
     <article class="top container" :class="{inline, sub}"  v-if="!!content.top.length">
-      <component v-for="single in content.top" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" />
+      <component v-for="single in content.top" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" @event="handleEvents($event)" />
     </article>
 
     <article class="container" :class="[mode, {inline, sub}]" :inline="inline" v-if="!!content.content.length">
       <template v-for="single in content.content" :key="single.uuid">
-        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :sub="sub" :additional="content.additional" position="content" />
+        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :sub="sub" :additional="content.additional" position="content" @event="handleEvents($event)" />
       </template>
     </article>
 
     <article class="bottom container" :class="{inline, sub}" v-if="!!content.bottom.length">
-      <component v-for="single in content.bottom" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="bottom" />
+      <component v-for="single in content.bottom" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="bottom" @event="handleEvents($event)" />
     </article>
 
   </section>
