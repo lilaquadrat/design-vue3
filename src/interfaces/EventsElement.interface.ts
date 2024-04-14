@@ -4,15 +4,14 @@ import type Picture from './picture.interface';
 import type Textblock from './textblock.interface';
 import type Video from './video.interface';
 
-export default interface EventsElement{
-    link: Link[];
+export default interface EventsElement {
+    link: Link;
     icon: IconsPartial['type'];
     textblock: Textblock;
     video?: Video;
-    picture?: Picture[];
-    moreText?: Link[];
+    picture?: Picture;
+    moreText: Link;
+    startDate: string;
+    endDate: string;
 }
 
-export interface EventsElementWithSettings extends EventsElement{
-    visible: boolean
-}

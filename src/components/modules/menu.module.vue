@@ -23,7 +23,7 @@ const introVariants = ['center'];
 
     <header>
 
-      <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" />
+      <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" /> 
 
       <lila-menu-navigation-partial :categories="categories" />
 

@@ -1,3 +1,5 @@
+import type EventsElement from './EventsElement.interface';
+
 export default interface Link {
 
     text: string;

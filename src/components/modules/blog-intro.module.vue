@@ -5,7 +5,7 @@ import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, ref, defineProps } from 'vue';
 import { useInview } from '@/plugins/inview';
-import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
@@ -64,11 +64,11 @@ const hasLink = computed(() => !!props.link?.link);
 .lila-blog-intro-module {
   .module;
 
+
+
   display: grid;
   gap: 20px;
   justify-items: center;
-
-  max-width: @moduleWidth_M;
 
   background: transparent;
   .modulePadding('none');

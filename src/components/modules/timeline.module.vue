@@ -10,7 +10,6 @@ defineOptions({ inheritAttrs: false }); // atri
 const props = defineProps<ModuleBaseProps & {
     elements: TimelineElement[];
     date: string;
-    disabled?: boolean;
   }>();
 const active = ref<boolean>(false)
 const element = ref<HTMLElement>();
@@ -21,6 +20,7 @@ const timeContainer = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 // const emit = defineEmits<{(e: string, event?: Event): void}>();
 const emit = defineEmits(['click']);
+
 onBeforeMount(() => {
   if (props.elements) {
     setElements(props.elements);
@@ -36,33 +36,28 @@ function setElements (elements: TimelineElement[]) {
     let position: string = 'left';
 
     if (index > 0 && item.media?.length) {
-
-      console.log(lastElementPosition);
+      
       if(lastElementPosition === 'left') position = 'right';
 
     }
-
+    
     if(!item.media?.length) {
-
-      lastElementPosition = 'noMedia';
-    } else {
-
-      lastElementPosition = position;
+      lastElementPosition = 'noMedia'
+     
     }
-
+ 
     positionedItem.push({
       ...item,
       position,
       active: false
     });
-    lastElementPosition = position;
+    lastElementPosition = position
   });
 
   elementsExtended.value = positionedItem;
 }
 
-
-function activeText(event:Event): void {
+function activeText (event:Event): void {
   active.value = true
  
   emit('click', event.target)
@@ -74,7 +69,7 @@ function activeMedia (event:Event, element: TimelineElement) {
   if(!target){
     active.value = false
   } else if(target) {
-    console.log(target)
+
     active.value = false
   }
   
@@ -102,7 +97,7 @@ const formattedDate = computed(() => {
 
         <section class="timeline-container"></section>
 
-        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeText($event, element)" :active="active"> 
+        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeText($event)" :active="active"> 
             <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
               <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
               <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
@@ -125,6 +120,7 @@ const formattedDate = computed(() => {
 .lila-timeline-module {
   .module;
   display: grid;
+  @smartphone;
 
   transition: @aType @aTimeMedium;
   transform: translate(-70%);// default, so dass man zuerst den Text sieht und nicht das Bild
@@ -137,7 +133,7 @@ const formattedDate = computed(() => {
     .singleElement-container {
         display: grid;
         grid-template-columns: 90% 5px 90%;
-        grid-template-rows:35px min-content min-content 35px;
+        grid-template-rows:35px min-content min-content 40px;
         
         gap: 25px 0;
         
@@ -158,7 +154,7 @@ const formattedDate = computed(() => {
             grid-column-start: 3;
             grid-row-start: 2;
             grid-row-end: 3;
-
+           
             .year {
                 .font-head;
                 font-size: 44px;
@@ -274,8 +270,25 @@ const formattedDate = computed(() => {
           grid-row-end: 6;
           grid-column-start: 2;
           position: relative;
-          background-color: @color4;
-          }
+          
+          // für die abgerundete Kappe oben
+          &::after,
+            &::before {
+                content: '';
+                position: absolute;
+                width: 5px;
+                background: @color4;
+                border-radius: 99px;
+            }
+            &::after {
+                top: 0;
+                bottom: -10px;
+            }
+            &::before {
+                top: -10px;
+                bottom: 0;
+            }
+        }
 
         &.noMedia {
           gap: 0;

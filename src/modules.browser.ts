@@ -385,24 +385,9 @@ export default
       component: () => import('@/components/modules/timeline.module.vue'),
     },
     {
-      name    : 'events-list',
-      variants: [
-        {
-          key : 'center',
-          name: 'Text zentriert',
-        },
-      ],
-      component: () => import('@/components/modules/text.module.vue'),
-    },
-    {
-      name    : 'event',
-      variants: [
-        {
-          key : 'center',
-          name: 'Text zentriert',
-        },
-      ],
-      component: () => import('@/components/modules/event.module.vue'),
+      name     : 'events',
+      variants : [],
+      component: () => import('@/components/modules/events.module.vue'),
     },
   ]
 }

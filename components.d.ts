@@ -86,6 +86,7 @@ declare module 'vue' {
         'lila-cookies-module': typeof cookiesModuleVue
         'lila-emotion-module': typeof emotionModuleVue
         'lila-events-module': typeof eventsModuleVue
+         'lila-events-module': typeof eventsModuleVue
         'lila-facts-module': typeof factsModuleVue
         'lila-faq-module': typeof faqModuleVue
         'lila-footer-module': typeof footerModuleVue

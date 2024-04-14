@@ -15,7 +15,7 @@ const content: Content = {
     {
       type     : 'blog-intro-module',
       textblock: {
-        headline: 'JEDES ANLIEGEN VERDIENT GEHÖR.',
+        headline: 'Default Blog content',
         subline : 'Der Support ist inklusive.',
         intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
       },
@@ -30,7 +30,7 @@ const content: Content = {
     {
       type     : 'blog-intro-module',
       textblock: {
-        headline: 'with Link.',
+        headline: 'Blog content with a Link.',
         subline : 'Der Support ist inklusive.',
         intro   : 'STUDIO steht für einmalige Kosten und trotzdem eine langfristige Nutzbarkeit: Jede Lizenzgebühr beinhaltet fünf volle Jahre Support von zertifizierten Mitarbeitern. ',
       },

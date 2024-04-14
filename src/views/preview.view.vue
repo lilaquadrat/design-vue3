@@ -30,7 +30,7 @@ import contact from './viewData/contact';
 import menu from './viewData/menu';
 import training from './viewData/training';
 import timeline from './viewData/timeline';
-import events from'./viewData/events'
+import events from'./viewData/events';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -117,4 +117,4 @@ const contentMerged = computed(() => {
     <article class="content-screen screen">
         <lila-content-module v-if="contentMerged" :content="contentMerged" />
     </article>
-</template>
+</template>./viewData/eventslist./viewData/events-list./viewData/eventslist

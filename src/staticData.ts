@@ -41,7 +41,7 @@ export default {
               'text'      : 'register',
               'link'      : 'register',
               'attributes': [
-                'event'
+                'events'
               ],
               'variant': [
                 'callToAction'
