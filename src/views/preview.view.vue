@@ -8,29 +8,29 @@ import { hardCopy } from '@lilaquadrat/studio';
 
 import preview from './viewData/preview';
 
-import emotion from './viewData/emotion';
 import blogIntro from './viewData/blog-intro';
+import compare from './viewData/compare';
+import contact from './viewData/contact';
+import cookies from './viewData/cookies';
+import eventgroup from './viewData/eventgroup';
+import faq from './viewData/faq';
 import facts from './viewData/facts';
 import footer from './viewData/footer';
-import cookies from './viewData/cookies';
-import faq from './viewData/faq';
 import gallery from './viewData/gallery';
+import index from './viewData/index';
+import navigation from './viewData/navigation';
 import picture from './viewData/picture';
-import picturegroup from './viewData/picturegroup';
 import pictureandtext from './viewData/pictureandtext';
+import picturegroup from './viewData/picturegroup';
+import prices from './viewData/prices';
 import quote from './viewData/quote';
 import text from './viewData/text';
-import index from './viewData/index';
-import compare from './viewData/compare';
-import prices from './viewData/prices';
-// import quellcode from './viewData/quellcode';
-import video from './viewData/video';
-import navigation from './viewData/navigation';
-import contact from './viewData/contact';
-import menu from './viewData/menu';
-import training from './viewData/training';
 import timeline from './viewData/timeline';
-import events from'./viewData/events';
+import training from './viewData/training';
+import video from './viewData/video';
+import emotion from './viewData/emotion';
+import menu from './viewData/menu';
+import singleevent from './viewData/singleevent';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -54,13 +54,14 @@ const modules: Record<string, Partial<Content>> = {
   contact,
   menu,
   training,
-  timeline, 
-  events
+  timeline,
+  eventgroup,
+  singleevent
 };
 const route = useRoute();
 const store = useMainStore();
 
-function getBaseContent () {
+function getBaseContent() {
 
   const baseContent = hardCopy(preview);
   const elements: Object[] = [];
@@ -75,21 +76,21 @@ function getBaseContent () {
       },
       textblock: {
         headline: singleModule.settings?.title || single,
-        intro   : singleModule.settings?.description
+        intro: singleModule.settings?.description
       }
     })
 
   });
 
   baseContent.modules.push({
-    uuid   : '9a081157-eaf8-419d-a534-244ad69d3012',
-    type   : 'picturegroup-module',
+    uuid: '9a081157-eaf8-419d-a534-244ad69d3012',
+    type: 'picturegroup-module',
     variant: [
       'fourColumns',
       'cards'
     ],
     elements: elements,
-      
+
     textblock: {
       headline: 'Explore the Modules'
     }
@@ -100,21 +101,21 @@ function getBaseContent () {
 
 }
 
-store.setConfiguration({preloadImages: true})
+store.setConfiguration({ preloadImages: true })
 
 const contentMerged = computed(() => {
 
   const content = modules[route.params.pathMatch as keyof typeof modules];
 
-  if(!content) return prepareContent(getBaseContent());
+  if (!content) return prepareContent(getBaseContent());
   return prepareContent(content);
 
-}); 
+});
 
 </script>
 
 <template>
-    <article class="content-screen screen">
-        <lila-content-module v-if="contentMerged" :content="contentMerged" />
-    </article>
-</template>./viewData/eventslist./viewData/events-list./viewData/eventslist
+  <article class="content-screen screen">
+    <lila-content-module v-if="contentMerged" :content="contentMerged" />
+  </article>
+</template>

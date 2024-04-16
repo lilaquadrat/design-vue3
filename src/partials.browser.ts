@@ -152,7 +152,7 @@ export default [
     component: () => import('@/components/partials/video.partial.vue'),
   },
   {
-    name     : 'events',
-    component: () => import('@/components/partials/events.partial.vue'),
+    name     : 'single-event',
+    component: () => import('@/components/partials/single-event.partial.vue'),
   }
 ]

@@ -37,7 +37,7 @@ import type blogIntroModuleVue from '@/components/modules/blog-intro.module.vue'
 import type compareModuleVue from '@/components/modules/compare.module.vue';
 import type contentModuleVue from '@/components/modules/content.module.vue';
 import type actionNoticePartialVue from '@/components/partials/action-notice.partial.vue';
-import type eventsPartialVue from '@/components/partials/events.partial.vue'
+import type singleEventPartialVue from '@/components/partials/single-event.partial.vue'
 
 declare module 'vue' {
     export interface GlobalComponents {
@@ -54,7 +54,7 @@ declare module 'vue' {
         'lila-content-container-partial': typeof contentContainerPartialVue
         'lila-content-head-partial': typeof contentHeadPartialVue
         'lila-dialog-partial': typeof dialogPartial
-        'lila-events-partial': typeof eventsPartialVue
+        'lila-single-event-partial': typeof eventsPartialVue
         'lila-fact-partial': typeof factPartialVue
         'lila-fieldset-partial': typeof fieldsetPartialVue
         'lila-highlight-partial': typeof highlightPartialVue
@@ -76,6 +76,7 @@ declare module 'vue' {
         'lila-quote-partial': typeof quotePartialVue
         'lila-select-category-partial': typeof selectCategoryPartialVue
         'lila-select-partial': typeof selectPartialVue
+        'lila-single-event-partial': typeof singleEventPartialVue
         'lila-textarea-partial': typeof textareaPartialVue
         'lila-textblock-partial': typeof textblockPartialVue
         'lila-video-partial': typeof videoPartialVue
@@ -85,8 +86,7 @@ declare module 'vue' {
         'lila-content-module': typeof contentModuleVue
         'lila-cookies-module': typeof cookiesModuleVue
         'lila-emotion-module': typeof emotionModuleVue
-        'lila-events-module': typeof eventsModuleVue
-         'lila-events-module': typeof eventsModuleVue
+        'lila-event-group-module': typeof eventGrouplModuleVue
         'lila-facts-module': typeof factsModuleVue
         'lila-faq-module': typeof faqModuleVue
         'lila-footer-module': typeof footerModuleVue
@@ -100,6 +100,7 @@ declare module 'vue' {
         'lila-picturegroup-module': typeof picturegroupModuleVue
         'lila-prices-module': typeof pricesModuleVue
         'lila-quote-module': typeof quoteModuleVue
+        'lila-single-event-module': typeof singleEventPartialVue
         'lila-text-module': typeof textModuleVue
         'lila-timeline-module': typeof timelineModuleVue
         'lila-training-module': typeof trainingModuleVue

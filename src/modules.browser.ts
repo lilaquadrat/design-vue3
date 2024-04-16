@@ -385,9 +385,14 @@ export default
       component: () => import('@/components/modules/timeline.module.vue'),
     },
     {
-      name     : 'events',
+      name     : 'eventgroup',
       variants : [],
-      component: () => import('@/components/modules/events.module.vue'),
+      component: () => import('@/components/modules/eventgroup.module.vue'),
+    },
+    {
+      name     : 'singleevent',
+      variants : [],
+      component: () => import('@/components/modules/singleevent.module.vue'),
     },
   ]
 }
