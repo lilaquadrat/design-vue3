@@ -75,15 +75,15 @@ class Auth {
 
   }
 
-  triggerLogin (customerId?: string) {
+  triggerLogin (customerId?: string, emailConfirmationCode?: string) {
 
-    this.auth0.loginWithRedirect<AppState>({ appState: { customerId } });
+    this.auth0.loginWithRedirect<AppState>({ appState: { customerId, emailConfirmationCode } });
 
   }
 
-  triggerRegister (customerId?: string) {
+  triggerRegister (customerId?: string, emailConfirmationCode?: string) {
 
-    this.auth0.loginWithRedirect<AppState>({ appState: { customerId }, authorizationParams: { screen_hint: 'signup' } });
+    this.auth0.loginWithRedirect<AppState>({ appState: { customerId, emailConfirmationCode }, authorizationParams: { screen_hint: 'signup' } });
 
   }
 

@@ -2,7 +2,7 @@
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import { useInview } from '@/plugins/inview';
 import useMainStore from '@/stores/main.store';
-import type { BasicData, Content, GenericData, GenericDataWithContent, List, ListContent, ListParticipants } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, GenericData, GenericDataDistributed, List, ListContent, ListParticipants } from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
 import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { onBeforeMount, ref } from 'vue';
@@ -10,9 +10,9 @@ import { onBeforeMount, ref } from 'vue';
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
-  genericData: GenericDataWithContent
+  genericData: GenericDataDistributed
 }>();
-const list = ref<List>();
+const list = ref<BasicData<List>>();
 const state = ref<ListParticipants>();
 const contentState = ref<keyof ListContent>('pre');
 const contentMerged = ref();
@@ -24,14 +24,14 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
 async function init () {
 
-  console.log('BEFOR EMOUNT EVENT', props.genericData.data);
+  console.log('BEFOR EMOUNT EVENT', props.genericData);
 
   const mainStore = useMainStore();
   const sdk = new StudioSDK(mainStore.apiConfig);
 
-  list.value = props.genericData.data[props.genericData.lists[0]];
+  list.value = props.genericData.data[props.genericData.lists[0].toString()] as BasicData<List>;
 
-  const stateReponse = await sdk.members.lists.state(list.value._id);
+  const stateReponse = await sdk.members.lists.state(list.value._id.toString());
 
   state.value = stateReponse.data;
 

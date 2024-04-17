@@ -17,7 +17,6 @@ const hint = ref<string>();
 onBeforeMount(async () => {
 
   let loginResult: RedirectLoginResult<AppState>;
-  let isConnected = false;
 
   // Attempt to handle the authentication callback.
   try {
@@ -32,62 +31,45 @@ onBeforeMount(async () => {
 
   }
 
-  // Attempt to retrieve the token content, which includes the user's email verification status.
-  const token = await auth.getTokenContent();
-
-  // Check if the email associated with the token is not verified.
-  if(!token?.email_verified) {
-
-    console.error('LOCK THE USE FOR EMAIL VERIFICATION');
-    // Lock the user account for email verification.
-    userStore.locked = 'email-verified';
-
-  } else if(userStore.locked === 'email-verified') { // If the user was previously locked for email verification and now is verified,
-
-    // Unlock the user account.
-    userStore.locked = undefined;
+  await userStore.updateLock();
   
-  }
-
+  console.log(userStore.locked, loginResult);
+  
   const sdk = new StudioSDK(mainStore.apiConfig);
 
-  try {
-  
-    // Check the connection status and compare the response status.
-    isConnected = (await sdk.members.me.isConnected()).status === 200;
-
-  } catch (error) {
-
-    console.error(error);
-    isConnected = false;
-  
-  }
-
-  // Check if a customerId is provided in the login result and the user is not connected.
-  if(loginResult?.appState?.customerId && !isConnected) {
+  if(userStore.locked === 'user-connect' && loginResult?.appState?.customerId) {
 
     try {
 
       // Attempt to connect the user with the provided customerId.
       await sdk.members.me.connect(loginResult?.appState?.customerId);
-      isConnected = true;
-    
+      await userStore.updateLock();
+
     } catch (e) {
 
       console.error(e);
-      console.error('LOCK THE USE FOR MISSING CONNECTION');
-      // Lock the user account for missing connection if not already locked.
-      if(!userStore.locked) userStore.locked = 'user-connect';
+      console.error('CONNECT_ACCOUNT_TO_CUSTOMER_FAILED');
     
     }
-  
-  } else if(!loginResult?.appState?.customerId && !isConnected) { // If no customerId is provided and the user is not connected,
 
-    console.error('LOCK THE USE FOR MISSING CONNECTION');
-    // Lock the user account for missing connection if not already locked.
-    if(!userStore.locked) userStore.locked = 'user-connect';
+  }
 
-  } 
+  if(!userStore.userData?.emailConfirmed && loginResult?.appState?.emailConfirmationCode) {
+
+    try {
+
+      // Attempt to confirm the email address with the provided code
+      await sdk.members.me.confirmEmail(loginResult?.appState?.emailConfirmationCode)
+      await userStore.updateLock();
+
+    } catch (e) {
+
+      console.error(e);
+      console.error('EMAIL_CONFIRMATION_FAILED');
+    
+    }
+
+  }
 
   router.replace({name: 'members'});
 

@@ -15,6 +15,12 @@ export default
       component        : () => import('@/components/modules/connect-user.module.vue'),
     },
     {
+      name             : 'confirm-email',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/confirm-email.module.vue'),
+    },
+    {
       name     : 'blog-intro',
       variants : [],
       component: () => import('@/components/modules/blog-intro.module.vue'),

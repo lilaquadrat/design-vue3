@@ -9,11 +9,12 @@ import { type Me } from '@lilaquadrat/interfaces';
 export const useUserStore = defineStore('user', () => {
 
   const locked = ref<string>();
-  const customer = ref<{_id: string, id: string}>();
+  const customer = ref<{_id: string, id?: string}>();
+  const emailConfirmationCode = ref<string>();
   const userData = ref<Me>();
   const isUser = ref<boolean>(false);
 
-  function setCustomer (customerData: {_id: string, id: string}) {
+  function setCustomer (customerData: {_id: string, id?: string}) {
 
     customer.value = customerData;
     localStorage.setItem('lila-customer', JSON.stringify(customerData));
@@ -32,12 +33,11 @@ export const useUserStore = defineStore('user', () => {
 
     }
 
-    await updateLock();
-
     if(auth.isAuth.value) {
-
-      await getUser();
+      
+      await updateLock();
       isUser.value = true;
+
     }
 
     logger.userstore('done');
@@ -46,45 +46,32 @@ export const useUserStore = defineStore('user', () => {
 
   async function updateLock () {
 
-    const mainStore = useMainStore();
-
     if(auth.isAuth.value) {
       
-      const token = await auth.getTokenContent();
+      await getUser();
 
-      locked.value = undefined;
+      if(!userData.value) {
 
+        console.error('LOCK THE USE FOR MISSING CONNECTION');
+        locked.value = 'user-connect';
+
+        return;
+        
+      }
+      
       /**
       * check if a customerId is given and user is not connected
       */
-      if(!token?.email_verified) {
-  
+      if (!userData.value?.emailConfirmed) {
+        
         console.error('LOCK THE USE FOR EMAIL VERIFICATION');
         locked.value = 'email-verified';
-  
-      } else {
-
-        const sdk = new StudioSDK(mainStore.apiConfig);
-        let isConnected: boolean = false;
-
-        try {
-          
-          isConnected = (await sdk.members.me.isConnected()).status === 200;
-
-        } catch (error) {
-
-          console.error(error);
-          
-        }
-  
-        if (!isConnected) {
-    
-          console.error('LOCK THE USE FOR MISSING CONNECTION');
-          locked.value = 'user-connect';
-    
-        }
-
+        
+        return;
+        
       }
+
+      locked.value = undefined;
 
     }
     
@@ -92,11 +79,15 @@ export const useUserStore = defineStore('user', () => {
 
   async function getUser () {
     
+    console.log('get user');
+
     const mainStore = useMainStore();
     const sdk = new StudioSDK(mainStore.apiConfig);
 
     try {
       
+      StudioSDK.flushCache('me');
+
       const me = await sdk.members.me.get();
 
       userData.value = me.data;
@@ -116,7 +107,9 @@ export const useUserStore = defineStore('user', () => {
     updateLock,
     customer,
     userData,
-    isUser
+    isUser,
+    getUser,
+    emailConfirmationCode
   }
 
 })

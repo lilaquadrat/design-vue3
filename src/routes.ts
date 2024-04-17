@@ -5,6 +5,7 @@ import EditorView from '@/views/editor.view.vue';
 import MainViewStatic from '@/views/main-static.view.vue';
 import MainViewDynamic from '@/views/main-dynamic.view.vue';
 import LoginView from '@/views/login.view.vue';
+import RegisterView from '@/views/register.view.vue';
 
 const dynamicRoutes: readonly RouteRecordRaw[] = [
   {
@@ -41,6 +42,11 @@ const dynamicRoutes: readonly RouteRecordRaw[] = [
     path     : '/login-callback',
     name     : 'login-callback',
     component: LoginView
+  },
+  {
+    path     : '/register',
+    name     : 'register',
+    component: RegisterView
   },
 ];
 const previewRoutes: readonly RouteRecordRaw[] = [
