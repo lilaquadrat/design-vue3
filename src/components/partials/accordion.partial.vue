@@ -7,7 +7,6 @@ import { watch } from 'vue';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 
 const { resized } = useResize();
-const items: Ref<HTMLElement[]> = ref([]);
 const props = defineProps<{
   multiOpen?: boolean;
   disableControls?: boolean;
@@ -16,6 +15,7 @@ const props = defineProps<{
   renderTarget?: 'pdf' | 'web';
   variant?: string[]
 }>();
+const items: Ref<HTMLElement[]> = ref([]);
 const useElements = ref<AccordionElementWithSettings[]>([]);
 
 watch(() => props.elements, () => setElements(props.elements));

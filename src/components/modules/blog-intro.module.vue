@@ -5,7 +5,7 @@ import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import { computed, ref, defineProps } from 'vue';
 import { useInview } from '@/plugins/inview';
-import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });
 
@@ -17,27 +17,28 @@ type blogIntroProps = ModuleBaseProps & {
   date: string;
 }
 
-const props = withDefaults(defineProps<blogIntroProps>(), {variant: () => []})
+const props = withDefaults(defineProps<blogIntroProps>(), { variant: () => [] })
 const element = ref<HTMLElement>();
-const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
+const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const textTop = computed(() => ({
   headline: props.textblock?.headline,
-  subline : props.textblock?.subline,
+  subline: props.textblock?.subline,
 }));
 const textBottom = computed(() => ({
   intro: props.textblock?.intro,
-  text : props.textblock?.text,
+  text: props.textblock?.text,
 }));
 const hasLink = computed(() => !!props.link?.link);
 
 </script>
 <template>
-  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture, sub }]" class="lila-blog-intro-module lila-module">
+  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture, sub }]"
+    class="lila-blog-intro-module lila-module">
 
     <header>
       <template v-if="!hasLink">
         <time v-if="date">{{ date }}</time>
-        <lila-textblock-partial class="top" v-bind="textTop" /> 
+        <lila-textblock-partial class="top" v-bind="textTop" />
       </template>
 
       <lila-link-partial v-if="hasLink" v-bind="link">
@@ -53,22 +54,19 @@ const hasLink = computed(() => !!props.link?.link);
 
     <lila-textblock-partial class="bottom" v-bind="textBottom" />
 
-    <address v-if="author">{{$translate('blog-intro-author', [author])}}</address>
+    <address v-if="author">{{ $translate('blog-intro-author', [author]) }}</address>
 
     <slot />
 
   </article>
 </template>
 <style lang="less" scoped>
-
 .lila-blog-intro-module {
   .module;
 
   display: grid;
   gap: 20px;
   justify-items: center;
-
-  max-width: @moduleWidth_M;
 
   background: transparent;
   .modulePadding('none');

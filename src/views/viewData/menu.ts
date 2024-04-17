@@ -31,7 +31,7 @@ const content: Content = {
       'categories': [
         {
           'textblock': {
-            'headline': 'Warme Speisen',
+            'headline': 'Warme Speisen',       
           },
           'items': [
             {
