@@ -76,8 +76,6 @@ function flattenErrors (errors: ErrorsObject) {
 
   Object.keys(errors).forEach((single) => {
 
-    console.log(single);
-
     if (errors[single].translatedPath) {
 
       flattenedErrors[single] = errors[single] as ParsedError;
@@ -86,7 +84,6 @@ function flattenErrors (errors: ErrorsObject) {
 
       Object.values(errors[single]).forEach((child, index) => {
 
-        console.log(94, errors[single], child);
         Object.keys(child).forEach((childKey) => {
 
           flattenedErrors[`${single}-element-${index}-${childKey}`] = {
@@ -123,15 +120,11 @@ const hasErrors = computed(() => !!props.errors?.errors || !!props.preparsedErro
 
 function closeOptions () {
 
-  console.log('close');
-
   open.value = false;
 
 }
 
 function toggleErrors () {
-
-  console.log('toggle');
 
   open.value = !open.value;
 
@@ -139,7 +132,6 @@ function toggleErrors () {
 
 function calculateOptionsStyle () {
   
-  console.log(triggerElement.value, errorsElement.value);
   if (!triggerElement.value || !errorsElement.value) return;
   
   const optionsContainer = errorsElement.value;
@@ -149,8 +141,6 @@ function calculateOptionsStyle () {
   const left = bounds.left - optionsContainer.offsetWidth + element.offsetWidth;
 
   top = bounds.top - 5 - optionsContainer.offsetHeight;
-
-  console.log(optionsContainer.offsetWidth, element.offsetWidth);
 
   calculatedOptions.value = {
     top : `${top}px`,

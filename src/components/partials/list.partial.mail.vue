@@ -8,8 +8,29 @@ const props = withDefaults(defineProps<{
   mode?: 'list' | 'links'
   variant?: string[]
 }>(), {mode: 'list'})
-const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered')); 
-const noStyle: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noStyle')); 
+const listStyle = computed(() => {
+
+  const cssArray = ['padding: 0; margin: 0; color: #555; font-size: 15px; padding-bottom: 5px; font-family: Arial, Helvetica, sans-serif;'];
+
+  if(props.variant?.includes('noStyle')) {
+
+    cssArray.push('list-style-type: none;');
+
+  } else {
+
+    cssArray.push('list-style-position: inside; list-style-type: circle;')
+
+  }
+
+  if(props.variant?.includes('center')) {
+
+    cssArray.push('text-align: center;');
+
+  }
+
+  return cssArray.join(' ');
+
+}); 
 const actions: ComputedRef<boolean> = computed(() => !!props.variant?.includes('actions')); 
 const notEmpty: ComputedRef<boolean> = computed(() => !!props.value?.find((single) => {
 
@@ -32,8 +53,8 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
   <section class="lila-list-links" v-if="notEmpty" :class="variant">
     <h4 style="padding: 0; margin: 0; color: #555; font-weight: bold; font-size: 15px; padding-bottom: 20px; font-family: Arial, Helvetica, sans-serif;" v-if="title">{{ $replacer(title) }}</h4>
 
-    <ul v-if="!actions || mode === 'list'" style="padding: 0; margin: 0; padding-left: 20px;">
-      <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`" style="padding: 0; margin: 0; list-style-type: circle; list-style-position: inside; color: #555; font-size: 15px; padding-bottom: 5px; font-family: Arial, Helvetica, sans-serif;">
+    <ul v-if="!actions || mode === 'list'" style="padding: 0; margin: 0;">
+      <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`" :style="listStyle">
 
         <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" />
         <template v-if="typeof(single) === 'string'">{{ $replacer(single) }}</template>

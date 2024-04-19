@@ -27,7 +27,7 @@ onBeforeMount(() => {
 //  * sorts all events by the same day and sorts its 
 //  * containing SingleEventElement by theirstarting time 
 //  */
-function setElements(elements: SingleEventElement[]) {
+function setElements (elements: SingleEventElement[]) {
   elements.sort((a: any, b: any) => a.date.localeCompare(b.date));
 
   elements.forEach((single: any) => {

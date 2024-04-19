@@ -24,8 +24,6 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
 async function init () {
 
-  console.log('BEFOR EMOUNT EVENT', props.genericData);
-
   const mainStore = useMainStore();
   const sdk = new StudioSDK(mainStore.apiConfig);
 
@@ -94,8 +92,6 @@ function mergeContent (baseContent: BasicData<Content>) {
 } 
 
 function handleChildEvent (event: string) {
-
-  console.log('handle child interaction', event);
 
   if(event === 'reset') {
 

@@ -9,7 +9,6 @@ defineProps<{
 
 const emits = defineEmits(['update:modelValue']);
 const changeHandler = (checked: boolean) => {
-  console.log(checked);
   emits('update:modelValue', checked);
 };
 

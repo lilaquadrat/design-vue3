@@ -56,8 +56,6 @@ function getStoreContent () {
 
 async function getContent () {
 
-  console.log(userStore.locked, 'get content main components');
-    
   getStoreContent();
 
   const contentId = HelpersPlugin.getFilename(route.meta.contentType as 'public' | 'members', props.type);
