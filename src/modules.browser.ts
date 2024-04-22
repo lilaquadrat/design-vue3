@@ -15,6 +15,12 @@ export default
       component        : () => import('@/components/modules/connect-user.module.vue'),
     },
     {
+      name             : 'confirm-email',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/confirm-email.module.vue'),
+    },
+    {
       name     : 'blog-intro',
       variants : [],
       component: () => import('@/components/modules/blog-intro.module.vue'),
@@ -357,7 +363,7 @@ export default
           name: 'Text zentriert',
         },
         {
-          key : ' notice',
+          key : 'notice',
           name: 'Links werden zu Call To Action Buttons',
         },
       ],
@@ -393,6 +399,16 @@ export default
       name     : 'singleevent',
       variants : [],
       component: () => import('@/components/modules/singleevent.module.vue'),
+    },
+    {
+      name    : 'event',
+      variants: [
+        {
+          key : 'center',
+          name: 'Text zentriert',
+        },
+      ],
+      component: () => import('@/components/modules/event.module.vue'),
     },
   ]
 }

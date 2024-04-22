@@ -25,7 +25,13 @@ const contentType = computed(() => route.meta.contentType as 'public' | 'members
 const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 
 watch(route, () => getContent());
-watch(() => userStore.locked, () => getContent());
+watch(() => userStore.locked, () => {
+
+  if(!userStore.locked) {
+    getContent();
+  }
+
+});
 
 onBeforeMount(async () => await getContent());
 onServerPrefetch(() => getStoreContent());
@@ -49,7 +55,7 @@ function getStoreContent () {
 }
 
 async function getContent () {
-    
+
   getStoreContent();
 
   const contentId = HelpersPlugin.getFilename(route.meta.contentType as 'public' | 'members', props.type);

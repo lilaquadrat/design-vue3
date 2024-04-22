@@ -8,18 +8,19 @@ import type { TimelineElement } from '../../interfaces/TimelineElement.interface
 defineOptions({ inheritAttrs: false }); // atri
 
 const props = defineProps<ModuleBaseProps & {
-  elements: TimelineElement[];
-  date: string;
-}>();
-const active = ref<boolean>(false)
+    elements: TimelineElement[];
+    date: string;
+  }>();
+const active = ref<boolean>(false);
 const element = ref<HTMLElement>();
 const elementsExtended = ref<(TimelineElement & { position: 'left' | 'right' })[]>([]);
-const mediaContainer = ref<HTMLElement>();
-const textContainer = ref<HTMLElement>();
-const timeContainer = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-// const emit = defineEmits<{(e: string, event?: Event): void}>();
-const emit = defineEmits(['click']);
+const date = computed(() => ({
+  year    : props.date ? dayjs(props.date).year() : '',
+  dayMonth: props.date ? dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase() : ''
+}));
+const emit = defineEmits<{(e: string, event?: Event): void}>();
+//const emit = defineEmits(['click']);
 
 onBeforeMount(() => {
   if (props.elements) {
@@ -42,72 +43,62 @@ function setElements (elements: TimelineElement[]) {
     }
 
     if (!item.media?.length) {
-      lastElementPosition = 'noMedia'
+      lastElementPosition = 'noMedia';
 
     }
 
     positionedItem.push({
       ...item,
       position,
-      active: false
     });
-    lastElementPosition = position
+    lastElementPosition = position;
   });
 
   elementsExtended.value = positionedItem;
 }
 
-function activeText (event: Event): void {
-  active.value = true
+function activated (): void {
+  active.value = true;
 
-  emit('click', event.target)
+  emit('click');
+
 }
 
-function activeMedia (event: Event, element: TimelineElement) {
-  const target = element.media
+function activeMedia (element: TimelineElement) {
+  const target = element.media;
 
   if (!target) {
-    active.value = false
+    active.value = false;
   } else if (target) {
 
-    active.value = false
+    active.value = false;
   }
 
-  emit('click', event.target)
+  emit('click');
 }
 
-const formattedDate = computed(() => {
-  const date = props.date ? dayjs(props.date) : null;
-
-  return {
-    year    : date ? date.year() : '',
-    dayMonth: date ? date.locale('de').format('DD, MMMM').toUpperCase() : '',
-  };
-});
-
 </script>
+
 <template>
-  <section ref="element" :id="id" class="lila-timeline-module lila-module"
-    :class="[inviewState, variant, { active: active }]">
-    <section class="elements-container">
-      <section class="singleElement-container" v-for="(element, index) in elementsExtended"
+  <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
+    <section class="elements-container">  
+      <section class="singleelement-container" v-for="(element, index) in elementsExtended"
         :class="[element.position, { noMedia: !element.media }]" :key="`timeline-withpositions${index}`">
-        <section ref="timeContainer" class="time-container" @click="activeMedia($event, element)">
-          <time v-if="date" class="year">{{ formattedDate.year }}</time>
-          <time v-if="date" class="dayMonth">{{ formattedDate.dayMonth }}</time>
+        <section ref="timeContainer" class="time-container" @click="activeMedia(element)">
+          <time v-if="date" class="year">{{ date.year }}</time>
+          <time v-if="date" class="dayMonth">{{ date.dayMonth }}</time>
         </section>
 
         <section class="timeline-container"></section>
 
-        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activeText($event)"
-          :active="active">
+        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activated()">
           <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
             <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
             <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
           </template>
         </section>
 
-        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia($event, element)">
+        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia(element)">
           <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
           <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
           <lila-list-partial v-if="element.list" v-bind="element.list" />
@@ -119,261 +110,207 @@ const formattedDate = computed(() => {
 </template>
 
 <style lang="less" scoped>
-.lila-timeline-module {
-  .module;
-  display: grid;
-
-  transition: @aType @aTimeMedium;
-  transform: translate(-70%); // default, so dass man zuerst den Text sieht und nicht das Bild
-
-  @media @desktop {
-    transform: translate(0%);
-  }
-
-  .elements-container {
-    display: grid;
-
-    .singleElement-container {
+  .lila-timeline-module {
+    .module;
+    padding-right: 20px;
+    transition: @aType @aTimeMedium;
+    transform: translate(-70%);
+    max-width: @moduleWidth_XS;
+    margin-bottom: 100px;
+    
+    @media @desktop {
+      transform: translate(0%);
+      max-width: @desktopWidthWide;
+    }
+    
+    .elements-container {
       display: grid;
-      grid-template-columns: 90% 5px 90%;
-      grid-template-rows: 35px min-content min-content 40px;
 
-      gap: 25px 0;
-
-      @media @desktop {
+      .singleelement-container {
         display: grid;
-        grid-template-columns: 2fr 8px 4fr;
-        grid-template-rows: 20px min-content min-content 20px;
-        gap: 50px 0;
-      }
-
-      .time-container {
-        display: grid;
-        grid-template-rows: max-content max-content;
-        padding: 0 20px;
-
-        justify-self: start;
-        justify-items: start;
-        grid-column-start: 3;
-        grid-row-start: 2;
-        grid-row-end: 3;
-
-        .year {
-          .font-head;
-          font-size: 44px;
-          line-height: 46px;
-          color: @color4;
-        }
-
-        .dayMonth {
-          .font-bold;
-          font-size: 25px;
-          line-height: 27px;
-          color: @color1;
-          grid-row-start: 2;
-        }
+        grid-template-columns: 90% 5px 90%;
+        grid-template-rows: 60px auto auto;
 
         @media @desktop {
-          justify-self: end;
-          justify-items: end;
-          grid-column-start: 1;
-          ;
-          grid-row-start: 2;
-          grid-row-end: 3;
-          padding: 0 40px;
-
-          .year {
-            font-size: 60px;
-            line-height: 62px;
-
-          }
-
-          .dayMonth {
-            .font-head;
-            font-size: @headline_L;
-            line-height: @headlineLineHeight_L;
-          }
-        }
-      }
-
-      .media-container {
-        gap: 25px 0;
-        padding: 0 20px;
-        display: grid;
-        grid-column-start: 1;
-        grid-row-start: 3;
-        grid-row-end: 4;
-        height: auto;
-        grid-auto-rows: min-content;
-        position: sticky;
-        top: 20px;
-
-        @media @desktop {
-          gap: 40px 0;
-          padding: 0 40px;
-          position: inherit;
-
-          :deep(.lila-figure) {
-            justify-content: left;
-          }
+          display: grid;
+          grid-template-columns: 2fr 8px 4fr;
+          grid-template-rows: 140px  auto auto;
         }
 
-      }
-
-      .text-container {
-        grid-row-start: 3;
-        grid-row-end: 6;
-        grid-column-start: 3;
-        padding: 0 20px;
-
-        :deep(.lila-textblock) {
-
-          h1 {
-            font-size: 25px;
-            line-height: 27px;
-            .font-bold;
-          }
-
-          h2 {
-            font-size: @headline_S;
-            line-height: @headlineLineHeight_S;
-          }
-
-          h3 {
-            color: @textColor;
-            .font-bold;
-          }
-
-          h3,
-          p {
-            line-height: 20px;
-          }
-        }
-
-        @media @desktop {
-          padding: 0 40px;
-          grid-row-start: 3;
-          grid-row-end: 4;
-          .font-head;
-
-          :deep(.lila-textblock) {
-
-            h1 {
-              font-size: @headline_L;
-              line-height: @headlineLineHeight_L;
-              .font-head;
-            }
-
-            h2 {
-              font-size: 25px;
-              line-height: 27px
-            }
-
-            h3 {
-              .font-bold;
-              line-height: @headlineLineHeight_S;
-            }
-
-            p,
-            h3 {
-              font-size: 16px;
-              color: @textColor;
-            }
-          }
-        }
-      }
-
-      .timeline-container {
-        grid-row-start: 1;
-        grid-row-end: 6;
-        grid-column-start: 2;
-        position: relative;
-
-        // für die abgerundete Kappe oben
-        &::after,
-        &::before {
-          content: '';
-          position: absolute;
+        .timeline-container {
+          background-color: @color4;
+          grid-column-start: 2;
+          grid-row: 1/5;
           width: 5px;
-          background: @color4;
-          border-radius: 99px;
-        }
+          height: 110%;
+          border-radius: 200px;
 
-        &::after {
-          top: 0;
-          bottom: -10px;
-        }
-
-        &::before {
-          top: -10px;
-          bottom: 0;
-        }
-      }
-
-      &.noMedia {
-        gap: 0;
-
-        //grid-template-rows:auto;
-        .time-container,
-        .text-container {
-          grid-column-start: 3;
-
+          @media @desktop {
+            width: 8px;
+          }
         }
 
         .time-container {
-          justify-items: start;
-          justify-self: start;
-        }
-
-        @media @desktop {
-          grid-template-rows: 70px auto 70px;
-
-          .time-container {
-            grid-column-start: 1;
-            justify-items: end;
-            justify-self: end;
-
-            padding: 0 40px
+          display: grid; 
+          grid-column-start: 3;
+          grid-row-start: 2;
+          padding-left: 20px; 
+          text-align: left;
+          padding-bottom: 25px;
+          
+          .year {
+            .font-head; 
+            color: @color4;
+            font-size: 44px;
+            line-height: 46px;
           }
 
-          .text-container {
-            grid-column-start: 3;
+          .dayMonth {
+            .font-bold; 
+            color: @color5;
+            font-size: 25px;
+            line-height: 27px;
+          }
+
+          @media @desktop {
+            grid-column-start: 1;
             grid-row-start: 2;
-            grid-row-end: 3;
-            padding: 0 40px
-          }
+            padding-bottom: 50px; 
+            padding-right: 40px;
+            text-align: right;
+             
+            .year,
+            .dayMonth {
+              .font-head; 
+            }
 
-          .timeline-container {
-            grid-column-start: 2;
-            grid-row-start: 1;
+            .year { 
+              font-size: 60px;
+              line-height: 62px;
+            }
+
+            .dayMonth { 
+              font-size: @headline_L;
+              line-height: @headlineLineHeight_L;
+            }
           }
         }
-      }
 
-      &.right {
+        .media-container {
+          grid-column-start: 1;
+          grid-row: 3/3;
+          padding: 0 20px;
+          position: sticky;
+          top: 15px;
+          padding-left: 0;
 
-        @media @desktop {
-          .text-container {
-            grid-column-start: 1;
+          :deep(.lila-figure) {
+            justify-content: left;
+            padding-bottom: 20px;
+          }
+          
+          @media @desktop {
+            padding: 0 40px;
+            grid-row: 3/5;
+
+            :deep(.lila-figure) {
+              padding-bottom: 27px;
+            }
+          }
+        }
+
+        .text-container {
+          grid-column-start: 3;
+          grid-row-start: 3;
+          grid-row-end: 5;
+          padding:0 20px;
+
+          :deep(.lila-textblock) {
+            h1 {
+              font-size: 25px;
+              line-height: 27px;
+              .font-bold;   
+            }
+
+            h2 {
+              font-size: @headline_S;
+              line-height: @headlineLineHeight_S;
+            }
+
+            h3, p {
+              line-height: @headline_S;
+            }
           }
 
-          .media-container,
+          @media @desktop {
+            padding: 0 40px;
+
+            :deep(.lila-textblock) {
+              h1 {
+                .font-head;
+                font-size: @headline_L;
+                line-height: @headlineLineHeight_L;
+              }
+
+              h2 {
+                font-size: 25px;
+                line-height: 27px;
+              }
+
+              h3, p {
+                font-size: @headline_XS;
+                line-height: @headline_S;
+              }
+            }
+          }
+        }
+
+        &.right {
+          .time-container {
+            text-align: left;
+          }
+
+          @media @desktop {
+            .media-container,
+            .time-container {
+              grid-column-start: 3;
+              text-align: left;
+              padding: 0 40px;
+              padding-bottom: 50px; 
+              padding-right: 40px;
+            }
+
+            .text-container {
+              grid-column-start: 1;
+            }
+          }
+        }
+
+        &.noMedia {
           .time-container {
             grid-column-start: 3;
+            text-align: left;
+            padding-left: 20px; 
           }
 
-          .time-container {
-            justify-self: start;
-            justify-items: start;
+          @media @desktop {
+            .time-container {
+              grid-column-start: 1;
+              grid-row-start: 2;
+              text-align: right;
+              padding-right: 40px;
+            }
+
+            .text-container {
+              grid-row-start: 2;
+            }
           }
         }
       }
     }
-
   }
 
   &.active {
-    transform: translate(0%)
+    transform: translate(0%);
   }
-
-}</style>
+</style>

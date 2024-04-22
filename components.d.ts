@@ -54,7 +54,7 @@ declare module 'vue' {
         'lila-content-container-partial': typeof contentContainerPartialVue
         'lila-content-head-partial': typeof contentHeadPartialVue
         'lila-dialog-partial': typeof dialogPartial
-        'lila-single-event-partial': typeof eventsPartialVue
+        'lila-eventgroup-partial': typeof eventsPartialVue
         'lila-fact-partial': typeof factPartialVue
         'lila-fieldset-partial': typeof fieldsetPartialVue
         'lila-highlight-partial': typeof highlightPartialVue
@@ -76,7 +76,6 @@ declare module 'vue' {
         'lila-quote-partial': typeof quotePartialVue
         'lila-select-category-partial': typeof selectCategoryPartialVue
         'lila-select-partial': typeof selectPartialVue
-        'lila-single-event-partial': typeof singleEventPartialVue
         'lila-textarea-partial': typeof textareaPartialVue
         'lila-textblock-partial': typeof textblockPartialVue
         'lila-video-partial': typeof videoPartialVue

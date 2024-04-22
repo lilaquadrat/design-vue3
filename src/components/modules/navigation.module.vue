@@ -23,7 +23,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 const attachTo = ref<HTMLElement>();
 const overlay = ref<HTMLElement>();
 const linksContainer = ref<HTMLElement>();
-const logoContainer = ref<HTMLElement>(); 
+const logoContainer = ref<HTMLElement>();
 const links = ref<HTMLElement>();
 const triggerMenuOverlay = ref<HTMLElement>();
 const elementsArray = ref<(LinkGroupElement & { active: boolean })[]>([]);
@@ -68,12 +68,12 @@ watch(() => props.elements, () => {
 watch(() => attachTo.value, () => {
 
   // if attachTo gets a value it indicates that the overlay is getting rendered
-  if(!useTriggerMenu.value && attachTo.value) requestAnimationFrame(() => calculateOptionsStyle())
+  if (!useTriggerMenu.value && attachTo.value) requestAnimationFrame(() => calculateOptionsStyle())
 
 });
 watch(() => triggerMenuOverlay.value, () => {
 
-  if(triggerMenuOverlay.value && open.value) {
+  if (triggerMenuOverlay.value && open.value) {
     requestAnimationFrame(() => calculateOptionsStyle())
   }
 
@@ -97,7 +97,7 @@ onMounted(() => checkOverflow());
 /**
  * removes empty entries and adds active
  */
-function updateElements () {
+function updateElements() {
 
   const newElements: (LinkGroupElement & { active: boolean })[] = [];
 
@@ -112,27 +112,27 @@ function updateElements () {
     }
 
     newElements.push(newElement);
-    
+
   });
-  
+
   elementsArray.value = newElements;
 }
 
-function toggle (): void {
+function toggle(): void {
 
   open.value = !open.value;
-  if(!open.value) closeAll();
+  if (!open.value) closeAll();
 
 }
 
-function openElement (event: Event, element: LinkGroupElement & { active: boolean }) {
+function openElement(event: Event, element: LinkGroupElement & { active: boolean }) {
 
   open.value = false;
   attachTo.value = undefined;
 
   console.log(event, element);
 
-  if(element.active) {
+  if (element.active) {
 
     element.active = false;
     open.value = false;
@@ -151,9 +151,9 @@ function openElement (event: Event, element: LinkGroupElement & { active: boolea
 
 }
 
-function toggleTriggerElement (event: Event, element: LinkGroupElement & { active: boolean }) {
+function toggleTriggerElement(event: Event, element: LinkGroupElement & { active: boolean }) {
 
-  if(element.active) {
+  if (element.active) {
 
     element.active = false;
 
@@ -166,7 +166,7 @@ function toggleTriggerElement (event: Event, element: LinkGroupElement & { activ
 
 }
 
-function closeAll () {
+function closeAll() {
 
   elementsArray.value?.forEach((element) => {
     element.active = false;
@@ -181,9 +181,9 @@ function closeAll () {
  * If this is true we switch to triggerMenu through isOverflow
  * 
  */
-function checkOverflow () {
+function checkOverflow() {
 
-  if(!linksContainer.value || !logoContainer.value || !links.value) return;
+  if (!linksContainer.value || !logoContainer.value || !links.value) return;
 
   // Calculate the available width inside the links container.
   // Subtract 60 pixels as a margin or padding.
@@ -202,7 +202,7 @@ const calculateOptionsStyle = () => {
 
   const overlayElement = useTriggerMenu.value ? triggerMenuOverlay.value : overlay.value;
 
-  if(!overlayElement || isLeft.value) {
+  if (!overlayElement || isLeft.value) {
 
     style.value = {};
     return;
@@ -211,26 +211,26 @@ const calculateOptionsStyle = () => {
   const bounds = overlayElement.getBoundingClientRect();
   const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
 
-  if(!targetBounds) return;
+  if (!targetBounds) return;
 
   let left = targetBounds.left;
   const top = targetBounds.top + targetBounds.height;
   const body = document.querySelector('body') as HTMLBodyElement;
   const positionLeft = targetBounds.left + bounds.width + 50 > body.offsetWidth;
 
-  if(positionLeft) {
+  if (positionLeft) {
 
     left = targetBounds.left - bounds.width + targetBounds.width;
-    if(!useTriggerMenu.value) left += 10;
+    if (!useTriggerMenu.value) left += 10;
 
   } else {
 
     //match the padding of the attachTo element and the links inside the overlay
-    if(!useTriggerMenu.value) left -= 10;
-    
+    if (!useTriggerMenu.value) left -= 10;
+
   }
 
-  if(media.value === 'wide' && useTriggerMenu.value) {
+  if (media.value === 'wide' && useTriggerMenu.value) {
     left -= 20;
   }
 
@@ -238,7 +238,7 @@ const calculateOptionsStyle = () => {
   // top += 1;
 
   style.value = {
-    top : `${top}px`,
+    top: `${top}px`,
     left: `${left}px`,
   };
 
@@ -246,10 +246,11 @@ const calculateOptionsStyle = () => {
 
 </script>
 <template>
-  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]" class="lila-navigation-module lila-module"> {{ useTriggerMenu}}
+  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]"
+    class="lila-navigation-module lila-module"> {{ useTriggerMenu }}
     <section class="placeholder"></section>
 
-    <section class="overflow-container"> 
+    <section class="overflow-container">
       <section ref="linksContainer" class="links-container">
         <section ref="logoContainer" class="logo-container">
           <a class="logo" href="/">
@@ -258,7 +259,7 @@ const calculateOptionsStyle = () => {
           </a>
         </section>
 
-        <button v-if="useTriggerMenu" class="trigger" :class="{open}" @click="toggle"> 
+        <button v-if="useTriggerMenu" class="trigger" :class="{ open }" @click="toggle">
           <div class="placeholder"></div>
           <div class="trigger-container">
             <span></span>
@@ -268,14 +269,16 @@ const calculateOptionsStyle = () => {
         </button>
 
         <section ref="links" class="links">
-          <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
+          <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
 
-            <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" /> 
+            <lila-link-partial :key="`link-${index}`" class="main" :class="{ isActive: element.active }"
+              v-if="!element.links" v-bind="element" />
 
-            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="white" v-bind="element" icon="arrow-right"  @click="openElement($event, element)">
+            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="white" v-bind="element"
+              icon="arrow-right" @click="openElement($event, element)">
               {{ element.text }}
             </lila-button-partial>
-            
+
           </template>
         </section>
       </section>
@@ -286,41 +289,46 @@ const calculateOptionsStyle = () => {
 
       <teleport to="body">
         <transition name="menu">
-            <lila-overlay-background-partial :index="5" :key="activeKey" class="lila-navigation-module-overlay-background" v-if="overlayContent && open && !useTriggerMenu" background="none" @close="toggle">
-                <ul class="lila-navigation-module-overlay" v-if="overlayContent" ref="overlay" :style="style">
-                  <li :key="`sublinks-${index}`" v-for="(single, index) in overlayContent">
-                    <lila-link-partial v-if="single.text" v-bind="single" />
-                  </li>
-                </ul>
-            </lila-overlay-background-partial>
-          </transition>
+          <lila-overlay-background-partial :index="5" :key="activeKey" class="lila-navigation-module-overlay-background"
+            v-if="overlayContent && open && !useTriggerMenu" background="none" @close="toggle">
+            <ul class="lila-navigation-module-overlay" v-if="overlayContent" ref="overlay" :style="style">
+              <li :key="`sublinks-${index}`" v-for="(single, index) in overlayContent">
+                <lila-link-partial v-if="single.text" v-bind="single" />
+              </li>
+            </ul>
+          </lila-overlay-background-partial>
+        </transition>
       </teleport>
-  
+
       <teleport to="body">
         <transition name="menu">
-            <lila-overlay-background-partial :index="isLeft ? 7 : 5" class="lila-navigation-module-overlay-background" v-if="open && useTriggerMenu || isLeft" :inactive="isLeft && !open" background="none" @close="toggle">
-              <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu" :class="[variant, {open}]" :style="style">
-                <template v-for="(element, index) in elementsArray" :key="`button-${index}`" >
-  
-                  <lila-link-partial :key="`link-${index}`" class="main" :class="{isActive: element.active}" v-if="!element.links" v-bind="element" />
-  
-                  <section :key="`group-${index}`" v-if="element.links" class="link-group main">
-  
-                    <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="white" @click="toggleTriggerElement($event, element)">
-                      {{ element.text }}
-                    </lila-button-partial>
-  
-                    <ul class="link-list" v-show="element.links && element.active">
-                      <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
-                        <lila-link-partial v-if="single.text" v-bind="single"></lila-link-partial>
-                      </li>
-                    </ul>
-  
-                  </section>
-                </template>
-              </section>
-            </lila-overlay-background-partial>
-          </transition>
+          <lila-overlay-background-partial :index="isLeft ? 7 : 5" class="lila-navigation-module-overlay-background"
+            v-if="open && useTriggerMenu || isLeft" :inactive="isLeft && !open" background="none" @close="toggle">
+            <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu"
+              :class="[variant, { open }]" :style="style">
+              <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
+
+                <lila-link-partial :key="`link-${index}`" class="main" :class="{ isActive: element.active }"
+                  v-if="!element.links" v-bind="element" />
+
+                <section :key="`group-${index}`" v-if="element.links" class="link-group main">
+
+                  <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="white"
+                    @click="toggleTriggerElement($event, element)">
+                    {{ element.text }}
+                  </lila-button-partial>
+
+                  <ul class="link-list" v-show="element.links && element.active">
+                    <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
+                      <lila-link-partial v-if="single.text" v-bind="single"></lila-link-partial>
+                    </li>
+                  </ul>
+
+                </section>
+              </template>
+            </section>
+          </lila-overlay-background-partial>
+        </transition>
       </teleport>
 
     </lila-client-only-partial>
@@ -328,8 +336,9 @@ const calculateOptionsStyle = () => {
   </nav>
 </template>
 <style lang="less" scoped>
+.lila-navigation-module-overlay,
+.lila-navigation-module {
 
-.lila-navigation-module-overlay, .lila-navigation-module {
   a,
   :deep(.lila-button) {
     .font-head;
@@ -352,6 +361,7 @@ const calculateOptionsStyle = () => {
     cursor: pointer;
 
     .basicHover;
+
     &.isActive {
       color: @color3
     }
@@ -359,6 +369,7 @@ const calculateOptionsStyle = () => {
   }
 
 }
+
 .lila-navigation-module {
   .index(6);
 
@@ -369,17 +380,19 @@ const calculateOptionsStyle = () => {
   background-color: transparent;
   transition-delay: 0s;
 
-  a, :deep(.lila-button.icon.iconText) {
+  a,
+  :deep(.lila-button.icon.iconText) {
     .multi(padding, 0, 2);
   }
 
-  .logo, .trigger {
+  .logo,
+  .trigger {
     padding: 0;
   }
 
   .placeholder {
     height: 40px;
-  
+
   }
 
   &.overlay {
@@ -438,13 +451,15 @@ const calculateOptionsStyle = () => {
 
       transform: rotate(0);
     }
+
     &:hover {
-        .trigger-container {
-          span {
-            background-color: @color2;
-          }
+      .trigger-container {
+        span {
+          background-color: @color2;
         }
       }
+    }
+
     &.open {
 
       .trigger-container {
@@ -584,6 +599,7 @@ const calculateOptionsStyle = () => {
   &.useTriggerMenu {
 
     width: 100%;
+
     @media @desktop {
       max-width: 100%;
     }
@@ -594,18 +610,19 @@ const calculateOptionsStyle = () => {
     }
 
     &.left {
-      
-      a, :deep(.lila-button) {
+
+      a,
+      :deep(.lila-button) {
         .multi(padding, 0, 4);
         border-bottom: solid 1px @color3;
         color: @white;
-  
+
         svg {
           stroke: @white;
         }
-  
+
         .trans(background);
-  
+
         &:hover {
           background-color: @color3;
           opacity: 1;
@@ -618,7 +635,7 @@ const calculateOptionsStyle = () => {
         a {
           .multi(padding, 0, 8);
         }
-        
+
       }
     }
 
@@ -627,7 +644,7 @@ const calculateOptionsStyle = () => {
 
 .lila-overlay-background {
   transition: opacity @aTime @aType, transform @aTime @aType;
-  
+
   .lila-navigation-module-overlay {
     transition: opacity @aTime @aType, transform @aTime @aType;
     background-color: @white;
@@ -652,6 +669,7 @@ const calculateOptionsStyle = () => {
       top: 0;
       left: 0;
       transform: translateX(-250px);
+
       &.open {
         transform: translateX(0);
       }
@@ -662,7 +680,7 @@ const calculateOptionsStyle = () => {
 
   &.menu-leave-active {
 
-    .lila-navigation-module-overlay { 
+    .lila-navigation-module-overlay {
       opacity: 0;
       transform: translateY(-5px);
 
@@ -672,12 +690,12 @@ const calculateOptionsStyle = () => {
       }
 
     }
-    
+
   }
 
   &.menu-enter-active {
 
-    .lila-navigation-module-overlay { 
+    .lila-navigation-module-overlay {
 
       opacity: 0;
       transform: translateY(-5px);
@@ -690,5 +708,4 @@ const calculateOptionsStyle = () => {
   }
 
 }
-
 </style>

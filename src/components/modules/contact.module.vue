@@ -9,7 +9,7 @@ import { computed, onBeforeMount, onServerPrefetch, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
-  type ErrorObject, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
+  type ErrorObject, type GenericDataDistributed, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
@@ -27,7 +27,7 @@ const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
     textblock: Textblock;
     categoryTextblock: Textblock;
-    genericData: GenericDataWithContent;
+    genericData: GenericDataDistributed;
     editor?: {modes: string[]},
     agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {};
 }>();
@@ -51,7 +51,7 @@ const list = computed<BasicData<List> | undefined>(() => {
 
   if(props.genericData.data) {
 
-    return props.genericData.data[props.genericData.lists[0]] as BasicData<List>
+    return props.genericData.data[props.genericData.lists[0].toString()] as BasicData<List>
 
   }
 
@@ -132,7 +132,7 @@ const selectCategories = computed<SelectOption[] | null>(() => {
 const feedback = computed<BasicData<Content>|undefined>(() => {
 
   if(props.genericData?.editor && props.genericData?.data && Array.isArray(props.genericData.editor)){
-    return props.genericData.data[props.genericData.editor[0]] as BasicData<Content>;
+    return props.genericData.data[props.genericData.editor[0].toString()] as BasicData<Content>;
   }
 
   return undefined
@@ -330,15 +330,12 @@ const handleForm = async (event: Event) => {
   try {
     
     const sdk = new StudioSDK(mainStore.apiConfig);
-
-    console.log(auth.isAuth);
-
-    const call = auth.isAuth 
+    const call = auth.isAuth.value 
       ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements)
       : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
     const customerResponse = await traceable(call, traceId);
 
-    if(!auth.isAuth) {
+    if(!auth.isAuth.value) {
       setCustomer(customerResponse.data);
     }
 

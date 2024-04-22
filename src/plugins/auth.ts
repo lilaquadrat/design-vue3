@@ -31,8 +31,6 @@ class Auth {
 
     }
 
-    console.log(this.isAuth.value);
-
     try {
       
       if (this.isAuth.value && !this.token.value) await this.getToken();
@@ -54,19 +52,14 @@ class Auth {
 
   async getToken () {
 
-    console.log('get token');
-
     this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access', audience: 'https://testapi.lilaquadrat.de' } });
 
   }
 
   async refreshToken () {
 
-    console.log('refresh token');
-
     this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access', audience: 'https://testapi.lilaquadrat.de' } });
 
-    console.log(this.token.value, await this.getTokenContent());
   }
 
   getTokenContent (): Promise<IdTokenExtended | undefined> {
@@ -75,15 +68,15 @@ class Auth {
 
   }
 
-  triggerLogin (customerId?: string) {
+  triggerLogin (customerId?: string, emailConfirmationCode?: string) {
 
-    this.auth0.loginWithRedirect<AppState>({ appState: { customerId } });
+    this.auth0.loginWithRedirect<AppState>({ appState: { customerId, emailConfirmationCode } });
 
   }
 
-  triggerRegister (customerId?: string) {
+  triggerRegister (customerId?: string, emailConfirmationCode?: string) {
 
-    this.auth0.loginWithRedirect<AppState>({ appState: { customerId }, authorizationParams: { screen_hint: 'signup' } });
+    this.auth0.loginWithRedirect<AppState>({ appState: { customerId, emailConfirmationCode }, authorizationParams: { screen_hint: 'signup' } });
 
   }
 
@@ -98,7 +91,6 @@ class Auth {
 
     const result = await this.auth0.handleRedirectCallback<AppState>();
 
-    console.log(result);
     await this.updateAuthStatus();
     await this.getToken();
 

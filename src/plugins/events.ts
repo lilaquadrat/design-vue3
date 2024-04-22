@@ -6,13 +6,11 @@ const events = {
     
     const userStore = useUserStore();
 
-    auth.triggerLogin(userStore.customer?._id);
+    auth.triggerLogin(userStore.customer?._id, userStore.emailConfirmationCode);
     
   },
   logout: (params?: Record<string, unknown>) => {
     
-    const userStore = useUserStore();
-
     auth.triggerLogout();
     
   },
@@ -20,7 +18,7 @@ const events = {
     
     const userStore = useUserStore();
 
-    auth.triggerRegister(userStore.customer?._id);
+    auth.triggerRegister(userStore.customer?._id, userStore.emailConfirmationCode);
 
   },
   refresh_token: (params?: Record<string, unknown>) => {

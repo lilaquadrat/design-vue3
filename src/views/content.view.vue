@@ -85,8 +85,6 @@ async function getContent () {
 
   getStoreContent();
 
-  console.log(route.path);
-
   const filename = HelpersPlugin.getFilename(contentType.value, route.path);
 
   if(data.value?.data?.settings?.filename?.includes(filename)) return;
@@ -113,7 +111,6 @@ async function getContent () {
 
     const typedError = error as AxiosError;
 
-    console.log(error);
     data.value = {data: undefined, status: typedError.response?.status as HttpStatusCode}
     
   } 

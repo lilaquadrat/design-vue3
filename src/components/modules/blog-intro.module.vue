@@ -22,11 +22,11 @@ const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const textTop = computed(() => ({
   headline: props.textblock?.headline,
-  subline: props.textblock?.subline,
+  subline : props.textblock?.subline,
 }));
 const textBottom = computed(() => ({
   intro: props.textblock?.intro,
-  text: props.textblock?.text,
+  text : props.textblock?.text,
 }));
 const hasLink = computed(() => !!props.link?.link);
 

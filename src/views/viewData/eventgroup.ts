@@ -6,7 +6,9 @@ const content: Content = {
   company : 'company',
   project : 'project',
   settings: {
-    mode: 'presentation'
+    mode       : 'presentation',
+    title      : 'Eventgroup',
+    description: 'Multible Singleevents'
   },
   state  : 'publish',
   modules: [
@@ -36,9 +38,8 @@ const content: Content = {
               },
               moreText:
               {
-                text: 'more Text',
-                link: '/event-content',
-
+                text: 'some text',
+                link: '/test',
               },
               icon: 'location',
             },
@@ -58,9 +59,8 @@ const content: Content = {
               },
               moreText:
               {
-                text: 'more Text',
-                link: '/event-content',
-
+                text: 'some text',
+                link: '/test',
               },
               icon: 'location',
               picture:
@@ -91,9 +91,8 @@ const content: Content = {
               },
               moreText:
               {
-                text: 'more Text',
-                link: '/event-content',
-
+                text: 'some text',
+                link: '/test',
               },
               icon: 'location',
               picture:
@@ -119,7 +118,7 @@ const content: Content = {
               },
               moreText:
               {
-                text: 'more Text',
+                text: 'some text',
                 link: '/test',
               }
               ,
@@ -129,6 +128,87 @@ const content: Content = {
                 source: [],
                 alt   : 'IMAGE ALT',
                 src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/instrument.png',
+              }
+            },
+          ],
+        },
+        {
+          date    : '2019-11-12T14:00:02.561+00:00',
+          elements: [
+            {
+              startDate: '2019-11-07T14:00:02.561+00:00',
+              endDate  : '2019-11-07T16:00:02.561+00:00',
+              textblock: {
+                headline: 'Macy Gray and The California Jet Club',
+                subline : `${'Until '}`+dayjs('2019-03-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
+                intro   : dayjs('2019-03-04T17:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T19:00:02.561+00:00').format('HH:mm'),
+                text    : [
+                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
+                ],
+              },
+              link: {
+                link: 'Eventslocation',
+              },
+              moreText:
+              {
+                text: 'some text',
+                link: 'some text',
+              },
+              icon: 'location',
+            },
+            {
+              startDate: '2019-11-07T14:00:02.561+00:00',
+              endDate  : '2019-11-07T16:00:02.561+00:00',
+              textblock: {
+                headline: 'Macy Gray and The California Jet Club',
+                subline : `${'Until '}`+dayjs('2019-03-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
+                intro   : dayjs('2019-03-04T18:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T20:00:02.561+00:00').format('HH:mm'),
+                text    : [
+                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
+                ],
+              },
+              link: {
+                link: 'Eventslocation',
+              },
+              moreText:
+              {
+                text: 'some text',
+                link: 'some text',
+              },
+              icon: 'location',
+              picture:
+              {
+                source: [],
+                alt   : 'IMAGE ALT',
+                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/sidemusician.jpg',
+              }
+            },
+            {
+              startDate: '2019-11-07T10:00:02.561+00:00',
+              endDate  : '2019-11-07T12:00:02.561+00:00',
+              textblock: {
+                headline: 'Macy Gray and The California Jet Club',
+                subline : `${'Until '}`+dayjs('2019-03-07T15:30:02.561+00:00').format('DD MMMM YYYY'),
+                intro   : dayjs('2019-03-04T12:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T14:00:02.561+00:00').format('HH:mm'),
+                text    : [
+                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
+                ],
+              },
+              link: {
+                link: 'Eventslocation',
+              },
+              moreText:
+              {
+                text: 'some text',
+                link: '/test',
+              }
+              ,
+              icon: 'location',
+              picture:
+              {
+                source: [],
+                alt   : 'IMAGE ALT',
+                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/2musicians.png',
               }
             },
           ],

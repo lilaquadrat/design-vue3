@@ -22,7 +22,7 @@ const traceId = ref<string>();
 const errors = ref<ResponseError>();
 const errorsObject = ref<ErrorsObject>();
 const translationPre = '';
-const customerId = ref<string>();
+const confirmationCode = ref<string>();
 
 function updateErrors (newErrorsObject?: ErrorsObject) {
 
@@ -32,15 +32,16 @@ function updateErrors (newErrorsObject?: ErrorsObject) {
 
 async function handleForm () {
 
-  if(!customerId.value) return;
+  console.log(confirmationCode.value, userStore.locked);
+  if(!confirmationCode.value) return;
 
   const sdk = new StudioSDK(apiConfig)
 
   try {
 
-    await traceable(sdk.members.me.connect(customerId.value), traceId);
+    await traceable(sdk.members.me.confirmEmail(confirmationCode.value), traceId);
     await userStore.updateLock();
-    
+
   } catch (error) {
 
     errors.value = error.response?.data;
@@ -55,11 +56,11 @@ async function handleForm () {
 
         <form>
             <lila-fieldset-partial>
-                <lila-input-partial v-model="customerId" :error="errorsObject?.customerId" required>{{ $translate('customerId') }}</lila-input-partial>
+                <lila-input-partial v-model="confirmationCode" :error="errorsObject?.confirmationCode" required>{{ $translate('confirmationCode') }}</lila-input-partial>
             </lila-fieldset-partial>
 
             <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
-                <lila-button-partial save :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">{{$translate('connect-to-user')}}</lila-button-partial>
+                <lila-button-partial save :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">{{$translate('confirm-email')}}</lila-button-partial>
             </lila-action-notice-partial>
         </form>
     </article>

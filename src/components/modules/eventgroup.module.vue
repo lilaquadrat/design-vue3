@@ -2,14 +2,14 @@
 import { onBeforeMount, ref, defineProps, computed } from 'vue';
 import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
-import type SingleEventElement from '../../interfaces/SingleEventElement';
 import type Textblock from '../../interfaces/textblock.interface';
+import type EventGroupElement from '../../interfaces/EventGroupElement';
 
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
   textblock: Textblock;
-  events: SingleEventElement[];
+  events: EventGroupElement[];
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
@@ -27,7 +27,7 @@ onBeforeMount(() => {
 //  * sorts all events by the same day and sorts its 
 //  * containing SingleEventElement by theirstarting time 
 //  */
-function setElements(elements: SingleEventElement[]) {
+function setElements (elements: EventGroupElement[]) {
   elements.sort((a: any, b: any) => a.date.localeCompare(b.date));
 
   elements.forEach((single: any) => {
@@ -52,9 +52,8 @@ function setElements(elements: SingleEventElement[]) {
       <header class="title-container">
         <lila-textblock-partial v-bind="title" />
       </header>
-
       <section class="event-container" v-for="(event, index) in events" :key="`event-${index}`">
-        <lila-single-event-partial class="event" v-bind="event" />
+        <lila-eventgroup-partial class="event" v-bind="event" />
       </section>
     </section>
 
@@ -64,6 +63,7 @@ function setElements(elements: SingleEventElement[]) {
 <style lang="less" scoped>
 .lila-event-group-module {
   .module;
+  max-width: @moduleWidth_XS;
 
   @media @desktop {
     max-width: fit-content;
@@ -71,7 +71,7 @@ function setElements(elements: SingleEventElement[]) {
 
   .elements-container {
     display: grid;
-
+    padding-bottom: 40px;
     .title-container {
       padding-bottom: 60px;
 
@@ -83,6 +83,7 @@ function setElements(elements: SingleEventElement[]) {
       }
 
       @media @desktop {
+       
         :deep(.lila-textblock) {
           h1 {
             font-size: @headline_XL;
@@ -91,13 +92,8 @@ function setElements(elements: SingleEventElement[]) {
         }
       }
     }
-
-    .event-container {
-      @media @desktop {
-        padding: 0 40px;
-      }
-    }
   }
 }
 </style>
+
 

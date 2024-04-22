@@ -104,7 +104,6 @@ const linkVariant = computed(() => {
         color: @white;
       }
     }
-
   }
 }
 </style>

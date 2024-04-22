@@ -63,7 +63,6 @@ function event ($event: MouseEvent) {
   color: @link;
   .font-normal;
   .trans(color);
-
   &:hover {
     color: @linkHover;
   }

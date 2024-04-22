@@ -3,12 +3,12 @@ import { defineProps, defineOptions, ref, computed, onBeforeMount } from 'vue';
 import { useInview } from '../../plugins/inview';
 import dayjs from 'dayjs';
 import type Link from '../../interfaces/link.interface';
-import type SingleEventElement from '../../interfaces/SingleEventElement';
+import type EventGroupElement from '../../interfaces/EventGroupElement';
 
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
-  elements: SingleEventElement[];
+  elements: EventGroupElement[];
   variant?: string[];
   date: string;
 
@@ -16,10 +16,10 @@ const props = defineProps<{
 const elementsContainer = ref<HTMLElement>();
 const parentElement = ref<HTMLElement>();
 const imageContainer = ref<HTMLElement>();
-const eventsElements = ref<SingleEventElement[]>([]);
+const eventsElements = ref<EventGroupElement[]>([]);
 const { inviewState } = useInview(parentElement, { align: props.variant ? props.variant?.includes('align') : false });
 
-function componentType(link?: Link): 'lila-link-partial' | 'section' {
+function componentType (link?: Link): 'lila-link-partial' | 'section' {
   return link?.link?.length ? 'lila-link-partial' : 'section';
 }
 
@@ -29,10 +29,10 @@ onBeforeMount(() => {
 });
 
 /**
- * organizes an array of SingleEventElement objects into groups by their start date
- * each SingleEventElement is then mapped to a new object structure that includes its given content
+ * organizes an array of EventGroupElement objects into groups by their start date
+ * each EventGroupElement is then mapped to a new object structure that includes its given content
  */
-function setElements(elements: SingleEventElement[]) {
+function setElements (elements: EventGroupElement[]) {
   const groupedEvents: any[] = [];
   const groupedContent: any[] = [];
 
@@ -40,15 +40,15 @@ function setElements(elements: SingleEventElement[]) {
     const eventContent = {
       textblock: {
         headline: item.textblock.headline,
-        subline: item.textblock.subline,
-        intro: item.textblock.intro,
-        text: item.textblock.text
+        subline : item.textblock.subline,
+        intro   : item.textblock.intro,
+        text    : item.textblock.text
       },
-      link: item.link,
+      link    : item.link,
       moreText: item.moreText,
-      icon: item.icon,
-      picture: item.picture,
-      video: item.video,
+      icon    : item.icon,
+      picture : item.picture,
+
     };
 
     if (item.startDate) {
@@ -56,7 +56,7 @@ function setElements(elements: SingleEventElement[]) {
 
       if (!group) {
         group = {
-          date: item.startDate,
+          date  : item.startDate,
           events: []
         };
         groupedEvents.push(group);
@@ -80,25 +80,42 @@ function setElements(elements: SingleEventElement[]) {
 
 }
 
-const dateItem = computed(() => {
-  const date = props.date ? dayjs(props.date) : null;
-
-  return {
-    day: date ? date.format('DD') : '',
-    weekDay: date ? date.format('dd').toUpperCase() : '',
-  };
-});
+//const date = computed(() => ({day: props.date ? dayjs(props.date).format('DD') : '', weekDay: props.date ? dayjs(props.date).format('DD').toUpperCase() : ''}));
+const time = computed(() => ({
+  firstDigit : props.date ? dayjs(props.date).format('DD')[0] : '', 
+  secondDigit: props.date ? dayjs(props.date).format('DD')[1] : '',
+  firstChar  : props.date ? dayjs(props.date).format('dd')[0] : '',
+  secondChar : props.date ? ((dayjs(props.date).format('dd')).toUpperCase()[1]) : '',
+}))
 
 </script>
 
-<template v-if="!hasImage">
-  <section ref="parentElement" class="lila-single-event-partial" :class="[inviewState]">
+<template>
+  <section ref="parentElement" class="lila-eventgroup-partial" :class="[inviewState]">
     <section class="elements-container">
+      <!-- <section class="time-container">
+        <section class="time">
+          <time v-if="date">
+            {{ date.day }}
+          </time>
+          <time v-if="date">
+            {{ date.weekDay }}
+          </time>
+        </section>
+      </section> -->
 
       <section class="time-container">
         <section class="time">
-          <time v-if="date">{{ dateItem.day }}</time>
-          <time v-if="date">{{ dateItem.weekDay }}</time>
+          <time v-bind="time">
+            <div>
+              <span>{{ time.firstDigit }}</span>
+              <span>{{ time.secondDigit }}</span>
+            </div>
+            <div>
+              <span>{{ time.firstChar }}</span>
+              <span>{{ time.secondChar }}</span>
+            </div>
+          </time>
         </section>
       </section>
 
@@ -122,7 +139,7 @@ const dateItem = computed(() => {
                     <lila-icons-partial type="location" size="large" class="icon green" v-if="single" v-bind="single" />
                   </section>
                   <section class="location-link">
-                    <lila-link-partial v-if="single.link?.text" v-bind:link="single.link?.text" />
+                    <lila-link-partial v-if="single.link?.text" v-bind="single.link?.text" />
                     {{ single.link?.link }}
                   </section>
                 </section>
@@ -132,81 +149,100 @@ const dateItem = computed(() => {
 
           <section class="event-content">
             <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
-
             <section class="more-text">
-              <lila-link-partial v-if="single.moreText" class="moreText-link" v-bind="single.moreText" />
+                <component :is="componentType(single.moreText)" v-bind="single.moreText">
+                  {{ single.moreText?.text }}
+                </component>
             </section>
-
           </section>
         </section>
       </section>
 
     </section>
-    <section class="seperator">
-      <hr />
-    </section>
+    <section class="seperator"> <hr /> </section>
   </section>
 </template>
-
 <style lang="less" scoped>
-.lila-single-event-partial {
-
-  max-width: @moduleWidth_XS;
-
-  @media @desktop {
-    max-width: @moduleWidth_L;
-  }
-
+.lila-eventgroup-partial {
+  // -webkit-font-smoothing: antialiased;
+  // font-synthesis: style;
+  // text-rendering: optimizeLegibility;
   .elements-container {
     display: grid;
     gap: 0 40px;
-
+   
     @media @desktop {
       gap: 0 80px;
-      max-width: @moduleWidth_L;
     }
+  //  .time-container {
+  //     display: grid;
+  //     .font-head;
+  //     font-variant-caps:small-caps ;
+  //     font-variant-numeric: tabular-nums;
 
+  //     @media @desktop {
+  //       align-content: center;
+    
+  //     }
+
+  //     .time {
+  //       gap: 15px;
+  //       display: grid;
+  //       border: .5px red solid; 
+  //       text-align: center;
+  //       font-size: @headline_L;
+  //       line-height: @headlineLineHeight_L;
+  //       width: 64px;
+
+  //       @media @desktop {
+  //         width: 83px;
+  //         font-size: @headline_XL;
+  //         line-height: @headlineLineHeight_XL;
+         
+  //       }
+  //     }
+  //   }
     .time-container {
-      display: grid;
-
-      @media @desktop {
-        align-content: center;
-      }
-
-      .time {
-        display: grid;
-        gap: 15px;
-        text-align: center;
-        font-size: @headline_L;
+       display: grid; 
+       .font-head;
+       font-size: @headline_L;
         line-height: @headlineLineHeight_L;
-        .font-head;
-        height: fit-content;
+        padding: 40px 0;
         width: 64px;
-
+        
         @media @desktop {
+          align-self: center;
           width: 83px;
-          text-align: center;
-
           font-size: @headline_XL;
           line-height: @headlineLineHeight_XL;
         }
+      .time {
+        display: grid;
+        
+        justify-content: stretch;
+        text-align: center;
+        justify-self: center;
       }
+      div {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: grid;
+        min-width: 100%;
+
+        }
+        div:first-child {
+          padding-bottom:15px;
+       }
     }
 
     .events-container {
       display: grid;
       grid-column-start: 2;
-
+      padding: 40px 0;
       @media @desktop {
         gap: 44px;
-        grid-template-columns: max-content 1fr;
-        padding-bottom: 40px;
-        grid-column-end: 4;
-        height: auto;
+        grid-template-columns: max-content 100%;
       }
-
       .img-container {
-
         width: 260px;
         height: 220px;
         overflow: hidden;
@@ -221,7 +257,6 @@ const dateItem = computed(() => {
           width: 100%;
           height: 100%;
           overflow: visible;
-
           .picture-container {
             object-fit: none;
           }
@@ -229,10 +264,9 @@ const dateItem = computed(() => {
       }
 
       .informations-container {
-
-        //grid-column-end: 4;
         @media @desktop {
-          width: fit-content;
+           width:100%;
+           overflow: hidden;
         }
 
         .event-info {
@@ -240,13 +274,11 @@ const dateItem = computed(() => {
 
           :deep(.lila-textblock) {
             gap: 0;
-            width: fit-content;
-
+            //width: fit-content;
             h1,
             p {
               display: none;
             }
-
             h2,
             h3 {
 
@@ -265,7 +297,6 @@ const dateItem = computed(() => {
               padding-bottom: 13px;
             }
           }
-
           .event-link-info {
             padding-bottom: 15px;
             display: grid;
@@ -278,7 +309,6 @@ const dateItem = computed(() => {
               grid-template-columns: auto 1fr;
               gap: 55px;
             }
-
             .link-container {
               padding-top: 15px;
               font-weight: 700; // k.V.
@@ -287,22 +317,18 @@ const dateItem = computed(() => {
               grid-column-start: 2;
               display: flex;
               gap: 5px;
-
+              .font-bold;
             }
           }
-
         }
-
         .event-content {
           :deep(.lila-textblock) {
-
             h2,
             h3 {
               display: none;
             }
-
             h1 {
-              .font-bold;
+              //.font-bold;
               //font-weight: 700;
               height: 102px;
               font-size: @headline_S;
@@ -318,14 +344,12 @@ const dateItem = computed(() => {
           }
 
           @media @desktop {
-
             :deep(.lila-textblock) {
 
               h2,
               h3 {
                 display: none;
               }
-
               h1 {
                 font-size: 25px; //es gibt für die 25px  und 27px line-height keine Variable
                 line-height: 27px;
@@ -335,32 +359,28 @@ const dateItem = computed(() => {
               }
             }
           }
-        }
-      }
+          .more-text {
+            padding-bottom: 50px;
 
-      .more-text {
-        padding-bottom: 50px;
-
-        .moreText-link {
-          .font-bold;
-          color: @color4;
-          font-size: @headline_XS;
-          line-height: @headlineLineHeight_S;
+              :deep(.lila-link) {
+                color: @color1;
+                .font-bold;
+                font-size: @headline_XS;
+                font-style: italic;
+                line-height: @headlineLineHeight_S;
+              }
+          }
         }
       }
     }
   }
-
   .seperator {
     grid-column-start: 1;
     grid-row-start: 3;
-    padding-bottom: 40px;
 
     hr {
       border-top: 1px @textColor;
-
     }
   }
-
 }
 </style>

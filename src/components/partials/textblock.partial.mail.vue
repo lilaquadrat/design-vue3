@@ -14,11 +14,24 @@ const props = defineProps<{
   id?: string
 }>();
 const notEmpty: ComputedRef<boolean> = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
+const style = computed(() => {
+
+  const cssArray = ['table-layout: fixed; width: 100%;'];
+
+  if(props.variant?.includes('center')) {
+
+    cssArray.push('text-align:center;')
+
+  }
+
+  return cssArray.join('');
+
+});
 
 </script>
 
 <template >
-  <table :id="id" v-if="notEmpty" border="0" cellspacing="0" cellpadding="0">
+  <table :id="id" v-if="notEmpty" border="0" cellspacing="0" cellpadding="0" :style="style">
     <tr v-if="headline">
       <td><h1 style="text-transform: uppercase; padding: 0; margin: 0; font-weight: bold; color: #3f2d56; font-size: 34px; line-height: 36px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;">{{ $replacer(headline) }}</h1></td>
     </tr>

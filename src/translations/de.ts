@@ -125,5 +125,6 @@ export default {
   'CONTENT_NOT_FOUND'                                                                                     : 'Inhalt wurde nicht gefunden',
   'CONTENT_LOADING'                                                                                       : 'Wird geladen',
   'customerId'                                                                                            : 'Kunden ID',
-  'connect-to-user'                                                                                       : 'Account verbinden'
+  'connect-to-user'                                                                                       : 'Account verbinden',
+  'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen' 
 };

@@ -63,6 +63,7 @@ onServerPrefetch(() => {
 @import "./src/assets/less/loadFonts.less";
 
 body {
+
   .font-normal;
 
   @media print {

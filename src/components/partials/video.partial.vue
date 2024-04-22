@@ -81,7 +81,7 @@ const attributesObject = computed(() => {
 
 onBeforeMount(() => {
 
-  if(props.preload === 'auto') loadVideo.value = true;
+  if (props.preload === 'auto') loadVideo.value = true;
 
 })
 
@@ -95,9 +95,9 @@ onMounted(() => {
 /**
  * adds listeners for play, pause and ended events
  */
-function bind () {
+function bind() {
 
-  if(listenersAttached.value || !loadVideo.value) return;
+  if (listenersAttached.value || !loadVideo.value) return;
 
   if (videoType.value === 'basic' && videoElement.value) {
 
@@ -133,8 +133,8 @@ function bind () {
 
     youtubePlayer.value?.addEventListener('onStateChange', (event: YT.OnStateChangeEvent) => {
 
-      if(event.data === 1) isPlaying.value = true;
-      if(event.data === 2 || event.data === 0) isPlaying.value = false;
+      if (event.data === 1) isPlaying.value = true;
+      if (event.data === 2 || event.data === 0) isPlaying.value = false;
 
     })
 
@@ -149,7 +149,7 @@ function bind () {
  *
  * if preload is set to none, inits the loading 
  */
-function toggle () {
+function toggle() {
 
   /**
   * video was not preloaded and is not loaded
@@ -158,7 +158,7 @@ function toggle () {
 
     loadVideo.value = true;
     state.value = 'loading';
-    if(videoType.value === 'youtube') startYoutube();
+    if (videoType.value === 'youtube') startYoutube();
     return false;
 
   }
@@ -180,9 +180,9 @@ function toggle () {
 /**
  * trigger the loading of the youtube api and create the player when its done
  */
-function startYoutube () {
+function startYoutube() {
 
-  if(!youtubeApiState.value) {
+  if (!youtubeApiState.value) {
 
     addYoutube();
     watch(youtubeApiState, () => createYoutubePlayer());
@@ -197,11 +197,11 @@ function startYoutube () {
 
 }
 
-async function start (forcePlaying?: boolean) {
+async function start(forcePlaying?: boolean) {
 
-  if(!loadVideo.value) return false;
+  if (!loadVideo.value) return false;
 
-  if(videoType.value === 'youtube') {
+  if (videoType.value === 'youtube') {
 
     startYoutube();
     return;
@@ -209,7 +209,7 @@ async function start (forcePlaying?: boolean) {
   }
 
   await nextTick();
-  if(!videoElement.value) return;
+  if (!videoElement.value) return;
 
   const current = videoElement.value.querySelector('source[src]');
   const allSource = videoElement.value.querySelectorAll('source');
@@ -239,16 +239,16 @@ async function start (forcePlaying?: boolean) {
 
     }
 
-  }, 
-  {once: true}
+  },
+    { once: true }
   );
 
   videoElement.value.load();
 }
 
-function play () {
+function play() {
 
-  if(youtubePlayer.value) {
+  if (youtubePlayer.value) {
 
     youtubePlayer.value.playVideo();
 
@@ -258,16 +258,16 @@ function play () {
 
     if (props.attributes?.includes('unmuted')) {
 
-      if(videoElement.value) videoElement.value.muted = false;
-  
+      if (videoElement.value) videoElement.value.muted = false;
+
     }
   }
 
 }
 
-function pause () {
+function pause() {
 
-  if(youtubePlayer.value) {
+  if (youtubePlayer.value) {
 
     youtubePlayer.value.pauseVideo();
 
@@ -281,32 +281,33 @@ function pause () {
 /**
  * create the youtube player
  */
-function createYoutubePlayer () {
+function createYoutubePlayer() {
 
-  if(!youtubePlayerElement.value || !youtubeId.value) return;
+  if (!youtubePlayerElement.value || !youtubeId.value) return;
 
   const playerVars: YT.PlayerVars = {
-    loop    : props.attributes?.includes('loop') ? 1 : 0,
+    loop: props.attributes?.includes('loop') ? 1 : 0,
     autoplay: props.attributes?.includes('autoplay') ? 1 : 0,
-    mute    : props.attributes?.includes('mute') ? 1 : 0,
+    mute: props.attributes?.includes('mute') ? 1 : 0,
     controls: props.attributes?.includes('controls') ? 1 : 0,
-    rel     : 0,
+    rel: 0,
     showinfo: 0
+
   }
 
   youtubePlayer.value = new YT.Player(
-    youtubePlayerElement.value, 
+    youtubePlayerElement.value,
     {
-      height : '100%',
-      width  : '100%',
+      height: '100%',
+      width: '100%',
       videoId: youtubeId.value,
       playerVars,
-      events : {
+      events: {
         onReady: () => {
 
           bind();
           state.value = 'ready';
-          if(props.preload === 'none') play();
+          if (props.preload === 'none') play();
 
         }
       }
@@ -314,14 +315,16 @@ function createYoutubePlayer () {
   );
 
   bind();
-  
+
 }
 
 </script>
 <template>
   <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none' }, state]">
-    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
-    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder">
+    </section>
+    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster"
+      :class="[state, { loading: loading }]" :key="src">
       <source v-for="single in source" :key="single.media" :class="single.media" :data-src="single.source" />
       <track kind="captions" />
       <source v-if="src" :data-src="src" />
@@ -340,10 +343,12 @@ function createYoutubePlayer () {
     cursor: pointer;
   }
 
-  .youtube-container, .preload-placeholder {
+  .youtube-container,
+  .preload-placeholder {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* Aspect Ratio 16:9 */
+    padding-top: 56.25%;
+    /* Aspect Ratio 16:9 */
     overflow: hidden;
   }
 

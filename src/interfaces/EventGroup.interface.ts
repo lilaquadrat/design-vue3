@@ -1,7 +1,7 @@
-import type SingleEventElement from './SingleEventElement';
-import type Textblock from './textblock.interface';
+// import type SingleEventElement from './EventGroupElement';
+// import type Textblock from './textblock.interface';
 
-export default interface Eventgroup {
-    event: SingleEventElement[];
-    textblock: Textblock;
-}
+// export default interface Eventgroup {
+//     event: SingleEventElement[];
+//     textblock: Textblock;
+// }

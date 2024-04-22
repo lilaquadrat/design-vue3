@@ -1,7 +1,11 @@
 const customModules = [
   {
-    hint  : 'some-hint',
+    hint  : 'connect-user',
     module: 'connect-user-module',
+  },
+  {
+    hint  : 'confirm-email',
+    module: 'confirm-email-module',
   },
 ]
 

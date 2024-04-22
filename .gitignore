@@ -33,3 +33,4 @@ coverage
 .vscode
 
 config.ts
+stats.html

@@ -1,4 +1,4 @@
-import type EventsElement from './SingleEventElement';
+import type EventsElement from './EventGroupElement';
 
 export default interface Link {
 
