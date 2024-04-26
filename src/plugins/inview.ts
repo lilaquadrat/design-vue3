@@ -28,7 +28,7 @@ class Inview {
 
   });
 
-  constructor() {
+  constructor () {
 
     this.scrolledEvent = new Event('scrolled');
     this.checkIsTop();
@@ -45,7 +45,7 @@ class Inview {
 
   }
 
-  addScrollListener(element: Element) {
+  addScrollListener (element: Element) {
 
     element.addEventListener('scroll', () => {
 
@@ -55,7 +55,9 @@ class Inview {
 
   }
 
-  trigger(isStart?: boolean) {
+  trigger (isStart?: boolean) {
+
+    if(!this.safeWindow.value) return;
 
     this.checkIsTop();
     this.scrollDirection.value = this.scrolled.value > this.safeWindow.value?.scrollY
@@ -68,13 +70,15 @@ class Inview {
 
   }
 
-  checkIsTop() {
+  checkIsTop () {
+
+    if(!this.safeWindow.value) return;
 
     this.isTop.value = this.safeWindow.value?.scrollY <= 0
 
   }
 
-  debounce() {
+  debounce () {
 
     /**
      * indicates that the scrolling has begun and fire an inital scrolling event without waiting for the debounce
@@ -95,12 +99,13 @@ class Inview {
 
   }
 
-  check(component: HTMLElement, state: Ref<string[]>, options?: { align?: boolean }) {
+  check (component: HTMLElement, state: Ref<string[]>, options?: { align?: boolean }) {
 
     const element = component;
     const newState = [];
 
     if (typeof element?.getBoundingClientRect !== 'function') return;
+    if(!this.safeWindow.value) return;
 
     const viewportHeight = this.safeWindow.value?.outerHeight;
     const height = this.safeWindow.value?.outerHeight / 2;
@@ -145,7 +150,7 @@ class Inview {
 
   }
 
-  checkPreload(component: HTMLElement, state: Ref<boolean>) {
+  checkPreload (component: HTMLElement, state: Ref<boolean>) {
 
     const preloadRange = window?.outerHeight * 2;
     const rect = component.getBoundingClientRect();
@@ -158,7 +163,7 @@ class Inview {
 
   }
 
-  adjustScrolling(component: HTMLElement, top: number) {
+  adjustScrolling (component: HTMLElement, top: number) {
 
     const offset = window?.outerHeight / 10;
 
@@ -186,7 +191,7 @@ const inview = new Inview();
  ** inview-visible - more than 30% of the element are visible in the current viewport, regardless if it is centered or nor
  */
 
-export function useInview(element?: Ref<HTMLElement | undefined>, options?: { align?: boolean, preload?: boolean }) {
+export function useInview (element?: Ref<HTMLElement | undefined>, options?: { align?: boolean, preload?: boolean }) {
 
   const state = ref<string[]>([]);
   const preload = ref<boolean>(false);

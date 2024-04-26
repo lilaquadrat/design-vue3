@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import {auth} from '@/plugins/auth';
+import useMainStore from '@/stores/main.store';
 import useUserStore from '@/stores/user.store';
-import { onBeforeMount } from 'vue';
-import { useRoute } from 'vue-router';
+import type { BasicData, Content } from '@lilaquadrat/interfaces';
+import type { SDKResponse } from '@lilaquadrat/sdk';
+import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
+import { computed, onBeforeMount, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
+const store = useMainStore();
 
 onBeforeMount(() => {
-  console.log('before mount', route.query);
 
   if(route.query.customerId) {
 
@@ -21,14 +26,40 @@ onBeforeMount(() => {
     userStore.emailConfirmationCode = route.query.emailConfirmationCode as string;
 
   }
+
+  if(!auth.isAuth.value) {
+
+    auth.triggerRegister(userStore.customer?._id, userStore.emailConfirmationCode);
+
+  } else {
+
+    router.push({name: 'members'})
+
+  }
   
 })
 
-function login () {
-  
-  auth.triggerLogin(userStore.customer?._id, userStore.emailConfirmationCode);
+const contentMerged = computed(() => {
 
-}
+  const data = store.staticData?.redirect;
+
+  if(data) return prepareContent(data);
+  return prepareContent({})
+
+}); 
 
 </script>
-<template>register <button @click="login">LOGIN</button></template>
+<template>
+  <section class="register-view">
+    <lila-content-module v-if="contentMerged" :content="contentMerged" />
+  </section>
+</template>
+<style lang="less" scoped>
+  .register-view {
+    display: grid;
+    align-content: center;
+    justify-content: center;
+
+    height: 80vh;
+  }
+</style>

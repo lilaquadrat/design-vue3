@@ -61,7 +61,7 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
 
       <section class="position-container" :class="{ visible: !playing }">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
-        <lila-indicator-partial  v-if="loading" :variant="variant" />
+        <lila-indicator-partial v-if="loading" :variant="variant" />
       </section>
 
       <lila-picture-partial class="posterExt" v-if="hasPoster" :class="{ visible: !playing }" v-bind="poster" />

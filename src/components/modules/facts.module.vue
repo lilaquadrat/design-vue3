@@ -8,8 +8,8 @@ import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
-  textblock: Textblock;
-  elements: Fact[];
+  textblock?: Textblock;
+  elements?: Fact[];
   variant?: string[];
 }>();
 const active = ref<number>(0);

@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import type GenericModel from '@lilaquadrat/interfaces';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 
 type DeclarationTypes = 'string' | 'number' | 'boolean' | 'object';
@@ -57,7 +56,7 @@ class Models {
 
   options: Record<string, ModelOptions> = {};
 
-  hooks: Record<string, ModelHooks<unknown>> = {};
+  hooks: Record<string, ModelHooks<T>> = {};
 
   debug: boolean = false;
 
@@ -79,8 +78,9 @@ class Models {
     // this.registeredModels[name] = declaration;
     this.registeredModels.push(name);
     this.declarations[name] = options?.extends ? this.extendDeclaration(declaration, options.extends) : declaration;
-    this.options[name] = options;
-    this.hooks[name] = hooks;
+    
+    if(options) this.options[name] = options;
+    if(hooks) this.hooks[name] = hooks;
 
   }
 

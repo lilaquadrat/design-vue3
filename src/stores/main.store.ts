@@ -79,7 +79,7 @@ export const useMainStore = defineStore('main', () => {
   async function getContent(params: { filename: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent(params: { id: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent(params: { internalId: string }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
-  async function getContent(params: { latest: true, predefined: true, categories: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
+  async function getContent(params: { latest?: boolean, predefined?: boolean, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>>
   async function getContent (params: { predefined?: boolean, filename?: string, latest?: boolean, id?: string, internalId?: string, categories?: string[] }, type: 'public' | 'members'): Promise<SDKResponse<BasicData<Content>|undefined>> {
 
     const sdk = new StudioSDK(apiConfig.value);

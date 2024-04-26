@@ -9,9 +9,9 @@ import { computed, ref, watch, type Ref } from 'vue';
 
 const store = useMainStore();
 const props = defineProps<{
-  alt: string;
+  alt?: string;
 
-  src: string;
+  src?: string;
 
   copyright?: string;
   source?: Picture['source'];

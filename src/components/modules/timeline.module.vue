@@ -20,7 +20,6 @@ const date = computed(() => ({
   dayMonth: props.date ? dayjs(props.date).locale('de').format('DD, MMMM').toUpperCase() : ''
 }));
 const emit = defineEmits<{(e: string, event?: Event): void}>();
-//const emit = defineEmits(['click']);
 
 onBeforeMount(() => {
   if (props.elements) {
@@ -64,16 +63,10 @@ function activated (): void {
 
 }
 
-function activeMedia (element: TimelineElement) {
-  const target = element.media;
+function activeMedia () {
 
-  if (!target) {
-    active.value = false;
-  } else if (target) {
-
-    active.value = false;
-  }
-
+  active.value = false;
+  
   emit('click');
 }
 
@@ -84,7 +77,7 @@ function activeMedia (element: TimelineElement) {
     <section class="elements-container">  
       <section class="singleelement-container" v-for="(element, index) in elementsExtended"
         :class="[element.position, { noMedia: !element.media }]" :key="`timeline-withpositions${index}`">
-        <section ref="timeContainer" class="time-container" @click="activeMedia(element)">
+        <section ref="timeContainer" class="time-container" @click="activeMedia">
           <time v-if="date" class="year">{{ date.year }}</time>
           <time v-if="date" class="dayMonth">{{ date.dayMonth }}</time>
         </section>
@@ -98,7 +91,7 @@ function activeMedia (element: TimelineElement) {
           </template>
         </section>
 
-        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia(element)">
+        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia">
           <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
           <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
           <lila-list-partial v-if="element.list" v-bind="element.list" />

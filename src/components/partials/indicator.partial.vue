@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 const props = defineProps<{
-  small: boolean
-  medium: boolean
-  large: boolean
+  small?: boolean
+  medium?: boolean
+  large?: boolean
   variant?: string[]
 }>();
 

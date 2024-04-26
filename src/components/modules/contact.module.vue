@@ -10,7 +10,7 @@ import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.inter
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
   type ErrorObject, type GenericDataDistributed, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
-import StudioSDK from '@lilaquadrat/sdk';
+import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
 import { useTraceable } from '@/plugins/traceable';
@@ -25,8 +25,8 @@ const mainStore = useMainStore();
 const userStore = useUserStore();
 const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
-    textblock: Textblock;
-    categoryTextblock: Textblock;
+    textblock?: Textblock;
+    categoryTextblock?: Textblock;
     genericData: GenericDataDistributed;
     editor?: {modes: string[]},
     agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {};
@@ -34,9 +34,9 @@ const props = defineProps<ModuleBaseProps & {
 const state = ref<string>();
 const traceId = ref<string>();
 const model = ref<Contact>();
-const addressModel = ref<Address>({});
+const addressModel = ref<Address>();
 const errors = ref<ResponseError>();
-const errorsObject = ref<ErrorsObject>({});
+const errorsObject = ref<ErrorsObject>();
 const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
 const categoriesExtended = ref<ListCategoryExtended[]>();
@@ -51,7 +51,15 @@ const list = computed<BasicData<List> | undefined>(() => {
 
   if(props.genericData.data) {
 
-    return props.genericData.data[props.genericData.lists[0].toString()] as BasicData<List>
+    const lists = props.genericData.lists;
+
+    if(!lists) return undefined;
+
+    const useList = lists[0];
+
+    if(!useList) return undefined;
+
+    return props.genericData.data[useList.toString()] as BasicData<List>
 
   }
 
@@ -132,7 +140,12 @@ const selectCategories = computed<SelectOption[] | null>(() => {
 const feedback = computed<BasicData<Content>|undefined>(() => {
 
   if(props.genericData?.editor && props.genericData?.data && Array.isArray(props.genericData.editor)){
-    return props.genericData.data[props.genericData.editor[0].toString()] as BasicData<Content>;
+
+    const editor = props.genericData.editor[0];
+
+    if(!editor) return undefined;
+
+    return props.genericData.data[editor.toString()] as BasicData<Content>;
   }
 
   return undefined
@@ -212,7 +225,7 @@ function resetForm () {
    
 }
 
-function updateErrors (newErrorsObject: ErrorsObject) {
+function updateErrors (newErrorsObject?: ErrorsObject) {
 
   errorsObject.value = newErrorsObject
   updateAgreements();
@@ -333,10 +346,10 @@ const handleForm = async (event: Event) => {
     const call = auth.isAuth.value 
       ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements)
       : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
-    const customerResponse = await traceable(call, traceId);
+    const customerResponse = await traceable<SDKResponse<string|{_id: string, id: string}>>(call, traceId);
 
     if(!auth.isAuth.value) {
-      setCustomer(customerResponse.data);
+      setCustomer(customerResponse.data as {_id: string, id?: string});
     }
 
     //   await props.$traceable(call);
@@ -445,35 +458,35 @@ const handleForm = async (event: Event) => {
     <form v-if="!showFeedback && list && model">
       <lila-fieldset-partial legend="message">
 
-        <lila-textarea-partial :required="list.mode === 'contact'" :error="errorsObject.message" :maxLength="2500" v-model="model.message">{{$translate('message')}}</lila-textarea-partial>
+        <lila-textarea-partial :required="list.mode === 'contact'" :error="errorsObject?.message" :maxLength="2500" v-model="model.message">{{$translate('message')}}</lila-textarea-partial>
 
       </lila-fieldset-partial>
 
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
-        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject.category" :variant="variant" :categories="categoriesExtended" />
-        <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
+        <lila-select-category-partial v-if="list.mode !== 'contact' && model.category" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
+        <lila-select-partial v-if="list.mode === 'contact' && selectCategories && model.category" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
       <template v-if="!userStore.isUser">
 
         <lila-fieldset-partial legend="personal"> 
   
-          <lila-input-partial :error="errorsObject.prename" required v-model="model.prename">
+          <lila-input-partial :error="errorsObject?.prename" required v-model="model.prename">
             {{$translate('prename')}}
           </lila-input-partial>
   
-          <lila-input-partial :error="errorsObject.name" required v-model="model.name">
+          <lila-input-partial :error="errorsObject?.name" required v-model="model.name">
             {{$translate('name')}}
           </lila-input-partial>
   
         </lila-fieldset-partial>
   
-        <lila-address-partial v-model="addressModel" :error="errorsObject.address" required />
+        <lila-address-partial v-if="addressModel" v-model="addressModel" :error="errorsObject?.address" required />
   
         <lila-fieldset-partial legend="contact">
   
-          <lila-input-partial :error="errorsObject.email" required v-model="model.email">
+          <lila-input-partial :error="errorsObject?.email" required v-model="model.email">
             {{$translate('email')}}
           </lila-input-partial>
   

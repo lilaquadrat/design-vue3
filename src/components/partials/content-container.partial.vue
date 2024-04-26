@@ -2,7 +2,7 @@
 import { ref, watch, onBeforeMount, computed } from 'vue';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { useTranslations } from '@/plugins/translations';
-import type { Content, ContentWithPositions } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, ContentWithPositions } from '@lilaquadrat/interfaces';
 import type { SDKResponse } from '@lilaquadrat/sdk';
 import useMainStore from '@/stores/main.store';
 
@@ -22,7 +22,7 @@ const content = ref<ContentWithPositions>();
 const error = ref<boolean>(true);
 const visible = ref<boolean>(false);
 const loading = ref<number>(0);
-const errorContent = {
+const errorContent: ContentWithPositions = {
   settings: {},
   top     : [],
   content : [
@@ -33,7 +33,8 @@ const errorContent = {
       intro   : translate.translate('The content is missing'),
     },
   ],
-  bottom: [],
+  bottom    : [],
+  additional: {}
 };
 
 watch(visible, (newVisible) => {
@@ -50,8 +51,8 @@ const getContent = async () => {
   content.value = undefined;
   loading.value = 100;
 
-  let data: SDKResponse<Content> | null = null;
-  const params: Record<string, string|string[]|boolean|undefined> = {
+  let data: SDKResponse<BasicData<Content> | undefined>;
+  const params: { predefined?: boolean, filename?: string, latest?: boolean, id?: string, internalId?: string, categories?: string[]} = {
     latest    : props.latest, 
     categories: props.categories as string[], 
   };
@@ -74,9 +75,9 @@ const getContent = async () => {
 
   }
 
-  if(data.status === 200) {
+  if(data?.status === 200 && data.data) {
 
-    if (data) content.value = prepareContent(data.data);
+    content.value = prepareContent(data.data);
     loading.value = 200;
     error.value = false;
 

@@ -8,14 +8,11 @@
 </template>
 <script setup lang="ts">
 import type { ModuleGeneric } from '@lilaquadrat/interfaces';
-import { onMounted, ref } from 'vue';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineProps<ModuleBaseProps & {
   modules: ModuleGeneric[];
 }>();
-
-const el = ref(null);
 
 </script>
 <style lang="less" scoped>

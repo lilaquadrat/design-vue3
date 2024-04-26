@@ -4,7 +4,7 @@ import type Textblock from '@interfaces/textblock.interface';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  textblock: Textblock;
+  textblock?: Textblock;
   picture?: Picture;
   variant?: string[];
 }>();

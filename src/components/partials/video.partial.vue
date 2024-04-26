@@ -69,7 +69,7 @@ const attributesObject = computed(() => {
 
   const newObject: Record<string, string> = {};
 
-  props.attributes?.forEach((single) => {
+  props.attributes?.forEach((single: string) => {
 
     newObject[single] = single;
 
@@ -95,7 +95,7 @@ onMounted(() => {
 /**
  * adds listeners for play, pause and ended events
  */
-function bind() {
+function bind () {
 
   if (listenersAttached.value || !loadVideo.value) return;
 
@@ -149,7 +149,7 @@ function bind() {
  *
  * if preload is set to none, inits the loading 
  */
-function toggle() {
+function toggle () {
 
   /**
   * video was not preloaded and is not loaded
@@ -180,7 +180,7 @@ function toggle() {
 /**
  * trigger the loading of the youtube api and create the player when its done
  */
-function startYoutube() {
+function startYoutube () {
 
   if (!youtubeApiState.value) {
 
@@ -197,7 +197,7 @@ function startYoutube() {
 
 }
 
-async function start(forcePlaying?: boolean) {
+async function start (forcePlaying?: boolean) {
 
   if (!loadVideo.value) return false;
 
@@ -240,13 +240,13 @@ async function start(forcePlaying?: boolean) {
     }
 
   },
-    { once: true }
+  { once: true }
   );
 
   videoElement.value.load();
 }
 
-function play() {
+function play () {
 
   if (youtubePlayer.value) {
 
@@ -265,7 +265,7 @@ function play() {
 
 }
 
-function pause() {
+function pause () {
 
   if (youtubePlayer.value) {
 
@@ -281,16 +281,16 @@ function pause() {
 /**
  * create the youtube player
  */
-function createYoutubePlayer() {
+function createYoutubePlayer () {
 
   if (!youtubePlayerElement.value || !youtubeId.value) return;
 
   const playerVars: YT.PlayerVars = {
-    loop: props.attributes?.includes('loop') ? 1 : 0,
+    loop    : props.attributes?.includes('loop') ? 1 : 0,
     autoplay: props.attributes?.includes('autoplay') ? 1 : 0,
-    mute: props.attributes?.includes('mute') ? 1 : 0,
+    mute    : props.attributes?.includes('mute') ? 1 : 0,
     controls: props.attributes?.includes('controls') ? 1 : 0,
-    rel: 0,
+    rel     : 0,
     showinfo: 0
 
   }
@@ -298,11 +298,11 @@ function createYoutubePlayer() {
   youtubePlayer.value = new YT.Player(
     youtubePlayerElement.value,
     {
-      height: '100%',
-      width: '100%',
+      height : '100%',
+      width  : '100%',
       videoId: youtubeId.value,
       playerVars,
-      events: {
+      events : {
         onReady: () => {
 
           bind();

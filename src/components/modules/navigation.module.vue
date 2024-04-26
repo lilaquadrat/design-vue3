@@ -97,7 +97,7 @@ onMounted(() => checkOverflow());
 /**
  * removes empty entries and adds active
  */
-function updateElements() {
+function updateElements () {
 
   const newElements: (LinkGroupElement & { active: boolean })[] = [];
 
@@ -118,14 +118,14 @@ function updateElements() {
   elementsArray.value = newElements;
 }
 
-function toggle(): void {
+function toggle (): void {
 
   open.value = !open.value;
   if (!open.value) closeAll();
 
 }
 
-function openElement(event: Event, element: LinkGroupElement & { active: boolean }) {
+function openElement (event: Event, element: LinkGroupElement & { active: boolean }) {
 
   open.value = false;
   attachTo.value = undefined;
@@ -151,7 +151,7 @@ function openElement(event: Event, element: LinkGroupElement & { active: boolean
 
 }
 
-function toggleTriggerElement(event: Event, element: LinkGroupElement & { active: boolean }) {
+function toggleTriggerElement (event: Event, element: LinkGroupElement & { active: boolean }) {
 
   if (element.active) {
 
@@ -166,7 +166,7 @@ function toggleTriggerElement(event: Event, element: LinkGroupElement & { active
 
 }
 
-function closeAll() {
+function closeAll () {
 
   elementsArray.value?.forEach((element) => {
     element.active = false;
@@ -181,7 +181,7 @@ function closeAll() {
  * If this is true we switch to triggerMenu through isOverflow
  * 
  */
-function checkOverflow() {
+function checkOverflow () {
 
   if (!linksContainer.value || !logoContainer.value || !links.value) return;
 
@@ -238,7 +238,7 @@ const calculateOptionsStyle = () => {
   // top += 1;
 
   style.value = {
-    top: `${top}px`,
+    top : `${top}px`,
     left: `${left}px`,
   };
 

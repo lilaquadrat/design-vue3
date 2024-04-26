@@ -2,7 +2,7 @@
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Picture from '@interfaces/picture.interface';
 import type Textblock from '@interfaces/textblock.interface';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 

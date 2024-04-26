@@ -26,10 +26,13 @@ async function init () {
 
   const mainStore = useMainStore();
   const sdk = new StudioSDK(mainStore.apiConfig);
+  const genericList = props.genericData.lists[0];
 
-  list.value = props.genericData.data[props.genericData.lists[0].toString()] as BasicData<List>;
+  if(!genericList) return;
 
-  const stateReponse = await sdk.members.lists.state(list.value._id.toString());
+  list.value = props.genericData.data[genericList.toString()] as BasicData<List>;
+
+  const stateReponse = await sdk.members.lists.state(list.value._id?.toString() as string);
 
   state.value = stateReponse.data;
 

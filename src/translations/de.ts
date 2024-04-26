@@ -72,6 +72,7 @@ export default {
   LIST_CATEGORY_SOLD_OUT                                                                                  : 'AUSVERKAUFT',
   LIST_SOLD_OUT                                                                                           : 'Es sind keine weiteren Plätze verfügbar',
   EMAIL_INVALID_contact                                                                                   : 'Bitte überprüfe deine E-Mail Adresse',
+  EMAIL_INVALID_reservation                                                                               : 'Bitte überprüfe deine E-Mail Adresse',
   allergens                                                                                               : 'Allergene',
   euro                                                                                                    : '€',
   'gluten-containing-grains'                                                                              : 'Glutenhaltiges Getreide',
@@ -126,5 +127,5 @@ export default {
   'CONTENT_LOADING'                                                                                       : 'Wird geladen',
   'customerId'                                                                                            : 'Kunden ID',
   'connect-to-user'                                                                                       : 'Account verbinden',
-  'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen' 
+  'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen',
 };

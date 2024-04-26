@@ -61,7 +61,7 @@ const modules: Record<string, Partial<Content>> = {
 const route = useRoute();
 const store = useMainStore();
 
-function getBaseContent() {
+function getBaseContent () {
 
   const baseContent = hardCopy(preview);
   const elements: Object[] = [];
@@ -76,15 +76,15 @@ function getBaseContent() {
       },
       textblock: {
         headline: singleModule.settings?.title || single,
-        intro: singleModule.settings?.description
+        intro   : singleModule.settings?.description
       }
     })
 
   });
 
   baseContent.modules.push({
-    uuid: '9a081157-eaf8-419d-a534-244ad69d3012',
-    type: 'picturegroup-module',
+    uuid   : '9a081157-eaf8-419d-a534-244ad69d3012',
+    type   : 'picturegroup-module',
     variant: [
       'fourColumns',
       'cards'

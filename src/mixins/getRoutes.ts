@@ -8,8 +8,6 @@ export default () => {
   const isIframe = window !== window.top;
   const isDynamic = config.dynamic;
 
-  console.log(mode, isIframe, config);
-
   /**
    * running in an iframe indicates that we are in the STUDIO editor
    */

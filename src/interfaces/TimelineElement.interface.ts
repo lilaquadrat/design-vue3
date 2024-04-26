@@ -6,7 +6,7 @@ import type LinkListWithTitle from './LinkListWithTitle.interface';
 import type Quote from './Quote.interfaces';
 
 export interface TimelineElement {
-    media: ((Video | Picture )&{type: string})[]
+    media: ({type: 'picture'} & Picture | {type: 'video'} & Video)[]
     textblock?: Textblock;
     list?: ListWithTitle;
     links?: LinkListWithTitle;

@@ -44,7 +44,12 @@ class Resize {
   trigger (isStart?: boolean) {
 
     this.getMediaQuery();
-    this.realHeight.value = this.safeWindow.value?.innerHeight;
+
+    if(this.safeWindow.value) {
+
+      this.realHeight.value = this.safeWindow.value?.innerHeight;
+    }
+
     this.resized.value = Date.now();
     this.safeWindow.value?.dispatchEvent(this.resizedEvent);
 

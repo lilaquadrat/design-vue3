@@ -21,9 +21,8 @@ provide('linkBase', props.linkBase);
 
 const mode = computed(() => props.content?.settings.mode || 'presentation');
 
-function handleEvents (event: string, data?: unknown) {
+function handleEvents (event: string) {
 
-  console.log('handleEvent', event);
   emit('event', event);
 
 }

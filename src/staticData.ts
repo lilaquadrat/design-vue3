@@ -57,7 +57,7 @@ export default {
       {
         type    : 'text-module',
         variant : ['center'],
-        headline: 'you dont have the rights to view this content',
+        headline: 'Du wirst weitergeleitet',
         links   : {
           'value': [
             {
@@ -89,6 +89,15 @@ export default {
             },
           ]
         }
+      }
+    ]
+  },
+  'redirect': {
+    modules: [
+      {
+        type    : 'text-module',
+        variant : ['center'],
+        headline: 'you will be redirected',
       }
     ]
   }

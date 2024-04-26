@@ -4,14 +4,14 @@ import StudioSDK from '@lilaquadrat/sdk';
 import useMainStore from './main.store';
 import { auth } from '@/plugins/auth';
 import logger from '@/mixins/logger';
-import { type Me } from '@lilaquadrat/interfaces';
+import { type CustomerPerson } from '@lilaquadrat/interfaces';
 
 export const useUserStore = defineStore('user', () => {
 
   const locked = ref<string>();
   const customer = ref<{_id: string, id?: string}>();
   const emailConfirmationCode = ref<string>();
-  const userData = ref<Me>();
+  const userData = ref<CustomerPerson>();
   const isUser = ref<boolean>(false);
 
   function setCustomer (customerData: {_id: string, id?: string}) {

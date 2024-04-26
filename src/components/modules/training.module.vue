@@ -16,7 +16,7 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 const { resized } = useResize();
 const linkMode: 'event' | 'link' | undefined = inject('linkMode');
-const linkBase = inject('linkBase');
+const linkBase = inject<string>('linkBase');
 const currentContentContainer = ref<HTMLElement>();
 const mainGridContainer = ref<HTMLElement>();
 const currentIndex = ref<number>(0);

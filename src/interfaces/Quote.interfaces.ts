@@ -1,6 +1,6 @@
-import type Link from "./link.interface";
+import type Link from './link.interface';
 
-export default  interface Quote {
+export default interface Quote {
     quote: string;
     link?: Link;
     citation?: string

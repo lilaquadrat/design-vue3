@@ -80,7 +80,7 @@ const emitChanges = (value: string) => {
       </div>
     </span>
 
-    <lila-input-labels-partial :required="required" :error="error" :disabled="disabled">
+    <lila-input-labels-partial :required="required" :error="!!error" :disabled="disabled">
       <slot />
     </lila-input-labels-partial>
   </label>

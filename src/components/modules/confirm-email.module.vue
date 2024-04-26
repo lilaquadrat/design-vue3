@@ -7,6 +7,7 @@ import useMainStore from '@/stores/main.store';
 import useUserStore from '@/stores/user.store';
 import type { ResponseError } from '@lilaquadrat/interfaces';
 import StudioSDK from '@lilaquadrat/sdk';
+import type { AxiosError } from 'axios';
 import { ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
@@ -42,12 +43,13 @@ async function handleForm () {
     await traceable(sdk.members.me.confirmEmail(confirmationCode.value), traceId);
     await userStore.updateLock();
 
-  } catch (error) {
+  } catch (e) {
+
+    const error = e as AxiosError<ResponseError>;
 
     errors.value = error.response?.data;
-    
-  }
 
+  }
 }
 
 </script>

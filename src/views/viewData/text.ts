@@ -69,7 +69,7 @@ const content: Content = {
           'entry 4',
           'entry 5',
         ],
-        title  : 'some nice list',
+        title: 'some nice list',
       },
     },   
   ],

@@ -15,7 +15,7 @@ export interface ParsedError {
 }
 
 export interface ErrorsObject {
-  [key: string]: ParsedError | Record<string, ParsedError>
+  [key: string]: ParsedError
 }
 
 export default class ActionNotice {

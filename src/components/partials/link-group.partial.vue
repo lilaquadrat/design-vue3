@@ -2,7 +2,7 @@
 
 const props = defineProps<{
     gap?: boolean
-    variant: string[]
+    variant?: string[]
 }>();
 
 </script>

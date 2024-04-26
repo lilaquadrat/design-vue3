@@ -96,4 +96,3 @@ function setElements (elements: EventGroupElement[]) {
 }
 </style>
 
-

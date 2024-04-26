@@ -6,7 +6,7 @@ const props = withDefaults(
   defineProps<IconsPartial>(),
   {
     colorScheme: 'colorScheme1',
-    size: 'medium'
+    size       : 'medium'
   }
 );
 const rotateClass: ComputedRef<string | undefined> = computed(() => props.rotate ? `rotate${props.rotate}` : undefined);

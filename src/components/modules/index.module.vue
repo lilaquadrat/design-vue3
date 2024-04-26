@@ -27,7 +27,7 @@ const useLinks = computed(() => {
         link      : `#${single.anchor}`,
         attributes: ['static'],
       })),
-    };
+    } as LinkListWithTitle;
 
   }
 

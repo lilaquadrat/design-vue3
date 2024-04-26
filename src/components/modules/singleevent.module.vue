@@ -21,7 +21,6 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 
 onBeforeMount(() => {
-
  
 })
 
@@ -38,7 +37,6 @@ const topDetails = computed(() => ({
 const linkedEvent = computed (() => ({
   subline: props.details?.subline
 }));
-
 
 </script>
 <template>
@@ -144,7 +142,6 @@ const linkedEvent = computed (() => ({
         .text-container {
             grid-column-start: 1;
             grid-row-start: 1;
-      
 
             :deep(.lila-textblock) {
         

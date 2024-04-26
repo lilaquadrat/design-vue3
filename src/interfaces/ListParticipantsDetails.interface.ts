@@ -1,4 +1,4 @@
-pexport default interface ListParticipantsDetails {
+export default interface ListParticipantsDetails {
     used: number;
     categories: {
         id: string;

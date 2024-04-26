@@ -1,6 +1,6 @@
 export class Dom {
 
-  bindings: {event: string, element: any, func: Function}[];
+  bindings: {event: string, element: any, func: EventListenerOrEventListenerObject}[];
 
   constructor () {
 
@@ -44,6 +44,8 @@ export class Dom {
     splitEvents.forEach((event) => {
 
       item = this.bindings.find((e) => event === e.event && e.element === selectedElement);
+
+      if(!item) return;
 
       this.bindings.splice(this.bindings.indexOf(item), 1);
 
