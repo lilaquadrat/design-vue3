@@ -52,8 +52,9 @@ function setElements (elements: EventGroupElement[]) {
       <header class="title-container">
         <lila-textblock-partial v-bind="title" />
       </header>
-      <section class="event-container" v-for="(event, index) in events" :key="`event-${index}`">
+      <section class="single-day-container" v-for="(event, index) in events" :key="`event-${index}`">
         <lila-eventgroup-partial class="event" v-bind="event" />
+        <hr class="separator" />
       </section>
     </section>
 
@@ -63,17 +64,23 @@ function setElements (elements: EventGroupElement[]) {
 <style lang="less" scoped>
 .lila-event-group-module {
   .module;
-  max-width: @moduleWidth_XS;
 
   @media @desktop {
-    max-width: fit-content;
+    max-width: @moduleWidth_L;
+  }
+
+  .single-day-container {
+    display: grid;
+    gap: 40px;
+    .separator {
+      border: 0;
+      border-top: solid 1px @grey;
+    }
   }
 
   .elements-container {
     display: grid;
-    padding-bottom: 40px;
-    .title-container {
-      padding-bottom: 60px;
+    gap: 40px;
 
       :deep(.lila-textblock) {
         h1 {
@@ -91,7 +98,6 @@ function setElements (elements: EventGroupElement[]) {
           }
         }
       }
-    }
   }
 }
 </style>

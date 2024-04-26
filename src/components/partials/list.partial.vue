@@ -147,5 +147,13 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
     }
   }
 
+  &.bold {
+    .font-bold;
+    li {
+      font-size: @headline_XS;
+
+    }
+  }
+
 }
 </style>

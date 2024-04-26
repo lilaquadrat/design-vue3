@@ -1,4 +1,5 @@
 import logger from '@/mixins/logger';
+import dayjs from 'dayjs';
 import type { App } from 'vue';
 
 const HelpersPlugin = {
@@ -19,6 +20,12 @@ const HelpersPlugin = {
 
     return contentIdArray.filter((single) => single.length).join('/');
   
+  },
+
+  date (date: string | Date, format?: string) {
+
+    return dayjs(date).format(format || 'DD.MM.YYYY hh:mm');
+
   }
 
 }
