@@ -4,14 +4,18 @@ import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
 import type EventGroupElement from '../../interfaces/EventGroupElement';
+import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
+import dayjs from 'dayjs';
+import type Event from '@/interfaces/Event.interface';
 
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModuleBaseProps & {
   textblock: Textblock;
-  events: EventGroupElement[];
+  elements: Event[];
 }>();
 const element = ref<HTMLElement>();
+const groupedEvents = ref();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const title = computed(() => ({
   headline: props.textblock?.headline,
@@ -19,7 +23,7 @@ const title = computed(() => ({
 
 onBeforeMount(() => {
 
-  setElements(props.events);
+  setElements(props.elements);
 
 });
 
@@ -27,21 +31,28 @@ onBeforeMount(() => {
 //  * sorts all events by the same day and sorts its 
 //  * containing SingleEventElement by theirstarting time 
 //  */
-function setElements (elements: EventGroupElement[]) {
-  elements.sort((a: any, b: any) => a.date.localeCompare(b.date));
+function setElements (elements: any[]) {
 
-  elements.forEach((single: any) => {
-    single.elements.sort((a: any, b: any) => {
-      const startTimeA = a.textblock.intro;
-      const startTimeB = b.textblock.intro;
+  const safeElements = hardCopy(elements);
+  const target: Record<string, any> = {};
 
-      if (startTimeA !== startTimeB) {
-        return startTimeA.localeCompare(startTimeB);
-      }
+  safeElements.sort((a, b) => a.start.localeCompare(b.date));
 
-      return a.startDate.localeCompare(b.startDate);
-    });
+  safeElements.forEach((single) => {
+
+    const dateString = dayjs(single.start).format('YYYY-MM-DD');
+
+    if(!target[dateString]) target[dateString] = {
+      date: dateString,
+      elements: []
+    }
+
+    target[dateString].elements.push(single);
+
+
   });
+
+  groupedEvents.value = target;
 }
 
 </script>
@@ -52,8 +63,8 @@ function setElements (elements: EventGroupElement[]) {
       <header class="title-container">
         <lila-textblock-partial v-bind="title" />
       </header>
-      <section class="single-day-container" v-for="(event, index) in events" :key="`event-${index}`">
-        <lila-eventgroup-partial class="event" v-bind="event" />
+      <section class="single-day-container" v-for="(day, index) in groupedEvents" :key="`event-${index}`">
+        <lila-eventgroup-partial class="event" v-bind="day" />
         <hr class="separator" />
       </section>
     </section>
@@ -71,7 +82,7 @@ function setElements (elements: EventGroupElement[]) {
 
   .single-day-container {
     display: grid;
-    gap: 40px;
+    gap: 80px;
     .separator {
       border: 0;
       border-top: solid 1px @grey;
@@ -80,7 +91,7 @@ function setElements (elements: EventGroupElement[]) {
 
   .elements-container {
     display: grid;
-    gap: 40px;
+    gap: 80px;
 
       :deep(.lila-textblock) {
         h1 {

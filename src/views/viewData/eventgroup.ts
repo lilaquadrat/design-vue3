@@ -18,202 +18,217 @@ const content: Content = {
       textblock: {
         headline: 'EVENT SCHEDULE'
       },
-      events: [
+      elements: [
         {
-          date    : '2019-11-08T11:49:02.561+00:00',
-          elements: [
-            {
-              startDate: '2019-12-04T15:30:02.561+00:00',
-              endDate  : '2019-12-05T18:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}` + dayjs('2019-12-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-12-04T15:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-12-05T18:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
+          artist     : 'Berliner Ensemble',
+          name       : 'Macy Gray and The California Jet Club',
+          location   : 'Essener Str. 100, 04358 Leipzig',
+          description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          start      : '2024-04-26T17:00:00.373Z',
+          end        : '2024-04-26T19:00:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          video: {
+            src       : 'https://www.youtube.com/watch?v=JXGUf6oIqco',
+            attributes: ['controls'],
+            preload   : 'auto',
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
               {
-                text: 'some text',
-                link: '/test',
-              },
-              icon: 'location',
-            },
-            {
-              startDate: '2019-11-24T09:00:02.561+00:00',
-              endDate  : '2019-11-24T11:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-12-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-12-04T15:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-12-05T18:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
-              {
-                text: 'some text',
-                link: '/test',
-              },
-              icon: 'location',
-              picture:
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/mic.png',
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
               }
-            },
-          ],
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
         },
         {
-          date    : '2019-11-07T14:00:02.561+00:00',
-          elements: [
-            {
-              startDate: '2019-11-07T14:00:02.561+00:00',
-              endDate  : '2019-11-07T16:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-03-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-03-04T18:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T20:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
+          artist     : 'Berliner Ensemble 2',
+          name       : 'Macy Gray and The California Jet Club',
+          location   : 'Essener Str. 100, 04358 Leipzig',
+          description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          start      : '2024-04-26T17:00:00.373Z',
+          end        : '2024-04-29T19:00:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
               {
-                text: 'some text',
-                link: '/test',
-              },
-              icon: 'location',
-              picture:
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/frontmusician.png',
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
               }
-            },
-            {
-              startDate: '2019-11-07T10:00:02.561+00:00',
-              endDate  : '2019-11-07T12:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-03-07T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-03-04T12:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T14:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
-              {
-                text: 'some text',
-                link: '/test',
-              }
-              ,
-              icon: 'location',
-              picture:
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/instrument.png',
-              }
-            },
-          ],
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
         },
         {
-          date    : '2019-11-12T14:00:02.561+00:00',
-          elements: [
-            {
-              startDate: '2019-11-07T14:00:02.561+00:00',
-              endDate  : '2019-11-07T16:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-03-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-03-04T17:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T19:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
+          artist     : 'Berliner Ensemble 1',
+          name       : 'Macy Gray and The California Jet Club',
+          location   : 'Essener Str. 100, 04358 Leipzig',
+          description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          start      : '2024-04-26T17:30:00.373Z',
+          end        : '2024-04-26T19:30:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          video: {
+            src       : 'https://www.youtube.com/watch?v=JXGUf6oIqco',
+            attributes: ['controls'],
+            preload   : 'auto',
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
               {
-                text: 'some text',
-                link: 'some text',
-              },
-              icon: 'location',
-            },
-            {
-              startDate: '2019-11-07T14:00:02.561+00:00',
-              endDate  : '2019-11-07T16:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-03-04T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-03-04T18:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T20:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
-              {
-                text: 'some text',
-                link: 'some text',
-              },
-              icon: 'location',
-              picture:
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/sidemusician.jpg',
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
               }
-            },
-            {
-              startDate: '2019-11-07T10:00:02.561+00:00',
-              endDate  : '2019-11-07T12:00:02.561+00:00',
-              textblock: {
-                headline: 'Macy Gray and The California Jet Club',
-                subline : `${'Until '}`+dayjs('2019-03-07T15:30:02.561+00:00').format('DD MMMM YYYY'),
-                intro   : dayjs('2019-03-04T12:30:02.561+00:00').format('HH:mm') + ' - ' + dayjs('2019-03-05T14:00:02.561+00:00').format('HH:mm'),
-                text    : [
-                  'Forever full of ear-tugging/eye-popping surprises, ever-eclectic singer/songwriter and actress Macy Gray returns... '
-                ],
-              },
-              link: {
-                link: 'Eventslocation',
-              },
-              moreText:
-              {
-                text: 'some text',
-                link: '/test',
-              }
-              ,
-              icon: 'location',
-              picture:
-              {
-                source: [],
-                alt   : 'IMAGE ALT',
-                src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/2musicians.png',
-              }
-            },
-          ],
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
         },
-      ],
+        {
+          artist     : 'The Holographs',
+          name       : 'Holographic Symphony',
+          location   : 'Virtual Venue',
+          description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
+          start      : '2024-06-10T19:00:00.000Z',
+          end        : '2024-06-10T21:00:00.000Z',
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        },
+        {
+          artist     : 'The Holographs',
+          name       : 'Holographic Symphony',
+          location   : 'Virtual Venue',
+          description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
+          start      : '2024-06-10T19:00:00.000Z',
+          end        : '2024-06-12T21:00:00.000Z',
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        },
+        {
+          artist     : 'Jazz Collective',
+          name       : 'Jazz Under the Stars',
+          location   : 'Open Air, Central Park, New York',
+          description: 'Enjoy a serene night of jazz outdoors under the starry sky.',
+          start      : '2024-07-15T21:00:00.000Z',
+          end        : '2024-07-16T00:00:00.000Z',
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        },
+        {
+          artist     : 'Indie Rockers',
+          name       : 'Indie Festival 2023',
+          location   : 'Downtown Club, San Francisco',
+          description: 'A lineup of top indie bands, showcasing new albums and classic hits.',
+          start      : '2024-08-20T18:00:00.000Z',
+          end        : '2024-08-20T23:00:00.000Z',
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        }
+      ]
     }
   ]
 };

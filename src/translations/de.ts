@@ -128,4 +128,6 @@ export default {
   'customerId'                                                                                            : 'Kunden ID',
   'connect-to-user'                                                                                       : 'Account verbinden',
   'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen',
+  'event-until'                                                                                           : '%s bis %s Uhr',
+  'event-short'                                                                                           : '%s bis %s',
 };
