@@ -51,9 +51,9 @@ const brightText = computed(() => {
 
       <section class="elements-container"> 
 
-        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="element">
+        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="elements">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
-          <section class="text-container">
+          <section class="text-container" v-if="element.textblock || element.links || element.list">
             <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
             <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
             <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
@@ -87,6 +87,12 @@ const brightText = computed(() => {
     width: 100%;
     max-width: @moduleWidth_S;
     text-align: left;
+  }
+
+  .text-container {
+    &:empty {
+      display: none;
+    }
   }
 
   &.color1 {

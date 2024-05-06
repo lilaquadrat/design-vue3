@@ -391,21 +391,22 @@ export default
       component: () => import('@/components/modules/timeline.module.vue'),
     },
     {
-      name     : 'eventgroup',
+      name     : 'events-list',
       variants : [],
-      component: () => import('@/components/modules/eventgroup.module.vue'),
-    },
-    {
-      name     : 'singleevent',
-      variants : [],
-      component: () => import('@/components/modules/singleevent.module.vue'),
+      component: () => import('@/components/modules/events-list.module.vue'),
     },
     {
       name    : 'event',
       variants: [
         {
-          key : 'center',
-          name: 'Text zentriert',
+          key : 'noContent',
+          name: 'Listeninhalte verbergen',
+          description: 'Falls eine Liste verbunden wurde, werden automatisch die passenden Inhalte, die in der Liste ausgewählt wurden, angezeigt. Diese Variante verhindert dieses Verhalten.'
+        },
+        {
+          key : 'onlyContent',
+          name: 'Nur Listeninhalte anzeigen',
+          description: 'Es werden nur die Inhalte aus der verbundenen Listen angezeigt.'
         },
       ],
       component: () => import('@/components/modules/event.module.vue'),

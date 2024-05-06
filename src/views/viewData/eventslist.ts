@@ -7,13 +7,13 @@ const content: Content = {
   project : 'project',
   settings: {
     mode       : 'presentation',
-    title      : 'Eventgroup',
-    description: 'Multible Singleevents'
+    title      : 'Events List',
+    description: 'List of Events'
   },
   state  : 'publish',
   modules: [
     {
-      type     : 'eventgroup-module',
+      type     : 'events-list-module',
       variant  : [],
       textblock: {
         headline: 'EVENT SCHEDULE'
@@ -23,7 +23,6 @@ const content: Content = {
           artist     : 'Berliner Ensemble',
           name       : 'Macy Gray and The California Jet Club',
           location   : 'Essener Str. 100, 04358 Leipzig',
-          description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
           start      : '2024-04-26T17:00:00.373Z',
           end        : '2024-04-26T19:00:00.373Z',
           textblock  : {
@@ -54,6 +53,10 @@ const content: Content = {
           link: {
             link: 'Eventslocation',
           },
+          callToAction: {
+            link: 'Eventslocation',
+            text: 'Tickets' 
+          }
         },
         {
           artist     : 'Berliner Ensemble 2',
@@ -91,6 +94,10 @@ const content: Content = {
           link: {
             link: 'Eventslocation',
           },
+          callToAction: {
+            link: 'Eventslocation',
+            text: 'Tickets' 
+          }
         },
         {
           artist     : 'Berliner Ensemble 1',
@@ -127,6 +134,45 @@ const content: Content = {
           link: {
             link: 'Eventslocation',
           },
+        },
+        {
+          artist     : 'Berliner Ensemble 1',
+          location   : 'Essener Str. 100, 04358 Leipzig',
+          description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          start      : '2024-04-26T17:30:00.373Z',
+          end        : '2024-04-26T19:30:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          video: {
+            src       : 'https://www.youtube.com/watch?v=JXGUf6oIqco',
+            attributes: ['controls'],
+            preload   : 'auto',
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+          callToAction: {
+            link: 'Eventslocation',
+            text: 'Tickets' 
+          }
         },
         {
           artist     : 'The Holographs',
@@ -177,6 +223,10 @@ const content: Content = {
           link: {
             link: 'Eventslocation',
           },
+          callToAction: {
+            link: 'Eventslocation',
+            text: 'Tickets' 
+          }
         },
         {
           artist     : 'Jazz Collective',
@@ -228,6 +278,110 @@ const content: Content = {
             link: 'Eventslocation',
           },
         }
+      ]
+    },
+    {
+      type     : 'events-list-module',
+      variant  : ['tour'],
+      textblock: {
+        headline: 'Alive Tour 2024',
+        subline: 'Tour Dates',
+        text: [
+          'some text'
+        ]
+      },
+      elements: [
+        {
+          location   : 'Halle 02',
+          name       : 'Heidelberg',
+          start      : '2024-04-26T17:00:00.373Z',
+          end        : '2024-04-26T19:00:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+          callToAction: {
+            link: 'Eventslocation',
+            text: 'Tickets' 
+          }
+        },
+        {
+          location   : 'Central',
+          name       : 'Erfurt',
+          start      : '2024-04-27T17:00:00.373Z',
+          end        : '2024-04-27T19:00:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        },
+        {
+          location   : 'Capitol',
+          name       : 'Hannover',
+          start      : '2024-05-01T17:00:00.373Z',
+          end        : '2024-05-01T19:00:00.373Z',
+          textblock  : {
+            text: [
+              'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+              'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
+            ],
+          },
+          list: {
+            value: [
+              'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
+              'Artist Support Fee: 25€'
+            ]
+          },
+          links: {
+            value: [
+              {
+                link: 'http://www.berliner.com',
+                text: 'Tickets are available for purchase online at http://www.berliner.com'
+              }
+            ],
+          },
+          link: {
+            link: 'Eventslocation',
+          },
+        },
       ]
     }
   ]

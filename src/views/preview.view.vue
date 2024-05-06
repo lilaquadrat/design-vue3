@@ -12,7 +12,7 @@ import blogIntro from './viewData/blog-intro';
 import compare from './viewData/compare';
 import contact from './viewData/contact';
 import cookies from './viewData/cookies';
-import eventgroup from './viewData/eventgroup';
+import eventslist from './viewData/eventslist';
 import faq from './viewData/faq';
 import facts from './viewData/facts';
 import footer from './viewData/footer';
@@ -30,7 +30,7 @@ import training from './viewData/training';
 import video from './viewData/video';
 import emotion from './viewData/emotion';
 import menu from './viewData/menu';
-import singleevent from './viewData/singleevent';
+import event from './viewData/event';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -55,8 +55,8 @@ const modules: Record<string, Partial<Content>> = {
   menu,
   training,
   timeline,
-  eventgroup,
-  singleevent
+  eventslist,
+  event
 };
 const route = useRoute();
 const store = useMainStore();

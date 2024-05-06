@@ -9,14 +9,12 @@ import type Video from '@/interfaces/video.interface';
 
 const props = withDefaults(
   defineProps<Video & {
-    trigger?: boolean;
-    poster?: string;
-    src: string;
-    attributes?: string[];
-    source?: VideoSource[];
-    js?: boolean;
-    preview?: boolean;
-    preload?: 'auto' | 'metadata' | 'none';
+    trigger?: boolean
+    poster?: string
+    attributes?: string[]
+    source?: VideoSource[]
+    preview?: boolean
+    preload?: 'auto' | 'metadata' | 'none'
   }>(),
   {
     preload: 'auto',
@@ -44,6 +42,8 @@ const youtubeId = computed(() => {
 
   const url = new URL(props.src);
 
+  console.log('get youtube id');
+
   return url.searchParams.get('v');
 
 });
@@ -54,6 +54,14 @@ watch(() => props.source, () => start());
 watch(() => props.trigger, () => toggle());
 watch(() => isPlaying.value, () => emit('playing', isPlaying.value));
 watch(() => state.value, () => emit('loading', state.value === 'loading'));
+/**
+ * this is needed for recreating the youtube player after changing the src
+ */
+watch(() => youtubePlayerElement.value, () => {
+
+  if(youtubeId.value && videoType.value === 'youtube' && youtubePlayerElement.value) start();
+
+});
 /**
 * used if preload is set to none to start the video after the element is loaded
 */
@@ -199,6 +207,8 @@ function startYoutube () {
 
 async function start (forcePlaying?: boolean) {
 
+  console.log('start', loadVideo.value, videoElement.value, videoType.value);
+
   if (!loadVideo.value) return false;
 
   if (videoType.value === 'youtube') {
@@ -217,11 +227,15 @@ async function start (forcePlaying?: boolean) {
 
   if (allSource.length === 1 || !newSource) newSource = allSource[0];
 
+  console.log(allSource, newSource);
+
   if (current) current.removeAttribute('src');
   if (newSource) newSource.setAttribute('src', newSource.getAttribute('data-src') as string);
 
   await nextTick();
   if (typeof videoElement.value.load !== 'function') return;
+
+  console.log('start #1', newSource);
 
   if (props.attributes?.includes('muted')) {
 
@@ -283,6 +297,8 @@ function pause () {
  */
 function createYoutubePlayer () {
 
+  console.log('try to create player', youtubePlayerElement.value, youtubeId.value);
+
   if (!youtubePlayerElement.value || !youtubeId.value) return;
 
   const playerVars: YT.PlayerVars = {
@@ -295,6 +311,8 @@ function createYoutubePlayer () {
 
   }
 
+  console.log('create new youtube video', youtubeId.value, youtubePlayer.value);
+
   youtubePlayer.value = new YT.Player(
     youtubePlayerElement.value,
     {
@@ -305,9 +323,16 @@ function createYoutubePlayer () {
       events : {
         onReady: () => {
 
+          console.log('onready');
+
           bind();
           state.value = 'ready';
           if (props.preload === 'none') play();
+
+        },
+        onStateChange: (state) => {
+
+          console.log('state change', state);
 
         }
       }
@@ -318,14 +343,18 @@ function createYoutubePlayer () {
 
 }
 
+const filteredSource = computed(() => {
+
+  return props.source?.filter((single) => !!single.source);
+
+});
+
 </script>
 <template>
   <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none' }, state]">
-    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder">
-    </section>
-    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster"
-      :class="[state, { loading: loading }]" :key="src">
-      <source v-for="single in source" :key="single.media" :class="single.media" :data-src="single.source" />
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
+    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
+      <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source" />
       <track kind="captions" />
       <source v-if="src" :data-src="src" />
     </video>

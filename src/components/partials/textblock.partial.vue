@@ -10,7 +10,7 @@ const props = defineProps<Textblock & {
   variant?: string[],
   id?: string
 }>();
-const notEmpty = computed(() => !!(props.headline || props.subline || props.intro || props.text)); 
+const notEmpty = computed(() => !!(props.headline?.length || props.subline?.length || props.intro?.length || props.text?.length)); 
 
 </script>
 

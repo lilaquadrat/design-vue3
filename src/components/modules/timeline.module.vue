@@ -106,10 +106,8 @@ function activeMedia () {
   .lila-timeline-module {
     .module;
     padding-right: 20px;
-    transition: @aType @aTimeMedium;
     transform: translate(-70%);
-    max-width: @moduleWidth_XS;
-    margin-bottom: 100px;
+    .trans(transform);
     
     @media @desktop {
       transform: translate(0%);
@@ -127,7 +125,7 @@ function activeMedia () {
         @media @desktop {
           display: grid;
           grid-template-columns: 2fr 8px 4fr;
-          grid-template-rows: 140px  auto auto;
+          grid-template-rows: 140px auto auto;
         }
 
         .timeline-container {
@@ -135,8 +133,6 @@ function activeMedia () {
           grid-column-start: 2;
           grid-row: 1/5;
           width: 5px;
-          height: 110%;
-          border-radius: 200px;
 
           @media @desktop {
             width: 8px;
@@ -168,7 +164,6 @@ function activeMedia () {
           @media @desktop {
             grid-column-start: 1;
             grid-row-start: 2;
-            padding-bottom: 50px; 
             padding-right: 40px;
             text-align: right;
              
@@ -199,7 +194,6 @@ function activeMedia () {
 
           :deep(.lila-figure) {
             justify-content: left;
-            padding-bottom: 20px;
           }
           
           @media @desktop {

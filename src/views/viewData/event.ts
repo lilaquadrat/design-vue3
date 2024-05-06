@@ -1,21 +1,19 @@
 import type { Content } from '@lilaquadrat/interfaces';
 import dayjs from 'dayjs';
 
-const startDate = dayjs('2019-05-04T15:30:02.561+00:00')
-const endDate = dayjs('2019-05-05T18:00:02.561+00:00')
 const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
     mode       : 'presentation',
-    title      : 'singleevent',
+    title      : 'Event',
     description: 'Single Event with video and text details'
   },
   state  : 'publish',
   modules: [
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
@@ -53,7 +51,7 @@ const content: Content = {
       },
     },
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
@@ -92,7 +90,7 @@ const content: Content = {
       },
     },
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
