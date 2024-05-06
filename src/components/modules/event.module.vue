@@ -278,5 +278,116 @@ function handleChildEvent (event: string) {
     }
     }
 
+  .main-container {
+    display: grid;
+    gap: 40px;
+
+    .headlines;
+
+    @media @desktop {
+      max-width: @moduleWidth_L;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      
+    }
+
+    grid-template-rows: max-content max-content;
+
+    .date-artist {
+
+      display: grid;
+      @media @desktop {
+          gap: 15px;
+      }
+
+    }
+
+    .artist,
+        .date {
+          font-size: @headline_XS;
+          @media @desktop {
+              font-size: @headline_S;
+          }
+        }
+
+    .artist {
+      color: @color3;
+    }
+
+    .date {
+      color: @success;
+    }
+
+    .location {
+      display: grid;
+      
+      grid-template-columns: max-content 1fr;
+      align-items: center;
+      
+      gap: 5px;
+
+      font-size: @headline_XS;
+      
+      .font-bold;
+      color: @success;
+    }
+
+    .name {
+      .multi(padding-top, 3);
+
+      @media @desktop {
+          font-size: @headline_XL;
+          line-height: @headlineLineHeight_XL;
+      }
+    }
+
+    .intro-container {
+      display: grid;
+      gap: 15px;
+      align-content: start;
+    }
+
+    .media-container {
+      display: grid;
+      gap: 20px;
+
+      grid-template-rows: min-content max-content;
+
+      grid-row-start: 2;
+
+      @media @desktop {
+          grid-row-start: 1;
+      }
+    }
+    
+    .details-container {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+  }
+  &.noMedia {
+
+    @media @desktop {
+        max-width: @moduleWidth_S;
+        grid-template-rows: max-content max-content;
+        grid-template-columns: 1fr;
+    }
+
+    .main-container {
+
+      grid-template-columns: 1fr;
+
+      .media-container {
+        @media @desktop {
+          grid-row-start: 2;
+
+        }
+      }
+
+    }
+    }
+
 }
 </style>
