@@ -18,9 +18,6 @@ class Youtube {
       script.src = 'https://www.youtube.com/iframe_api';
       
       script.onload = () => {
-        
-        console.log('youtube api loaded');
-        
         resolve();
       };
       

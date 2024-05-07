@@ -42,8 +42,6 @@ const youtubeId = computed(() => {
 
   const url = new URL(props.src);
 
-  console.log('get youtube id');
-
   return url.searchParams.get('v');
 
 });
@@ -207,8 +205,6 @@ function startYoutube () {
 
 async function start (forcePlaying?: boolean) {
 
-  console.log('start', loadVideo.value, videoElement.value, videoType.value);
-
   if (!loadVideo.value) return false;
 
   if (videoType.value === 'youtube') {
@@ -227,15 +223,11 @@ async function start (forcePlaying?: boolean) {
 
   if (allSource.length === 1 || !newSource) newSource = allSource[0];
 
-  console.log(allSource, newSource);
-
   if (current) current.removeAttribute('src');
   if (newSource) newSource.setAttribute('src', newSource.getAttribute('data-src') as string);
 
   await nextTick();
   if (typeof videoElement.value.load !== 'function') return;
-
-  console.log('start #1', newSource);
 
   if (props.attributes?.includes('muted')) {
 
@@ -297,8 +289,6 @@ function pause () {
  */
 function createYoutubePlayer () {
 
-  console.log('try to create player', youtubePlayerElement.value, youtubeId.value);
-
   if (!youtubePlayerElement.value || !youtubeId.value) return;
 
   const playerVars: YT.PlayerVars = {
@@ -311,8 +301,6 @@ function createYoutubePlayer () {
 
   }
 
-  console.log('create new youtube video', youtubeId.value, youtubePlayer.value);
-
   youtubePlayer.value = new YT.Player(
     youtubePlayerElement.value,
     {
@@ -323,18 +311,11 @@ function createYoutubePlayer () {
       events : {
         onReady: () => {
 
-          console.log('onready');
-
           bind();
           state.value = 'ready';
           if (props.preload === 'none') play();
 
         },
-        onStateChange: (state) => {
-
-          console.log('state change', state);
-
-        }
       }
     }
   );

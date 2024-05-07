@@ -79,8 +79,6 @@ export const useUserStore = defineStore('user', () => {
 
   async function getUser () {
     
-    console.log('get user');
-
     const mainStore = useMainStore();
     const sdk = new StudioSDK(mainStore.apiConfig);
 

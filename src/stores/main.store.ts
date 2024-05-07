@@ -126,8 +126,6 @@ export const useMainStore = defineStore('main', () => {
 
       const error = e as AxiosError;
 
-      console.log(error);
-
       if (!error.response?.status) {
 
         return { status: 400, data: undefined} 

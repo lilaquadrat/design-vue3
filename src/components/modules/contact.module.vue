@@ -298,13 +298,11 @@ const getparticipantsState = async () => {
     const error = e as AxiosError<ResponseError>;
 
     console.error(error);
-    console.log(error.response?.data);
     updateCategories();
 
   }
 };
 const handleForm = async (event: Event) => {
-  console.log('handle form');
   event.preventDefault();
 
   if(!list.value?._id) return
@@ -364,7 +362,6 @@ const handleForm = async (event: Event) => {
     const error = e as AxiosError<ResponseError>;
 
     console.error(e);
-    console.log(error.response?.data);
 
     /**
          * because of the address partial we need to remove the single errors from the error messages and add
@@ -424,7 +421,6 @@ const handleForm = async (event: Event) => {
     } else {
 
       // If the error isn't a validation failure, just set the component's errors to the response data
-      console.log(error.response?.data);
       //this.errors = e.response?.data;
       errors.value = error.response?.data;
     }

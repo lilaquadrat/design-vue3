@@ -26,8 +26,6 @@ const errorsElement = ref<HTMLElement>();
 
 watch(() => props.errors, () => {
 
-  console.log(props.errors);
-
   if (props.errors?.errors) {
 
     parsedErrors.value = ActionNotice.parse(props.errors.errors, props.translationPre);
@@ -45,7 +43,6 @@ watch(() => props.errors, () => {
 })
 
 watch(parsedErrors, () => {
-  console.log('update', parsedErrors.value);
   emit('update', parsedErrors.value)
 });
 

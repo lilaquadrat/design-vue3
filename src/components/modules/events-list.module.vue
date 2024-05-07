@@ -29,8 +29,6 @@ function setElements (elements: any[]) {
   const safeElements = hardCopy(elements);
   const target: Record<string, any> = {};
 
-  console.log(safeElements);
-
   safeElements.sort((a, b) => a.start.localeCompare(b.date));
 
   safeElements.forEach((single) => {
