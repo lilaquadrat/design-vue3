@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, defineProps, computed, watch } from 'vue';
+import { onBeforeMount, ref, defineProps, watch } from 'vue';
 import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
-import type EventGroupElement from '../../interfaces/EventGroupElement';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import dayjs from 'dayjs';
 import type Event from '@/interfaces/Event.interface';
@@ -40,13 +39,14 @@ function setElements (elements: any[]) {
 
     const dateString = dayjs(single.start).format('YYYY-MM-DD');
 
-    if(!target[dateString]) target[dateString] = {
-      date: dateString,
-      elements: []
+    if(!target[dateString]) {
+      target[dateString] = {
+        date    : dateString,
+        elements: []
+      }
     }
 
     target[dateString].elements.push(single);
-
 
   });
 

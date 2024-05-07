@@ -9,7 +9,7 @@ import { computed, onBeforeMount, onServerPrefetch, ref} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
-  type ErrorObject, type GenericDataDistributed, type GenericDataWithContent, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
+  type ErrorObject, type GenericDataDistributed, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
@@ -465,7 +465,7 @@ const handleForm = async (event: Event) => {
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
         <lila-select-category-partial v-if="list.mode !== 'contact' && model.category" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
-        <lila-select-partial v-if="list.mode === 'contact' && selectCategories && model.category" v-model="model.category" :multiple="false" :error="errorsObject.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
+        <lila-select-partial v-if="list.mode === 'contact' && selectCategories && model.category" v-model="model.category" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
       <template v-if="!userStore.isUser">

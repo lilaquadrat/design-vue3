@@ -2,10 +2,8 @@
 import {auth} from '@/plugins/auth';
 import useMainStore from '@/stores/main.store';
 import useUserStore from '@/stores/user.store';
-import type { BasicData, Content } from '@lilaquadrat/interfaces';
-import type { SDKResponse } from '@lilaquadrat/sdk';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();

@@ -8,6 +8,7 @@ import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 import type { AxiosError } from 'node_modules/axios/index.cjs';
 import { computed } from 'vue';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
+import type CustomModule from '@/interfaces/CustomModul.interface';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -18,7 +19,7 @@ export const useMainStore = defineStore('main', () => {
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
-  const customModules = ref<any>();
+  const customModules = ref<CustomModule[]>();
 
   function setData (value: BasicData<Content>) {
 

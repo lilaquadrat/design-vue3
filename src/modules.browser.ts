@@ -399,13 +399,13 @@ export default
       name    : 'event',
       variants: [
         {
-          key : 'noContent',
-          name: 'Listeninhalte verbergen',
+          key        : 'noContent',
+          name       : 'Listeninhalte verbergen',
           description: 'Falls eine Liste verbunden wurde, werden automatisch die passenden Inhalte, die in der Liste ausgewählt wurden, angezeigt. Diese Variante verhindert dieses Verhalten.'
         },
         {
-          key : 'onlyContent',
-          name: 'Nur Listeninhalte anzeigen',
+          key        : 'onlyContent',
+          name       : 'Nur Listeninhalte anzeigen',
           description: 'Es werden nur die Inhalte aus der verbundenen Listen angezeigt.'
         },
       ],

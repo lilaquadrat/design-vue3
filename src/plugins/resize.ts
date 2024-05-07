@@ -1,5 +1,5 @@
 import logger from '@/mixins/logger';
-import { ref, type App, computed } from 'vue';
+import { ref, computed } from 'vue';
 
 class Resize {
 

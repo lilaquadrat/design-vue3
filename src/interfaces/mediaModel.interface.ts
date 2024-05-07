@@ -1,31 +1,32 @@
+
+export interface MediaInfo {
+    width?: number
+    height?: number
+    ratio?: number
+}
+
+export interface MediaViewInfo {
+    width?: number
+    padding?: number
+    src?: string
+    thumb?: string
+    loading?: boolean
+}
+
 export default interface MediaModel {
-    _id?: string;
+    _id?: string
 
-    company?: string;
-    filename?: string;
-    originalname?: string;
-    type?: string;
-    size?: number;
-    tags?: string[];
-    image?: boolean;
-    video?: boolean;
-    mimetype?: string;
+    company?: string
+    filename?: string
+    originalname?: string
+    type?: string
+    size?: number
+    tags?: string[]
+    image?: boolean
+    video?: boolean
+    mimetype?: string
 
-    info?: MediaInfo;
-    view?: MediaViewInfo;
-    download?: string;
-}
-
-export default interface MediaInfo {
-    width?: number;
-    height?: number;
-    ratio?: number;
-}
-
-export default interface MediaViewInfo {
-    width?: number;
-    padding?: number;
-    src?: string;
-    thumb?: string;
-    loading?: boolean;
+    info?: MediaInfo
+    view?: MediaViewInfo
+    download?: string
 }

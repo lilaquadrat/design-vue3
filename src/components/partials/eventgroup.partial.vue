@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { defineProps, defineOptions, ref, computed, onBeforeMount, watch } from 'vue';
-import { useInview } from '../../plugins/inview';
+import { defineProps, defineOptions, ref, onBeforeMount, watch } from 'vue';
 import dayjs from 'dayjs';
-import type Link from '../../interfaces/link.interface';
 import type Event from '../../interfaces/Event.interface';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import { useTranslations } from '@/plugins/translations';
@@ -17,14 +15,10 @@ const props = defineProps<{
 const useElements = ref<(Event & {dateString?: string})[]>([]);
 const {translate} = useTranslations();
 
-function componentType (link?: Link): 'lila-link-partial' | 'section' {
-  return link?.link?.length ? 'lila-link-partial' : 'section';
-}
-
 onBeforeMount(() => setElements());
 watch(() => props.elements, () => setElements(), {deep: true});
 
-function setElements() {
+function setElements () {
 
   const safeElements = hardCopy(props.elements);
 
@@ -52,7 +46,6 @@ function setElements() {
   });
 
 }
-
 
 </script>
 
@@ -132,7 +125,6 @@ function setElements() {
             <section class="callToAction" v-if="single.callToAction">
               <lila-link-partial callToAction v-bind="single.callToAction" />
             </section>
-
 
           </section>
   
@@ -268,7 +260,6 @@ function setElements() {
                 line-height: @headlineLineHeight_M;
               }
             }
-            
 
             h2 {
               font-size: @headline_XS;

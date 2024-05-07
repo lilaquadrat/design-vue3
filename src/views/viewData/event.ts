@@ -28,7 +28,7 @@ const content: Content = {
         ],
       },
       media: {
-        type: 'video',
+        type      : 'video',
         src       : 'https://www.youtube.com/watch?v=JXGUf6oIqco',
         attributes: ['controls'],
         preload   : 'auto',
@@ -67,7 +67,7 @@ const content: Content = {
         ],
       },
       media: {
-        type: 'image',
+        type     : 'image',
         source   : [],
         alt      : 'IMAGE ALT',
         src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',

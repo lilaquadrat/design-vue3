@@ -4,9 +4,10 @@ import { computed, type ComputedRef } from 'vue';
 
 const props = withDefaults(defineProps<IconsPartial>(), {
   colorScheme: 'colorScheme1',
-  size: 'medium',
+  size       : 'medium',
 });
 const rotateClass: ComputedRef<string | undefined> = computed(() => (props.rotate ? `rotate${props.rotate}` : undefined));
+
 </script>
 <template>
   <span class="lila-icons-partial" :class="[type, colorScheme, size, rotateClass, { animate }]">
@@ -40,7 +41,6 @@ const rotateClass: ComputedRef<string | undefined> = computed(() => (props.rotat
     </svg>
   </span>
 </template>
-
 
 <!-- https://heroicons.com/ -->
 <style lang="less" scoped>

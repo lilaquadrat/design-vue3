@@ -20,12 +20,12 @@ const content: Content = {
       },
       elements: [
         {
-          artist     : 'Berliner Ensemble',
-          name       : 'Macy Gray and The California Jet Club',
-          location   : 'Essener Str. 100, 04358 Leipzig',
-          start      : '2024-04-26T17:00:00.373Z',
-          end        : '2024-04-26T19:00:00.373Z',
-          textblock  : {
+          artist   : 'Berliner Ensemble',
+          name     : 'Macy Gray and The California Jet Club',
+          location : 'Essener Str. 100, 04358 Leipzig',
+          start    : '2024-04-26T17:00:00.373Z',
+          end      : '2024-04-26T19:00:00.373Z',
+          textblock: {
             text: [
               'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
               'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
@@ -181,7 +181,7 @@ const content: Content = {
           description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
           start      : '2024-06-10T19:00:00.000Z',
           end        : '2024-06-10T21:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -206,7 +206,7 @@ const content: Content = {
           description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
           start      : '2024-06-10T19:00:00.000Z',
           end        : '2024-06-12T21:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -235,7 +235,7 @@ const content: Content = {
           description: 'Enjoy a serene night of jazz outdoors under the starry sky.',
           start      : '2024-07-15T21:00:00.000Z',
           end        : '2024-07-16T00:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -260,7 +260,7 @@ const content: Content = {
           description: 'A lineup of top indie bands, showcasing new albums and classic hits.',
           start      : '2024-08-20T18:00:00.000Z',
           end        : '2024-08-20T23:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -285,18 +285,18 @@ const content: Content = {
       variant  : ['tour'],
       textblock: {
         headline: 'Alive Tour 2024',
-        subline: 'Tour Dates',
-        text: [
+        subline : 'Tour Dates',
+        text    : [
           'some text'
         ]
       },
       elements: [
         {
-          location   : 'Halle 02',
-          name       : 'Heidelberg',
-          start      : '2024-04-26T17:00:00.373Z',
-          end        : '2024-04-26T19:00:00.373Z',
-          textblock  : {
+          location : 'Halle 02',
+          name     : 'Heidelberg',
+          start    : '2024-04-26T17:00:00.373Z',
+          end      : '2024-04-26T19:00:00.373Z',
+          textblock: {
             text: [
               'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
               'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
@@ -325,11 +325,11 @@ const content: Content = {
           }
         },
         {
-          location   : 'Central',
-          name       : 'Erfurt',
-          start      : '2024-04-27T17:00:00.373Z',
-          end        : '2024-04-27T19:00:00.373Z',
-          textblock  : {
+          location : 'Central',
+          name     : 'Erfurt',
+          start    : '2024-04-27T17:00:00.373Z',
+          end      : '2024-04-27T19:00:00.373Z',
+          textblock: {
             text: [
               'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
               'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
@@ -354,11 +354,11 @@ const content: Content = {
           },
         },
         {
-          location   : 'Capitol',
-          name       : 'Hannover',
-          start      : '2024-05-01T17:00:00.373Z',
-          end        : '2024-05-01T19:00:00.373Z',
-          textblock  : {
+          location : 'Capitol',
+          name     : 'Hannover',
+          start    : '2024-05-01T17:00:00.373Z',
+          end      : '2024-05-01T19:00:00.373Z',
+          textblock: {
             text: [
               'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
               'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',

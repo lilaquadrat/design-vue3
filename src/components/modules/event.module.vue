@@ -148,7 +148,6 @@ function handleChildEvent (event: string) {
 
       </section>
 
-
     <lila-content-module v-if="contentMerged && !noContent" sub :content="contentMerged" @event="handleChildEvent" />
     
   </article>

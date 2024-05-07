@@ -343,11 +343,7 @@ function createYoutubePlayer () {
 
 }
 
-const filteredSource = computed(() => {
-
-  return props.source?.filter((single) => !!single.source);
-
-});
+const filteredSource = computed(() => props.source?.filter((single) => !!single.source));
 
 </script>
 <template>

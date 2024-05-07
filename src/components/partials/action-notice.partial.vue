@@ -3,7 +3,7 @@ import type { ErrorsObject, ParsedError } from '@/libs/ActionNotice';
 import ActionNotice from '@/libs/ActionNotice';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
-import type { ErrorObject, ResponseError } from '@lilaquadrat/interfaces';
+import type { ResponseError } from '@lilaquadrat/interfaces';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch } from 'vue';
 

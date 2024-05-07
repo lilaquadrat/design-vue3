@@ -1,5 +1,3 @@
-import type EventsElement from './EventGroupElement';
-
 export default interface Link {
 
     text: string;

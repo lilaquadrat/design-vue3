@@ -100,4 +100,4 @@ body {
 
   text-decoration: none;
 }
-</style>../projects/company/project/src/modules.browser../projects/company/project/src/modules.mail../projects/company/project/src/staticData../projects/company/project/src/customModules../projects/company/project/src/partials.browser../projects/company/project/src/partials.mail
+</style>
