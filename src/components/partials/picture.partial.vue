@@ -46,8 +46,11 @@ watch(image, () => {
 });
 
 onServerPrefetch(() => {
+
   if(store.configuration.preloadImages) loading.value = true;
+  
 })
+
 onBeforeMount(() => {
 
   if(store.configuration.preloadImages) loading.value = true;

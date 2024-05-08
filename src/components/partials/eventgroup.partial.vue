@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineOptions, ref, onBeforeMount, watch } from 'vue';
+import { defineProps, defineOptions, ref, onBeforeMount, watch, onServerPrefetch } from 'vue';
 import dayjs from 'dayjs';
 import type Event from '../../interfaces/Event.interface';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
@@ -16,6 +16,7 @@ const useElements = ref<(Event & {dateString?: string})[]>([]);
 const {translate} = useTranslations();
 
 onBeforeMount(() => setElements());
+onServerPrefetch(() => setElements());
 watch(() => props.elements, () => setElements(), {deep: true});
 
 function setElements () {
@@ -139,8 +140,9 @@ function setElements () {
     display: grid;
     grid-template-columns: 40px 1fr;
     gap: 50px 30px;
+    break-inside: avoid;
     
-    @media @desktop {
+    @media @desktopSreenOnly {
       gap: 50px 0;
       grid-template-columns: 180px 5fr;
     }
@@ -185,6 +187,7 @@ function setElements () {
       justify-items: start;
       justify-content: start;
       grid-template-columns: 1fr;
+      break-inside: avoid;
 
       .single-event {
         display: grid;
@@ -196,7 +199,7 @@ function setElements () {
           justify-items: start;
           align-items: start;
 
-          @media @desktop {
+          @media @desktopSreenOnly {
             grid-template-columns: 180px 1fr;
 
             .lila-figure {
@@ -213,7 +216,7 @@ function setElements () {
             display: grid;
             align-items: start;
             
-            @media @desktop {
+            @media @desktopSreenOnly {
               gap: 0 25px;
               display: flex;
               flex-wrap: wrap;
@@ -255,7 +258,7 @@ function setElements () {
               font-size: @headline_S;
               line-height: @headlineLineHeight_S;
 
-              @media @desktop {
+              @media @desktopSreenOnly {
                 font-size: @headline_M;
                 line-height: @headlineLineHeight_M;
               }
@@ -265,7 +268,7 @@ function setElements () {
               font-size: @headline_XS;
               line-height: @headlineLineHeight_XS;
 
-              @media @desktop {
+              @media @desktopSreenOnly {
                 font-size: @headline_S;
                 line-height: @headlineLineHeight_S;
               }

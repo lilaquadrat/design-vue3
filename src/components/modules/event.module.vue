@@ -157,10 +157,17 @@ function handleChildEvent (event: string) {
 .lila-event-module {
   .module;
 
+  @media print {
+    margin: 20mm 0;
+  }
+
   display: grid;
   gap: 120px;
 
-  max-width: @moduleWidth_M;
+  max-width: @moduleWidth_S;
+  @media @desktop {
+    max-width: @moduleWidth_M;
+  }
 
   .main-container {
     display: grid;
@@ -253,11 +260,9 @@ function handleChildEvent (event: string) {
   }
   &.noMedia {
 
-    @media @desktop {
-        max-width: @moduleWidth_S;
-        grid-template-rows: max-content max-content;
-        grid-template-columns: 1fr;
-    }
+    max-width: @moduleWidth_S;
+    grid-template-rows: max-content max-content;
+    grid-template-columns: 1fr;
 
     .main-container {
 

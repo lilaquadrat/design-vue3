@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, defineProps, watch } from 'vue';
+import { onBeforeMount, ref, defineProps, watch, onServerPrefetch } from 'vue';
 import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
@@ -18,6 +18,7 @@ const groupedEvents = ref();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
 onBeforeMount(() => setElements(props.elements));
+onServerPrefetch(() => setElements(props.elements));
 watch(() => props.elements, () => setElements(props.elements), {deep: true, immediate: true});
 
 // /**
@@ -29,7 +30,7 @@ function setElements (elements: any[]) {
   const safeElements = hardCopy(elements);
   const target: Record<string, any> = {};
 
-  safeElements.sort((a, b) => a.start.localeCompare(b.date));
+  safeElements.sort((a, b) => a.start.localeCompare(b.start));
 
   safeElements.forEach((single) => {
 
@@ -71,6 +72,10 @@ function setElements (elements: any[]) {
 <style lang="less" scoped>
 .lila-events-list-module {
   .module;
+
+  @media print {
+    margin: 20mm 0;
+  }
 
   @media @desktop {
     max-width: @moduleWidth_L;
