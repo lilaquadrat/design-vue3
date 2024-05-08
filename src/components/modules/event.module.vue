@@ -369,11 +369,9 @@ function handleChildEvent (event: string) {
   }
   &.noMedia {
 
-    @media @desktop {
-        max-width: @moduleWidth_S;
-        grid-template-rows: max-content max-content;
-        grid-template-columns: 1fr;
-    }
+    max-width: @moduleWidth_S;
+    grid-template-rows: max-content max-content;
+    grid-template-columns: 1fr;
 
     .main-container {
 
