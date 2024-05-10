@@ -88,7 +88,7 @@ const confirm = (event: MouseEvent): void => {
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, state, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed, save, }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, state, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed, save }, $attrs.class]" @click.stop="confirm">
     <span v-if="save"></span>
     <slot v-if="!showCheck && !confirmed" />
     <span v-if="showCheck">Please confirm your action.</span>
@@ -171,6 +171,16 @@ const confirm = (event: MouseEvent): void => {
 
     &:hover {
       background-color: @color1;
+    }
+
+  }
+
+  &.white {
+    background-color: @white;
+    color: @color1;
+
+    &:hover {
+      background-color: @color2;
     }
 
   }
@@ -294,6 +304,22 @@ const confirm = (event: MouseEvent): void => {
     &.rejected {
       background-color: @error;
       color: @white;
+    }
+
+  }
+
+  &:not(.icon) {
+
+    :deep(.lila-icons-partial) {
+      .trans(opacity);
+    }
+
+    &:hover {
+
+      :deep(.lila-icons-partial) {
+        opacity: .6;
+      }
+
     }
 
   }

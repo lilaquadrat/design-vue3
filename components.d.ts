@@ -38,6 +38,7 @@ import type compareModuleVue from '@/components/modules/compare.module.vue';
 import type contentModuleVue from '@/components/modules/content.module.vue';
 import type actionNoticePartialVue from '@/components/partials/action-notice.partial.vue';
 import type singleEventPartialVue from '@/components/partials/single-event.partial.vue'
+import type StoryPartial from '@/components/partials/story.partial.vue';
 
 declare module 'vue' {
     export interface GlobalComponents {
@@ -79,6 +80,7 @@ declare module 'vue' {
         'lila-textarea-partial': typeof textareaPartialVue
         'lila-textblock-partial': typeof textblockPartialVue
         'lila-video-partial': typeof videoPartialVue
+        'lila-story-partial': typeof StoryPartial
         'lila-blog-intro-module': typeof blogIntroModuleVue
         'lila-contact-module': typeof contactModuleVue
         'lila-compare-module':typeof compareModuleVue

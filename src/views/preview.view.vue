@@ -31,6 +31,7 @@ import video from './viewData/video';
 import emotion from './viewData/emotion';
 import menu from './viewData/menu';
 import event from './viewData/event';
+import story from './viewData/story';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -56,7 +57,8 @@ const modules: Record<string, Partial<Content>> = {
   training,
   timeline,
   eventslist,
-  event
+  event,
+  story
 };
 const route = useRoute();
 const store = useMainStore();

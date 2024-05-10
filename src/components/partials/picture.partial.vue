@@ -9,18 +9,21 @@ import { computed, ref, watch, type Ref } from 'vue';
 
 const store = useMainStore();
 const props = defineProps<{
-  alt?: string;
+  alt?: string
 
-  src?: string;
+  src?: string
 
-  copyright?: string;
-  source?: Picture['source'];
+  copyright?: string
+  source?: Picture['source']
 
-  noLoadAnimation?: boolean;
+  noLoadAnimation?: boolean
 
-  fit?: boolean;
+  fit?: boolean
 
-  center?: boolean;
+  center?: boolean
+
+  animation?: 'leftToRight' | 'scale' | 'rightToLeft' | 'topToBottom' | 'bottomToTop'
+  activeAnimation?: boolean
 
 }>();
 const emit = defineEmits(['loaded']);
@@ -96,7 +99,7 @@ const sourceMedia = computed((): PictureMedia[] => {
 
 </script>
 <template>
-  <figure :class="[loading,{ notLoaded: !loading, noLoadAnimation: noLoadAnimation, fit, center }]" class="lila-figure" ref="element">
+  <figure :class="[loading, animation, { notLoaded: !loading, noLoadAnimation, fit, center, animation, activeAnimation }]" class="lila-figure" ref="element">
     <section class="picture-container">
       <picture>
         <template v-if="loading">
@@ -185,6 +188,159 @@ const sourceMedia = computed((): PictureMedia[] => {
 
     img {
       justify-self: center;
+    }
+
+  }
+
+  &.animation.activeAnimation {
+    overflow: hidden;
+    
+    picture {
+      img {
+        animation-fill-mode: forwards;
+        animation-duration: 10s;
+        animation-timing-function: linear;
+      }
+    }
+
+    &.leftToRight {
+      picture {
+
+        img {
+          transform: scale(120%);
+          animation-name: leftToRight;
+        }
+
+      }
+    }
+
+    &.rightToLeft {
+      picture {
+
+        img {
+          transform: scale(120%);
+          animation-name: rightToLeft;
+        }
+
+      }
+    }
+
+    &.topToBottom {
+      picture {
+
+        img {
+          transform: scale(120%);
+          animation-name: topToBottom;
+        }
+
+      }
+      
+    }
+
+    &.bottomToTop {
+      picture {
+
+        img {
+          transform: scale(120%);
+          animation-name: bottomToTop;
+        }
+
+      }
+
+    }
+
+    &.scaleUp {
+      picture {
+
+        img {
+          animation-name: scaleUp;
+        }
+
+      }
+
+    }
+
+    &.scaleDown {
+      picture {
+
+        img {
+          animation-name: scaleDown;
+        }
+
+      }
+
+    }
+
+  }
+
+  @keyframes leftToRight {
+
+    0% {
+      transform: translateX(-10%) scale(120%);
+    }
+
+    100% {
+      transform: translateX(0) scale(120%);
+    }
+
+  }
+
+  @keyframes rightToLeft {
+
+    0% {
+      transform: translateX(10%) scale(120%);
+    }
+
+    100% {
+      transform: translateX(0) scale(120%);
+    }
+
+  }
+
+  @keyframes topToBottom {
+
+    0% {
+      transform: translateY(-5%) scale(120%);
+    }
+
+    100% {
+      transform: translateY(0) scale(120%);
+    }
+
+  }
+
+  @keyframes bottomToTop {
+
+    0% {
+      transform: translateY(5%) scale(120%);
+    }
+
+    100% {
+      transform: translateY(0) scale(120%);
+    }
+
+  }
+
+  @keyframes scaleUp {
+
+    0% {
+      transform: scale(100%);
+    }
+
+    100% {
+      transform: scale(120%);
+    }
+
+  }
+
+  @keyframes scaleDown {
+
+    0% {
+      transform: scale(120%);
+    }
+
+    100% {
+      transform: scale(100%);
     }
 
   }

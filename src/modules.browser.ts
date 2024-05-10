@@ -925,5 +925,34 @@ export default
       ],
       component: () => import('@/components/modules/event.module.vue'),
     },
+    {
+      name    : 'story',
+      variants: [
+        {
+          key        : 'pdf-single-page',
+          name       : 'Eigene Seite',
+          description: 'Ist Innerhalb der PDF eine eigene Seite ohne andere Module',
+          group      : 'pdf',
+        },
+        {
+          key        : 'pdf-new-page-after',
+          name       : 'Neue Seite nach diesem Module',
+          description: 'Innerhalb der PDF eine eigene Seite ohne andere Module',
+          group      : 'pdf',
+        },
+        {
+          key        : 'pdf-new-page-before',
+          name       : 'Neue Seite vor diesem Module',
+          description: 'Innerhalb der PDF eine eigene Seite ohne andere Module',
+          group      : 'pdf',
+        },
+        {
+          key  : 'pdf-invisible',
+          name : 'Wird nicht in PDF angezeigt',
+          group: 'pdf',
+        },
+      ],
+      component: () => import('@/components/modules/story.module.vue'),
+    },
   ]
 }
