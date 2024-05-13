@@ -135,7 +135,7 @@ const content: Content = {
           description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
           start      : '2024-06-10T19:00:00.000Z',
           end        : '2024-06-10T21:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -160,7 +160,7 @@ const content: Content = {
           description: 'Experience a live symphony orchestra performance in a completely virtual setting.',
           start      : '2024-06-10T19:00:00.000Z',
           end        : '2024-06-12T21:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -185,7 +185,7 @@ const content: Content = {
           description: 'Enjoy a serene night of jazz outdoors under the starry sky.',
           start      : '2024-07-15T21:00:00.000Z',
           end        : '2024-07-16T00:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
@@ -210,7 +210,7 @@ const content: Content = {
           description: 'A lineup of top indie bands, showcasing new albums and classic hits.',
           start      : '2024-08-20T18:00:00.000Z',
           end        : '2024-08-20T23:00:00.000Z',
-          list: {
+          list       : {
             value: [
               'Beginn 16:00 Uhr (Einlass 15:00 Uhr)',
               'Artist Support Fee: 25€'
