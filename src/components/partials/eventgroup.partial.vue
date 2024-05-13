@@ -15,23 +15,17 @@ const props = defineProps<{
 const useElements = ref<(Event & { dateString?: string })[]>([]);
 const { translate } = useTranslations();
 
-function componentType (link?: Link): 'lila-link-partial' | 'section' {
-  return link?.link?.length ? 'lila-link-partial' : 'section';
-}
-
-onBeforeMount(() => {
-
-  setElements();
-
-});
+onBeforeMount(() => setElements());
+onServerPrefetch(() => setElements());
+watch(() => props.elements, () => setElements(), {deep: true});
 
 function setElements () {
 
   const safeElements = hardCopy(props.elements);
 
+  useElements.value = [];
   safeElements.forEach((single: Event & {dateString?: string}) => {
 
-    console.log(single);
     if(single.start && single.end) {
 
       if (dayjs(single.end).diff(single.start, 'hours') > 24) {
@@ -60,36 +54,77 @@ function setElements () {
   <section class="lila-eventgroup-partial" :class="[variant]">
 
       <time class="time-container">
-        <div>
+        <div class="date">
           {{ $helpers.date(date, 'DD') }}
         </div>
-        <div>
-          {{ $helpers.date(date, 'dd') }}
+        <div class="month">
+          {{ $helpers.date(date, 'MM') }}
+        </div>
+        <div class="year">
+          {{ $helpers.date(date, 'YY') }}
         </div>
       </time>
 
     <section class="events-container">
 
-        <section class="single-event" v-for="(single, index) in useElements" :class="{hasPicture: single.picture}" :key="`events-${index}`">
+        <section class="single-event" v-for="(single, index) in useElements" :class="{hasPicture: single.picture?.src.length}" :key="`events-${index}`">
   
-          <lila-picture-partial v-if="single.picture" v-bind="single.picture" fit class="picture-container" />
+          <lila-picture-partial v-if="single.picture?.src.length" v-bind="single.picture" fit class="picture-container" />
   
           <section class="event-info">
 
             <section class="date-location">
               <section class="date">
                 <div class="day">
-                  <template v-if="!single.dateString">{{ $helpers.date(single.start) }} - {{ $helpers.date(single.end) }} </template>
+                  <template v-if="!single.dateString">
+                    <template v-if="single.start">{{ $helpers.date(single.start) }}</template> 
+                    <template v-if="single.end">- {{ $helpers.date(single.end) }}</template> 
+                  </template>
                   {{ single.dateString }}
                 </div>
               </section>
-              <div class="location"><lila-icons-partial type="location" size="large" class="icon green" /> {{ single.location }}</div>
+              <div v-if="single.location" class="location"><lila-icons-partial type="location" size="large" class="icon green" /> {{ single.location }}</div>
             </section>
 
             <section class="title">
-              <h2 class="artist">{{ single.artist }}</h2>
-              <h1 class="name">{{ single.name }}</h1>
-              <p>{{ single.description || single.textblock.intro }}</p>
+              <template v-if="!single.link?.link">
+                <h2 v-if="single.artist && single.name" class="artist">{{ single.artist }}</h2>
+              </template>
+
+              <template v-if="single.link?.link">
+                <lila-link-partial v-bind="single.link">
+                  <h2 v-if="single.artist && single.name" class="artist">{{ single.artist }}</h2>
+                </lila-link-partial>
+              </template>
+
+              <template v-if="single.link?.link">
+                <lila-link-partial v-bind="single.link">
+                  <h1 class="name">
+                    <template v-if="single.name && single.artist || single.name && !single.artist">
+                      {{ single.name }}
+                    </template>
+                    <template v-if="!single.name && single.artist">
+                      {{ single.artist }}
+                    </template>
+                  </h1>
+                </lila-link-partial>
+              </template>
+              <template v-if="!single.link?.link">
+                  <h1 class="name">
+                    <template v-if="single.name && single.artist || single.name && !single.artist">
+                      {{ single.name }}
+                    </template>
+                    <template v-if="!single.name && single.artist">
+                      {{ single.artist }}
+                    </template>
+                  </h1>
+              </template>
+
+              <p v-if="single.description || single.textblock?.intro">{{ single.description || single.textblock?.intro }}</p>
+            </section>
+
+            <section class="callToAction" v-if="single.callToAction">
+              <lila-link-partial callToAction v-bind="single.callToAction" />
             </section>
 
         </section>
@@ -103,10 +138,12 @@ function setElements () {
 <style lang="less" scoped>
 .lila-eventgroup-partial {
     display: grid;
-    gap: 50px 0;
-    grid-template-columns: 80px 1fr;
-
-    @media @desktop {
+    grid-template-columns: 40px 1fr;
+    gap: 50px 30px;
+    break-inside: avoid;
+    
+    @media @desktopSreenOnly {
+      gap: 50px 0;
       grid-template-columns: 180px 5fr;
     }
 
@@ -117,22 +154,30 @@ function setElements () {
 
     .time-container {
       display: grid;
+
       .font-head;
+
       font-size: @headline_L;
       line-height: @headlineLineHeight_L;
-      font-variant-numeric: tabular-nums;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      align-self: start;
-      justify-self: start;
-      
-      @media @desktop {
-        .multi(margin-top, 6);
-        justify-self: center;
-        font-size: @headline_XL;
-        line-height: @headlineLineHeight_XL;
-      }
 
+      font-variant-numeric: tabular-nums;
+
+      text-align: right;
+
+      text-transform: uppercase;
+      
+      align-self: start;
+      justify-self: center;
+
+      position: sticky;
+      top: 20px;
+
+      color: @color1;
+      
+      .year {
+        color: @grey;
+      }
+      
     }
 
   .events-container {
@@ -141,14 +186,26 @@ function setElements () {
       gap: 120px 0;
       justify-items: start;
       justify-content: start;
+      grid-template-columns: 1fr;
+      break-inside: avoid;
 
       .single-event {
         display: grid;
-        grid-column-start: 2;
+        grid-column-start: 1;
+        width: 100%;
   
         &.hasPicture {
-          grid-template-columns: 200px 1fr;
-          gap: 40px;
+          gap: 20px 40px;
+          justify-items: start;
+          align-items: start;
+
+          @media @desktopSreenOnly {
+            grid-template-columns: 180px 1fr;
+
+            .lila-figure {
+              aspect-ratio: 2/3;
+            }
+          }
         }
   
         .event-info {
@@ -157,9 +214,13 @@ function setElements () {
   
           .date-location {
             display: grid;
-            grid-template-columns: max-content max-content;
             align-items: start;
-            gap: 40px;
+            
+            @media @desktopSreenOnly {
+              gap: 0 25px;
+              display: flex;
+              flex-wrap: wrap;
+            }
     
             .location {
               display: grid;
@@ -178,7 +239,7 @@ function setElements () {
               gap: 15px;
     
               .day {
-                font-size: @headline_M;
+                font-size: @headline_S;
                 line-height: @headlineLineHeight_M;
               }
     
@@ -192,6 +253,26 @@ function setElements () {
           .title {
             display: grid;
             gap: 15px;
+
+            h1 {
+              font-size: @headline_S;
+              line-height: @headlineLineHeight_S;
+
+              @media @desktopSreenOnly {
+                font-size: @headline_M;
+                line-height: @headlineLineHeight_M;
+              }
+            }
+
+            h2 {
+              font-size: @headline_XS;
+              line-height: @headlineLineHeight_XS;
+
+              @media @desktopSreenOnly {
+                font-size: @headline_S;
+                line-height: @headlineLineHeight_S;
+              }
+            }
     
             p {
               .font-bold;
@@ -202,6 +283,15 @@ function setElements () {
       }
     }
 
+    &.tour {
+      .events-container {
+        .single-event {
+          .event-info {
+            gap: 10px;
+          }
+        }
+      }
+    }
 
 }
 </style>
