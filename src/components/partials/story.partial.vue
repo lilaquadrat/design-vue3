@@ -131,7 +131,6 @@ defineExpose({
             align-items: center;
         }
     }
-
     &.textVerticalEnd {
         .position-container {
             align-items: end;

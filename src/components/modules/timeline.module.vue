@@ -134,12 +134,6 @@ function activeMedia () {
           grid-row: 1/5;
           width: 5px;
 
-          &::after {
-            top: 100px;
-            // border-top-right-radius: 99px;
-            background: red;
-          }
-
           @media @desktop {
             width: 8px;
           }
@@ -200,7 +194,6 @@ function activeMedia () {
 
           :deep(.lila-figure) {
             justify-content: left;
-            padding-bottom: 20px;
           }
           
           @media @desktop {

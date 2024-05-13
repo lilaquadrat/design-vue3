@@ -60,8 +60,7 @@ const brightTextIntro = computed(() => {
 
       <section class="elements-container">
 
-        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element"
-          :is="componentType(element.link)" v-bind="element.link" v-memo="elements">
+        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="elements">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
           <section class="text-container" v-if="element.textblock || element.links || element.list">
             <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />

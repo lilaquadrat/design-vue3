@@ -290,6 +290,7 @@ function setElements () {
             gap: 10px;
           }
         }
+  
       }
     }
 
