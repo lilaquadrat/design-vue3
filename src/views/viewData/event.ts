@@ -1,21 +1,19 @@
 import type { Content } from '@lilaquadrat/interfaces';
 import dayjs from 'dayjs';
 
-const startDate = dayjs('2019-05-04T15:30:02.561+00:00')
-const endDate = dayjs('2019-05-05T18:00:02.561+00:00')
 const content: Content = {
   id      : 'home',
   company : 'company',
   project : 'project',
   settings: {
     mode       : 'presentation',
-    title      : 'singleevent',
+    title      : 'Event',
     description: 'Single Event with video and text details'
   },
   state  : 'publish',
   modules: [
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
@@ -29,7 +27,8 @@ const content: Content = {
           'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
         ],
       },
-      video: {
+      media: {
+        type      : 'video',
         src       : 'https://www.youtube.com/watch?v=JXGUf6oIqco',
         attributes: ['controls'],
         preload   : 'auto',
@@ -53,7 +52,7 @@ const content: Content = {
       },
     },
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
@@ -67,7 +66,8 @@ const content: Content = {
           'Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). Die Frage nach dem Betriebssystem stellt sich nicht: STUDIO steht für sich und arbeitet unabhängig und immer zuverlässig – egal ob als installierbare Version für den Computer oder als App für Android und iOS (in Kürze erhältlich). ',
         ],
       },
-      picture: {
+      media: {
+        type     : 'image',
         source   : [],
         alt      : 'IMAGE ALT',
         src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
@@ -92,7 +92,7 @@ const content: Content = {
       },
     },
     {
-      type       : 'singleevent-module',
+      type       : 'event-module',
       variant    : [],
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',

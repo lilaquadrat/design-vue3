@@ -1,7 +1,5 @@
 <script setup lang="ts">
-
 import type Picture from '@interfaces/picture.interface';
-import { ref } from 'vue';
 
 defineProps<{
   alt: string;

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, defineProps, computed } from 'vue';
+import { onBeforeMount, ref, defineProps, watch, onServerPrefetch } from 'vue';
 import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
-import type EventGroupElement from '../../interfaces/EventGroupElement';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import dayjs from 'dayjs';
 import type Event from '@/interfaces/Event.interface';
@@ -17,38 +16,36 @@ const props = defineProps<ModuleBaseProps & {
 const element = ref<HTMLElement>();
 const groupedEvents = ref();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-const title = computed(() => ({
-  headline: props.textblock?.headline,
-}));
 
-onBeforeMount(() => {
-
-  setElements(props.elements);
-
-});
+onBeforeMount(() => setElements(props.elements));
+onServerPrefetch(() => setElements(props.elements));
+watch(() => props.elements, () => setElements(props.elements), {deep: true, immediate: true});
 
 // /**
 //  * sorts all events by the same day and sorts its 
-//  * containing SingleEventElement by theirstarting time 
+//  * containing SingleEventElement by their starting time 
 //  */
 function setElements(elements: any[]) {
 
   const safeElements = hardCopy(elements);
   const target: Record<string, any> = {};
 
-  safeElements.sort((a, b) => a.start.localeCompare(b.date));
+  safeElements.sort((a, b) => a.start.localeCompare(b.start));
 
   safeElements.forEach((single) => {
 
+    if(!dayjs(single.start).isValid()) return;
+
     const dateString = dayjs(single.start).format('YYYY-MM-DD');
 
-    if (!target[dateString]) target[dateString] = {
-      date: dateString,
-      elements: []
+    if(!target[dateString]) {
+      target[dateString] = {
+        date    : dateString,
+        elements: []
+      }
     }
 
     target[dateString].elements.push(single);
-
 
   });
 
@@ -57,14 +54,14 @@ function setElements(elements: any[]) {
 
 </script>
 <template>
-  <section ref="element" :id="id" :class="[inviewState]" class="lila-event-group-module lila-module">
+  <section ref="element" :id="id" :class="[inviewState, variant]" class="lila-events-list-module lila-module">
 
     <section class="elements-container">
-      <header class="title-container">
-        <lila-textblock-partial v-bind="title" />
+      <header v-if="textblock" class="title-container">
+        <lila-textblock-partial v-bind="textblock" />
       </header>
       <section class="single-day-container" v-for="(day, index) in groupedEvents" :key="`event-${index}`">
-        <lila-eventgroup-partial class="event" v-bind="day" />
+        <lila-eventgroup-partial v-bind="day" :variant="variant" />
         <hr class="separator" />
       </section>
     </section>
@@ -73,8 +70,12 @@ function setElements(elements: any[]) {
 </template>
 
 <style lang="less" scoped>
-.lila-event-group-module {
+.lila-events-list-module {
   .module;
+
+  @media print {
+    margin: 20mm 0;
+  }
 
   @media @desktop {
     max-width: @moduleWidth_L;

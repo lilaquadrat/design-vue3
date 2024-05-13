@@ -130,8 +130,6 @@ function openElement (event: Event, element: LinkGroupElement & { active: boolea
   open.value = false;
   attachTo.value = undefined;
 
-  console.log(event, element);
-
   if (element.active) {
 
     element.active = false;

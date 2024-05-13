@@ -154,5 +154,9 @@ export default [
   {
     name     : 'eventgroup',
     component: () => import('@/components/partials/eventgroup.partial.vue'),
+  },
+  {
+    name     : 'story',
+    component: () => import('@/components/partials/story.partial.vue'),
   }
 ]

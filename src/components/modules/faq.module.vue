@@ -2,7 +2,7 @@
 import type Textblock from '@interfaces/textblock.interface';
 import type Accordion from '@interfaces/Accordion.interface';
 import { useInview } from '@/plugins/inview';
-import { onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 
 defineOptions({ inheritAttrs: false });

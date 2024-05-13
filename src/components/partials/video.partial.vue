@@ -9,14 +9,12 @@ import type Video from '@/interfaces/video.interface';
 
 const props = withDefaults(
   defineProps<Video & {
-    trigger?: boolean;
-    poster?: string;
-    src: string;
-    attributes?: string[];
-    source?: VideoSource[];
-    js?: boolean;
-    preview?: boolean;
-    preload?: 'auto' | 'metadata' | 'none';
+    trigger?: boolean
+    poster?: string
+    attributes?: string[]
+    source?: VideoSource[]
+    preview?: boolean
+    preload?: 'auto' | 'metadata' | 'none'
   }>(),
   {
     preload: 'auto',
@@ -54,6 +52,14 @@ watch(() => props.source, () => start());
 watch(() => props.trigger, () => toggle());
 watch(() => isPlaying.value, () => emit('playing', isPlaying.value));
 watch(() => state.value, () => emit('loading', state.value === 'loading'));
+/**
+ * this is needed for recreating the youtube player after changing the src
+ */
+watch(() => youtubePlayerElement.value, () => {
+
+  if(youtubeId.value && videoType.value === 'youtube' && youtubePlayerElement.value) start();
+
+});
 /**
 * used if preload is set to none to start the video after the element is loaded
 */
@@ -309,7 +315,7 @@ function createYoutubePlayer () {
           state.value = 'ready';
           if (props.preload === 'none') play();
 
-        }
+        },
       }
     }
   );
@@ -318,14 +324,14 @@ function createYoutubePlayer () {
 
 }
 
+const filteredSource = computed(() => props.source?.filter((single) => !!single.source));
+
 </script>
 <template>
   <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none' }, state]">
-    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder">
-    </section>
-    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster"
-      :class="[state, { loading: loading }]" :key="src">
-      <source v-for="single in source" :key="single.media" :class="single.media" :data-src="single.source" />
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
+    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
+      <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source" />
       <track kind="captions" />
       <source v-if="src" :data-src="src" />
     </video>

@@ -16,6 +16,17 @@ export async function render (url: string, context: any, contextData: Content[],
   const contentStore = useContentStore();
 
   mainStore.setData(context.data);
+  
+  /**
+  * for pdfs all images must be preloaded
+  * because there will be no hydration
+  */
+  if(context.renderTarget === 'pdf') {
+
+    context.settings.preloadImages = true; 
+
+  }
+
   mainStore.configuration = context.settings;
 
   if(contextData) contentStore.addMulti(contextData);

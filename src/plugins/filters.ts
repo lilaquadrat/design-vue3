@@ -24,7 +24,7 @@ const HelpersPlugin = {
 
   date (date: string | Date, format?: string) {
 
-    return dayjs(date).format(format || 'DD.MM.YYYY hh:mm');
+    return dayjs(date).locale('de').format(format || 'DD.MM.YYYY HH:mm');
 
   }
 

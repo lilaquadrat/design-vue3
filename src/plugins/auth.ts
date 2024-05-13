@@ -2,7 +2,7 @@ import type AppState from '@/interfaces/AppState.interface';
 import type IdTokenExtended from '@/interfaces/IdTokenExtended.interface';
 import logger from '@/mixins/logger';
 import { Auth0Client, type Auth0ClientOptions } from '@auth0/auth0-spa-js';
-import { ref, type App } from 'vue';
+import { ref } from 'vue';
 
 class Auth {
 
@@ -102,8 +102,7 @@ class Auth {
 
 const auth = new Auth;
 const plugin = {
-  install: (vue: App): void => {
-
+  install: (): void => {
     logger.plugins('auth installed')
   },
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, type Ref, nextTick, onServerPrefetch, onBeforeMount } from 'vue';
+import { ref, type Ref, nextTick, onServerPrefetch, onBeforeMount } from 'vue';
 import type AccordionElement from '@interfaces/AccordionElement.interface';
 import type { AccordionElementWithSettings } from '@interfaces/AccordionElement.interface';
 import { useResize } from '@/plugins/resize';

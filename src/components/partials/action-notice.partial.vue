@@ -3,7 +3,7 @@ import type { ErrorsObject, ParsedError } from '@/libs/ActionNotice';
 import ActionNotice from '@/libs/ActionNotice';
 import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
-import type { ErrorObject, ResponseError } from '@lilaquadrat/interfaces';
+import type { ResponseError } from '@lilaquadrat/interfaces';
 import { onBeforeMount } from 'vue';
 import { computed, ref, watch } from 'vue';
 
@@ -26,8 +26,6 @@ const errorsElement = ref<HTMLElement>();
 
 watch(() => props.errors, () => {
 
-  console.log(props.errors);
-
   if (props.errors?.errors) {
 
     parsedErrors.value = ActionNotice.parse(props.errors.errors, props.translationPre);
@@ -45,7 +43,6 @@ watch(() => props.errors, () => {
 })
 
 watch(parsedErrors, () => {
-  console.log('update', parsedErrors.value);
   emit('update', parsedErrors.value)
 });
 

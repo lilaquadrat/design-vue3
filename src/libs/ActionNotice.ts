@@ -31,8 +31,6 @@ export default class ActionNotice {
 
     });
 
-    console.log(parsedErrors);
-
     return parsedErrors;
 
   }

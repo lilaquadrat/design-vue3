@@ -33,7 +33,6 @@ function updateErrors (newErrorsObject?: ErrorsObject) {
 
 async function handleForm () {
 
-  console.log(confirmationCode.value, userStore.locked);
   if(!confirmationCode.value) return;
 
   const sdk = new StudioSDK(apiConfig)
