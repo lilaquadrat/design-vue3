@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type Link from '@/interfaces/link.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 
 defineProps<{
@@ -6,6 +7,7 @@ defineProps<{
   textblock: Textblock
   active: boolean
   variant?: string[]
+  link?: Link
 }>();
 
 </script>
@@ -16,6 +18,7 @@ defineProps<{
     <section class="position-container">
         <lila-textblock-partial v-bind="textblock" :variant="['bright']" />
     </section>
+    <lila-link-partial v-if="link" v-bind="link" callToAction />
   </section>
 </template>
 <style lang="less" scoped>
@@ -39,10 +42,17 @@ defineProps<{
             align-items: center;
         }
     }
+
     &.textVerticalEnd {
         .position-container {
             align-items: end;
         }
+    }
+
+    .lila-link {
+        position: absolute;
+        justify-self: center;
+        bottom: 20px;
     }
 }
 </style>

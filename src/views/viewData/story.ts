@@ -30,6 +30,10 @@ const content: Content = {
             headline: 'Exploring New Horizons: Luxury Sailing Into the Future',
             subline: 'Aerial View Captures Majestic Sailing Vessel Cruising the Emerald Waters',
             text: ['In an awe-inspiring display of elegance and freedom, this aerial photograph captures a luxurious sailboat as it cuts through the vibrant turquoise seas. Designed for both performance and comfort, the vessel is a testament to modern maritime engineering, blending classic aesthetics with cutting-edge technology. As it navigates the vast, open waters, this sailboat not only showcases the thrilling possibilities of nautical adventures but also symbolizes a return to the timeless allure of sailing. The expansive seas around it highlight the pure joy and escapism that sailing offers to those seeking solace from the bustling world ashore.']
+          },
+          link  : {
+            link: '/test',
+            text: 'get to know'
           }
         },
         {
