@@ -3,7 +3,9 @@ import type MenuCategoryElement from '@/interfaces/MenuCategory.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
-import { ref } from 'vue';
+import { computed, onBeforeMount, ref } from 'vue';
+import type MenuItemElement from '@/interfaces/MenuItem.interface';
+import type menuCategoryPartialVue from '../partials/menu-category.partial.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -11,11 +13,16 @@ const props = defineProps<ModuleBaseProps & {
   textblock?: Textblock;
   intro?: Textblock;
   categories: MenuCategoryElement[];
+  allergens: MenuItemElement[]
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 const titleVariants = ['center', 'font-extra', 'horizontalLine'];
 const introVariants = ['center'];
+const removeItems = computed(() => ({
+  allergens: props.categories.find(single => single)
+}));
+
 
 </script>
 <template>
@@ -23,7 +30,7 @@ const introVariants = ['center'];
 
     <header>
 
-      <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" /> 
+      <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" />
 
       <lila-menu-navigation-partial :categories="categories" />
 
@@ -33,16 +40,23 @@ const introVariants = ['center'];
 
     <section class="category-container">
 
-      <lila-menu-category-partial v-for="(category, index) in categories" v-bind="category" :key="`single-category-${index}`" />
+      <lila-menu-category-partial v-for="(category, index) in categories" v-bind="category" 
+        :key="`single-category-${index}`" /> 
 
     </section>
 
-    <lila-menu-allergens-partial />
+    <section class="allegene-container" :variant="removeItems">
+      <lila-menu-allergens-partial /> 
+    </section>
+
+    <!-- <section class="allegene-container" :variant="removeItems"> {{ removeItems }}
+        <lila-menu-allergens-partial v-for="(allergens, index) in categories" v-bind="allergens"
+        :key="`single-category-${index}`"/> 
+      </section> -->
 
   </section>
 </template>
 <style lang="less" scoped>
-
 .lila-menu-module {
   .module;
   .modulePadding('none');
@@ -73,7 +87,8 @@ const introVariants = ['center'];
 
   }
 
-  .intro, .lila-textblock.title {
+  .intro,
+  .lila-textblock.title {
     .module;
   }
 
@@ -82,5 +97,4 @@ const introVariants = ['center'];
     gap: 140px;
   }
 }
-
 </style>

@@ -12,8 +12,8 @@ const props = defineProps<{
   variant?: string[];
   date: string;
 }>();
-const useElements = ref<(Event & {dateString?: string})[]>([]);
-const {translate} = useTranslations();
+const useElements = ref<(Event & { dateString?: string })[]>([]);
+const { translate } = useTranslations();
 
 onBeforeMount(() => setElements());
 onServerPrefetch(() => setElements());
@@ -28,13 +28,13 @@ function setElements () {
 
     if(single.start && single.end) {
 
-      if(dayjs(single.end).diff(single.start, 'hours') > 24) {
+      if (dayjs(single.end).diff(single.start, 'hours') > 24) {
 
         single.dateString = translate.translate('event-until', [dayjs(single.start).locale('de').format('HH:mm').toString(), dayjs(single.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
 
       }
 
-      if(dayjs(single.end).diff(single.start, 'hours') < 24) {
+      if (dayjs(single.end).diff(single.start, 'hours') < 24) {
 
         single.dateString = translate.translate('event-short', [dayjs(single.start).locale('de').format('HH:mm').toString(), dayjs(single.end).locale('de').format('HH:mm').toString()]);
 
@@ -65,7 +65,7 @@ function setElements () {
         </div>
       </time>
 
-      <section class="events-container">
+    <section class="events-container">
 
         <section class="single-event" v-for="(single, index) in useElements" :class="{hasPicture: single.picture?.src.length}" :key="`events-${index}`">
   
@@ -127,13 +127,13 @@ function setElements () {
               <lila-link-partial callToAction v-bind="single.callToAction" />
             </section>
 
-          </section>
-  
         </section>
 
       </section>
 
     </section>
+
+  </section>
 </template>
 <style lang="less" scoped>
 .lila-eventgroup-partial {
@@ -147,10 +147,10 @@ function setElements () {
       grid-template-columns: 180px 5fr;
     }
 
-    align-items: start;
-    align-content: start;
+  align-items: start;
+  align-content: start;
 
-    .headlines;
+  .headlines;
 
     .time-container {
       display: grid;
@@ -180,7 +180,7 @@ function setElements () {
       
     }
 
-    .events-container {
+  .events-container {
 
       display: grid;
       gap: 120px 0;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTranslations } from '@/plugins/translations';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const { translate } = useTranslations();
 const allergens = [
@@ -25,13 +25,14 @@ const allergens = [
 * Sorting is based on the translated title, ensuring compatibility with different locales.
 */
 const allergenTranslatedSorted = computed(() => allergens.map((single) => ({ title: translate.translate(single), value: single })).sort((a, b) => a.title.localeCompare(b.title)));
-
+const props = defineProps<{
+  variant: string[];
+}>();
 </script>
 <template>
-  <section class="lila-menu-allergens">
+  <section class="lila-menu-allergens" :class="[variant]">
     <h3>{{ $translate('allergens') }}</h3>
-
-    <section class="allergens-container">
+    <section class="allergens-container" v-if="allergenTranslatedSorted"> 
       <h5 v-for="(allergen, index) in allergenTranslatedSorted" :key="`single-allergen-${index}`">
         <span>{{ $translate(`${allergen.value}Number`) }}</span>
         <span>{{ allergen.title }}</span>
@@ -42,7 +43,6 @@ const allergenTranslatedSorted = computed(() => allergens.map((single) => ({ tit
   </section>
 </template>
 <style lang="less" scoped>
-
 .lila-menu-allergens {
   .module;
   gap: 40px;
@@ -74,6 +74,12 @@ const allergenTranslatedSorted = computed(() => allergens.map((single) => ({ tit
     }
 
     gap: 20px;
+  }
+
+}
+&.removeAllergens {
+  .lila-menu-allergens {
+     display: none;
   }
 }
 </style>

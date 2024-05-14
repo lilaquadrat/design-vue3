@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type { TimelineElement } from '../../interfaces/TimelineElement.interface';
 
-defineOptions({ inheritAttrs: false }); // atri
+defineOptions({ inheritAttrs: false }); 
 
 const props = defineProps<ModuleBaseProps & {
     elements: TimelineElement[];

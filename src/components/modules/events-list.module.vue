@@ -25,7 +25,7 @@ watch(() => props.elements, () => setElements(props.elements), {deep: true, imme
 //  * sorts all events by the same day and sorts its 
 //  * containing SingleEventElement by their starting time 
 //  */
-function setElements (elements: any[]) {
+function setElements(elements: any[]) {
 
   const safeElements = hardCopy(elements);
   const target: Record<string, any> = {};
@@ -84,6 +84,7 @@ function setElements (elements: any[]) {
   .single-day-container {
     display: grid;
     gap: 80px;
+
     .separator {
       border: 0;
       border-top: solid 1px @grey;
@@ -94,22 +95,22 @@ function setElements (elements: any[]) {
     display: grid;
     gap: 80px;
 
+    :deep(.lila-textblock) {
+      h1 {
+        font-size: @headline_L;
+        line-height: @headlineLineHeight_XL;
+      }
+    }
+
+    @media @desktop {
+
       :deep(.lila-textblock) {
         h1 {
-          font-size: @headline_L;
-          line-height: @headlineLineHeight_XL;
+          font-size: @headline_XL;
+          line-height: @headlineLineHeight_L;
         }
       }
-
-      @media @desktop {
-       
-        :deep(.lila-textblock) {
-          h1 {
-            font-size: @headline_XL;
-            line-height: @headlineLineHeight_L;
-          }
-        }
-      }
+    }
   }
 }
 </style>
