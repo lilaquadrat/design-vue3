@@ -15,13 +15,23 @@ const props = withDefaults(
     source?: VideoSource[]
     preview?: boolean
     preload?: 'auto' | 'metadata' | 'none'
+    fit?: boolean
+    customControls?: string
+    /**
+     * when the video has the state "canplay" it get muted und start playing
+     * this way it can be properly unmuted and does not use html attributes
+     */
+    autoplay?: boolean
   }>(),
   {
     preload: 'auto',
   },
 );
 const emit = defineEmits<{
-  (e: string, i: boolean): void;
+  (e: 'playing', i: boolean): void;
+  (e: 'loading', i: boolean): void;
+  (e: 'progress', i: number): void;
+  (e: 'metadata', i: {duration: number}): void;
 }>();
 const { media } = useResize();
 const { youtubeApiState, addYoutube } = useYoutube();
@@ -31,8 +41,11 @@ const youtubePlayer = ref<YT.Player>();
 const loading = ref<boolean>(true);
 const loadVideo = ref<boolean>(false);
 const isPlaying = ref<boolean>(false);
+const isMuted = ref<boolean>(false);
 const renderTarget = ref<string>('browser');
 const state = ref<string>('init');
+const alreadyStarted = ref<boolean>(false);
+const progress = ref<number>(0);
 const listenersAttached = ref<boolean>(false);
 const videoType = computed(() => (props.src?.match('^https://(www.)?youtube.com') ? 'youtube' : 'basic'));
 const renderVideo = computed(() => (props.preload === 'auto' || (props.preload === 'none' && loadVideo.value)) && props.src && videoType.value !== 'youtube' && renderTarget.value !== 'pdf');
@@ -109,6 +122,8 @@ function bind () {
 
     dom.onElement('playing', videoElement.value, () => {
 
+      console.log('playing');
+
       isPlaying.value = true;
 
     });
@@ -127,10 +142,29 @@ function bind () {
 
     dom.onElement('canplay', videoElement.value, () => {
 
+      isPlaying.value = false;
       state.value = 'ready';
+
+      if(videoElement.value && props.autoplay) {
+        
+        toggleSound(true);
+        videoElement.value?.play();
+
+      }
+
+      console.log(videoElement.value?.duration);
 
     });
 
+    dom.onElement('timeupdate', videoElement.value, updateProgress);
+    dom.onElement('seeked', videoElement.value, updateProgress);
+    dom.onElement('loadedmetadata', videoElement.value, () => {
+
+      emit('metadata', {duration: videoElement.value?.duration as number});
+      updateProgress;
+      
+    });
+    
     listenersAttached.value = true;
 
   }
@@ -284,6 +318,69 @@ function pause () {
 
 }
 
+function restart () {
+
+  if(!videoElement.value) return;
+  videoElement.value.currentTime = 0;  
+}
+
+function callAutoPlay () {
+
+  const stopWatcher = watch(state, () => {
+
+    if(state.value === 'ready') {
+
+      if(!alreadyStarted.value) toggleSound(true);
+      videoElement.value?.play();
+
+      stopWatcher();
+    }
+
+  })
+
+  if(state.value === 'ready') {
+
+    if(!alreadyStarted.value) toggleSound(true);
+    videoElement.value?.play();
+
+  }
+  
+}
+
+function toggleSound (mute?: boolean) {
+
+  if(videoElement.value) {
+
+    if(typeof mute === 'undefined') {
+
+      videoElement.value.muted = !videoElement.value.muted;
+      isMuted.value = videoElement.value.muted;
+    
+    } else {
+
+      videoElement.value.muted = mute;
+      isMuted.value = mute;
+
+    }
+
+  }
+
+}
+
+function updateProgress () {
+
+  if(!videoElement.value) return;
+
+  alreadyStarted.value = true;
+
+  const percentPlayed = Math.round(videoElement.value.currentTime / videoElement.value.duration * 100);
+
+  progress.value = percentPlayed;
+
+  emit('progress', percentPlayed);
+
+}
+
 /**
  * create the youtube player
  */
@@ -326,18 +423,32 @@ function createYoutubePlayer () {
 
 const filteredSource = computed(() => props.source?.filter((single) => !!single.source));
 
+defineExpose({
+  pause,
+  play,
+  restart,
+  toggleSound,
+  callAutoPlay
+})
+
 </script>
 <template>
-  <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none' }, state]">
+  <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none', fit }, state]">
+    
     <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
+    
     <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
       <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source" />
       <track kind="captions" />
       <source v-if="src" :data-src="src" />
     </video>
+
+    <component v-if="customControls && videoElement" :is="customControls" :element="videoElement" :muted="isMuted" :playing="isPlaying" @togglePlay="toggle" @toggleSound="toggleSound"/>
+    
     <section v-if="youtubeId" class="youtube-container">
       <div ref="youtubePlayerElement" class="youtube-video"></div>
     </section>
+
   </section>
 </template>
 <style lang="less" scoped>
@@ -370,6 +481,14 @@ const filteredSource = computed(() => props.source?.filter((single) => !!single.
   .preload-placeholder {
     display: grid;
     max-width: 100%;
+  }
+
+  &.fit {
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   &.noPreload {

@@ -65,6 +65,15 @@ const content: Content = {
         },
         {
           media: {
+            type     : 'video',
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/introfinal.mp4',
+            copyright: '© lilaquadrat',
+          }
+        },
+        {
+          media: {
             type     : 'image',
             source   : [],
             alt      : 'IMAGE ALT',
@@ -92,6 +101,15 @@ const content: Content = {
             subline: 'Vibrant Umbrellas Dot the Shoreline in a Seasonal Spectacle',
             text: ['Captured in the warm glow of the setting sun, this bustling beach scene epitomizes the quintessential summer getaway. With colorful umbrellas punctuating the sandy shores and a backdrop of lush greenery, the beach is a hive of activity. Families, friends, and solo adventurers gather here to soak up the sun and immerse themselves in the refreshing ocean waters, making lasting memories in this picturesque coastal retreat.']
           }
+        },
+        {
+          media: {
+            type     : 'video',
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/sample.webm',
+            copyright: '© lilaquadrat',
+          },
         },
         {
           media: {

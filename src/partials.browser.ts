@@ -158,5 +158,9 @@ export default [
   {
     name     : 'story',
     component: () => import('@/components/partials/story.partial.vue'),
+  },
+  {
+    name     : 'video-controls-story',
+    component: () => import('@/components/partials/video-controls-story.partial.vue'),
   }
 ]
