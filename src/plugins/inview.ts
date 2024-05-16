@@ -14,6 +14,8 @@ class Inview {
 
   scrolled = ref<number>(0);
 
+  moduleAdded = ref<number>(0);
+
   scrollDirection = ref<'up' | 'down'>();
 
   /**
@@ -177,6 +179,12 @@ class Inview {
 
   }
 
+  moduleRendered () {
+
+    this.moduleAdded.value++;
+
+  }
+
 }
 
 const inview = new Inview();
@@ -202,6 +210,8 @@ export function useInview (element?: Ref<HTMLElement | undefined>, options?: { a
 
       if (element.value) {
 
+        inview.moduleRendered();
+
         if (options?.preload) {
 
           inview.checkPreload(element.value, preload);
@@ -224,6 +234,16 @@ export function useInview (element?: Ref<HTMLElement | undefined>, options?: { a
           watch(inview.scrolled, () => {
 
             inview.check(element.value as HTMLElement, state, options)
+
+          })
+
+          watch(inview.moduleAdded, () => {
+
+            requestAnimationFrame(() => {
+
+              inview.check(element.value as HTMLElement, state, options);
+
+            })
 
           })
 

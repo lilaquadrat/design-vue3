@@ -929,6 +929,11 @@ export default
       name    : 'story',
       variants: [
         {
+          key        : 'align',
+          name       : 'Automatisch zentrieren',
+          description: 'Wenn das Module nicht vollständig zentriert ist, wird automatisch zum Startpunkt des Modules gescrolled',
+        },
+        {
           key        : 'pdf-single-page',
           name       : 'Eigene Seite',
           description: 'Ist Innerhalb der PDF eine eigene Seite ohne andere Module',
@@ -952,6 +957,48 @@ export default
           group: 'pdf',
         },
       ],
+      additionalData: {
+        animations: [
+          {
+            key : '',
+            name: 'Keine Animation',
+          },
+          {
+            key : 'leftToRight',
+            name: 'links nach rechts',
+          },
+          {
+            key : 'rightToLeft',
+            name: 'rechts nach links',
+          },
+          {
+            key : 'bottomToTop',
+            name: 'unten nach oben',
+          },
+          {
+            key : 'topToBottom',
+            name: 'oben nach unten',
+          },
+          {
+            key : 'scaleUp',
+            name: 'vergrössern',
+          },
+          {
+            key : 'scaleDown',
+            name: 'verkleinern',
+          },
+        ],
+        storyVariants: [
+          {
+            key : 'textVerticalCenter',
+            name: 'Text vertikal zentriert',
+          },
+          {
+            key : 'textVerticalEnd',
+            name: 'Text unten positioniert',
+          },
+        ],
+      },
       component: () => import('@/components/modules/story.module.vue'),
     },
   ]

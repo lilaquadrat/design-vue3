@@ -9,6 +9,8 @@ const props = defineProps<{
   active: boolean
   variant?: string[]
   link?: Link
+  animation?: string
+  parentVisible?: boolean
 }>();
 const emit = defineEmits<{
   (e: 'progress', i: number): void;
@@ -17,9 +19,12 @@ const video = ref();
 
 watch(() => props.active, handleActive);
 watch(() => video.value, handleActive);
+watch(() => props.parentVisible, visibilityChanged);
 onMounted(() => handleActive)
 
 function handleActive () {
+
+  if(!props.parentVisible) return;
 
   if(video.value && props.active) {
 
@@ -40,6 +45,7 @@ function updateProgress (progress: number) {
   if(props.active) {
 
     emit('progress', progress)
+
   }
 
 }
@@ -54,8 +60,26 @@ function restart () {
 
 }
 
+function visibilityChanged (visible: boolean) {
+
+  if(video.value && props.active) {
+
+    if(visible) {
+
+      video.value.callAutoPlay();
+      
+    } else {
+      
+      video.value.pause();
+      
+    }
+
+  }
+}
+
 defineExpose({
-  restart
+  restart,
+  visibilityChanged
 })
 
 </script>
@@ -63,7 +87,7 @@ defineExpose({
   <section class="lila-story" :class="[variant, media.type, {active}]">
 
     <lila-video-partial ref="video" v-if="media && media.type === 'video'" @progress="updateProgress" v-bind="media" customControls="lila-video-controls-story-partial" fit />
-    <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" :activeAnimation="active" fit />
+    <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" :activeAnimation="active" :animation="animation" fit />
     
     <section class="position-container">
         <lila-textblock-partial v-bind="textblock" :variant="['bright']" />
@@ -78,6 +102,8 @@ defineExpose({
 .lila-story {
     display: grid;
     visibility: hidden;
+
+    background-color: @color1;
     
     &.active {
         visibility: visible;
@@ -116,6 +142,7 @@ defineExpose({
         position: absolute;
         justify-self: center;
         bottom: 20px;
+        z-index: 6;
     }
 
     .lila-video-partial {

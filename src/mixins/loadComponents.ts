@@ -53,9 +53,10 @@ function loadViaDeclarationSync (components: { name: string, component: AsyncCom
 function getAvailableModules (modules: any[]) {
 
   return modules.filter((single) => single.availableInEditor !== false).map((single) => ({
-    name    : `${single.name}-module`,
-    variants: single.variants || [],
-    editor  : single.editor || {},
+    name          : `${single.name}-module`,
+    variants      : single.variants || [],
+    editor        : single.editor || {},
+    additionalData: single.additionalData || {}
   }));
 
 }

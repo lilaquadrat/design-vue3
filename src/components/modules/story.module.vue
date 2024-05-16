@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type LinkListWithTitle from '@/interfaces/LinkListWithTitle.interface';
-import type ListWithTitle from '@/interfaces/ListWithTitle.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type StoryElement from '@/interfaces/StoryElement.interface';
 import { useInview } from '@/plugins/inview';
-import { computed, onBeforeMount, ref, watch } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -21,6 +19,10 @@ const element = ref<HTMLElement>();
 const activeElement = ref<StoryElement>();
 const stories = ref<{restart: () => void}[]>();
 const activeIndex = ref<number>(0);
+const isVisible = ref<boolean>(false);
+const isRunning = ref<boolean>(false);
+const isVideo = ref<boolean>(false);
+const hasEnded = ref<boolean>(false);
 const percentStyle = ref<{'--timerPercent': string}>({'--timerPercent': '0%'});
 const progress = ref<number>(0);
 const timerId = ref<number>(0);
@@ -29,10 +31,21 @@ const isLast = computed(() => activeIndex.value === props.elements.length - 1);
 let timerStart: number = 0;
 let elapsedTime: number = 0;
 
-onBeforeMount(() => start());
-watch(() => props.elements, () => {
+onBeforeMount(() => {
 
-  console.log('elements changed');
+  setActiveElement();
+
+});
+
+onMounted(() => {
+
+  if(isVisible.value) {
+    start();
+  }
+
+});
+
+watch(() => props.elements, () => {
 
   setActiveElement();
   startTimer();
@@ -46,7 +59,23 @@ watch(activeIndex, () => {
 
 });
 
-const isVideo = computed(() => activeElement.value?.media && activeElement.value?.media.type === 'video')
+watch(inviewState.value, () => {
+
+  isVisible.value = inviewState.value.includes('inview-current');
+
+  if(hasEnded.value) return;
+
+  if(!isVisible.value) {
+
+    stopTimer();
+
+  } else {
+
+    if(!isRunning.value) startTimer(elapsedTime);
+
+  }
+
+});
 
 function start () {
 
@@ -59,9 +88,7 @@ function control (direction: 'prev' | 'next') {
 
   stopTimer();
   elapsedTime = 0;
-
-  console.log('control', stories, direction, activeIndex.value);
-  console.log(progress.value);
+  hasEnded.value = false;
 
   const lengthIndexCorrected = props.elements.length - 1;
   let tempIndex = activeIndex.value;
@@ -85,6 +112,7 @@ function control (direction: 'prev' | 'next') {
 
   if(tempIndex > lengthIndexCorrected) {
 
+    hasEnded.value = true;
     return;
 
   }
@@ -146,6 +174,8 @@ function setActiveElement () {
 
   activeElement.value = props.elements[activeIndex.value];
 
+  isVideo.value = activeElement.value?.media?.type === 'video';
+
 }
 
 function startTimer (startTime?: number) {
@@ -159,6 +189,7 @@ function startTimer (startTime?: number) {
   }
 
   timerId.value = requestAnimationFrame(tickTimer);
+  isRunning.value = true;
 
 }
 
@@ -166,6 +197,7 @@ function stopTimer () {
 
   cancelAnimationFrame(timerId.value);
   timerId.value = 0;
+  isRunning.value = false;
 
 }
 
@@ -195,6 +227,7 @@ function updateProgress (newProgress: number) {
 
   percentStyle.value = {'--timerPercent': `${newProgress}%`};
   progress.value = newProgress; 
+  isRunning.value = true;
 
   if(newProgress >= 100) {
 
@@ -243,7 +276,7 @@ function restartCurrentStory () {
             <lila-button-partial class="pause" color-scheme="transparent" @click="playPause"><lila-icons-partial color-scheme="white" size="large" :type="timerId> 0 ? 'pause' : 'play'"/></lila-button-partial>
           </section>
 
-          <lila-story-partial ref="stories" v-for="(story, index) in props.elements" :key="`story-${index}`" :active="index === activeIndex" @progress="updateProgress" v-bind="story" />
+          <lila-story-partial ref="stories" v-for="(story, index) in props.elements" :key="`story-${index}`" :parentVisible="isVisible" :active="index === activeIndex" @progress="updateProgress" v-bind="story" />
        
         </section>
 

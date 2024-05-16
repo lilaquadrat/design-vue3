@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useResize } from '@/plugins/resize';
 import type { VideoSource } from '../../interfaces/video.interface';
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch, type WatchStopHandle } from 'vue';
 import dom from '@/functions/lila-dom';
 import { useYoutube } from '@/plugins/youtube';
 import { onBeforeMount } from 'vue';
@@ -47,6 +47,7 @@ const state = ref<string>('init');
 const alreadyStarted = ref<boolean>(false);
 const progress = ref<number>(0);
 const listenersAttached = ref<boolean>(false);
+const autoplayWatcher = ref<WatchStopHandle>();
 const videoType = computed(() => (props.src?.match('^https://(www.)?youtube.com') ? 'youtube' : 'basic'));
 const renderVideo = computed(() => (props.preload === 'auto' || (props.preload === 'none' && loadVideo.value)) && props.src && videoType.value !== 'youtube' && renderTarget.value !== 'pdf');
 const youtubeId = computed(() => {
@@ -151,8 +152,6 @@ function bind () {
         videoElement.value?.play();
 
       }
-
-      console.log(videoElement.value?.duration);
 
     });
 
@@ -316,6 +315,16 @@ function pause () {
     videoElement.value?.pause();
   }
 
+  /**
+  * if pause is called after callAutoPlay we need to stop the watcher
+  * if not the video would play when it shouldnt
+  */
+  if(autoplayWatcher.value) {
+
+    autoplayWatcher.value();
+
+  }
+
 }
 
 function restart () {
@@ -326,20 +335,20 @@ function restart () {
 
 function callAutoPlay () {
 
-  const stopWatcher = watch(state, () => {
+  autoplayWatcher.value = watch(state, () => {
 
     if(state.value === 'ready') {
 
       if(!alreadyStarted.value) toggleSound(true);
       videoElement.value?.play();
-
-      stopWatcher();
+      
+      if(autoplayWatcher.value) autoplayWatcher.value();
     }
-
+    
   })
-
+  
   if(state.value === 'ready') {
-
+    
     if(!alreadyStarted.value) toggleSound(true);
     videoElement.value?.play();
 
