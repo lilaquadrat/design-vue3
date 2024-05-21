@@ -294,6 +294,18 @@ function activeMedia () {
           }
         }
       }
+      .singleelement-container:first-child {
+        .timeline-container {
+          border-top-left-radius: 99px;
+          border-top-right-radius: 99px;
+        }
+      }
+      .singleelement-container:last-child {
+        .timeline-container {
+          border-bottom-left-radius: 99px;
+          border-bottom-right-radius: 99px;
+        }
+      }
     }
   }
 
