@@ -265,6 +265,7 @@ function restartCurrentStory () {
         <lila-button-partial @click="control('prev')" class="control" color-scheme="white"><lila-icons-partial color-scheme="colorScheme1" size="large" type="chevron-left"/></lila-button-partial>
         
         <section class="stories-container">
+
           <section class="indicator-container" :style="percentStyle">
             <section class="indicator" v-for="(story, index) in props.elements" :key="`story-${index}`" :class="{active: index === activeIndex, played: index < activeIndex, unplayed: index > activeIndex}">
               <div class="progress"></div>
