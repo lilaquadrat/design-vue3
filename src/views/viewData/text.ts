@@ -13,6 +13,46 @@ const content: Content = {
   modules: [
     {
       type    : 'text-module',
+      variant : [],
+      headline: 'some headline',
+      subline : 'some subline',
+      intro   : 'some intro',
+      text    : [
+        'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+      ],
+      links: {
+        value: [
+          {text: 'more', link: '#more'},
+          {text: 'Link 1', link: '/link1'},
+          {text: 'Link empty'},
+          {text: 'Link 2', link: '/link1'},
+        ],
+      },
+    },
+    {
+      type    : 'text-module',
+      variant : [],
+      headline: 'some headline',
+      subline : 'some subline',
+      intro   : 'some intro',
+      text    : [
+        'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+      ],
+      list: {
+        value: [
+          'Entry with some longer text',
+          'Normal entry',
+          'entry 3',
+          'entry 4',
+          'entry 5',
+        ],
+        title: 'some nice list',
+      },
+    },
+    {
+      type    : 'text-module',
       headline: 'Some headline',
       variant : ['center'],
       text    : [
@@ -33,6 +73,16 @@ const content: Content = {
         'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
         'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
       ],
+      list: {
+        value: [
+          'Entry with some longer text',
+          'Normal entry',
+          'entry 3',
+          'entry 4',
+          'entry 5',
+        ],
+        title: 'some nice list',
+      },
     },
     {
       type   : 'text-module',

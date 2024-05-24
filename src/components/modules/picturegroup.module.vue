@@ -41,13 +41,22 @@ const brightText = computed(() => {
   return variantsArray;
 
 });
+const brightTextIntro = computed(() => {
+
+  const variantsArray = [];
+
+  if(props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
+
+  return variantsArray;
+
+});
 
 </script>
 <template>
   <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
 
     <section class="content-container">
-      <lila-textblock-partial :variant="brightText" v-if="textblock" v-bind="textblock" />
+      <lila-textblock-partial :variant="brightTextIntro" v-if="textblock" v-bind="textblock" />
 
       <section class="elements-container"> 
 
@@ -341,13 +350,14 @@ const brightText = computed(() => {
 
             border-color: @color1;
             .lila-figure {
-              transform: translateY(-5.5%);
+              transform: translateY(-4.5%);
             }
             .lila-textblock, .lila-list-links {
               transform: translateY(-15px);
             }
             .lila-list-links {
               opacity: 1;
+              pointer-events: all;
             }
 
           }

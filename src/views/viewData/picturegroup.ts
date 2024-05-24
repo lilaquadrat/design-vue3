@@ -854,6 +854,82 @@ const content: Content = {
         },
       ],
     },      
+    {
+      type     : 'picturegroup-module',
+      variant  : ['cards'],
+      textblock: {
+        headline: 'align with fit and links and description',
+        text    : [
+          'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+          'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+        ],
+      },
+      elements: [
+        { 
+          textblock: {
+            headline: 'The Power of lilaquadrat STUDIO at hand.',
+            text: [
+              'Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+            ],
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          textblock: {
+            subline: 'The Power of lilaquadrat STUDIO at hand.',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          },
+          link: {
+             link: '#more',
+          },
+        },
+        { 
+          textblock: {
+            headline: 'The Power of lilaquadrat STUDIO at hand.',
+          },
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          }
+        },
+      ],
+    },      
   ],
 };
 

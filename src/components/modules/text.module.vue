@@ -28,6 +28,12 @@ const listVariant = computed(() => {
 
   }
 
+  if (props.variant?.includes('notice')) {
+
+    base.push('white');
+
+  }
+
   return base;
 
 });
@@ -45,6 +51,12 @@ const linkVariant = computed(() => {
   if (props.variant?.includes('actions')) {
 
     base.push('actions');
+
+  }
+
+  if (props.variant?.includes('notice')) {
+
+    base.push('white');
 
   }
 
@@ -81,20 +93,24 @@ const linkVariant = computed(() => {
   }
 
   &.notice {
-    .modulePadding('none');
+    // .modulePadding('none');
     
     max-width: 100%;
     grid-template-columns: 1fr;
     justify-items: center;
 
     background-color: @color1;
+    padding: @modulePadding;
+
+    @media @tablet, @desktop {
+      padding: @modulePaddingExt;
+    }
+
+    .lila-list-links {
+      max-width: @moduleWidth_S;
+    }
 
     :deep(.lila-textblock) {
-      padding: @modulePadding;
-
-      @media @tablet, @desktop {
-        padding: @modulePaddingExt;
-      }
 
       max-width: @moduleWidth_S;
       color: @white;

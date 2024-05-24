@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
 const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered')); 
 const noStyle: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noStyle')); 
 const actions: ComputedRef<boolean> = computed(() => !!props.variant?.includes('actions')); 
+const white: ComputedRef<boolean> = computed(() => !!props.variant?.includes('white')); 
 const notEmpty: ComputedRef<boolean> = computed(() => !!props.value?.find((single) => {
 
   if (typeof single === 'string') return single.length > 0;
@@ -35,7 +36,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
     <ul v-if="!actions || mode === 'list'">
       <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`">
 
-        <lila-icons-partial v-if="!isNumbered && !noStyle" size="small" :type="'arrow-right'"/>
+        <lila-icons-partial v-if="!isNumbered && !noStyle" size="small" :color-scheme="white ? 'white' : 'colorScheme1'" :type="'arrow-right'"/>
 
         <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" />
         <template v-if="typeof(single) === 'string'">{{ $replacer(single) }}</template>
@@ -58,6 +59,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 <style lang="less" scoped>
 .lila-list-links {
   display: grid;
+  width: 100%;
 
   gap: 10px;
   counter-reset: listItem;
@@ -88,6 +90,15 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 
     }
 
+  }
+
+  &.bold {
+    .font-bold;
+
+    li {
+      font-size: @headline_XS;
+    }
+    
   }
 
   &.noStyle, &.actions {
@@ -135,7 +146,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 
   &.white {
 
-    a, h4 {
+    a, h4, li {
       color: @white;
     }
 
@@ -144,14 +155,6 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
       &:hover {
         color: @color2;
       }
-    }
-  }
-
-  &.bold {
-    .font-bold;
-    li {
-      font-size: @headline_XS;
-
     }
   }
 
