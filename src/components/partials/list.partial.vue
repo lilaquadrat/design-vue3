@@ -146,7 +146,7 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 
   &.white {
 
-    a, h4, li {
+    a, h4, ul li {
       color: @white;
     }
 
