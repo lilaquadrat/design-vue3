@@ -97,4 +97,5 @@ const removeItems = computed(() => ({
     gap: 140px;
   }
 }
+
 </style>
