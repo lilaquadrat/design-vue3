@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTranslations } from '@/plugins/translations';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 const { translate } = useTranslations();
 const allergens = [
@@ -28,11 +28,12 @@ const allergenTranslatedSorted = computed(() => allergens.map((single) => ({ tit
 const props = defineProps<{
   variant: string[];
 }>();
+
 </script>
 <template>
   <section class="lila-menu-allergens" :class="[variant]">
     <h3>{{ $translate('allergens') }}</h3>
-    <section class="allergens-container" v-if="allergenTranslatedSorted"> 
+    <section class="allergens-container" v-if="allergenTranslatedSorted">
       <h5 v-for="(allergen, index) in allergenTranslatedSorted" :key="`single-allergen-${index}`">
         <span>{{ $translate(`${allergen.value}Number`) }}</span>
         <span>{{ allergen.title }}</span>
@@ -76,10 +77,5 @@ const props = defineProps<{
     gap: 20px;
   }
 
-}
-&.removeAllergens {
-  .lila-menu-allergens {
-     display: none;
-  }
 }
 </style>

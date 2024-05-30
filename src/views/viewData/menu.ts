@@ -1643,7 +1643,7 @@ const content: Content = {
       'type'     : 'menu-module',
       'id'       : 'Speisekarte',
       'name'     : '',
-      'variant'  : ['removeAllergens'],
+      'variant'  : ['hideAllergens'],
       'textblock': {
         'headline': '',
         'subline' : '',
