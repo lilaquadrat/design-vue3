@@ -137,8 +137,12 @@ function activeMedia () {
           @media @desktop {
             width: 8px;
           }
-        }
 
+        
+        }
+       
+
+       
         .time-container {
           display: grid; 
           grid-column-start: 3;
@@ -146,6 +150,7 @@ function activeMedia () {
           padding-left: 20px; 
           text-align: left;
           padding-bottom: 25px;
+        
           
           .year {
             .font-head; 
@@ -296,7 +301,9 @@ function activeMedia () {
       }
     }
   }
-
+  .timeline-container:first-child {
+            border: red solid .5px
+          }
   &.active {
     transform: translate(0%);
   }
