@@ -39,6 +39,7 @@ import type contentModuleVue from '@/components/modules/content.module.vue';
 import type actionNoticePartialVue from '@/components/partials/action-notice.partial.vue';
 import type singleEventPartialVue from '@/components/partials/single-event.partial.vue'
 import type StoryPartial from '@/components/partials/story.partial.vue';
+import type LocationPartial from '@/components/partials/location.partial.vue'
 
 declare module 'vue' {
     export interface GlobalComponents {
@@ -67,6 +68,7 @@ declare module 'vue' {
         'lila-link-group-partial': typeof linkGroupPartialVue
         'lila-link-partial': typeof linkPartialVue
         'lila-list-partial': typeof listPartialVue
+        'lila-location-partial': typeof locationPartialVue
         'lila-mediadetection-partial': typeof mediadetectionPartialVue
         'lila-menu-allergens-partial': typeof menuAllergensPartial
         'lila-menu-category-partial': typeof menuCategoryPartial
@@ -91,6 +93,7 @@ declare module 'vue' {
         'lila-facts-module': typeof factsModuleVue
         'lila-faq-module': typeof faqModuleVue
         'lila-footer-module': typeof footerModuleVue
+        'lila-location-module': typeof locationModuleVue
         'lila-gallery-module': typeof galleryModuleVue
         'lila-index-module': typeof indexModuleVue
         'lila-menu-module': typeof menuModuleVue
@@ -106,7 +109,6 @@ declare module 'vue' {
         'lila-timeline-module': typeof timelineModuleVue
         'lila-training-module': typeof trainingModuleVue
         'lila-video-module': typeof videoModuleVue  
-        
     }
 }
 

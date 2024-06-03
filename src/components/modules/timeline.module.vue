@@ -138,7 +138,7 @@ function activeMedia () {
             width: 8px;
           }
         }
-
+       
         .time-container {
           display: grid; 
           grid-column-start: 3;
@@ -146,7 +146,7 @@ function activeMedia () {
           padding-left: 20px; 
           text-align: left;
           padding-bottom: 25px;
-          
+        
           .year {
             .font-head; 
             color: @color4;
@@ -189,7 +189,7 @@ function activeMedia () {
           grid-row: 3/3;
           padding: 0 20px;
           position: sticky;
-          top: 15px;
+          top: 20px;
           padding-left: 0;
 
           :deep(.lila-figure) {
@@ -292,6 +292,18 @@ function activeMedia () {
               grid-row-start: 2;
             }
           }
+        }
+      }
+      .singleelement-container:first-child {
+        .timeline-container {
+          border-top-left-radius: 99px;
+          border-top-right-radius: 99px;
+        }
+      }
+      .singleelement-container:last-child {
+        .timeline-container {
+          border-bottom-left-radius: 99px;
+          border-bottom-right-radius: 99px;
         }
       }
     }

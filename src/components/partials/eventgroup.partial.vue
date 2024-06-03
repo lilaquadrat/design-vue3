@@ -160,7 +160,7 @@ function setElements () {
       font-size: @headline_L;
       line-height: @headlineLineHeight_L;
 
-      font-variant-numeric: tabular-nums;
+      // font-variant-numeric: tabular-nums;
 
       text-align: right;
 
@@ -188,6 +188,7 @@ function setElements () {
       justify-content: start;
       grid-template-columns: 1fr;
       break-inside: avoid;
+
 
       .single-event {
         display: grid;
@@ -290,6 +291,7 @@ function setElements () {
             gap: 10px;
           }
         }
+  
       }
     }
 

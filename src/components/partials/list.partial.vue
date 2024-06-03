@@ -2,58 +2,58 @@
 import type Link from '@/interfaces/link.interface';
 import { computed, type ComputedRef } from 'vue';
 
-const props = withDefaults(defineProps<{
-  value?: (string | Link)[]
-  title?: string
-  mode?: 'list' | 'links'
-  variant?: string[]
-}>(), {mode: 'list'})
-const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered')); 
+const props = withDefaults(defineProps < {
+  value?: (string | Link)[];
+  title?: string;
+  mode?: 'list' | 'links';
+variant ?: string[]
+}> (), { mode: 'list' })
+const isNumbered: ComputedRef<boolean> = computed(() => !!props.variant?.includes('numbered'));
 const noStyle: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noStyle')); 
 const actions: ComputedRef<boolean> = computed(() => !!props.variant?.includes('actions')); 
 const white: ComputedRef<boolean> = computed(() => !!props.variant?.includes('white')); 
+const noIcon: ComputedRef<boolean> = computed(() => !!props.variant?.includes('noIcon')); 
 const notEmpty: ComputedRef<boolean> = computed(() => !!props.value?.find((single) => {
 
   if (typeof single === 'string') return single.length > 0;
   return single.text?.length > 0;
 
-})); 
-const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => props.value?.filter((single) => {
+}));
+const filteredValues: ComputedRef<(string | Link)[] | undefined> = computed(() => props.value?.filter((single) => {
 
   if (typeof single === 'string' && single.length) return single;
   if (typeof single === 'object' && single.text && single.link) return single;
   return false;
 
-})); 
+}));
 
 </script>
 
 <template>
-
   <section class="lila-list-links" v-if="notEmpty" :class="variant">
     <h4 v-if="title">{{ $replacer(title) }}</h4>
 
     <ul v-if="!actions || mode === 'list'">
       <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`">
 
-        <lila-icons-partial v-if="!isNumbered && !noStyle" size="small" :color-scheme="white ? 'white' : 'colorScheme1'" :type="'arrow-right'"/>
+        <lila-icons-partial v-if="!isNumbered && !noStyle && !noIcon" size="small"
+          :color-scheme="white ? 'white' : 'colorScheme1'" :type="'arrow-right'" />
 
-        <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" />
-        <template v-if="typeof(single) === 'string'">{{ $replacer(single) }}</template>
+        <lila-link-partial v-if="typeof (single) === 'object'" v-bind="single" />
+        <template v-if="typeof (single) === 'string'">{{ $replacer(single) }}</template>
 
       </li>
     </ul>
 
     <lila-link-group-partial :variant="variant" v-if="actions">
 
-      <template v-for="(single, index) in filteredValues" >
-        <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" :key="`list-actions-element-${index}`" />
+      <template v-for="(single, index) in filteredValues">
+        <lila-link-partial v-if="typeof (single) === 'object'" v-bind="single" :key="`list-actions-element-${index}`" />
       </template>
 
     </lila-link-group-partial>
 
   </section>
-
 </template>
 
 <style lang="less" scoped>
@@ -98,10 +98,11 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
     li {
       font-size: @headline_XS;
     }
-    
+
   }
 
-  &.noStyle, &.actions {
+  &.noStyle,
+  &.actions {
 
     h4 {
       .multi(margin-left, 0);
@@ -146,7 +147,9 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 
   &.white {
 
-    a, h4, ul li {
+    a,
+    h4,
+    ul li {
       color: @white;
     }
 
@@ -158,5 +161,19 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
     }
   }
 
+  &.noIcon {
+
+    h4 {
+      .multi(margin-left, 0);
+    }
+
+    ul {
+
+      li {
+        grid-template-columns: auto;
+      }
+
+    }
+  }
 }
 </style>

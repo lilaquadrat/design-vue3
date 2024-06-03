@@ -13,13 +13,13 @@ const props = defineProps<ModuleBaseProps & {
   textblock: Textblock;
 }>();
 const element = ref<HTMLElement>();
-const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
+const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
-function componentType (link?: Link): 'lila-link-partial' | 'section' {
+function componentType(link?: Link): 'lila-link-partial' | 'section' {
 
   return link?.link?.length
     ? 'lila-link-partial'
-    : 'section';
+    : 'section'; link?.link?.length
 
 }
 
@@ -35,8 +35,8 @@ const brightText = computed(() => {
 
   const variantsArray = [];
 
-  if(props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
-  if(props.variant?.includes('cards')) variantsArray.push('content');
+  if (props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
+  if (props.variant?.includes('cards')) variantsArray.push('content');
 
   return variantsArray;
 
@@ -45,7 +45,7 @@ const brightTextIntro = computed(() => {
 
   const variantsArray = [];
 
-  if(props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
+  if (props.variant?.some(single => ['color1', 'color3'].includes(single))) variantsArray.push('bright');
 
   return variantsArray;
 
@@ -58,7 +58,7 @@ const brightTextIntro = computed(() => {
     <section class="content-container">
       <lila-textblock-partial :variant="brightTextIntro" v-if="textblock" v-bind="textblock" />
 
-      <section class="elements-container"> 
+      <section class="elements-container">
 
         <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="elements">
           <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
@@ -75,7 +75,6 @@ const brightTextIntro = computed(() => {
   </section>
 </template>
 <style lang="less" scoped>
-
 .lila-picture-group-module {
 
   width: 100%;
@@ -113,14 +112,14 @@ const brightTextIntro = computed(() => {
   }
 
   .content-container {
- 
+
     .multi(padding, 0, 8);
 
     display: grid;
     gap: 60px;
 
     .elements-container {
-      
+
       display: grid;
       gap: 40px;
 
@@ -178,7 +177,9 @@ const brightTextIntro = computed(() => {
       .element {
         .lila-textblock {
 
-          h1, h2, h3 {
+          h1,
+          h2,
+          h3 {
             color: @white;
           }
         }
@@ -228,6 +229,7 @@ const brightTextIntro = computed(() => {
     }
 
   }
+
   &.contact {
 
     text-align: left;
@@ -246,7 +248,8 @@ const brightTextIntro = computed(() => {
           justify-content: start;
           text-align: left;
 
-          .lila-list-links, .lila-textblock {
+          .lila-list-links,
+          .lila-textblock {
             .multi(padding, 0, 4)
           }
 
@@ -258,7 +261,7 @@ const brightTextIntro = computed(() => {
               font-size: @headline_S;
 
               @media @tablet,
-                @desktop {
+              @desktop {
                 font-size: @headline_S;
               }
             }
@@ -280,9 +283,31 @@ const brightTextIntro = computed(() => {
     }
 
   }
-  
+
+  &.fivesameSizedInColumn {
+    .content-container {
+      .elements-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: 1fr;
+        gap: 20px;
+
+        @media @desktop {
+          grid-template-columns: repeat(5, 1fr);
+
+        }
+
+        .text-container {
+          display: none;
+        }
+
+      }
+    }
+
+  }
+
   &.cards {
-    
+
     .content-container {
       .elements-container {
         .element {
@@ -304,7 +329,7 @@ const brightTextIntro = computed(() => {
             position: absolute;
             width: 100%;
             height: 105%;
-            
+
             picture {
               position: absolute;
               width: 100%;
@@ -315,16 +340,19 @@ const brightTextIntro = computed(() => {
           }
 
           .text-container {
-            background-image: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0) 100%);
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, .8) 50%, rgba(255, 255, 255, 0) 100%);
             .index(3);
             display: grid;
           }
 
-          .lila-textblock, .lila-list-links{
+          .lila-textblock,
+          .lila-list-links {
             .multi(padding, 0, 4, 4, 4);
           }
 
-          .lila-textblock, .lila-figure, .lila-list-links {
+          .lila-textblock,
+          .lila-figure,
+          .lila-list-links {
             .trans(transform);
           }
 
@@ -333,7 +361,7 @@ const brightTextIntro = computed(() => {
             .trans(all);
             pointer-events: none;
           }
-          
+
           .lila-textblock {
 
             .multi(padding, 4);
@@ -349,12 +377,16 @@ const brightTextIntro = computed(() => {
             opacity: 1;
 
             border-color: @color1;
+
             .lila-figure {
               transform: translateY(-4.5%);
             }
-            .lila-textblock, .lila-list-links {
+
+            .lila-textblock,
+            .lila-list-links {
               transform: translateY(-15px);
             }
+
             .lila-list-links {
               opacity: 1;
               pointer-events: all;

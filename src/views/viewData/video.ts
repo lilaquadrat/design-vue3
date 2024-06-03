@@ -85,10 +85,10 @@ const content: Content = {
       'poster': {
         src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_fiery_color_002-2.jpg'
       },
-      'video': {
-        'src'       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
-        'attributes': []
-      }
+      // 'video': {
+      //   'src'       : 'https://www.youtube.com/watch?v=T0fTCDxudvE',
+      //   'attributes': []
+      // }
     },
     {
       'type'     : 'video-module',

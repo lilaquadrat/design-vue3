@@ -3,9 +3,8 @@ import type MenuCategoryElement from '@/interfaces/MenuCategory.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, ref } from 'vue';
 import type MenuItemElement from '@/interfaces/MenuItem.interface';
-import type menuCategoryPartialVue from '../partials/menu-category.partial.vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -49,10 +48,6 @@ const removeItems = computed(() => ({
       <lila-menu-allergens-partial /> 
     </section>
 
-    <!-- <section class="allegene-container" :variant="removeItems"> {{ removeItems }}
-        <lila-menu-allergens-partial v-for="(allergens, index) in categories" v-bind="allergens"
-        :key="`single-category-${index}`"/> 
-      </section> -->
 
   </section>
 </template>

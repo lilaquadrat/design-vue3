@@ -5,6 +5,10 @@ import type FooterSocial from '@/interfaces/FooterSocial.interface';
 import { useInview } from '@/plugins/inview';
 import { ref } from 'vue';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import type Picture from '../../interfaces/picture.interface';
+import type Textblock from '../../interfaces/textblock.interface';
+import type LinkListWithTitle from '../../interfaces/LinkListWithTitle.interface';
+import type ListWithTitle from '../../interfaces/ListWithTitle.interface';
 
 defineOptions({ inheritAttrs: false });
 
@@ -13,24 +17,30 @@ const props = defineProps<ModuleBaseProps & {
   social?: FooterSocial;
   legal?: string;
   sitemap?: Sitemap[];
+  picture?: Picture;
+  textblock?: Textblock;
+  links?: LinkListWithTitle;
+  list?: ListWithTitle;
+
 }>();
 const element = ref<HTMLElement>();
-const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
+const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
 </script>
 <template>
   <footer :id="id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
     <section class="footer-container">
-      <template v-if="sitemap">
-        <section v-for="(sitemap, index) in props.sitemap" :key="`sitemap-elements-${index}`" class="content">
-          <h3>{{ sitemap.title }}</h3>
+      <lila-picture-partial v-if="picture" v-bind="picture" class="picture-container" />
+      <section class="informations-container">
+        <lila-textblock-partial v-if="textblock" v-bind="textblock" />
+        <lila-list-partial class="list-container" v-if="list" v-bind="list" />
+        <lila-list-partial class="link-container" v-if="links" v-bind="links" />
+      </section>
 
-          <ul class="icon-container">
-            <li v-for="(element, index) in sitemap.elements" :key="`sitemap-element-links-${index}`">
-              <lila-link-partial v-bind="element"></lila-link-partial>
-            </li>
-          </ul>
-        </section>
+      <template v-if="sitemap">
+        <li v-for="(element, index) in sitemap" :key="`sitemap-element-links-${index}`" class="link-container">
+          <lila-list-partial class="link-container" v-if="element.links" v-bind="element.links" />
+        </li>
       </template>
     </section>
 
@@ -44,7 +54,8 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
         <h3>{{ social.title }}</h3>
 
         <div class="icon-container">
-          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`" :link="element.link.link">
+          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
+            :link="element.link.link">
             <lila-picture-partial v-bind="element.picture" />
           </lila-link-partial>
         </div>
@@ -55,7 +66,6 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
   </footer>
 </template>
 <style lang="less" scoped>
-
 .lila-footer-module {
 
   .module;
@@ -97,10 +107,13 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
   .footer-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    grid-template-columns: 1fr;
     gap: 40px 20px;
-  }
+    @media @desktop {
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    }
 
+  }
   .social {
 
     display: grid;
@@ -109,8 +122,7 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
     gap: 15px;
     align-items: center;
 
-    @media @tablet,
-    @desktop {
+    @media @tablet, @desktop {
       grid-template-columns: 1fr auto;
       justify-items: end;
     }
@@ -155,6 +167,7 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
   }
 
   .content {
+    border: red solid 3px; 
     display: grid;
     grid-template-rows: min-content 1fr;
     gap: 10px;
@@ -170,5 +183,37 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 
     .multi(padding, 4, 0);
   }
-}
-</style>
+
+  &.noPicture {
+    .footer-container > *:first-child {
+      visibility: hidden;
+      position: absolute;
+    }
+  }
+
+  &.footerWithIcon {
+
+    .footer-container {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    @media @desktop {
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    }
+  }
+    .informations-container {
+      display: grid;
+      gap: 20px
+    }
+
+    .contact {
+      display: none;
+    };
+
+    .social {
+      @media @tablet, @desktop {
+        grid-column-start: 2;
+      }
+    }
+  }
+}</style>
