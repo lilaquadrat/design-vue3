@@ -134,14 +134,16 @@ function activeMedia () {
           grid-row: 1/5;
           width: 5px;
 
+          &::after {
+            top: 100px;
+            // border-top-right-radius: 99px;
+            background: red;
+          }
+
           @media @desktop {
             width: 8px;
           }
-
-        
         }
-       
-
        
         .time-container {
           display: grid; 
@@ -151,7 +153,6 @@ function activeMedia () {
           text-align: left;
           padding-bottom: 25px;
         
-          
           .year {
             .font-head; 
             color: @color4;
@@ -194,11 +195,12 @@ function activeMedia () {
           grid-row: 3/3;
           padding: 0 20px;
           position: sticky;
-          top: 15px;
+          top: 20px;
           padding-left: 0;
 
           :deep(.lila-figure) {
             justify-content: left;
+            padding-bottom: 20px;
           }
           
           @media @desktop {
@@ -301,9 +303,7 @@ function activeMedia () {
       }
     }
   }
-  .timeline-container:first-child {
-            border: red solid .5px
-          }
+
   &.active {
     transform: translate(0%);
   }

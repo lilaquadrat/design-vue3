@@ -444,7 +444,8 @@ defineExpose({
 <template>
   <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none', fit }, state]">
     
-    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder">
+    </section>
     
     <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
       <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source" />
@@ -507,7 +508,7 @@ defineExpose({
 
     &.ready {
       video {
-        position: relative;
+        position: relative; 
       }
     }
   }

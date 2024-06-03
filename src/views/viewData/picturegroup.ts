@@ -15,7 +15,7 @@ const content: Content = {
       type     : 'picturegroup-module',
       variant  : ['fivesameSizedInColumn', 'fit'],
       textblock: {
-        headline: 'five same sized Images in a Column',
+        headline: 'five same sized Images in a Column with fit',
         intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.'
       },
       elements: [
@@ -39,7 +39,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/blackwoman.jpg',
             copyright: '© lilaquadrat',
           },
         },
@@ -47,7 +47,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
             copyright: '© lilaquadrat',
           },
         },
@@ -63,7 +63,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
             copyright: '© lilaquadrat',
           },
         },
@@ -95,7 +95,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/space-galaxy-universe-space-art-wallpaper-preview.jpg',
             copyright: '© lilaquadrat',
           },
         },
@@ -103,7 +103,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/space-galaxy-universe-space-art-wallpaper-preview.jpg',
             copyright: '© lilaquadrat',
           },
         },
@@ -127,7 +127,7 @@ const content: Content = {
           picture: {
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
             copyright: '© lilaquadrat',
           },
         },

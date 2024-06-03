@@ -273,7 +273,8 @@ function restartCurrentStory () {
           </section>
 
           <section v-if="!isVideo" class="pause-container">
-            <lila-button-partial class="pause" color-scheme="transparent" @click="playPause"><lila-icons-partial color-scheme="white" size="large" :type="timerId> 0 ? 'pause' : 'play'"/></lila-button-partial>
+            <lila-button-partial class="pause" color-scheme="transparent" @click="playPause">
+              <lila-icons-partial color-scheme="white" size="large" :type="timerId> 0 ? 'pause' : 'play'"/></lila-button-partial>
           </section>
 
           <lila-story-partial ref="stories" v-for="(story, index) in props.elements" :key="`story-${index}`" :parentVisible="isVisible" :active="index === activeIndex" @progress="updateProgress" v-bind="story" />

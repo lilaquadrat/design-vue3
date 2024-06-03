@@ -15,7 +15,7 @@ const props = defineProps<ModuleBaseProps & {
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
-function componentType (link?: Link): 'lila-link-partial' | 'section' {
+function componentType(link?: Link): 'lila-link-partial' | 'section' {
 
   return link?.link?.length
     ? 'lila-link-partial'
@@ -284,23 +284,24 @@ const brightTextIntro = computed(() => {
     }
 
   }
+
   &.fivesameSizedInColumn {
     .content-container {
       .elements-container {
- 
         display: grid;
         grid-template-columns: 1fr;
-         grid-auto-rows: 1fr;
-         height: auto;
+        grid-auto-rows: 1fr;
+        gap: 20px;
 
-       @media @desktop {
-         grid-template-columns: repeat(5, 1fr);
+        @media @desktop {
+          grid-template-columns: repeat(5, 1fr);
 
-       }       
-          .text-container {
-            display: none;
-          }
-        
+        }
+
+        .text-container {
+          display: none;
+        }
+
       }
     }
 

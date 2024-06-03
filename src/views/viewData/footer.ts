@@ -14,6 +14,7 @@ const content: Content = {
     {
       type  : 'footer-module',
       legal : 'some legal information',
+      variant: ['noPicture'],
       social: {
         title   : 'Social',
         elements: [
@@ -24,7 +25,7 @@ const content: Content = {
             picture: {
               source: [],
               alt   : 'IMAGE ALT',
-              src   : 'icon-32x32.png',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
           {
@@ -34,7 +35,7 @@ const content: Content = {
             picture: {
               source: [],
               alt   : 'IMAGE ALT',
-              src   : 'icon-32x32.png',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
         ],
@@ -50,82 +51,276 @@ const content: Content = {
       },
       sitemap: [
         {
-          title   : 'Sitemap 1',
-          elements: [
-            {
-              text: 'Link #1',
-              link: '/test',
-            },
-            {
-              text: 'Link #2',
-              link: '/test',
-            },
-            {
-              text: 'Link #3',
-              link: '/test',
-            },
-            {
-              text: 'Link #4',
-              link: '/test',
-            },
-            {
-              text: 'Link #5',
-              link: '/test',
-            },
-          ],
+          links: {
+            value: [
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+            ],
+            title: 'Follow up Details',
+            variant:['noIcon']
+          },
         },
         {
-          title   : 'Sitemap 2',
-          elements: [
-            {
-              text: 'Link #1',
-              link: '/test',
-            },
-            {
-              text: 'Link #2',
-              link: '/test',
-            },
-            {
-              text: 'Link #3',
-              link: '/test',
-            },
-            {
-              text: 'Link #4',
-              link: '/test',
-            },
-            {
-              text: 'Link #5',
-              link: '/test',
-            },
-          ],
+          links: {
+            value: [
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+            ],
+            title: 'Follow up links',
+            variant:['noIcon']
+          },
         },
         {
-          title   : 'Sitemap 3',
-          elements: [
-            {
-              text: 'Link #1',
-              link: '/test',
-            },
-            {
-              text: 'Link #2',
-              link: '/test',
-            },
-            {
-              text: 'Link #3',
-              link: '/test',
-            },
-            {
-              text: 'Link #4',
-              link: '/test',
-            },
-            {
-              text: 'Link #5',
-              link: '/test',
-            },
-          ],
+          links: {
+            value: [
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+            ],
+            title: 'Follow up links',
+            variant:['noIcon']
+          },
         },
-      ],
   
+        {
+          links: {
+            value: [
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+            ],
+            title: 'Details',
+            variant:['noIcon']
+          },
+        },
+        {
+          links: {
+            value: [
+              {
+                text: 'Link with some longer text',
+                link: 'https://testlink',
+              },
+              {
+                text: 'Normal link',
+                link: 'https://testlink',
+              },
+            ],
+            title: 'sitemap',
+            variant:['noIcon']
+          },
+        },
+  
+       ],
+  
+    },
+    {
+      type  : 'footer-module',
+      variant: ['footerWithIcon'],
+      legal : 'some legal information',
+      picture: {
+        source: [],
+        alt   : 'IMAGE ALT',
+        src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/lilaquadrat-logo.png',
+      },
+        textblock: {
+          headline: 'headline',
+          subline: 'subline',
+          intro: 'Kontakt',
+          text: [
+            'Streetnane of company Postcode Streetname Number',
+            'Postcode Streetname'
+          ],
+        },
+        list: {
+          value: [
+            'This is a list item',
+            'this an other list item',
+            'I am a third list item',
+          ],
+          title: 'some nice list',
+        },
+        links: {
+          value: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          title: 'Follow up links',
+          variant:['noIcon']
+        },
+ 
+      social: {
+         title   : 'Social',
+        elements: [
+          {
+            link: {
+              link: 'https://fb.com',
+            },
+            picture: {
+              source: [],
+              alt   : 'IMAGE ALT',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+            },
+          },
+          {
+            link: {
+              link: 'https://twitter.com',
+            },
+            picture: {
+              source: [],
+              alt   : 'IMAGE ALT',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+            },
+          },
+          {
+            link: {
+              link: 'https://twitter.com',
+            },
+            picture: {
+              source: [],
+              alt   : 'IMAGE ALT',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+            },
+          },
+          {
+            link: {
+              link: 'https://twitter.com',
+            },
+            picture: {
+              source: [],
+              alt   : 'IMAGE ALT',
+              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+            },
+          },
+          
+        ],
+      },
+     sitemap: [
+      {
+        links: {
+          value: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          title: 'Follow up links',
+          variant:['noIcon']
+        },
+      },
+      
+      {
+        links: {
+          value: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          title: 'Follow up links',
+          variant:['noIcon']
+        },
+      },
+      {
+        links: {
+          value: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          title: 'Follow up links',
+          variant:['noIcon']
+        },
+      },
+     ],
     },
   ],
 };
