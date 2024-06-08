@@ -3,19 +3,34 @@ import { onBeforeMount } from 'vue';
 import type { ParsedError } from '../../libs/ActionNotice';
 import { computed, watch, ref } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
-  modelValue?: string;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  errorMessage?: boolean;
-  error?: ParsedError;
+  modelValue?: string
+  placeholder?: string
+  required?: boolean
+  disabled?: boolean
+  errorMessage?: boolean
+  error?: ParsedError
+  selectOnFocus?: boolean
+  dontClear?: boolean
+  /**
+   * defines with keys are allowed as input
+   */
+  inputValidation?: string
+  /**
+   * defines with string is allowed as output
+   *
+   * the update will  not be sent if the produced string does not match this validation
+   */
+  outputValidation?: string
 }>();
 const inputElement = ref<HTMLInputElement>();
 let tempValue: string = '';
 const debounceTime: number = 50;
 const timeout = ref<ReturnType<typeof setTimeout>>();
 const emit = defineEmits(['update:modelValue', 'focus', 'enter', 'keydown', 'blur']);
+const whitelistedKeys = ['Escape', 'Backspace', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Delete', 'Tab'];
 
 watch(() => props.modelValue, () => {
 
@@ -41,7 +56,17 @@ const update = (event: KeyboardEvent) => {
 
   timeout.value = setTimeout(() => {
 
-    emit('update:modelValue', event ? target.value : '');
+    if(props.outputValidation) {
+
+      if(tempValue.match(props.outputValidation)) {
+        emit('update:modelValue', event ? target.value : '');
+      }
+
+    } else {
+
+      emit('update:modelValue', event ? target.value : '');
+
+    }
 
   }, debounceTime);
 
@@ -50,6 +75,10 @@ const update = (event: KeyboardEvent) => {
 function checkInput (event: KeyboardEvent) {
 
   const input = inputElement.value as HTMLInputElement;
+
+  if(!input) return;
+
+  let tempValue: string;
 
   if (event.key === 'Enter') {
 
@@ -62,17 +91,41 @@ function checkInput (event: KeyboardEvent) {
 
   }
 
-  if (['Backspace', 'Enter'].includes(event.key)) return;
+  if (whitelistedKeys.includes(event.key)) return;
+
+  if(input.selectionStart !== null && input.selectionEnd && (input.selectionStart < input.selectionEnd)) {
+
+    tempValue = event.key;
+    
+  } else {
+
+    tempValue = input.value + event.key;
+
+  }
 
   if (event.key === 'Escape') {
 
-    if (input.value.length > 0) {
+    if (props.dontClear) {
+
+      input.blur();
+
+    } else if (input.value.length > 0) {
 
       clear();
 
     } else if (input.value.length === 0) {
 
       blur();
+
+    }
+
+  }
+
+  if(props.inputValidation) {
+
+    if(!tempValue.match(props.inputValidation)) {
+
+      event.preventDefault();
 
     }
 
@@ -92,6 +145,7 @@ function clear () {
 function focus () {
 
   emit('focus');
+  if (props.selectOnFocus) inputElement.value?.select();
 
 }
 

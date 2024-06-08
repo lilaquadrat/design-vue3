@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 defineProps<{
-  gap: boolean;
+  gap?: boolean;
 }>();
 
 </script>
