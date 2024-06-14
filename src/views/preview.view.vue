@@ -34,6 +34,7 @@ import event from './viewData/event';
 import story from './viewData/story';
 import partialsPreview from './viewData/partials-preview';
 import datepicker from './viewData/datepicker';
+import type Textblock from '@/interfaces/textblock.interface';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -62,7 +63,7 @@ const modules: Record<string, Partial<Content>> = {
   event,
   story,
 };
-const partials: Record<string, Record<string, unknown>> = {
+const partials: Record<string, {settings?: {title?: string, description?: string}, partials: {textblock?: Textblock, props: Record<string, unknown>}[]}> = {
   datepicker
 }
 const route = useRoute();
@@ -147,10 +148,18 @@ const contentMerged = computed(() => {
     const partialData = partials[partialName];
 
     content = hardCopy(partialsPreview);
+    console.log(partialName, partialData, content);
     content.modules?.push({
-      type   : 'partials-preview-module',
-      partial: partialName,
-      partialData,
+      type    : 'text-module',
+      headline: partialData.settings?.title,
+      subline : partialData.settings?.description,
+      variant : []
+    });
+
+    content.modules?.push({
+      type       : 'partials-preview-module',
+      partial    : partialName,
+      partialData: partialData.partials,
     });
 
   } else {
