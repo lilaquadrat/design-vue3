@@ -69,6 +69,7 @@ const calendarElements = ref<any>({});
 const useMonthForCalender = ref();
 const calculatedOptions = ref();
 const triggerElement = ref<HTMLElement>();
+const calendarContainer = ref<HTMLElement>();
 const datepickerElement = ref<HTMLElement>();
 const renderCalendar = ref<boolean>(false);
 /**
@@ -351,8 +352,9 @@ function checkInput (type: 'date' | 'month' | 'year', input: KeyboardEvent, targ
 function calculateOptionsStyle () {
 
   const element = triggerElement.value as HTMLElement;
+  const calendarContainerElement = calendarContainer.value as HTMLElement;
 
-  if(!element) {
+  if(!element || !calendarContainerElement) {
 
     calculatedOptions.value = {};
     return;
@@ -365,18 +367,29 @@ function calculateOptionsStyle () {
     return;
 
   }
-
+  
   const bounds = element.getBoundingClientRect();
+  const calendarBounds = calendarContainerElement.getBoundingClientRect();
   let top = bounds.top + element.offsetHeight;
-  const positionTop = bounds.bottom + element.offsetHeight + 50 > window.innerHeight;
+  const positionTop = bounds.bottom + element.offsetHeight + calendarBounds.height + 50 > window.innerHeight;
+  const positionLeft = bounds.left + calendarBounds.right > window.innerWidth;
+  let left = bounds.left;
 
   if(positionTop) {
-    top = bounds.top - 5 - element.offsetHeight;
+
+    top = bounds.top - 10 - calendarBounds.height;
+
+  }
+
+  if(positionLeft) {
+
+    left = bounds.right - calendarBounds.width;
+
   }
 
   calculatedOptions.value = {
     top : `${top}px`,
-    left: `${bounds.left}px`,
+    left: `${left}px`,
   };
 
 }
@@ -910,11 +923,11 @@ function toggleMode () {
         </section>
 
         <lila-overlay-background-partial v-if="renderCalendar" background="none" ref="options" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
-          <article class="calendar-container" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :style="calculatedOptions">
+          <article class="calendar-container" ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :style="calculatedOptions">
               <header class="main">
                 <section class="details">
                   <h3 v-if="range">
-                    {{ rangeDuration }} Tage
+                    {{ $translateWithDiff('datepicker-range-days', rangeDuration) }}
                   </h3>
                 </section>
                 <section class="controls">
