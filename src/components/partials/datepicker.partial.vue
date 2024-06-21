@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type DatepickerCalendarElement from '@/interfaces/DatepickerCalendarElement.interface';
 import { useResize } from '@/plugins/resize';
-import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import duration from 'dayjs/plugin/duration';
@@ -12,9 +11,12 @@ dayjs.locale('de');
 
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import type DatepickerCalendarDay from '@/interfaces/DatepickerCalendarDay.interface';
+import type IconsPartial from '@/interfaces/IconsPartial.interface';
 
 defineOptions({ inheritAttrs: false });
 
+const fromModel = defineModel<Date | string>('from');
+const toModel = defineModel<Date | string>('to');
 const props = defineProps<{
     from?: Date | string
     to?: Date | string
@@ -25,6 +27,7 @@ const props = defineProps<{
     past?: boolean
     after?: Date | string
     before?: Date | string
+    icon?: IconsPartial['type'],
 }>();
 const { media, resized } = useResize();
 /**
@@ -96,12 +99,14 @@ const selectMode = ref<'from'|'to'>('from');
 const staticMode = ref<'from'|'to'>();
 
 onBeforeMount(() => {
+  
   setTemp(props.from);
   setTemp(props.to, 'to');
   setmonthVisibleMediaAware();
+
 });
-watch(() => props.from, () => setTemp(props.from)); 
-watch(() => props.to, () => setTemp(props.to, 'to')); 
+watch(() => fromModel.value, () => setTemp(fromModel.value)); 
+watch(() => toModel.value, () => setTemp(toModel.value, 'to')); 
 watch(() => [tempDayFrom.value, tempMonthFrom.value, tempYearFrom.value], () => update('from')); 
 watch(() => [tempDayTo.value, tempMonthTo.value, tempYearTo.value], () => update('to')); 
 watch(() => [resized.value, media.value], () => {
@@ -131,11 +136,11 @@ function setmonthVisibleMediaAware () {
 
 function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' = 'from', updateCalendarMonth: boolean = true) {
 
-  const date = baseDate ? dayjs(hardCopy(baseDate)) : dayjs();
+  const date = baseDate ? dayjs(baseDate).clone() : dayjs();
 
   if(target === 'from') {
     
-    tempDayFrom.value = date.get('date').toString().toString().padStart(2, '0');
+    tempDayFrom.value = date.get('date').toString().padStart(2, '0');
     tempMonthFrom.value = (date.get('month') + 1).toString().padStart(2, '0');
     tempYearFrom.value = date.get('year').toString();
   
@@ -144,11 +149,11 @@ function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' 
   }
 
   if(target === 'to') {
-    
-    tempDayTo.value = date.get('date').toString().toString().padStart(2, '0');
+
+    tempDayTo.value = date.get('date').toString().padStart(2, '0');
     tempMonthTo.value = (date.get('month') + 1).toString().padStart(2, '0');
     tempYearTo.value = date.get('year').toString();
-  
+    
     tempDateTo.value = date;
 
   }
@@ -156,6 +161,13 @@ function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' 
   if(updateCalendarMonth && !!tempDateFrom.value) setCalendarMonth(tempDateFrom.value);
   updateUseFromTo();
   if(!props.range) updateMonth();
+  
+}
+
+function emitDate (target: 'from' | 'to' = 'from') {
+  
+  if(target === 'from') fromModel.value = tempDateFrom.value?.toDate();
+  if(target === 'to') toModel.value = tempDateTo.value?.toDate();
 
 }
 
@@ -354,43 +366,35 @@ function calculateOptionsStyle () {
   const element = triggerElement.value as HTMLElement;
   const calendarContainerElement = calendarContainer.value as HTMLElement;
 
-  if(!element || !calendarContainerElement) {
-
-    calculatedOptions.value = {};
-    return;
-
-  }
-
-  if(media.value === 'mobile' || media.value === 'tablet') {
-
-    calculatedOptions.value = {};
-    return;
-
-  }
-  
-  const bounds = element.getBoundingClientRect();
-  const calendarBounds = calendarContainerElement.getBoundingClientRect();
-  let top = bounds.top + element.offsetHeight;
-  const positionTop = bounds.bottom + element.offsetHeight + calendarBounds.height + 50 > window.innerHeight;
-  const positionLeft = bounds.left + calendarBounds.right > window.innerWidth;
-  let left = bounds.left;
-
-  if(positionTop) {
-
-    top = bounds.top - 10 - calendarBounds.height;
-
-  }
-
-  if(positionLeft) {
-
-    left = bounds.right - calendarBounds.width;
-
-  }
-
   calculatedOptions.value = {
-    top : `${top}px`,
-    left: `${left}px`,
-  };
+    '--monthVisible': monthVisibleMediaAware.value
+  }
+
+  if(element && calendarContainerElement && media.value !== 'mobile' && media.value !== 'tablet') {
+
+    const bounds = element.getBoundingClientRect();
+    const calendarBounds = calendarContainerElement.getBoundingClientRect();
+    let top = bounds.top + element.offsetHeight;
+    const positionTop = bounds.bottom + element.offsetHeight + calendarBounds.height + 50 > window.innerHeight;
+    const positionLeft = bounds.left + calendarBounds.right > window.innerWidth;
+    let left = bounds.left;
+
+    if(positionTop) {
+
+      top = bounds.top - 10 - calendarBounds.height;
+
+    }
+
+    if(positionLeft) {
+
+      left = bounds.right - calendarBounds.width;
+
+    }
+
+    calculatedOptions.value.top = `${top}px`;
+    calculatedOptions.value.left = `${left}px`;
+
+  }
 
 }
 
@@ -413,6 +417,13 @@ function toggleCalendar (open?: boolean) {
 
   }
 
+  if(!renderCalendar.value) {
+
+    emitDate('from');
+    if(props.range) emitDate('to');
+
+  }
+
 }
 
 function focus (input: FocusEvent) {
@@ -427,7 +438,7 @@ function blur (input: FocusEvent) {
 
   const element = input.target as HTMLInputElement;
   const type = element.classList[0];
-  const requiredLength = ['day', 'month'].includes(type) 
+  const requiredLength = ['dayFrom', 'dayTo', 'monthFrom', 'monthTo'].includes(type) 
     ? 2 
     : 4;
 
@@ -435,21 +446,39 @@ function blur (input: FocusEvent) {
 
   if(element.value.length !== requiredLength) {
 
-    if(type === 'day') {
+    if(type === 'dayFrom') {
 
       tempDayFrom.value = tempDateFrom.value.get('date').toString().padStart(2, '0');
 
     }
 
-    if(type === 'month') {
+    if(type === 'dayTo' && tempDateTo.value) {
+
+      tempDayTo.value = tempDateTo.value.get('date').toString().padStart(2, '0');
+
+    }
+
+    if(type === 'monthFrom') {
 
       tempMonthFrom.value = (tempDateFrom.value.get('month') + 1).toString().padStart(2, '0');
 
     }
 
-    if(type === 'year') {
+    if(type === 'monthTo' && tempDateTo.value) {
+
+      tempMonthTo.value = (tempDateTo.value.get('month') + 1).toString().padStart(2, '0');
+
+    }
+
+    if(type === 'yearFrom') {
 
       tempYearFrom.value = (tempDateFrom.value.get('year')).toString();
+
+    }
+
+    if(type === 'yearTo' && tempDateTo.value) {
+
+      tempYearTo.value = (tempDateTo.value.get('year')).toString();
 
     }
 
@@ -486,6 +515,9 @@ function focusNext () {
  */
 function update (type: 'from' | 'to') {
 
+  //only update if changes are coming from input fields
+  if(document.activeElement?.nodeName !== 'INPUT' || !datepickerElement.value?.contains(document.activeElement)) return;
+
   if(type === 'from') {
 
     if(!tempDayFrom.value || tempDayFrom.value.length < 2 || 
@@ -512,6 +544,7 @@ function update (type: 'from' | 'to') {
 
   focusNext();
   updateUseFromTo();
+  emitDate(type);
   
 }
 
@@ -797,6 +830,7 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
     if(checkAfter(singleDay.day) && checkBefore(singleDay.day)) {
 
       setTemp(singleDay.day, 'from', false);
+      if(!props.stayOpenOnSelect) toggleCalendar(false);
 
     } 
 
@@ -862,7 +896,6 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
     setTemp(singleDay.day, target, false);
     staticMode.value = undefined;
-    if(!props.stayOpenOnSelect) toggleCalendar(false);
 
   }
 
@@ -894,8 +927,9 @@ function toggleMode () {
 
 </script>
 <template>
-    <section class="datepicker-partial" ref="datepickerElement" :class="[`monthVisible${monthVisibleMediaAware}`, {range}]" :style="monthVisibleCss">
+    <section class="datepicker-partial" ref="datepickerElement" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="monthVisibleCss">
         <section class="input-container" ref="triggerElement">
+            <lila-button-partial v-if="icon" @click="toggleCalendar()" class="front-toggle-icon" color-scheme="transparent"><lila-icons-partial size="small" :type="icon" /></lila-button-partial>
 
             <section class="input-group from">
               <input @keydown="checkInput('date', $event)" class="dayFrom" ref="dayFrom" @focus="focus" @blur="blur" v-model="tempDayFrom"  />
@@ -907,7 +941,7 @@ function toggleMode () {
 
             <template v-if="range">
 
-              <lila-icons-partial size="medium" type="arrow-right-long" />
+              <lila-icons-partial class="range-separator-icon" size="medium" type="arrow-right-long" />
               
               <section class="input-group to">
                 <input @keydown="checkInput('date', $event, 'to')" class="dayTo" ref="dayTo" @focus="focus" @blur="blur" v-model="tempDayTo"  />
@@ -923,7 +957,7 @@ function toggleMode () {
         </section>
 
         <lila-overlay-background-partial v-if="renderCalendar" background="none" ref="options" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
-          <article class="calendar-container" ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :style="calculatedOptions">
+          <article class="calendar-container" ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="calculatedOptions">
               <header class="main">
                 <section class="details">
                   <h3 v-if="range">
@@ -932,9 +966,9 @@ function toggleMode () {
                 </section>
                 <section class="controls">
                   <lila-button-group-partial>
-                    <lila-button-partial @click="modifyCalendarMonth('next', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-right" /></lila-button-partial>
-                    <lila-button-partial @click="modifyCalendarMonth('prev', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-left" /></lila-button-partial>
                     <lila-button-partial @click="toggleCalendar()" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-up" /></lila-button-partial>
+                    <lila-button-partial @click="modifyCalendarMonth('prev', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-left" /></lila-button-partial>
+                    <lila-button-partial @click="modifyCalendarMonth('next', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-right" /></lila-button-partial>
                   </lila-button-group-partial>
                 </section>
               </header>
@@ -960,15 +994,15 @@ function toggleMode () {
     
                           <div v-if="singleDay.isCurrentMonth && !singleDay.isAfter && !singleDay.isBefore" role="button" class="day active" 
                             :class="{
-                              currentMonth: singleDay.isCurrentMonth, 
-                              today: singleDay.isToday, 
-                              isSelected: singleDay.isSelected, 
-                              isFrom: singleDay.isFrom, 
-                              isTo: singleDay.isTo,
-                              inRange: singleDay.inRange,
-                              isHover: singleDay.isHover,
-                              isBefore: singleDay.isBefore,
-                              isAfter: singleDay.isAfter
+                                currentMonth: singleDay.isCurrentMonth, 
+                                today: singleDay.isToday, 
+                                isSelected: singleDay.isSelected, 
+                                isFrom: singleDay.isFrom, 
+                                isTo: singleDay.isTo,
+                                inRange: singleDay.inRange,
+                                isHover: singleDay.isHover,
+                                isBefore: singleDay.isBefore,
+                                isAfter: singleDay.isAfter
                               }" 
                               @mouseenter="updateHover(singleDay.day)" 
                               @mouseleave="updateHover()" 
@@ -1011,6 +1045,9 @@ function toggleMode () {
                 </section>
 
               </section>
+              <footer class="main">
+                <lila-button-partial @click="toggleCalendar()" color-scheme="colorScheme1">{{ $translate('datepicker-select-button') }}</lila-button-partial>
+              </footer>
 
           </article>
       </lila-overlay-background-partial>
@@ -1052,255 +1089,301 @@ function toggleMode () {
         
     }
 
-    &.range {
-      .input-container {
+    &.icon {
+      :deep(.front-toggle-icon) {
+        width: 25px;
+        .lila-icons-partial {
+          width: 20px;
 
-        grid-template-columns: max-content max-content max-content max-content;
-        gap: 10px;
+        }
+      }
+
+      .input-container {
+        grid-template-columns: 25px 1fr max-content;
+      }
+    }
+
+    &.range {
+
+      .input-container {
+        .range-separator-icon {
+          justify-self: center;
+        }
+
+        grid-template-columns: max-content 35px max-content max-content;
 
         .input-group {
           grid-template-columns: 17px max-content 17px max-content 35px;
         }
 
       }
+
+      &.icon {
+        .input-container {
+          grid-template-columns: 25px max-content 35px max-content max-content;
+        }
+      }
+    }
+}
+.calendar-container {
+  display: grid;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  background-color: @white;
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
+  border: solid 1px @grey1;
+  grid-template-rows: 40px calc(100vh - 120px) 80px;
+
+  header.main {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    background-color: @grey1;
+
+    .details {
+      h3 {
+        .multi(padding, 0, 2);
+        line-height: @buttonHeight;
+        font-size: @fontText;
+      }
+
+    }
+  }
+
+  footer.main {
+
+    display: grid;
+    align-items: center;
+    justify-items: center;
+
+    @media @desktop {
+      display: none;
     }
 
-    .calendar-container {
+  }
+
+  .scroll-container {
+    overflow: scroll;
+  }
+
+  @media @desktop {
+    width: calc(var(--monthVisible) * 350px);
+    grid-template-rows: 40px 1fr;
+  }
+
+  h3.selectTitle {
+    display: grid;
+    height: 60px;
+    width: 100%;
+
+    align-content: center;
+    justify-content: center;
+
+    &[role=button] {
+
+      .trans(color);
+      cursor: pointer;
+
+      &:hover {
+        color: @color1;
+      }
+
+      user-select: none;
+
+    }
+
+  }
+
+  .selection-container {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+
+    .single-month,
+    .single-year {
       display: grid;
+      justify-content: center;
+      align-content: center;
+      cursor: pointer;
 
-      position: absolute;
-      top: 0;
-      left: 0;
+      .multi(padding, 4);
+
+      &:hover {
+        background-color: @color1;
+        color: @white;
+      }
+    }
+
+  }
+
+  .elements-container {
+    display: grid;
+
+    transition: opacity .5s, transform .5s;
+
+    @media @desktop {
+      grid-template-rows: 365px;
+    }
+
+    .single-element {
+      display: grid;
+      justify-items: center;
+
+      grid-template-rows: 60px 1fr;
+      max-width: 450px;
       width: 100%;
+      align-self: center;
+      justify-self: center;
 
-      background-color: @white;
-      box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
-      border: solid 1px @grey1;
-      grid-template-rows: 40px calc(100vh - 40px);
-
-      header.main {
-
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-
-        background-color: @grey1;
-        .details {
-          h3 {
-            .multi(padding, 0, 2);
-            line-height: @buttonHeight;
-            font-size: @fontText;
-          }
-
-        }
-      }
-
-      .scroll-container {
-        overflow: scroll;
-      }
+      .multi(padding, 0, 2);
 
       @media @desktop {
-        width: calc(var(--monthVisible) * 350px);
-        grid-template-rows: 40px 1fr;
-      }
+        align-self: auto;
+        justify-self: auto;
 
-      h3.selectTitle {
-        display: grid;
-        height: 60px;
-        width: 100%;
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(6) {
+          border-top: solid 1px @grey;
+        }
 
-        align-content: center;
-        justify-content: center;
-
-        &[role=button] {
-
-          .trans(color);
-          cursor: pointer;
-
-          &:hover {
-            color: @color1;
-          }
-
-          user-select: none;
-
+        &:nth-child(2),
+        &:nth-child(5) {
+          border-left: solid 1px @grey;
+          border-right: solid 1px @grey;
         }
 
       }
 
-      .selection-container {
+      header,
+      .days-container {
         display: grid;
-        gap: 5px;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+
         width: 100%;
 
-        .single-month, .single-year {
-          display: grid;
+        .day {
+          color: @grey;
+          width: 1fr;
+          aspect-ratio: 1/1;
+
+          border: solid 1px @white;
+
           justify-content: center;
           align-content: center;
           cursor: pointer;
+          pointer-events: none;
 
-          .multi(padding, 4);
+          &.currentMonth {
+            color: @textColor;
+          }
 
-          &:hover {
+          &.today {
+            color: @color1;
+            .font-head;
+          }
+
+          &.isSelected,
+          &.isTo,
+          &.isFrom {
+            background-color: @color3;
+            color: @white;
+          }
+
+          &.inRange {
+            background-color: @color2;
+          }
+
+          &.isHover {
+            background-color: @black;
+          }
+
+          &.active {
+
+            pointer-events: all;
+
+            &:hover {
               background-color: @color1;
               color: @white;
+            }
           }
-        }
 
+        }
       }
 
-      .elements-container {
-        display: grid;
+      .days-container {
+        .day {
 
-        transition: opacity .5s, transform .5s;
-        @media @desktop {
-          grid-template-rows: 365px;
+          &:nth-child(7n),
+          &:nth-child(7n -1) {
+            .font-bold;
+          }
         }
+      }
 
-        .single-element {
-          display: grid;
-          justify-items: center;
+      header {
+        .header-day {
 
-          grid-template-rows: 60px 1fr;
-          max-width: 450px;
-          width: 100%;
-          align-self: center;
-          justify-self: center;
-
-          .multi(padding, 0, 2);
-
-          @media @desktop {
-            align-self: auto;
-            justify-self: auto;
-
-            &:nth-child(4), &:nth-child(5), &:nth-child(6) {
-              border-top: solid 1px @grey;
-            }
-  
-            &:nth-child(2), &:nth-child(5),  {
-              border-left: solid 1px @grey;
-              border-right: solid 1px @grey;
-            }
-            
+          &:nth-child(7n),
+          &:nth-child(7n -1) {
+            .font-bold;
           }
-  
-          header, .days-container {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            text-align: center;
-
-            width: 100%;
-            
-            .day {
-              color: @grey;
-              width: 1fr;
-              aspect-ratio: 1/1;
-
-              border: solid 1px @white;
-              
-              justify-content: center;
-              align-content: center;
-              cursor: pointer;
-              pointer-events: none;
-
-              &.currentMonth {
-                color: @textColor;
-              }
-    
-              &.today {
-                color: @color1;
-                .font-head;
-              }
-
-              &.isSelected, &.isTo, &.isFrom {
-                background-color: @color3;
-                color: @white;
-              }
-
-              &.inRange {
-                background-color: @color2;
-              }
-
-              &.isHover {
-                background-color: @black;
-              }
-
-              &.active {
-
-                pointer-events: all;
-
-                &:hover {
-                  background-color: @color1;
-                  color: @white;
-                }
-              } 
-    
-            }
-          }
-
-          .days-container {
-            .day {
-              &:nth-child(7n), &:nth-child(7n -1) {
-                .font-bold;
-              }
-            }
-          }
-
-          header {
-            .header-day {
-              &:nth-child(7n), &:nth-child(7n -1) {
-                .font-bold;
-              }
-            }
-          }
-  
         }
-
       }
 
     }
 
-    &.monthVisible1 {
+  }
 
-      .elements-container {
-        display: grid;
-        grid-template-columns: 1fr;
+  &.monthVisible1 {
+
+    .elements-container {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &.monthVisible2 {
+    .elements-container {
+      display: grid;
+
+      @media @desktop {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
+  }
 
-      &.monthVisible2 {
-      .elements-container {
-        display: grid;
-        @media @desktop {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-    }
+  &.monthVisible3 {
+    .elements-container {
+      display: grid;
 
-      &.monthVisible3 {
-      .elements-container {
-        display: grid;
-        @media @desktop {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-    }
-
-      &.monthVisible6 {
-
-        .calendar-container {
-          @media @desktop {
-            width: calc(3 * 350px);
-          }
-        }
-
-      .elements-container {
-        display: grid;
+      @media @desktop {
         grid-template-columns: repeat(3, 1fr);
-
-        @media @desktop {
-          grid-template-rows: 365px 365px;
-        }
       }
     }
+  }
+
+  &.monthVisible6 {
+
+    @media @desktop {
+      width: calc(3 * 350px);
+    }
+
+    .elements-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+
+      @media @desktop {
+        grid-template-rows: 365px 365px;
+      }
+    }
+  }
 }
 </style>

@@ -148,7 +148,6 @@ const contentMerged = computed(() => {
     const partialData = partials[partialName];
 
     content = hardCopy(partialsPreview);
-    console.log(partialName, partialData, content);
     content.modules?.push({
       type    : 'text-module',
       headline: partialData.settings?.title,

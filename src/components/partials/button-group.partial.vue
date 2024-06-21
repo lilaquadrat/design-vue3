@@ -17,7 +17,6 @@ defineProps<{
   gap: 10px;
 
   justify-content: end;
-  flex-direction: row-reverse;
   flex-wrap: wrap;
 
   &.gap {

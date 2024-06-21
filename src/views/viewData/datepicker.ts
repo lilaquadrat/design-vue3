@@ -12,21 +12,21 @@ export default {
             },
             props: {
                 monthVisible: 1,
-                stayOpenOnSelect: true,
                 after: dayjs(),
                 before: dayjs().add(1, 'week'),
+                icon: 'calendar'
             }
         },
         {
             textblock: {
-                intro: 'single date, one month visible, date has to be in future'
+                intro: 'single date, one month visible, date has to be in future, stays open on select'
             },
             props: {
                 from: dayjs().subtract(1, 'week'),
-                to: dayjs().add(1, 'week'),
                 monthVisible: 1,
                 stayOpenOnSelect: true,
-                future: true
+                future: true,
+                icon: 'calendar'
             }
         },
         {
@@ -42,6 +42,29 @@ export default {
         },
         {
             textblock: {
+                intro: 'single date, two month visible, before two weeks in the future'
+            },
+            props: {
+                from: dayjs().add(1, 'month').subtract(1, 'week'),
+                to: dayjs().add(1, 'month'),
+                monthVisible: 2,
+                before: dayjs().add(2, 'week')
+            }
+        },
+        {
+            textblock: {
+                intro: 'single date, two month visible, before two weeks in the future, stays open on select'
+            },
+            props: {
+                from: dayjs().add(1, 'month').subtract(1, 'week'),
+                to: dayjs().add(1, 'month'),
+                monthVisible: 2,
+                range: true,
+                before: dayjs().add(2, 'week')
+            }
+        },
+        {
+            textblock: {
                 intro: 'single date, three month visible, before two weeks in the future'
             },
             props: {
@@ -53,7 +76,7 @@ export default {
         },
         {
             textblock: {
-                intro: 'single date, three month visible, date has to be in the past'
+                intro: 'single date, three month visible, date has to be in the past, stays open on select'
             },
             props: {
                 from: dayjs().subtract(1, 'week'),
@@ -65,7 +88,7 @@ export default {
         },
         {
             textblock: {
-                intro: 'range, six month visible'
+                intro: 'range, six month visible, stays open on select'
             },
             props: {
                 from: dayjs().subtract(1, 'week'),
@@ -77,15 +100,15 @@ export default {
         },
         {
             textblock: {
-                intro: 'range, three month visible, future dates'
+                intro: 'range, three month visible, future dates, stays open on select'
             },
             props: {
                 from: dayjs().subtract(1, 'week'),
                 to: dayjs().add(1, 'week'),
                 monthVisible: 6,
-                stayOpenOnSelect: true,
                 range: true,
-                future: true
+                future: true,
+                icon: 'calendar'
             }
         }
     ]

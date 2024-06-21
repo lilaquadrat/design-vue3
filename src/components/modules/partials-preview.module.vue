@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import type Textblock from '@/interfaces/textblock.interface';
-import { computed } from 'vue';
 
 const props = defineProps<{
     partial: string,
     partialData: {textblock?: Textblock, props: Record<string, unknown>}[]
 }>();
-const partialName = computed(() => `lila-${props.partial}-partial`);
 
 </script>
 <template>
     <section class="partials-preview-module">
         <section class="single-partial" v-for="(single, index) in partialData" :key="`single-partial-${index}`">
-            <lila-textblock-partial v-bind="props" />
             <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
-            <component :is="partialName" v-bind="single.props"/>
+
+            <lila-datepicker-partial v-if="props.partial === 'datepicker'" v-bind="single.props" v-model:from="single.props.form" v-model="single.props.to"/>
         </section>
     </section> 
 </template>
