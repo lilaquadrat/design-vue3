@@ -301,7 +301,7 @@ const content: Content = {
             },
           ],
           title: 'Follow up links',
-          variant:['noIcon']
+          // variant:['noIcon']
         },
       },
       {

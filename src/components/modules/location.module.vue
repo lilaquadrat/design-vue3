@@ -23,8 +23,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 </script>
 <template>
     <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-location-module lila-module">
-        <lila-location-partial ref="iframeElement" v-bind="map" class="iframe-container"
-            :variant="variant" />
+        <lila-location-partial ref="iframeElement" v-bind="map" class="iframe-container" :variant="variant" />
         <section class="text-container">
             <lila-textblock-partial v-if="textblock" v-bind="textblock" />
             <lila-list-partial class="list-container" v-if="list" v-bind="list" />
@@ -34,24 +33,27 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 </template>
 <style lang="less" scoped>
 .lila-location-module {
-    .module;
+    .modulePadding('none');
     max-width: @moduleWidth_M;
     margin: auto;
-    .multi(padding-top, 4);
-    display: grid; 
+
+    display: grid;
+
+    .text-container {
+        .multi(padding-top, 8);
+    }
 
     @media @desktop {
         grid-template-columns: 1fr 1fr;
         gap: 40px;
     }
 
-    .modulePadding('none');
-    // text-align: center;
+
 
     .link-container,
-      .list-container {
+    .list-container {
         padding: 20px 0;
-      }
+    }
 
     &.bright {
         .iframe-container {
