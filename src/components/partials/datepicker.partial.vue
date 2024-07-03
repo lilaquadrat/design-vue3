@@ -28,6 +28,8 @@ const props = defineProps<{
     after?: Date | string
     before?: Date | string
     icon?: IconsPartial['type'],
+    time?: boolean
+    seconds?: boolean
 }>();
 const { media, resized } = useResize();
 /**
@@ -36,6 +38,9 @@ const { media, resized } = useResize();
 const tempDayFrom = ref<string>('00');
 const tempMonthFrom = ref<string>('00');
 const tempYearFrom = ref<string>('0000');
+const tempHoursFrom = ref<string>('00');
+const tempMinutesFrom = ref<string>('00');
+const tempSecondsFrom = ref<string>('00');
 const tempDateFrom = ref<dayjs.Dayjs>();
 /**
  * working dates to
@@ -43,6 +48,9 @@ const tempDateFrom = ref<dayjs.Dayjs>();
 const tempDayTo = ref<string>('00');
 const tempMonthTo = ref<string>('00');
 const tempYearTo = ref<string>('0000');
+const tempHoursTo = ref<string>('00');
+const tempMinutesTo = ref<string>('00');
+const tempSecondsTo = ref<string>('00');
 const tempDateTo = ref<dayjs.Dayjs>();
 /**
  * date that is currently hovered
@@ -55,19 +63,36 @@ const whitelistedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 
 /**
  * references to the input elements for from
  */
+const hoursFrom = ref<HTMLInputElement>();
+const minutesFrom = ref<HTMLInputElement>();
+const secondsFrom = ref<HTMLInputElement>();
 const dayFrom = ref<HTMLInputElement>();
 const monthFrom = ref<HTMLInputElement>();
 const yearFrom = ref<HTMLInputElement>();
 /**
  * references to the input elements for to
  */
+const hoursTo = ref<HTMLInputElement>();
+const minutesTo = ref<HTMLInputElement>();
+const secondsTo = ref<HTMLInputElement>();
 const dayTo = ref<HTMLInputElement>();
 const monthTo = ref<HTMLInputElement>();
 const yearTo = ref<HTMLInputElement>();
 /**
+ * references to scoll container for time selection
+ */
+const hoursScroll = ref<HTMLInputElement>();
+const minutesScroll = ref<HTMLInputElement>();
+const secondsScroll = ref<HTMLInputElement>();
+const timeScrollElements = ref({
+  hours  : hoursScroll,
+  minutes: minutesScroll,
+  seconds: secondsScroll,
+})
+/**
  * array of all input references for focus the next input element
  */
-const inputElements = [dayFrom, monthFrom, yearFrom, dayTo, monthTo, yearTo];
+// const inputElements = [dayFrom, monthFrom, yearFrom, dayTo, monthTo, yearTo];
 const calendarElements = ref<any>({});
 const useMonthForCalender = ref();
 const calculatedOptions = ref();
@@ -84,6 +109,8 @@ const monthVisibleMediaAware = ref<number>(1);
  * defines what will be rendered in the calendaro overviwe
  */
 const mode = ref<'days' | 'month' | 'years'>('days');
+const calendarMode = ref<'date' | 'time'>('date');
+const timeTarget = ref<'from'|'to'>('from');
 /**
  * used as working date on hover
  */
@@ -97,24 +124,26 @@ const selectMode = ref<'from'|'to'>('from');
  * a click on the from/to date in range mode activates the static move mode 
  */
 const staticMode = ref<'from'|'to'>();
+const scrollTimout = ref();
 
 onBeforeMount(() => {
   
-  setTemp(props.from);
-  setTemp(props.to, 'to');
+  setTemp(props.from, 'from', true, true);
+  setTemp(props.to, 'to', true, true);
   setmonthVisibleMediaAware();
 
 });
-watch(() => fromModel.value, () => setTemp(fromModel.value)); 
-watch(() => toModel.value, () => setTemp(toModel.value, 'to')); 
-watch(() => [tempDayFrom.value, tempMonthFrom.value, tempYearFrom.value], () => update('from')); 
-watch(() => [tempDayTo.value, tempMonthTo.value, tempYearTo.value], () => update('to')); 
+watch(() => fromModel.value, () => setTemp(fromModel.value, 'from', true, true)); 
+watch(() => toModel.value, () => setTemp(toModel.value, 'to', true, true)); 
+watch(() => [tempHoursFrom.value, tempMinutesFrom.value, tempSecondsFrom.value, tempDayFrom.value, tempMonthFrom.value, tempYearFrom.value], () => update('from')); 
+watch(() => [tempHoursTo.value, tempMinutesTo.value, tempSecondsTo.value, tempDayTo.value, tempMonthTo.value, tempYearTo.value], () => update('to')); 
 watch(() => [resized.value, media.value], () => {
 
   calculateOptionsStyle();
   setmonthVisibleMediaAware();
 
 });
+watch(() => timeScrollElements, () => setTime(timeTarget.value), {deep: true})
 
 const monthVisibleCss = computed(() => ({'--monthVisible': props.monthVisible || 1}));
 const rangeDuration = computed(() => {
@@ -134,27 +163,57 @@ function setmonthVisibleMediaAware () {
 
 }
 
-function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' = 'from', updateCalendarMonth: boolean = true) {
+function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' = 'from', updateCalendarMonth: boolean = true, updateTime = false) {
 
   const date = baseDate ? dayjs(baseDate).clone() : dayjs();
 
+  console.debug('setTemp');
+
   if(target === 'from') {
     
+    if(updateTime) {
+
+      tempHoursFrom.value = date.get('hours').toString().padStart(2, '0');
+      tempMinutesFrom.value = date.get('minutes').toString().padStart(2, '0');
+      tempSecondsFrom.value = date.get('seconds').toString().padStart(2, '0');
+    }
+
     tempDayFrom.value = date.get('date').toString().padStart(2, '0');
     tempMonthFrom.value = (date.get('month') + 1).toString().padStart(2, '0');
     tempYearFrom.value = date.get('year').toString();
   
-    tempDateFrom.value = date;
+    // tempDateFrom.value = date;
+    tempDateFrom.value = dayjs()
+      .set('date', +tempDayFrom.value)
+      .set('month', +tempMonthFrom.value - 1)
+      .set('year', +tempYearFrom.value)
+      .set('hours', +tempHoursFrom.value)
+      .set('minutes', +tempMinutesFrom.value)
+      .set('seconds', +tempSecondsFrom.value);
 
   }
 
   if(target === 'to') {
 
+    if(updateTime) {
+
+      tempHoursTo.value = date.get('hours').toString().padStart(2, '0');
+      tempMinutesTo.value = date.get('minutes').toString().padStart(2, '0');
+      tempSecondsTo.value = date.get('seconds').toString().padStart(2, '0');
+    }
+
     tempDayTo.value = date.get('date').toString().padStart(2, '0');
     tempMonthTo.value = (date.get('month') + 1).toString().padStart(2, '0');
     tempYearTo.value = date.get('year').toString();
     
-    tempDateTo.value = date;
+    // tempDateTo.value = date;
+    tempDateTo.value = dayjs()
+      .set('date', +tempDayTo.value)
+      .set('month', +tempMonthTo.value - 1)
+      .set('year', +tempYearTo.value)
+      .set('hours', +tempHoursTo.value)
+      .set('minutes', +tempMinutesTo.value)
+      .set('seconds', +tempSecondsTo.value);
 
   }
 
@@ -171,7 +230,7 @@ function emitDate (target: 'from' | 'to' = 'from') {
 
 }
 
-function checkInput (type: 'date' | 'month' | 'year', input: KeyboardEvent, target: 'from' | 'to' = 'from') {
+function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 'year', input: KeyboardEvent, target: 'from' | 'to' = 'from') {
   
   if (whitelistedKeys.includes(input.key)) return;
 
@@ -223,7 +282,7 @@ function checkInput (type: 'date' | 'month' | 'year', input: KeyboardEvent, targ
   * only allow up to two digits for date and month
   * if only the leading zero is present, dont check any further
   */
-  if(type === 'date' || type === 'month') {
+  if(['hours', 'minutes', 'seconds', 'date', 'month'].includes(type)) {
 
     if(tempValue.length > 2) {
 
@@ -232,7 +291,7 @@ function checkInput (type: 'date' | 'month' | 'year', input: KeyboardEvent, targ
 
     }
 
-    console.log(tempValue.length, tempValue);
+    console.log(type, tempValue.length, tempValue);
 
     if(tempValue === '0' && tempValue.length === 1) return;  
     if(tempValue.length < 2) return;
@@ -317,6 +376,36 @@ function checkInput (type: 'date' | 'month' | 'year', input: KeyboardEvent, targ
 
   }
 
+  if(type === 'hours') {
+
+    console.log('hours', tempValue);
+
+    if(+tempValue > 23) {
+
+      input.preventDefault();
+      return;
+
+    }
+
+    tempCompareDate = newDate.set('hours', +tempValue);
+
+  }
+
+  if(type === 'minutes' || type === 'seconds') {
+
+    console.log('minutes', tempValue);
+
+    if(+tempValue > 59) {
+
+      input.preventDefault();
+      return;
+
+    }
+
+    tempCompareDate = newDate.set(type, +tempValue);
+
+  }
+
   if(!tempCompareDate) return;
 
   if(props.range) {
@@ -398,12 +487,15 @@ function calculateOptionsStyle () {
 
 }
 
-function toggleCalendar (open?: boolean) {
+function toggleCalendar (open?: boolean, setCalendarMode: 'date' | 'time' = 'date', setTimeTarget?: 'from' | 'to') {
 
   calculateOptionsStyle();
   
   // reset to days view when opening the calendar
   mode.value = 'days';
+  calendarMode.value = setCalendarMode;
+  if(setTimeTarget) timeTarget.value = setTimeTarget;
+
   updateMonth();
   if(tempDateFrom.value) setCalendarMonth(tempDateFrom.value);
 
@@ -491,7 +583,46 @@ function blur (input: FocusEvent) {
  */
 function focusNext () {
 
-  const orderArray = ['dayFrom', 'monthFrom', 'yearFrom', 'dayTo', 'monthTo', 'yearTo'];
+  const orderArray = ['dayFrom', 'monthFrom', 'yearFrom'];
+  const inputElements = [dayFrom, monthFrom, yearFrom];
+
+  if(props.time) {
+
+    orderArray.push(...['hoursFrom', 'minutesFrom']);
+    inputElements.push(...[hoursFrom, minutesFrom]);
+    
+    if(props.seconds) {
+      
+      orderArray.push('secondsFrom');
+      inputElements.push(secondsFrom);
+      
+    }
+        
+  }
+
+  if(props.range) {
+
+    orderArray.push(...['dayTo', 'monthTo', 'yearTo']);
+    inputElements.push(...[dayTo, monthTo, yearTo]);
+
+    if(props.time) {
+
+      orderArray.push(...['hoursTo', 'minutesTo'])
+      inputElements.push(...[hoursTo, minutesTo]);
+      
+      if(props.seconds) {
+        
+        orderArray.push('secondsTo');
+        inputElements.push(secondsTo);
+  
+      }
+    
+    }
+
+  }
+
+  console.log(orderArray, inputElements);
+
   const currentFocus = document.activeElement;
 
   if(currentFocus?.nodeName !== 'INPUT') return;
@@ -499,7 +630,7 @@ function focusNext () {
   const currentPart = currentFocus?.classList[0];
   const currentIndex = orderArray.findIndex((single) => single === currentPart);
 
-  if(currentIndex < (props.range ? 5 : 2)) {
+  if(currentIndex < inputElements.length - 1) {
 
     const newFocus = inputElements[currentIndex + 1];
 
@@ -524,8 +655,29 @@ function update (type: 'from' | 'to') {
       !tempMonthFrom.value || tempMonthFrom.value.length < 2 || 
       !tempYearFrom.value || tempYearFrom.value.length < 4
     ) return;
+
+    if(props.time) {
+
+      if(!tempHoursFrom.value || tempHoursFrom.value.length < 2 || 
+      !tempMinutesFrom.value || tempMinutesFrom.value.length < 2
+      ) return;
+      
+      if(props.seconds) {
+
+        if(!tempSecondsFrom.value || tempSecondsFrom.value.length < 2) return;
+
+      }
+
+    }
   
-    tempDateFrom.value = dayjs().set('date', +tempDayFrom.value).set('month', +tempMonthFrom.value - 1).set('year', +tempYearFrom.value);
+    tempDateFrom.value = dayjs()
+      .set('date', +tempDayFrom.value)
+      .set('month', +tempMonthFrom.value - 1)
+      .set('year', +tempYearFrom.value)
+      .set('hours', +tempHoursFrom.value)
+      .set('minutes', +tempMinutesFrom.value)
+      .set('seconds', +tempSecondsFrom.value);
+
     //update the calendar month only if the active element is part of the datepicker and a input
     if(document.activeElement?.nodeName === 'INPUT' && datepickerElement.value?.contains(document.activeElement)) setCalendarMonth(tempDateFrom.value);
 
@@ -537,8 +689,28 @@ function update (type: 'from' | 'to') {
       !tempMonthTo.value || tempMonthTo.value.length < 2 || 
       !tempYearTo.value || tempYearTo.value.length < 4
     ) return;
+
+    if(props.time) {
+
+      if(!tempHoursTo.value || tempHoursTo.value.length < 2 || 
+      !tempMinutesTo.value || tempMinutesTo.value.length < 2
+      ) return;
+
+      if(props.seconds) {
+
+        if(!tempSecondsTo.value || tempSecondsTo.value.length < 2) return;
+
+      }
+
+    }
   
-    tempDateTo.value = dayjs().set('date', +tempDayTo.value).set('month', +tempMonthTo.value - 1).set('year', +tempYearTo.value);
+    tempDateTo.value = dayjs()
+      .set('date', +tempDayTo.value)
+      .set('month', +tempMonthTo.value - 1)
+      .set('year', +tempYearTo.value)
+      .set('hours', +tempHoursTo.value)
+      .set('minutes', +tempMinutesTo.value)
+      .set('seconds', +tempSecondsTo.value);
 
   }
 
@@ -901,6 +1073,36 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
 }
 
+function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', target: 'from' | 'to') {
+  
+  if(target === 'from') {
+
+    if(type === 'hours') tempHoursFrom.value = number.toString().padStart(2, '0');
+    if(type === 'minutes') tempMinutesFrom.value = number.toString().padStart(2, '0');
+    if(type === 'seconds') tempSecondsFrom.value = number.toString().padStart(2, '0');
+
+    tempDateFrom.value = tempDateFrom.value?.clone()
+      .set('hours', +tempHoursFrom.value)
+      .set('minutes', +tempMinutesFrom.value)
+      .set('seconds', +tempSecondsFrom.value);
+
+  }
+
+  if(target === 'to') {
+
+    if(type === 'hours') tempHoursTo.value = number.toString().padStart(2, '0');
+    if(type === 'minutes') tempMinutesTo.value = number.toString().padStart(2, '0');
+    if(type === 'seconds') tempSecondsTo.value = number.toString().padStart(2, '0');
+
+    tempDateTo.value = tempDateTo.value?.clone()
+      .set('hours', +tempHoursTo.value)
+      .set('minutes', +tempMinutesTo.value)
+      .set('seconds', +tempSecondsTo.value);
+
+  }
+
+}
+
 function updateHover (day?: dayjs.Dayjs) {
 
   if(!staticMode.value) return;
@@ -925,11 +1127,100 @@ function toggleMode () {
   
 }
 
+function setTime (target: 'from' | 'to') {
+
+  const useTempDate = target === 'from' 
+    ? tempDateFrom 
+    : tempDateTo;
+
+  if(!useTempDate) return;
+
+  scrollToIndex(+(useTempDate.value?.get('hours') || 0), 'hours');
+  scrollToIndex(+(useTempDate.value?.get('minutes') || 0), 'minutes');
+  scrollToIndex(+(useTempDate.value?.get('seconds') || 0), 'seconds');
+
+}
+
+/**
+ * scroll to a specific element
+ */
+function scrollToIndex (index: number, target: 'hours' | 'minutes' | 'seconds', animate = false) {
+
+  const targetElement = timeScrollElements.value[target];
+
+  if(!targetElement) return;
+
+  targetElement?.scrollTo({top: index * 100, behavior: animate ? 'smooth' : 'instant'});
+
+}
+
+function handleScroll (event: UIEvent) {
+
+  clearTimeout(scrollTimout.value);
+  scrollTimout.value = setTimeout(() => triggerScroll(event), 250);
+
+}
+
+/**
+ * Triggers the scroll event and selects the appropriate time based on the scroll position.
+ */
+function triggerScroll (event: UIEvent) {
+
+  const target = event.target as HTMLElement;
+  const childContainer = target.childNodes[0] as HTMLElement;
+  // Extract the time unit type (seconds, hours, or minutes) from the class name of the child container
+  const type = childContainer.classList[0].split('-')[0] as 'seconds' | 'hours' | 'minutes';
+  // Get the current scroll position of the target element
+  const scrollTop: number = target.scrollTop;
+  // Calculate the selected number based on the scroll position
+  // Assuming each time unit is 100 pixels tall
+  const selectedNumber: number = Math.round(scrollTop / 100);
+
+  // Select the time based on the calculated number and the extracted time unit type
+  selectTime(selectedNumber, type, timeTarget.value);
+}
+
+/**
+ * Sets the predefined time by selecting and scrolling to the specified hours, minutes, and seconds.
+ * If the 'now' parameter is true, it sets the time to the current time.
+ */
+function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, now?: true) {
+  
+  // Check if hours is defined, if so, select and scroll to the specified hour
+  if (hours !== undefined) {
+    selectTime(hours, 'hours', timeTarget.value);
+    scrollToIndex(hours, 'hours', true);
+  }
+  
+  // Check if minutes is defined, if so, select and scroll to the specified minute
+  if (minutes !== undefined) {
+    selectTime(minutes, 'minutes', timeTarget.value);
+    scrollToIndex(minutes, 'minutes', true);
+  }
+  
+  // Check if seconds is defined, if so, select and scroll to the specified second
+  if (seconds !== undefined) {
+    selectTime(seconds, 'seconds', timeTarget.value);
+    scrollToIndex(seconds, 'seconds', true);
+  }
+  
+  // If 'now' is true, set the time to the current time
+  if (now) {
+    selectTime(dayjs().get('hours'), 'hours', timeTarget.value);
+    scrollToIndex(dayjs().get('hours'), 'hours', true);
+    selectTime(dayjs().get('minutes'), 'minutes', timeTarget.value);
+    scrollToIndex(dayjs().get('minutes'), 'minutes', true);
+    selectTime(dayjs().get('seconds'), 'seconds', timeTarget.value);
+    scrollToIndex(dayjs().get('seconds'), 'seconds', true);
+  }
+}
+
 </script>
 <template>
-    <section class="datepicker-partial" ref="datepickerElement" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="monthVisibleCss">
+    <section class="datepicker-partial" ref="datepickerElement" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon, time, seconds}]" :style="monthVisibleCss">
         <section class="input-container" ref="triggerElement">
-            <lila-button-partial v-if="icon" @click="toggleCalendar()" class="front-toggle-icon" color-scheme="transparent"><lila-icons-partial size="small" :type="icon" /></lila-button-partial>
+
+          <lila-button-partial v-if="icon" @click="toggleCalendar()" class="front-toggle-icon" color-scheme="transparent"><lila-icons-partial size="small" :type="icon" /></lila-button-partial>
 
             <section class="input-group from">
               <input @keydown="checkInput('date', $event)" class="dayFrom" ref="dayFrom" @focus="focus" @blur="blur" v-model="tempDayFrom"  />
@@ -937,6 +1228,17 @@ function toggleMode () {
               <input @keydown="checkInput('month', $event)" class="monthFrom" ref="monthFrom" @focus="focus" @blur="blur" v-model="tempMonthFrom" />
               <span class="delimiter">.</span>
               <input @keydown="checkInput('year', $event)" class="yearFrom" ref="yearFrom" @focus="focus" @blur="blur" v-model="tempYearFrom" />
+              <template v-if="time">
+                <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+                <input @keydown="checkInput('hours', $event)" class="hoursFrom" ref="hoursFrom" @focus="focus" @blur="blur" v-model="tempHoursFrom"  />
+                <span class="delimiter">:</span>
+                <input @keydown="checkInput('minutes', $event)" class="minutesFrom" ref="minutesFrom" @focus="focus" @blur="blur" v-model="tempMinutesFrom" />
+                <template v-if="seconds">
+                  <span class="delimiter">:</span>
+                  <input @keydown="checkInput('seconds', $event)" class="secondsFrom" ref="secondsFrom" @focus="focus" @blur="blur" v-model="tempSecondsFrom" />
+                </template>
+                <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'from')"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+              </template>
             </section>
 
             <template v-if="range">
@@ -949,15 +1251,88 @@ function toggleMode () {
                 <input @keydown="checkInput('month', $event, 'to')" class="monthTo" ref="monthTo" @focus="focus" @blur="blur" v-model="tempMonthTo" />
                 <span class="delimiter">.</span>
                 <input @keydown="checkInput('year', $event, 'to')" class="yearTo" ref="yearTo" @focus="focus" @blur="blur" v-model="tempYearTo" />
+                <template v-if="time">
+                  <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+                  <input @keydown="checkInput('hours', $event)" class="hoursTo" ref="hoursTo" @focus="focus" @blur="blur" v-model="tempHoursTo"  />
+                  <span class="delimiter">:</span>
+                  <input @keydown="checkInput('minutes', $event)" class="minutesTo" ref="minutesTo" @focus="focus" @blur="blur" v-model="tempMinutesTo" />
+                  <template v-if="seconds">
+                    <span class="delimiter">:</span>
+                    <input @keydown="checkInput('seconds', $event)" class="secondsTo" ref="secondsTo" @focus="focus" @blur="blur" v-model="tempSecondsTo" />
+                  </template>
+                  <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'to')"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+                </template>
+        
               </section>
 
             </template>
 
-            <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+            <lila-button-partial v-if="!time" color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
         </section>
 
         <lila-overlay-background-partial v-if="renderCalendar" background="none" ref="options" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
-          <article class="calendar-container" ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="calculatedOptions">
+          <article class="calendar-container time" v-if="calendarMode === 'time'" ref="calendarContainer" :style="calculatedOptions">
+            <section class="time-selector-container" :class="{seconds}">
+              <div class="scroll-overlay-gradient top"></div>
+              <section class="scroll-container" ref="hoursScroll" @scroll="handleScroll($event as UIEvent)">
+                <section class="hours-container">
+                  <div class="scroll-space"></div>
+                  <button @click="setPredefinedTime(0, undefined, undefined)">00</button>
+                  <button v-for="number in 23" @click="setPredefinedTime(number, undefined, undefined)" :key="`hours-${number}`">
+                    {{ number.toString().padStart(2, '0') }}
+                  </button>
+                  <div class="scroll-space"></div>
+                </section>
+              </section>
+              <section class="scroll-container" ref="minutesScroll" @scroll="handleScroll($event as UIEvent)">
+                <section class="minutes-container">
+                  <div class="scroll-space"></div>
+                  <button @click="setPredefinedTime(undefined, 0, undefined)">00</button>
+                  <button v-for="number in 59" @click="setPredefinedTime(undefined, number, undefined)" :key="`minutes-${number}`">
+                    {{ number.toString().padStart(2, '0') }}
+                  </button>
+                  <div class="scroll-space"></div>
+                </section>
+              </section>
+              <section v-if="seconds" class="scroll-container" ref="secondsScroll" @scroll="handleScroll($event as UIEvent)">
+                <section class="seconds-container">
+                  <div class="scroll-space"></div>
+                  <button @click="setPredefinedTime(undefined, undefined, 0)">00</button>
+                  <button v-for="number in 59" @click="setPredefinedTime(undefined, undefined, number)" :key="`seconds-${number}`">
+                    {{ number.toString().padStart(2, '0') }}
+                  </button>
+                  <div class="scroll-space"></div>
+                </section>
+              </section>
+              <div class="scroll-overlay-gradient bottom"></div>
+            </section>
+            <section class="time-selector-predefined-container">
+              <section class="border-container">
+                <section class="time-predefined-group">
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(0)">00:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(9)">09:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(12)">12:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(15)">15:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(18)">18:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(20)">20:00</lila-button-partial>
+                </section>
+                
+                <section class="time-predefined-group">
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 0)">00:00</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 15)">00:15</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 30)">00:30</lila-button-partial>
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 45)">00:45</lila-button-partial>
+                </section>
+                
+                <section class="time-predefined-group">
+                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, undefined, undefined, true)">{{$translate('datepicker-predefined-now')}}</lila-button-partial>
+                </section>
+              </section>
+            </section>
+          </article>
+
+          <article class="calendar-container" v-if="calendarMode === 'date'" 
+            ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="calculatedOptions">
               <header class="main">
                 <section class="details">
                   <h3 v-if="range">
@@ -1110,12 +1485,7 @@ function toggleMode () {
           justify-self: center;
         }
 
-        grid-template-columns: max-content 35px max-content max-content;
-
-        .input-group {
-          grid-template-columns: 17px max-content 17px max-content 35px;
-        }
-
+        // grid-template-columns: max-content 35px max-content max-content;
       }
 
       &.icon {
@@ -1123,20 +1493,47 @@ function toggleMode () {
           grid-template-columns: 25px max-content 35px max-content max-content;
         }
       }
+
+    }
+
+    &.time {
+      /* stylelint-disable-next-line no-descending-specificity */
+      .input-container {
+        .input-group {
+          grid-template-columns: 17px max-content 17px max-content 35px 35px 17px max-content 17px 35px;
+        }
+
+      }
+
+      &.seconds {
+        .input-container {
+          .input-group {
+            grid-template-columns: 17px max-content 17px max-content 35px 35px 17px max-content 17px max-content 17px 35px;
+          }
+
+        }
+
+      }
+
     }
 }
+
 .calendar-container {
   display: grid;
 
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
 
   background-color: @white;
-  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
-  border: solid 1px @grey1;
   grid-template-rows: 40px calc(100vh - 120px) 80px;
+
+  &.time {
+    box-shadow: none;
+    border: 0;
+    align-items: end;
+  }
 
   header.main {
 
@@ -1174,6 +1571,16 @@ function toggleMode () {
   @media @desktop {
     width: calc(var(--monthVisible) * 350px);
     grid-template-rows: 40px 1fr;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
+    border: solid 1px @grey1;
+    position: absolute;
+
+    &.time {
+      width: 450px;
+      grid-template-rows: 1fr max-content;
+      grid-template-columns: 2fr 1fr;
+    }
+
   }
 
   h3.selectTitle {
@@ -1339,6 +1746,124 @@ function toggleMode () {
       }
 
     }
+
+  }
+
+  .time-selector-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
+    border: solid 1px @grey1;
+    
+    &.seconds {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .scroll-overlay-gradient {
+        position: absolute;
+        height: calc(100 * 1px);
+        width: 100%;
+        pointer-events: none;
+
+        justify-self: start;
+        align-self: start;
+
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,.9) 0%,
+          rgba(255,255,255,.7) 100%
+        );
+
+        &.bottom {
+          justify-self: end;
+          align-self: end;
+
+          background: linear-gradient(
+          to top,
+          rgba(255,255,255,.9) 0%,
+          rgba(255,255,255,.7) 100%
+        );
+
+        }
+      }
+
+    .scroll-container {
+      height: calc(100 * 3px);
+      scroll-snap-type: y mandatory;
+      background-color: @white;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+
+      button, .scroll-space {
+        scroll-snap-align: start;
+        display: grid;
+        height: 100px;
+        align-content: center;
+        justify-content: center;
+      }
+
+      button {
+        background-color: @grey2;
+        border: 0;
+        font-size: @headline_XS;
+        color: @color1;
+        .font-head;
+      }
+
+    }
+
+    .hours-container {
+      display: grid;
+      grid-template-rows: repeat(24, 100px);
+    }
+
+    .minutes-container, .seconds-container {
+      display: grid;
+      grid-template-rows: repeat(60, 100px);
+
+    }
+
+  }
+
+  .time-selector-predefined-container {
+      display: grid;
+      grid-auto-rows: max-content;
+
+      .border-container {
+        display: grid;
+        box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.13);
+        border: solid 1px @grey1;
+        grid-template-columns: 1fr 1fr;
+        background-color: @grey1;
+      }
+
+      .time-predefined-group {
+
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: max-content;
+
+        .title {
+          display: grid;
+          grid-column-start: 1;
+          grid-column-end: 2;
+          .multi(padding, 2);
+          text-align: center;
+          font-size: @fontTextSmaller;
+        }
+
+        // button {
+        //   border: 0;
+        //   background-color: transparent;
+        //   height: @buttonHeight;
+        // }
+      }
 
   }
 

@@ -132,5 +132,5 @@ export default {
   'event-short'                                                                                           : '%s bis %s',
   'datepicker-range-days_singular'                                                                        : '%s Tag',
   'datepicker-range-days_plural'                                                                          : '%s Tage',
-  'datepicker-select-button'                                                                              : 'Datum auswählen'
+  'datepicker-predefined-now'                                                                             : 'jetzt'
 };
