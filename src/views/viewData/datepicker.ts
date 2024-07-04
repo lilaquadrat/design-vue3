@@ -18,6 +18,28 @@ export default {
         },
         {
             textblock: {
+                intro: 'single date with time, one month visible, after 15 minutes'
+            },
+            props: {
+                monthVisible: 1,
+                icon: 'calendar',
+                time: true,
+                after: dayjs().add(15, 'minutes'),
+            }
+        },
+        {
+            textblock: {
+                intro: 'single date with time, one month visible, in the next 15 minutes'
+            },
+            props: {
+                monthVisible: 1,
+                icon: 'calendar',
+                time: true,
+                before: dayjs().add(15, 'minutes'),
+            }
+        },
+        {
+            textblock: {
                 intro: 'single date with time and seconds, one month visible'
             },
             props: {
@@ -94,12 +116,13 @@ export default {
                 intro: 'single date, two month visible, before two weeks in the future, stays open on select'
             },
             props: {
-                from: dayjs().add(1, 'month').subtract(1, 'week'),
-                to: dayjs().add(1, 'month'),
+                from: dayjs(),
+                to: dayjs(),
                 monthVisible: 2,
                 range: true,
                 time: true,
-                before: dayjs().add(2, 'week')
+                before: dayjs().add(2, 'week'),
+                icon: 'calendar'
             }
         },
         {

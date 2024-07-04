@@ -153,6 +153,12 @@ const rangeDuration = computed(() => {
   return !range ? 0 : range < 0 ? -range : range;
 
 });
+const timeElementHeight = computed(() => {
+
+  if(media.value === 'mobile') return 75;
+  return 100;
+
+});
 
 function setmonthVisibleMediaAware () {
 
@@ -410,9 +416,11 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
   if(props.range) {
 
+    console.log('check range', target, props.time, tempCompareDate.isAfter(tempDateFrom.value, !props.time ? 'date' : undefined));
+
     if(target === 'from') {
 
-      if(tempCompareDate.isAfter(tempDateTo.value, 'date')) {
+      if(tempCompareDate.isAfter(tempDateTo.value, !props.time ? 'date' : undefined)) {
 
         console.log('is after');
         input.preventDefault();
@@ -424,7 +432,7 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
     if(target === 'to') {
 
-      if(tempCompareDate.isBefore(tempDateFrom.value, 'date')) {
+      if(tempCompareDate.isBefore(tempDateFrom.value, !props.time ? 'date' : undefined)) {
 
         input.preventDefault();
         return;
@@ -456,7 +464,8 @@ function calculateOptionsStyle () {
   const calendarContainerElement = calendarContainer.value as HTMLElement;
 
   calculatedOptions.value = {
-    '--monthVisible': monthVisibleMediaAware.value
+    '--monthVisible' : monthVisibleMediaAware.value,
+    '--elementHeight': `${timeElementHeight.value}px`
   }
 
   if(element && calendarContainerElement && media.value !== 'mobile' && media.value !== 'tablet') {
@@ -981,7 +990,9 @@ function checkAfter (date: dayjs.Dayjs) {
 
   const afterDate = dayjs(props.after);
 
-  return date.startOf('date').isAfter(afterDate, 'date')
+  return props.time 
+    ? date.isAfter(afterDate)
+    : date.startOf('date').isAfter(afterDate, 'date')
 
 }
 
@@ -991,7 +1002,9 @@ function checkBefore (date: dayjs.Dayjs) {
 
   const beforeDate = dayjs(props.before);
 
-  return date.subtract(1, 'day').startOf('date').isBefore(beforeDate, 'date')
+  return props.time 
+    ? date.isBefore(beforeDate)
+    : date.subtract(1, 'day').startOf('date').isBefore(beforeDate)
 
 }
 
@@ -1074,8 +1087,25 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 }
 
 function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', target: 'from' | 'to') {
+
+  console.log('select time', number, type, target);
+
+  const newDate = target === 'from' ? tempDateFrom.value?.clone() : tempDateTo.value?.clone();
+  let tempCompareDate = newDate as dayjs.Dayjs;
+
+  tempCompareDate = tempCompareDate.set(type, number);
+  if(!checkAfter(tempCompareDate) || !checkBefore(tempCompareDate)) return false;
   
   if(target === 'from') {
+
+    console.log('check', type, tempCompareDate.format('DD.MM.YYYY HH:mm'), tempDateTo.value?.format('DD.MM.YYYY HH:mm'));
+
+    if(props.range && tempCompareDate.isAfter(tempDateTo.value)) {
+
+      console.log('from is after to');
+      return false;
+
+    }
 
     if(type === 'hours') tempHoursFrom.value = number.toString().padStart(2, '0');
     if(type === 'minutes') tempMinutesFrom.value = number.toString().padStart(2, '0');
@@ -1090,6 +1120,13 @@ function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', targ
 
   if(target === 'to') {
 
+    if(props.range && tempCompareDate.isBefore(tempDateFrom.value)) {
+
+      console.log('to is before from');
+      return false;
+
+    }
+
     if(type === 'hours') tempHoursTo.value = number.toString().padStart(2, '0');
     if(type === 'minutes') tempMinutesTo.value = number.toString().padStart(2, '0');
     if(type === 'seconds') tempSecondsTo.value = number.toString().padStart(2, '0');
@@ -1100,6 +1137,8 @@ function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', targ
       .set('seconds', +tempSecondsTo.value);
 
   }
+
+  return true;
 
 }
 
@@ -1129,6 +1168,8 @@ function toggleMode () {
 
 function setTime (target: 'from' | 'to') {
 
+  console.log('set time');
+
   const useTempDate = target === 'from' 
     ? tempDateFrom 
     : tempDateTo;
@@ -1146,11 +1187,13 @@ function setTime (target: 'from' | 'to') {
  */
 function scrollToIndex (index: number, target: 'hours' | 'minutes' | 'seconds', animate = false) {
 
+  console.log('scroll to index');
+
   const targetElement = timeScrollElements.value[target];
 
   if(!targetElement) return;
 
-  targetElement?.scrollTo({top: index * 100, behavior: animate ? 'smooth' : 'instant'});
+  targetElement?.scrollTo({top: index * timeElementHeight.value, behavior: animate ? 'smooth' : 'instant'});
 
 }
 
@@ -1174,10 +1217,16 @@ function triggerScroll (event: UIEvent) {
   const scrollTop: number = target.scrollTop;
   // Calculate the selected number based on the scroll position
   // Assuming each time unit is 100 pixels tall
-  const selectedNumber: number = Math.round(scrollTop / 100);
+  const selectedNumber: number = Math.round(scrollTop / timeElementHeight.value);
 
   // Select the time based on the calculated number and the extracted time unit type
-  selectTime(selectedNumber, type, timeTarget.value);
+  if(!selectTime(selectedNumber, type, timeTarget.value)) {
+
+    const useDate = timeTarget.value === 'from' ? tempDateFrom.value : tempDateTo.value;
+
+    scrollToIndex(useDate?.get(type) as number, type, true);
+
+  }
 }
 
 /**
@@ -1185,33 +1234,48 @@ function triggerScroll (event: UIEvent) {
  * If the 'now' parameter is true, it sets the time to the current time.
  */
 function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, now?: true) {
+
+  console.log('set predefined time', hours, minutes, seconds);
   
   // Check if hours is defined, if so, select and scroll to the specified hour
   if (hours !== undefined) {
-    selectTime(hours, 'hours', timeTarget.value);
-    scrollToIndex(hours, 'hours', true);
+
+    if(selectTime(hours, 'hours', timeTarget.value)) {
+
+      scrollToIndex(hours, 'hours', true);
+
+    }
+
   }
   
   // Check if minutes is defined, if so, select and scroll to the specified minute
   if (minutes !== undefined) {
-    selectTime(minutes, 'minutes', timeTarget.value);
-    scrollToIndex(minutes, 'minutes', true);
+
+    if(selectTime(minutes, 'minutes', timeTarget.value)) {
+
+      scrollToIndex(minutes, 'minutes', true);
+    }
+
   }
   
   // Check if seconds is defined, if so, select and scroll to the specified second
   if (seconds !== undefined) {
-    selectTime(seconds, 'seconds', timeTarget.value);
-    scrollToIndex(seconds, 'seconds', true);
+
+    if(selectTime(seconds, 'seconds', timeTarget.value)) {
+
+      scrollToIndex(seconds, 'seconds', true);
+
+    }
+
   }
   
   // If 'now' is true, set the time to the current time
   if (now) {
-    selectTime(dayjs().get('hours'), 'hours', timeTarget.value);
-    scrollToIndex(dayjs().get('hours'), 'hours', true);
-    selectTime(dayjs().get('minutes'), 'minutes', timeTarget.value);
-    scrollToIndex(dayjs().get('minutes'), 'minutes', true);
-    selectTime(dayjs().get('seconds'), 'seconds', timeTarget.value);
-    scrollToIndex(dayjs().get('seconds'), 'seconds', true);
+
+    if(selectTime(dayjs().get('hours'), 'hours', timeTarget.value)) scrollToIndex(dayjs().get('hours'), 'hours', true);
+    if(selectTime(dayjs().get('minutes'), 'minutes', timeTarget.value)) scrollToIndex(dayjs().get('minutes'), 'minutes', true);
+    if(selectTime(dayjs().get('seconds'), 'seconds', timeTarget.value)) scrollToIndex(dayjs().get('seconds'), 'seconds', true);
+
   }
 }
 
@@ -1253,12 +1317,12 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
                 <input @keydown="checkInput('year', $event, 'to')" class="yearTo" ref="yearTo" @focus="focus" @blur="blur" v-model="tempYearTo" />
                 <template v-if="time">
                   <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
-                  <input @keydown="checkInput('hours', $event)" class="hoursTo" ref="hoursTo" @focus="focus" @blur="blur" v-model="tempHoursTo"  />
+                  <input @keydown="checkInput('hours', $event, 'to')" class="hoursTo" ref="hoursTo" @focus="focus" @blur="blur" v-model="tempHoursTo"  />
                   <span class="delimiter">:</span>
-                  <input @keydown="checkInput('minutes', $event)" class="minutesTo" ref="minutesTo" @focus="focus" @blur="blur" v-model="tempMinutesTo" />
+                  <input @keydown="checkInput('minutes', $event, 'to')" class="minutesTo" ref="minutesTo" @focus="focus" @blur="blur" v-model="tempMinutesTo" />
                   <template v-if="seconds">
                     <span class="delimiter">:</span>
-                    <input @keydown="checkInput('seconds', $event)" class="secondsTo" ref="secondsTo" @focus="focus" @blur="blur" v-model="tempSecondsTo" />
+                    <input @keydown="checkInput('seconds', $event, 'to')" class="secondsTo" ref="secondsTo" @focus="focus" @blur="blur" v-model="tempSecondsTo" />
                   </template>
                   <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'to')"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
                 </template>
@@ -1272,6 +1336,13 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
 
         <lila-overlay-background-partial v-if="renderCalendar" background="none" ref="options" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
           <article class="calendar-container time" v-if="calendarMode === 'time'" ref="calendarContainer" :style="calculatedOptions">
+            <header class="main">
+                <section class="controls">
+                  <lila-button-group-partial>
+                    <lila-button-partial @click="toggleCalendar()" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-up" /></lila-button-partial>
+                  </lila-button-group-partial>
+                </section>
+              </header>
             <section class="time-selector-container" :class="{seconds}">
               <div class="scroll-overlay-gradient top"></div>
               <section class="scroll-container" ref="hoursScroll" @scroll="handleScroll($event as UIEvent)">
@@ -1322,13 +1393,14 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
                   <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 15)">00:15</lila-button-partial>
                   <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 30)">00:30</lila-button-partial>
                   <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 45)">00:45</lila-button-partial>
-                </section>
-                
-                <section class="time-predefined-group">
                   <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, undefined, undefined, true)">{{$translate('datepicker-predefined-now')}}</lila-button-partial>
                 </section>
+                
               </section>
             </section>
+            <footer class="main">
+              <lila-button-partial @click="toggleCalendar()" color-scheme="colorScheme1">{{ $translate('datepicker-select-time-button') }}</lila-button-partial>
+            </footer>
           </article>
 
           <article class="calendar-container" v-if="calendarMode === 'date'" 
@@ -1420,6 +1492,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
                 </section>
 
               </section>
+
               <footer class="main">
                 <lila-button-partial @click="toggleCalendar()" color-scheme="colorScheme1">{{ $translate('datepicker-select-button') }}</lila-button-partial>
               </footer>
@@ -1481,16 +1554,46 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
     &.range {
 
       .input-container {
+        grid-template-columns: max-content 35px max-content max-content;
+        
         .range-separator-icon {
           justify-self: center;
         }
-
+        
         // grid-template-columns: max-content 35px max-content max-content;
       }
 
       &.icon {
         .input-container {
           grid-template-columns: 25px max-content 35px max-content max-content;
+
+        }
+
+        }
+
+      &.time {
+
+        .input-container {
+            grid-template-rows: max-content max-content;
+            justify-items: start;
+            .input-group.to {
+              grid-row-start: 2;
+            }
+
+        }
+
+      }
+
+      &.icon.time {
+        .input-container {
+          grid-template-columns: 25px max-content;
+
+          .range-separator-icon, .input-group.to {
+            grid-row-start: 2;
+          }
+          .range-separator-icon {
+            grid-column-start: 1;
+          }
         }
       }
 
@@ -1506,6 +1609,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
       }
 
       &.seconds {
+        /* stylelint-disable-next-line no-descending-specificity */
         .input-container {
           .input-group {
             grid-template-columns: 17px max-content 17px max-content 35px 35px 17px max-content 17px max-content 17px 35px;
@@ -1528,12 +1632,6 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
 
   background-color: @white;
   grid-template-rows: 40px calc(100vh - 120px) 80px;
-
-  &.time {
-    box-shadow: none;
-    border: 0;
-    align-items: end;
-  }
 
   header.main {
 
@@ -1579,6 +1677,30 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
       width: 450px;
       grid-template-rows: 1fr max-content;
       grid-template-columns: 2fr 1fr;
+    }
+
+  }
+
+  &.time {
+    box-shadow: none;
+    border: 0;
+    grid-template-rows: 35px max-content 1fr 80px;
+    height: 100vh;
+    
+    @media @desktop {
+      align-items: end;
+      grid-template-rows: 1fr;
+      height: auto;
+    }
+
+    header.main {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      @media @desktop {
+        display: none;
+      }
+
     }
 
   }
@@ -1762,7 +1884,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
 
     .scroll-overlay-gradient {
         position: absolute;
-        height: calc(100 * 1px);
+        height: calc(var(--elementHeight) * 1);
         width: 100%;
         pointer-events: none;
 
@@ -1789,7 +1911,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
       }
 
     .scroll-container {
-      height: calc(100 * 3px);
+      height: calc(var(--elementHeight) * 3);
       scroll-snap-type: y mandatory;
       background-color: @white;
 
@@ -1803,7 +1925,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
       button, .scroll-space {
         scroll-snap-align: start;
         display: grid;
-        height: 100px;
+        height: var(--elementHeight);
         align-content: center;
         justify-content: center;
       }
@@ -1820,12 +1942,12 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
 
     .hours-container {
       display: grid;
-      grid-template-rows: repeat(24, 100px);
+      grid-template-rows: repeat(24, var(--elementHeight));
     }
 
     .minutes-container, .seconds-container {
       display: grid;
-      grid-template-rows: repeat(60, 100px);
+      grid-template-rows: repeat(60, var(--elementHeight));
 
     }
 
@@ -1849,20 +1971,25 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
         grid-template-columns: 1fr;
         grid-auto-rows: max-content;
 
+        &.select-button {
+
+          grid-column-start: 1;
+          grid-column-end: 3;
+
+        }
+
         .title {
           display: grid;
+
           grid-column-start: 1;
           grid-column-end: 2;
+
           .multi(padding, 2);
+
           text-align: center;
           font-size: @fontTextSmaller;
         }
 
-        // button {
-        //   border: 0;
-        //   background-color: transparent;
-        //   height: @buttonHeight;
-        // }
       }
 
   }
