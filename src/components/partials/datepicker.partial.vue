@@ -173,8 +173,6 @@ function setTemp (baseDate?: Date | string | dayjs.Dayjs, target: 'from' | 'to' 
 
   const date = baseDate ? dayjs(baseDate).clone() : dayjs();
 
-  console.debug('setTemp');
-
   if(target === 'from') {
     
     if(updateTime) {
@@ -297,8 +295,6 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
     }
 
-    console.log(type, tempValue.length, tempValue);
-
     if(tempValue === '0' && tempValue.length === 1) return;  
     if(tempValue.length < 2) return;
 
@@ -384,8 +380,6 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
   if(type === 'hours') {
 
-    console.log('hours', tempValue);
-
     if(+tempValue > 23) {
 
       input.preventDefault();
@@ -398,8 +392,6 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
   }
 
   if(type === 'minutes' || type === 'seconds') {
-
-    console.log('minutes', tempValue);
 
     if(+tempValue > 59) {
 
@@ -416,13 +408,10 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
   if(props.range) {
 
-    console.log('check range', target, props.time, tempCompareDate.isAfter(tempDateFrom.value, !props.time ? 'date' : undefined));
-
     if(target === 'from') {
 
       if(tempCompareDate.isAfter(tempDateTo.value, !props.time ? 'date' : undefined)) {
 
-        console.log('is after');
         input.preventDefault();
         return;
 
@@ -449,7 +438,6 @@ function checkInput (type: 'hours' | 'minutes' | 'seconds' | 'date' | 'month' | 
 
     if(tempCompareDate.startOf('date').isBefore(afterDate)) {
 
-      console.log('must be after', afterDate);
       input.preventDefault();
       return;
     }
@@ -629,8 +617,6 @@ function focusNext () {
     }
 
   }
-
-  console.log(orderArray, inputElements);
 
   const currentFocus = document.activeElement;
 
@@ -1088,8 +1074,6 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
 function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', target: 'from' | 'to') {
 
-  console.log('select time', number, type, target);
-
   const newDate = target === 'from' ? tempDateFrom.value?.clone() : tempDateTo.value?.clone();
   let tempCompareDate = newDate as dayjs.Dayjs;
 
@@ -1098,11 +1082,8 @@ function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', targ
   
   if(target === 'from') {
 
-    console.log('check', type, tempCompareDate.format('DD.MM.YYYY HH:mm'), tempDateTo.value?.format('DD.MM.YYYY HH:mm'));
-
     if(props.range && tempCompareDate.isAfter(tempDateTo.value)) {
 
-      console.log('from is after to');
       return false;
 
     }
@@ -1122,7 +1103,6 @@ function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', targ
 
     if(props.range && tempCompareDate.isBefore(tempDateFrom.value)) {
 
-      console.log('to is before from');
       return false;
 
     }
@@ -1168,8 +1148,6 @@ function toggleMode () {
 
 function setTime (target: 'from' | 'to') {
 
-  console.log('set time');
-
   const useTempDate = target === 'from' 
     ? tempDateFrom 
     : tempDateTo;
@@ -1186,8 +1164,6 @@ function setTime (target: 'from' | 'to') {
  * scroll to a specific element
  */
 function scrollToIndex (index: number, target: 'hours' | 'minutes' | 'seconds', animate = false) {
-
-  console.log('scroll to index');
 
   const targetElement = timeScrollElements.value[target];
 
@@ -1235,8 +1211,6 @@ function triggerScroll (event: UIEvent) {
  */
 function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, now?: true) {
 
-  console.log('set predefined time', hours, minutes, seconds);
-  
   // Check if hours is defined, if so, select and scroll to the specified hour
   if (hours !== undefined) {
 
