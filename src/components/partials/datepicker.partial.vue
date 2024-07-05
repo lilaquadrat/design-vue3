@@ -1560,16 +1560,15 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
           justify-self: center;
         }
         
-        // grid-template-columns: max-content 35px max-content max-content;
       }
 
       &.icon {
+
         .input-container {
           grid-template-columns: 25px max-content 35px max-content max-content;
-
         }
 
-        }
+      }
 
       &.time {
 
@@ -1663,7 +1662,7 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
   }
 
   .scroll-container {
-    overflow: scroll;
+    overflow-y: auto;
   }
 
   @media @desktop {
