@@ -119,11 +119,7 @@ const useTo = ref<dayjs.Dayjs>();
 /**
  * defines which date is changed on click in the calendar
  */
-const selectMode = ref<'from'|'to'>('from');
-/**
- * a click on the from/to date in range mode activates the static move mode 
- */
-const staticMode = ref<'from'|'to'>();
+const selectMode = ref<'from'|'to'>();
 const scrollTimout = ref();
 
 onBeforeMount(() => {
@@ -800,9 +796,7 @@ function updateUseFromTo () {
 
   }
 
-  if(staticMode.value) {
-
-    selectMode.value = staticMode.value;
+  if(selectMode.value) {
 
     if(selectMode.value === 'to') {
 
@@ -820,34 +814,9 @@ function updateUseFromTo () {
 
   }
 
-  // Check if hoverDate is defined and is between tempDateFrom and tempDateTo (inclusive)
-  if (hoverDate.value && hoverDate.value?.isBetween(tempDateFrom.value, tempDateTo.value, 'date')) {
+  useTo.value = tempDateTo.value;
+  useFrom.value = tempDateFrom.value;
 
-    selectMode.value = 'to';
-    useTo.value = hoverDate.value;
-    useFrom.value = tempDateFrom.value;
-
-  // Check if hoverDate is defined and is after tempDateTo
-  } else if (hoverDate.value && hoverDate.value?.isAfter(tempDateTo.value, 'date')) {
-
-    selectMode.value = 'to';
-    useTo.value = hoverDate.value;
-    useFrom.value = tempDateFrom.value;
-
-  // Check if hoverDate is defined and is before tempDateFrom
-  } else if (hoverDate.value && hoverDate.value?.isBefore(tempDateFrom.value, 'date')) {
-
-    selectMode.value = 'from';
-    useTo.value = tempDateTo.value;
-    useFrom.value = hoverDate.value;
-
-  // If none of the above conditions are met
-  } else {
-
-    useTo.value = tempDateTo.value;
-    useFrom.value = tempDateFrom.value;
-
-  }
 }
 
 function getCalendarElements (date: dayjs.Dayjs) {
@@ -1009,18 +978,18 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
   }
 
-  if(!staticMode.value) {
+  if(!selectMode.value) {
 
     if(singleDay.day?.isSame(tempDateFrom.value, 'date')) {
 
-      staticMode.value = 'from';
+      selectMode.value = 'from';
       return;
 
     }
 
     if(singleDay.day?.isSame(useTo.value, 'date')) {
 
-      staticMode.value = 'to';
+      selectMode.value = 'to';
       return;
 
     }
@@ -1035,7 +1004,7 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
       if(checkAfter(singleDay.day) && checkBefore(singleDay.day)) {
 
-        staticMode.value = undefined;
+        selectMode.value = undefined;
         setTemp(tempDateTo.value, 'from', false);
         setTemp(singleDay.day, 'to', false);
         return;
@@ -1052,7 +1021,7 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
 
       if(checkAfter(singleDay.day) && checkBefore(singleDay.day)) {
 
-        staticMode.value = undefined;
+        selectMode.value = undefined;
         setTemp(tempDateFrom.value, 'to', false);
         setTemp(singleDay.day, 'from', false);
         return;
@@ -1066,7 +1035,7 @@ function selectDate (singleDay: {day: dayjs.Dayjs}, target: 'from' | 'to' = 'fro
   if(checkAfter(singleDay.day) && checkBefore(singleDay.day)) {
 
     setTemp(singleDay.day, target, false);
-    staticMode.value = undefined;
+    selectMode.value = undefined;
 
   }
 
@@ -1124,7 +1093,7 @@ function selectTime (number: number, type: 'hours' | 'minutes' | 'seconds', targ
 
 function updateHover (day?: dayjs.Dayjs) {
 
-  if(!staticMode.value) return;
+  if(!selectMode.value) return;
 
   hoverDate.value = day;
   updateUseFromTo();
