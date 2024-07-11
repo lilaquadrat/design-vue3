@@ -399,6 +399,7 @@ const calculateOptionsStyle = () => {
     }
   }
 
+
   .trigger {
     display: grid;
     position: relative;
@@ -435,6 +436,8 @@ const calculateOptionsStyle = () => {
     }
 
     span {
+
+    
       display: grid;
 
       width: 20px;
@@ -488,6 +491,7 @@ const calculateOptionsStyle = () => {
 
   }
 
+
   &.left {
 
     .trigger {
@@ -525,7 +529,7 @@ const calculateOptionsStyle = () => {
     background-color: @white;
 
     @media @desktop {
-      background-color: @white;
+       background-color: @white;
     }
   }
 
