@@ -15,7 +15,6 @@ const props = defineProps<ModuleBaseProps & {
     map: Iframemap;
     links?: LinkListWithTitle
     list?: ListWithTitle
-
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') })
@@ -36,8 +35,8 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
     .modulePadding('none');
     max-width: @moduleWidth_M;
     margin: auto;
-
     display: grid;
+    .multi(margin-bottom, 8);
 
     .text-container {
         .multi(padding-top, 8);
@@ -46,23 +45,23 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
     @media @desktop {
         grid-template-columns: 1fr 1fr;
         gap: 40px;
-    }
 
+        .text-container {
+        .multi(padding-top, 0);
+    }
+    }
 
 
     .link-container,
     .list-container {
-        padding: 20px 0;
+        .multi(padding-top, 5)
+
     }
 
     &.bright {
         .iframe-container {
-            :deep(.lila-textblock) {
-
-                h1,
-                h2,
-                h3,
-                p {
+            :deep(.lila-textblock)  {
+                h1,h2,h3,p  {
                     color: @white
                 }
             }
