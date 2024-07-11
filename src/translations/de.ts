@@ -130,4 +130,9 @@ export default {
   'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen',
   'event-until'                                                                                           : '%s bis %s Uhr',
   'event-short'                                                                                           : '%s bis %s',
+  'datepicker-range-days_singular'                                                                        : '%s Tag',
+  'datepicker-range-days_plural'                                                                          : '%s Tage',
+  'datepicker-predefined-now'                                                                             : 'jetzt',
+  'datepicker-select-button'                                                                              : 'Datum auswählen',
+  'datepicker-select-time-button'                                                                         : 'Zeit auswählen'
 };

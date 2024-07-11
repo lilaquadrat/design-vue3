@@ -22,7 +22,6 @@ const removeItems = computed(() => ({
   allergens: props.categories.find(single => single)
 }));
 
-
 </script>
 <template>
   <section :id="id" ref="element" :class="[variant, inviewState]" class="lila-menu-module lila-module">
@@ -47,8 +46,7 @@ const removeItems = computed(() => ({
     <section class="allegene-container" :variant="removeItems">
       <lila-menu-allergens-partial /> 
     </section>
-
-
+    
   </section>
 </template>
 <style lang="less" scoped>
@@ -92,4 +90,5 @@ const removeItems = computed(() => ({
     gap: 140px;
   }
 }
+
 </style>

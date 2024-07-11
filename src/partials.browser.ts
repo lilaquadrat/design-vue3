@@ -166,5 +166,9 @@ export default [
   {
     name     : 'location',
     component: () => import('@/components/partials/location.partial.vue'),
-  }
+  }, 
+  {
+    name     : 'datepicker',
+    component: () => import('@/components/partials/datepicker.partial.vue'),
+  } 
 ]

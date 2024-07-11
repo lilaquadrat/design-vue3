@@ -15,7 +15,8 @@
     "preview": "vite",
     "type-check": "vue-tsc --build --force",
     "cli": "node node_modules/@lilaquadrat/cli/lib/src/index.js",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .eslintignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .eslintignore",
+    "lint:css": "stylelint \"src/**/*.{vue,less}\" --fix"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.1.3",
@@ -29,19 +30,19 @@
     "pinia": "^2.1.7",
     "uuid": "^9.0.1",
     "vite-tsconfig-paths": "^4.3.2",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@lilaquadrat/cli": "^0.9.8",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node18": "^18.2.4",
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.14.6",
     "@types/object-path": "^0.11.4",
     "@types/uuid": "^9",
     "@types/vue": "^2.0.0",
     "@types/youtube": "^0.0.50",
-    "@vitejs/plugin-vue": "^5.0.3",
+    "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.0",
     "eslint": "^8",
@@ -53,13 +54,13 @@
     "prettier-eslint": "^16.2.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "serve": "^14.2.3",
-    "stylelint": "^16.5.0",
+    "stylelint": "^16.6.1",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-recommended": "^14.0.0",
+    "stylelint-config-recommended": "^14.0.1",
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-order": "^6.0.4",
     "typescript": "~5.4.5",
-    "vite": "^5.2.11",
-    "vue-tsc": "^2.0.19"
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.21"
   }
 }

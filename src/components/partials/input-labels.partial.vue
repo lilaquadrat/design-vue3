@@ -8,7 +8,7 @@ defineProps<{
     error?: boolean;
   }>();
   
-const slotUsed = computed(() => !!useSlots().default);
+const slotUsed = computed(() => !!useSlots().default?.length);
   
 </script>
 <template>

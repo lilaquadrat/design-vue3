@@ -1,7 +1,9 @@
 <template>
+  <Teleport to="body">
     <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="checkClose" @click="checkClose">
       <slot />
     </section>
+  </Teleport>
 </template>
 <script setup lang="ts">
 import useMainStore from '@/stores/main.store';
@@ -16,7 +18,8 @@ const props = defineProps<{
   inactive?: boolean
 }>();
 const emit = defineEmits<{
-    (e: string): void
+    (e: 'mounted'): void
+    (e: 'close'): void
 }>();
 const backgroundMode = computed(() => props.background || 'mobile');
 const customIndex = computed(() => props.index ? `index${props.index}` : false);
