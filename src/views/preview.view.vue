@@ -33,6 +33,9 @@ import menu from './viewData/menu';
 import event from './viewData/event';
 import story from './viewData/story';
 import location from './viewData/location'
+import partialsPreview from './viewData/partials-preview';
+import datepicker from './viewData/datepicker';
+import type Textblock from '@/interfaces/textblock.interface';
 
 const modules: Record<string, Partial<Content>> = {
   emotion,
@@ -62,6 +65,9 @@ const modules: Record<string, Partial<Content>> = {
   story, 
   location
 };
+const partials: Record<string, {settings?: {title?: string, description?: string}, partials: {textblock?: Textblock, props: Record<string, unknown>}[]}> = {
+  datepicker
+}
 const route = useRoute();
 const store = useMainStore();
 
@@ -69,6 +75,7 @@ function getBaseContent () {
 
   const baseContent = hardCopy(preview);
   const elements: Object[] = [];
+  const partialsElements: Object[] = [];
 
   Object.keys(modules).sort((a, b) => a.localeCompare(b)).forEach((single) => {
 
@@ -86,6 +93,19 @@ function getBaseContent () {
 
   });
 
+  Object.keys(partials).sort((a, b) => a.localeCompare(b)).forEach((single) => {
+
+    partialsElements.push({
+      link: {
+        link: `/partials/${single}`
+      },
+      textblock: {
+        headline: single,
+      }
+    })
+
+  });
+
   baseContent.modules.push({
     uuid   : '9a081157-eaf8-419d-a534-244ad69d3012',
     type   : 'picturegroup-module',
@@ -98,8 +118,21 @@ function getBaseContent () {
     textblock: {
       headline: 'Explore the Modules'
     }
-  }
-  );
+  });
+
+  baseContent.modules.push({
+    uuid   : '9a081157-eaf8-419d-a534-244ad69d3013',
+    type   : 'picturegroup-module',
+    variant: [
+      'fourColumns',
+      'cards'
+    ],
+    elements: partialsElements,
+
+    textblock: {
+      headline: 'Explore the Partials'
+    }
+  });
 
   return baseContent;
 
@@ -109,7 +142,32 @@ store.setConfiguration({ preloadImages: true })
 
 const contentMerged = computed(() => {
 
-  const content = modules[route.params.pathMatch as keyof typeof modules];
+  let content: Partial<Content>;
+
+  if(route.params.pathMatch?.includes('partials')) {
+
+    const partialName = route.params.pathMatch[1];
+    const partialData = partials[partialName];
+
+    content = hardCopy(partialsPreview);
+    content.modules?.push({
+      type    : 'text-module',
+      headline: partialData.settings?.title,
+      subline : partialData.settings?.description,
+      variant : []
+    });
+
+    content.modules?.push({
+      type       : 'partials-preview-module',
+      partial    : partialName,
+      partialData: partialData.partials,
+    });
+
+  } else {
+
+    content = modules[route.params.pathMatch as keyof typeof modules];
+    
+  }
 
   if (!content) return prepareContent(getBaseContent());
   return prepareContent(content);

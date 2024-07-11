@@ -1,4 +1,3 @@
-import type Link from './link.interface';
 import type LinkListWithTitle from './LinkListWithTitle.interface';
 
 // export default interface Sitemap {

@@ -3,6 +3,12 @@ export default
   revision: 2,
   modules : [
     {
+      name             : 'partials-preview',
+      variants         : [],
+      availableInEditor: false,
+      component        : () => import('@/components/modules/partials-preview.module.vue'),
+    },
+    {
       name             : 'content',
       variants         : [],
       availableInEditor: false,

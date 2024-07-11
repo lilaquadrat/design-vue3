@@ -5,8 +5,8 @@
 </template>
 <script setup lang="ts">
 defineProps<{
-  gap: boolean;
-  center: boolean;
+  center?: boolean;
+  gap?: boolean;
 }>();
 
 </script>
@@ -18,7 +18,6 @@ defineProps<{
   gap: 10px;
 
   justify-content: end;
-  flex-direction: row-reverse;
   flex-wrap: wrap;
 
   &.gap {

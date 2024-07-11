@@ -311,6 +311,7 @@ const confirm = (event: MouseEvent): void => {
   &:not(.icon) {
 
     :deep(.lila-icons-partial) {
+      width: 35px;
       .trans(opacity);
     }
 

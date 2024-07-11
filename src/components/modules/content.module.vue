@@ -95,6 +95,6 @@ function handleEvents (event: string) {
       gap: @rowGapContent;
     }
   }
-
+  
 }
 </style>

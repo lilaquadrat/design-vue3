@@ -49,14 +49,13 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
         .text-container {
         .multi(padding-top, 0);
     }
-
     }
-
 
 
     .link-container,
     .list-container {
         .multi(padding-top, 5)
+
     }
 
     &.bright {
