@@ -13,6 +13,137 @@ const content: Content = {
   modules: [
     {
       type     : 'picturegroup-module',
+      variant  : ['fivesameSizedInColumn', 'fit'],
+      textblock: {
+        headline: 'five same sized Images in a Column with fit',
+        intro   : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu felis bibendum ut tristique et egestas quis. Nisi est sit amet facilisis magna.'
+      },
+      elements: [
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/raphael-lopes-zqgvyyqdvs4-unsplash1.png',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/blackwoman.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/arno-senoner-_th-tagnriy-unsplash2.png',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/space-galaxy-universe-space-art-wallpaper-preview.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/space-galaxy-universe-space-art-wallpaper-preview.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/rectangle2.png',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/women1.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+        { 
+          picture: {
+            source   : [],
+            alt      : 'IMAGE ALT',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
+            copyright: '© lilaquadrat',
+          },
+        },
+      ],
+    },
+    
+    {
+      type     : 'picturegroup-module',
       variant  : ['cards'],
       textblock: {
         headline: 'Picturegroup: fourColumns',
@@ -24,23 +155,8 @@ const content: Content = {
             source   : [],
             alt      : 'IMAGE ALT',
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_pistachio-crusted-sea-bream-and-smashed-potatoes-8f3bb02b-d24d4b79.jpg',
-            copyright: '© lilaquadrat',
+            // copyright: '© lilaquadrat',
           },
-          textblock: {
-            headline: 'Picturegroup: fourColumns',
-            text    : ['Lorem ipsum dolor sit amet, consectetur adipis.']
-          },
-          links: {
-            value: [
-              {
-                text: 'more details',
-                link: '/test'
-              }
-            ]
-          },
-          link: {
-            link: '/test'
-          }
         },
         { 
           picture: {
@@ -49,21 +165,6 @@ const content: Content = {
             src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/untouched_r1.jpg',
             copyright: '© lilaquadrat',
           },
-          textblock: {
-            headline: 'consectetur adipiscing',
-            text    : ['etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.']
-          },
-          links: {
-            value: [
-              {
-                text: 'more details',
-                link: '/test'
-              }
-            ]
-          },
-          link: {
-            link: '/test'
-          }
         },
         { 
           picture: {

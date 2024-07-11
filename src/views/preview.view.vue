@@ -32,6 +32,7 @@ import emotion from './viewData/emotion';
 import menu from './viewData/menu';
 import event from './viewData/event';
 import story from './viewData/story';
+import location from './viewData/location'
 import partialsPreview from './viewData/partials-preview';
 import datepicker from './viewData/datepicker';
 import type Textblock from '@/interfaces/textblock.interface';
@@ -61,7 +62,8 @@ const modules: Record<string, Partial<Content>> = {
   timeline,
   eventslist,
   event,
-  story,
+  story, 
+  location
 };
 const partials: Record<string, {settings?: {title?: string, description?: string}, partials: {textblock?: Textblock, props: Record<string, unknown>}[]}> = {
   datepicker

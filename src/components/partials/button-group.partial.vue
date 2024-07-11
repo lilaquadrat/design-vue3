@@ -1,10 +1,11 @@
 <template>
-  <section :class="{gap:gap}" class="lila-button-group">
+  <section :class="{gap:gap, center: center }" class="lila-button-group">
     <slot></slot>
   </section>
 </template>
 <script setup lang="ts">
 defineProps<{
+  center?: boolean;
   gap?: boolean;
 }>();
 
@@ -21,6 +22,10 @@ defineProps<{
 
   &.gap {
     gap: 10px 20px;
+  }
+
+  &.center {
+    justify-content: center;
   }
 
 }

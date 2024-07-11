@@ -3,7 +3,7 @@ import type MenuCategoryElement from '@/interfaces/MenuCategory.interface';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type Textblock from '@/interfaces/textblock.interface';
 import { useInview } from '@/plugins/inview';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, ref } from 'vue';
 import type MenuItemElement from '@/interfaces/MenuItem.interface';
 
 defineOptions({ inheritAttrs: false });
@@ -46,7 +46,7 @@ const removeItems = computed(() => ({
     <section class="allegene-container" :variant="removeItems">
       <lila-menu-allergens-partial /> 
     </section>
-
+    
   </section>
 </template>
 <style lang="less" scoped>

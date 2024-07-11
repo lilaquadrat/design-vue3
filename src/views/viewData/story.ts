@@ -52,10 +52,10 @@ const content: Content = {
         },
         {
           media: {
-            type     : 'image',
+            type     : 'video',
             source   : [],
             alt      : 'IMAGE ALT',
-            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/beach-ai.jpeg',
+            src      : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/singingwoman.mp4',
             animation: 'topToBottom',
             copyright: '© lilaquadrat',
           },

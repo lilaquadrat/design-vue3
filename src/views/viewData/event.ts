@@ -18,7 +18,7 @@ const content: Content = {
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
       location   : 'Essener Str. 100, 04358 Leipzig',
-      description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+      description: 'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
       start      : dayjs().add(4, 'hours'),
       end        : dayjs(),
       textblock  : {
@@ -57,7 +57,7 @@ const content: Content = {
       artist     : 'Berliner Ensemble',
       name       : 'Macy Gray and The California Jet Club',
       location   : '',
-      description: 'gal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
+      description: 'Egal, was auf der To-Do-Liste steht: Auf den Support ist Verlass. Ein persönlicher Ansprechpartner agiert bei jeder Anfrage nach definierten Regeln, hält sich an Absprachen und kümmert sich innerhalb fixierter Zeiten um eine Lösung.',
       start      : dayjs().add(4, 'hours'),
       end        : dayjs(),
       textblock  : {
