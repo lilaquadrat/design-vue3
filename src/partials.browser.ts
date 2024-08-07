@@ -164,7 +164,11 @@ export default [
     component: () => import('@/components/partials/video-controls-story.partial.vue'),
   },
   {
+    name     : 'location',
+    component: () => import('@/components/partials/location.partial.vue'),
+  }, 
+  {
     name     : 'datepicker',
     component: () => import('@/components/partials/datepicker.partial.vue'),
-  }
+  } 
 ]

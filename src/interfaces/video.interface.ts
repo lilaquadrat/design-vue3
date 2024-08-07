@@ -4,7 +4,7 @@ export interface VideoSource {
 }
 
 export default interface Video {
-  [x: string]: any
+
 
   src: string
 

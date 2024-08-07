@@ -507,7 +507,7 @@ defineExpose({
 
     &.ready {
       video {
-        position: relative;
+        position: relative; 
       }
     }
   }
