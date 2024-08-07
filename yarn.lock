@@ -549,11 +549,12 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz#d7c6e6755c78567a951e04ab52ef0fd26de59f32"
   integrity sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==
 
-"@lilaquadrat/cli@^0.9.8":
-  version "0.9.8"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/cli/-/cli-0.9.8.tgz#6e96aaf65c0d2d029a3bce5312fe0b15173a3a87"
-  integrity sha512-Cy1OC9cLBY6+hZnmvokjpCFlB62TEX0MySofnOI+ZchP4KdGNmlqeIWVgxmzoAcMW+oA23Wdd4RX8MkO6LrPaw==
+"@lilaquadrat/cli@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/cli/-/cli-0.10.1.tgz#c0cca96cf6c692d943e78a7dc93e41d15637b9c3"
+  integrity sha512-GB+EzRnacZOpvp4vRf3MccqAvJv4Nc+mAjO9bS1UUDEveVRPc663EzhLSW9VsTq1Si38txZpGat6EZ2OVQPPCQ==
   dependencies:
+    "@lilaquadrat/interfaces" "^1.8.0"
     archiver "^5.3.1"
     axios "^1.3.6"
     chalk "^4.1.2"
@@ -574,7 +575,7 @@
   dependencies:
     typescript "^5.3.3"
 
-"@lilaquadrat/interfaces@^1.12.0":
+"@lilaquadrat/interfaces@^1.12.0", "@lilaquadrat/interfaces@^1.8.0":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.12.0.tgz#8526b2158278910b9b3dac32f99757f348983c6a"
   integrity sha512-oKT/liOwUpdxUfu8PjD937hK9DKDj0/T4WMyAhwEHawifhtXrdVtXqw+qXqzFHzYeA5JGCkLs0j0UumMuY3NzA==
@@ -5311,7 +5312,6 @@ wrap-ansi@^6.0.1:
     strip-ansi "^6.0.0"
 
 wrap-ansi@^7.0.0:
-  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
