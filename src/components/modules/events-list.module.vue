@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, defineProps, watch, onServerPrefetch } from 'vue';
+import { onBeforeMount, ref, watch, onServerPrefetch } from 'vue';
 import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
@@ -25,7 +25,7 @@ watch(() => props.elements, () => setElements(props.elements), {deep: true, imme
 //  * sorts all events by the same day and sorts its 
 //  * containing SingleEventElement by their starting time 
 //  */
-function setElements(elements: any[]) {
+function setElements (elements: any[]) {
 
   const safeElements = hardCopy(elements);
   const target: Record<string, any> = {};

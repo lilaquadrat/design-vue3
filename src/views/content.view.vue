@@ -48,16 +48,16 @@ const hint = computed(() => {
 function getStoreContent () {
 
   const storeContent = mainStore.data;
-
+  
   if(!storeContent) return;
-
+  
   data.value = {
     data  : storeContent,
     status: 200,
   };
-
+  
   loading.value = 200;
-
+  
   updateContext();
 
   if(data.value.data) {

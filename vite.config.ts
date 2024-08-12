@@ -22,7 +22,7 @@ export default defineConfig((settings) => {
       vue(),
       visualizer()
     ],
-    base : config.base || '/',
+    base : './',
     build: {
       cssCodeSplit : false,
       cssMinify    : isProduction,
@@ -33,11 +33,13 @@ export default defineConfig((settings) => {
           dir           : 'dist/app',
           assetFileNames: (assetInfo) => {
             if (assetInfo.name?.endsWith('woff') || assetInfo.name?.endsWith('png')) {
-              return 'assets/[name][extname]';
+              return '[name][extname]';
             }
   
-            return 'assets/[name]-[hash][extname]';
+            return '[name]-[hash][extname]';
           },
+          chunkFileNames: '[name]-[hash].js',
+          entryFileNames: '[name]-[hash].js',
         }
       }
     },
@@ -77,12 +79,13 @@ export default defineConfig((settings) => {
           ...viteConfig.build?.rollupOptions?.output,
           inlineDynamicImports: true,
           dir                 : 'dist/server',
+          entryFileNames      : '[name].js',
         }
       },
       ssrManifest: true,
     }
     viteConfig.ssr = {
-      target    : 'node',
+      target    : 'webworker',
       noExternal: true,
       external  : ['node:stream', 'axios', 'http', 'https', 'crypto', 'path', 'highlight.js'],
     }

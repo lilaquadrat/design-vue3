@@ -42,12 +42,12 @@ export async function render (url: string, context: any, contextData: Content[],
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const initialState = JSON.stringify(pinia.state.value).replace(/</g, '\\u003c');
-  const preloadLinks = renderPreloadLinks(ctx.modules as Set<string>, manifest);
+  const preloadLinks = renderPreloadLinks(ctx.modules as Set<string>, manifest, context.cdn);
 
   return { html, preloadLinks, initialState };
 }
 
-function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>) {
+function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>, cdn: string) {
   let links = '';
   const seen = new Set();
 
@@ -57,7 +57,9 @@ function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, s
 
     if (files) {
 
-      files.forEach((file: string) => {
+      files.forEach((baseFile: string) => {
+
+        const file = `${cdn}${baseFile}`;
 
         if (!seen.has(file)) {
           seen.add(file);

@@ -86,6 +86,12 @@ export const useMainStore = defineStore('main', () => {
     const sdk = new StudioSDK(apiConfig.value);
     const targetWithType = sdk[type === 'members' ? 'members' : 'public'];
 
+    if(params.filename && data.value?.settings.filename?.includes(params.filename)) {
+
+      return hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
+
+    }
+
     if (params.id && data.value?.id === params.id) {
 
       return hardCopy<SDKResponse<BasicData<Content>>>({ data: data.value, status: 200 });
