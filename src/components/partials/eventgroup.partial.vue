@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineOptions, ref, onBeforeMount, watch, onServerPrefetch } from 'vue';
+import { ref, onBeforeMount, watch, onServerPrefetch } from 'vue';
 import dayjs from 'dayjs';
 import type Event from '../../interfaces/Event.interface';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
@@ -188,7 +188,6 @@ function setElements () {
       justify-content: start;
       grid-template-columns: 1fr;
       break-inside: avoid;
-
 
       .single-event {
         display: grid;

@@ -20,6 +20,7 @@ export const useMainStore = defineStore('main', () => {
   const config = ref<FrontendConfig>();
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
   const customModules = ref<CustomModule[]>();
+  const target = ref<'browser'|'mail'>();
 
   function setData (value: BasicData<Content>) {
 
@@ -162,7 +163,8 @@ export const useMainStore = defineStore('main', () => {
     config,
     staticData,
     apiConfig,
-    customModules
+    customModules,
+    target
   }
 
 });

@@ -1,22 +1,27 @@
+import ListPartialMail from '@/components/partials/list.partial.mail.vue';
+import LinkPartialMail from './components/partials/link.partial.mail.vue';
+import PicturePartialMail from '@/components/partials/picture.partial.mail.vue';
+import TextblockPartialMail from '@/components/partials/textblock.partial.mail.vue';
+
 export default [
   {
     name     : 'link',
-    component: () => import('@/components/partials/link.partial.mail.vue'),
+    component: LinkPartialMail
   },
   {
     name     : 'list',
-    component: () => import('@/components/partials/list.partial.mail.vue'),
+    component: ListPartialMail
   },
   {
     name     : 'picture',
-    component: () => import('@/components/partials/picture.partial.vue'),
+    component: PicturePartialMail
   },
   {
     name     : 'textblock',
-    component: () => import('@/components/partials/textblock.partial.mail.vue'),
+    component: TextblockPartialMail
   },
   {
     name     : 'picture',
-    component: () => import('@/components/partials/picture.partial.mail.vue'),
+    component: PicturePartialMail
   },
 ]

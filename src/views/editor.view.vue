@@ -6,8 +6,9 @@ import { type Content, type ContentWithPositions, type EditorActiveModule, type 
 import { onBeforeUnmount } from 'vue';
 import { watch } from 'vue';
 import type { AppEditorConfiguration } from '@lilaquadrat/interfaces';
-import { loadViaDeclaration } from '@/mixins/loadComponents';
+import { loadViaDeclarationSync } from '@/mixins/loadComponents';
 import useContentStore from '@/stores/content.store';
+import useMainStore from '@/stores/main.store';
 
 const currentInstance = getCurrentInstance();
 const editorStore = useEditorStore();
@@ -19,39 +20,32 @@ const live = ref<boolean>(false);
 const contentCache = ref<Content['modules']>();
 const settingsCache = ref<AppEditorConfiguration>();
 const active = ref<EditorActiveModule>();
-const targetCache = ref<'browser'|'mail'>();
+const mainStore = useMainStore();
+const init = ref<boolean>(false);
 
 watch(siteSettings, () => {
+
   /**
   * if the target type changes we need to update the available modules
   */
   const useTarget = siteSettings.value?.target || 'browser';
 
-  if(useTarget !== targetCache.value) {
+  if(useTarget !== mainStore.target) {
 
     const target = siteSettings.value?.target === 'browser' || !siteSettings.value?.target 
       ? 'browser' 
       : siteSettings.value?.target
-    const modules = target === 'browser'
-      ? editorStore.availableModulesWithRevision 
-      : editorStore.availableModulesWithRevisionMail
 
-    window.parent.postMessage(
-      {
-        type: 'studio-design-modules-with-revision',
-        data: hardCopy(modules),
-      },
-      '*',
-    );
+    postModules();
     
     if (currentInstance) {
 
-      loadViaDeclaration(target === 'browser' ? editorStore.modulesBrowser : editorStore.modulesMail, 'lila', 'module', currentInstance.appContext.app);
-      loadViaDeclaration(target === 'browser' ? editorStore.partialsBrowser : editorStore.partialsMail, 'lila', 'partial', currentInstance.appContext.app);
+      loadViaDeclarationSync(target === 'browser' ? editorStore.modulesBrowser : editorStore.modulesMail, 'lila', 'module', currentInstance.appContext.app);
+      loadViaDeclarationSync(target === 'browser' ? editorStore.partialsBrowser : editorStore.partialsMail, 'lila', 'partial', currentInstance.appContext.app);
 
     }
 
-    targetCache.value = useTarget;
+    mainStore.target = useTarget;
 
   }
     
@@ -81,6 +75,14 @@ function messageHandler (message: StudioIframeMessage) {
     console.groupEnd();
 
     siteSettings.value = message.data.data;
+
+    if(!init.value) {
+
+      postModules();
+      init.value = true;
+
+    }
+
     updateContent();
     updateContext();
 
@@ -136,6 +138,25 @@ function updateContent () {
   content.value = prepareContent({ modules: contentCache.value, ...siteSettings.value });
 }
 
+function postModules () {
+
+  const modules = mainStore.target === 'browser'
+    ? editorStore.availableModulesWithRevision 
+    : editorStore.availableModulesWithRevisionMail
+
+  window.parent.postMessage(
+    {
+      type: 'studio-design-modules-with-revision',
+      data: hardCopy(modules),
+    },
+    '*',
+  );
+
+}
+
+/**
+ * sets sitetitle and description
+ */
 function updateContext () {
 
   contentStore.setContext({

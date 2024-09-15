@@ -5,9 +5,10 @@ import { basename } from 'path';
 import type { Content, Customers } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import useContentStore from '@/stores/content.store';
+import { dynamicRoutes } from './routes';
 
 export async function render (url: string, context: any, contextData: Content[], recipientData: Customers, manifest: Record<string, string[]>) {
-  const { app, router, pinia } = getAppInstance(context);
+  const { app, router, pinia } = getAppInstance(context, dynamicRoutes, false);
 
   await router.push(url);
   await router.isReady();
@@ -15,7 +16,8 @@ export async function render (url: string, context: any, contextData: Content[],
   const mainStore = useMainStore();
   const contentStore = useContentStore();
 
-  mainStore.setData(context.data);
+  mainStore.data = context.data;
+  mainStore.layout = context.layout;
   
   /**
   * for pdfs all images must be preloaded
@@ -42,12 +44,12 @@ export async function render (url: string, context: any, contextData: Content[],
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const initialState = JSON.stringify(pinia.state.value).replace(/</g, '\\u003c');
-  const preloadLinks = renderPreloadLinks(ctx.modules as Set<string>, manifest, context.cdn);
+  const preloadLinks = renderPreloadLinks(ctx.modules as Set<string>, manifest);
 
   return { html, preloadLinks, initialState };
 }
 
-function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>, cdn: string) {
+function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, string[]>) {
   let links = '';
   const seen = new Set();
 
@@ -57,9 +59,7 @@ function renderPreloadLinks (modulesSet: Set<string>, manifest: Record<string, s
 
     if (files) {
 
-      files.forEach((baseFile: string) => {
-
-        const file = `${cdn}${baseFile}`;
+      files.forEach((file: string) => {
 
         if (!seen.has(file)) {
           seen.add(file);

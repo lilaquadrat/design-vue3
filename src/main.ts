@@ -1,9 +1,8 @@
-import { createApp } from 'vue';
+import { createApp, createSSRApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import { dynamicRoutes } from './routes';
 import createRouter from '@/mixins/createRouter';
-import { loadViaDeclaration } from '@/mixins/loadComponents';
+import { loadViaDeclarationSync } from '@/mixins/loadComponents';
 import translations from '@/plugins/translations';
 import resizePlugin from '@/plugins/resize';
 import de from '@/translations/de';
@@ -17,27 +16,35 @@ import modules from './modules.browser';
 import partials from './partials.browser';
 import modulesMail from './modules.mail';
 import partialsMail from './partials.mail';
+import type { RouteRecordRaw } from 'vue-router';
+import useMainStore from './stores/main.store';
 
-export function getAppInstance (context: any) {
+export function getAppInstance (context: any, routes: readonly RouteRecordRaw[], isSSR: boolean) {
 
-  const app = createApp(App);
+  const app = isSSR
+    ? createSSRApp(App)
+    : createApp(App);
   const pinia = createPinia();
 
   app.use(pinia);
 
+  const mainStore = useMainStore();
+
   if(context.data.target === 'mail') {
 
-    loadViaDeclaration(modulesMail.modules, 'lila', 'module', app);
-    loadViaDeclaration(partialsMail, 'lila', 'partial', app);
+    loadViaDeclarationSync(modulesMail.modules, 'lila', 'module', app);
+    loadViaDeclarationSync(partialsMail, 'lila', 'partial', app);
 
   } else {
 
-    loadViaDeclaration(modules.modules, 'lila', 'module', app);
-    loadViaDeclaration(partials, 'lila', 'partial', app);
+    loadViaDeclarationSync(modules.modules, 'lila', 'module', app);
+    loadViaDeclarationSync(partials, 'lila', 'partial', app);
 
   }
 
-  const router = createRouter(dynamicRoutes);
+  mainStore.target = context.data.target || 'browser';
+
+  const router = createRouter(routes);
 
   app.use(router);
 

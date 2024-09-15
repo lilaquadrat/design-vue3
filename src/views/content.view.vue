@@ -48,6 +48,7 @@ const hint = computed(() => {
 function getStoreContent () {
 
   const storeContent = mainStore.data;
+  const storeLayout = mainStore.layout;
   
   if(!storeContent) return;
   
@@ -62,7 +63,7 @@ function getStoreContent () {
 
   if(data.value.data) {
 
-    dataMerged.value = mergeContent(data.value.data);
+    dataMerged.value = mergeContent(data.value.data, storeLayout);
 
   } else {
 
@@ -159,7 +160,7 @@ async function getContent () {
 
 }
 
-function mergeContent (baseContent: Partial<BasicData<Content>>) {
+function mergeContent (baseContent: Partial<BasicData<Content>>, layout?: Content) {
 
   if(baseContent) {
     
@@ -171,7 +172,7 @@ function mergeContent (baseContent: Partial<BasicData<Content>>) {
 
     }
 
-    return prepareContent(safeData);
+    return prepareContent(safeData, layout);
 
   }
 

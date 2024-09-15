@@ -52,26 +52,27 @@ const hasText = computed(() => !!props.textblock);
 </script>
 <template>
   <table :id="id" class="callToAction-module" ref="element" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; width: 100%;">
-    <tr v-if="hasText">
-      <td>
-        <lila-textblock-partial v-bind="textblock" :variant="['center']" />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align: center; width: 100%; padding: 40px;">
-        <lila-link-partial v-bind="link" />
-      </td>
-    </tr>
-    <tr v-if="hasList">
-      <td style="padding-bottom: 40px">
-        <lila-list-partial v-bind="list" mode="list" :variant="listVariant"></lila-list-partial>
-      </td>
-    </tr>
-    <tr v-if="hasLinks">
-      <td style="padding-bottom: 40px">
-        <lila-list-partial v-bind="links" mode="links" :variant="linkVariant"></lila-list-partial>
-      </td>
-    </tr>
-    
+    <tbody>
+      <tr v-if="hasText">
+        <td>
+          <lila-textblock-partial v-bind="textblock" :variant="['center']" />
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center; width: 100%; padding: 40px;">
+          <lila-link-partial v-bind="link" />
+        </td>
+      </tr>
+      <tr v-if="hasList">
+        <td style="padding-bottom: 40px">
+          <lila-list-partial v-bind="list" mode="list" :variant="listVariant"></lila-list-partial>
+        </td>
+      </tr>
+      <tr v-if="hasLinks">
+        <td style="padding-bottom: 40px">
+          <lila-list-partial v-bind="links" mode="links" :variant="linkVariant"></lila-list-partial>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>

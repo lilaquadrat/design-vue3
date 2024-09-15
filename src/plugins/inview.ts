@@ -6,6 +6,8 @@ class Inview {
 
   timeout!: NodeJS.Timeout | undefined;
 
+  lastScrollingAdjustment = 0;
+
   debounceTime: number = 50;
 
   isTop = ref<boolean>(false);
@@ -18,6 +20,12 @@ class Inview {
 
   scrollDirection = ref<'up' | 'down'>();
 
+  parentElement = ref<HTMLElement>();
+
+  lastScrollY = 0;
+  lastTimestamp = 0;
+  scrollVelocity = 0;
+
   /**
   * if true we fire an inital scroll event to indicate that scrolling has started without waiting for the debounce
   */
@@ -26,9 +34,44 @@ class Inview {
   safeWindow = computed(() => {
 
     if (typeof window === 'undefined') return null;
+    if (this.parentElement.value) return this.parentElement.value;
     return window;
 
   });
+
+  scrollY () {
+
+    if (this.safeWindow.value instanceof Window) {
+
+      return this.safeWindow.value.scrollY;
+
+    }
+
+    if (this.parentElement.value) {
+
+      return this.parentElement.value.scrollTop;
+    }
+
+    return 0
+
+  }
+
+  height () {
+
+    if (this.safeWindow.value instanceof Window) {
+
+      return this.safeWindow.value.outerHeight;
+
+    }
+
+    if (this.parentElement.value) {
+
+      return this.parentElement.value.offsetHeight;
+    }
+
+    return 0
+    
+  }
 
   constructor () {
 
@@ -47,9 +90,28 @@ class Inview {
 
   }
 
+  setParentElement (element: HTMLElement) {
+
+    this.parentElement.value = element;
+    this.addScrollListener(element);
+
+  }
+
   addScrollListener (element: Element) {
 
     element.addEventListener('scroll', () => {
+
+      const currentTimestamp = performance.now();
+      const deltaY = this.scrollY() - this.lastScrollY;
+      const deltaTime = currentTimestamp - this.lastTimestamp;
+  
+      // Calculate velocity (pixels per millisecond)
+      this.scrollVelocity = Math.abs(deltaY / deltaTime);
+  
+      this.lastScrollY = this.scrollY();
+      this.lastTimestamp = currentTimestamp;
+  
+      // console.log(`Scroll Velocity: ${this.scrollVelocity.toFixed(2)} pixels/ms`);
 
       this.debounce();
 
@@ -59,13 +121,13 @@ class Inview {
 
   trigger (isStart?: boolean) {
 
-    if(!this.safeWindow.value) return;
+    if (!this.safeWindow.value) return;
 
     this.checkIsTop();
-    this.scrollDirection.value = this.scrolled.value > this.safeWindow.value?.scrollY
+    this.scrollDirection.value = this.scrolled.value > this.scrollY()
       ? 'down'
       : 'up'
-    this.scrolled.value = this.safeWindow.value?.scrollY;
+    this.scrolled.value = this.scrollY();
 
     this.safeWindow.value?.dispatchEvent(this.scrolledEvent);
     if (!isStart) this.triggerStart.value = true;
@@ -74,9 +136,9 @@ class Inview {
 
   checkIsTop () {
 
-    if(!this.safeWindow.value) return;
+    if (!this.safeWindow.value) return;
 
-    this.isTop.value = this.safeWindow.value?.scrollY <= 0
+    this.isTop.value = this.scrollY() <= 0
 
   }
 
@@ -102,54 +164,79 @@ class Inview {
   }
 
   check (component: HTMLElement, state: Ref<string[]>, options?: { align?: boolean }) {
-
     const element = component;
-    const newState = [];
+    const newState: string[] = [];
 
     if (typeof element?.getBoundingClientRect !== 'function') return;
-    if(!this.safeWindow.value) return;
+    if (!this.safeWindow.value) return;
 
-    const viewportHeight = this.safeWindow.value?.outerHeight;
-    const height = this.safeWindow.value?.outerHeight / 2;
+    const viewportHeight = this.height();
+    const height = viewportHeight / 2;
     const rect = element.getBoundingClientRect();
-    const top = rect.top - height + 10;
-    const bottom = rect.bottom - height + 10;
-    const visibleTop = Math.max(0, rect.top);
-    const visibleBottom = Math.min(rect.bottom, viewportHeight);
-    const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+    let top = rect.top - height + 10;
+    let bottom = rect.bottom - height + 10;
+    let visibleHeight = 0;
+    let marginToTop = 0;
+
+    if (this.parentElement.value) {
+
+      const parentRect = this.parentElement.value.getBoundingClientRect();
+      // Adjust top and bottom based on parent element's top and bottom
+      const parentTop = parentRect.top;
+      const parentBottom = parentRect.bottom;
+
+      top = rect.top - parentTop - height + 10;
+      bottom = rect.bottom - parentTop - height + 10;
+
+      marginToTop = Math.abs(rect.top - parentTop);
+
+      // Adjust visibleTop and visibleBottom for parent element
+      const visibleTop = Math.max(parentTop, rect.top);
+      const visibleBottom = Math.min(parentBottom, rect.bottom);
+
+      visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+    } else {
+
+      // Original calculations if no parent element is provided
+      const visibleTop = Math.max(0, rect.top);
+      const visibleBottom = Math.min(rect.bottom, viewportHeight);
+
+      marginToTop = Math.abs(rect.top);
+
+      visibleHeight = Math.max(0, visibleBottom - visibleTop);
+
+    }
 
     if (top > 0) {
-
       newState.push('inview-after');
-
     }
 
     if (top <= 0 && bottom >= 0) {
-
       newState.push('inview-current');
-
     }
 
     if (bottom < 0) {
-
       newState.push('inview-before');
-
     }
 
-    // check if more than 30% of the element is visible
+    // Check if more than 30% of the element is visible
     if (visibleHeight / rect.height >= 0.3) {
-
       newState.push('inview-visible');
-
     }
 
-    if (state.value.includes('inview-current') && options?.align) {
-      requestAnimationFrame(() => this.adjustScrolling(element, rect.top));
+    if (newState.includes('inview-current') && options?.align) {
+
+      if(!this.lastScrollingAdjustment || Date.now() - this.lastScrollingAdjustment > 1500) {
+
+        requestAnimationFrame(() => this.adjustScrolling(element, marginToTop));
+
+      }
+
     }
 
     state.value.length = 0;
     state.value.push(...newState);
-
   }
 
   checkPreload (component: HTMLElement, state: Ref<boolean>) {
@@ -167,9 +254,11 @@ class Inview {
 
   adjustScrolling (component: HTMLElement, top: number) {
 
-    const offset = window?.outerHeight / 10;
+    const offset = this.height() / 10;
 
     if (top < offset && top > (offset * -1)) {
+
+      this.lastScrollingAdjustment = Date.now();
 
       component.scrollIntoView({
         behavior: 'smooth',

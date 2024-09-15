@@ -37,14 +37,13 @@ function loadViaDeclaration (components: { name: string, component: AsyncCompone
 
 }
 
-function loadViaDeclarationSync (components: { name: string, component: AsyncComponentLoader<Component> }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
+function loadViaDeclarationSync (components: { name: string, component: Component }[], namespace: string | undefined, type: 'module' | 'partial', app: App<Element>) {
 
   return components.map(async (single) => {
 
     const name = getName(single.name, type, namespace);
-    const component = await single.component();
 
-    app.component(name, component);
+    app.component(name, single.component);
 
   });
 

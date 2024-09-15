@@ -1,174 +1,218 @@
+import ActionNoticePartial from '@/components/partials/action-notice.partial.vue';
+import AccordionPartial from './components/partials/accordion.partial.vue';
+import AddressPartial from '@/components/partials/address.partial.vue';
+import AgreementPartial from '@/components/partials/agreement.partial.vue';
+import ButtonGroupPartial from './components/partials/button-group.partial.vue';
+import ButtonPartial from '@/components/partials/button.partial.vue';
+import CheckboxPartial from './components/partials/checkbox.partial.vue';
+import ClientOnlyPartial from '@/components/partials/client-only.partial.vue';
+import ContentContainerPartial from '@/components/partials/content-container.partial.vue';
+import ContentHeadPartial from '@/components/partials/content-head.partial.vue';
+import DescriptionPartial from './components/partials/description.partial.vue';
+import DialogPartial from '@/components/partials/dialog.partial.vue';
+import ErrorPartial from './components/partials/error.partial.vue';
+import FactPartial from './components/partials/fact.partial.vue';
+import FieldsetPartial from '@/components/partials/fieldset.partial.vue';
+import IconsPartial from './components/partials/icons.partial.vue';
+import IndicatorPartial from '@/components/partials/indicator.partial.vue';
+import InputLabelsPartial from '@/components/partials/input-labels.partial.vue';
+import InputPartial from '@/components/partials/input.partial.vue';
+import LegendPartial from './components/partials/legend.partial.vue';
+import LinkGroupPartial from '@/components/partials/link-group.partial.vue';
+import LinkPartial from '@/components/partials/link.partial.vue';
+import ListPartial from '@/components/partials/list.partial.vue';
+import MainComponentsPartial from '@/components/partials/main-components.partial.vue';
+import MediadetectionPartial from '@/components/partials/mediadetection.partial.vue';
+import MenuAllergensPartial from '@/components/partials/menu-allergens.partial.vue';
+import MenuCategoryPartial from '@/components/partials/menu-category.partial.vue';
+import MenuItemPartial from '@/components/partials/menu-item.partial.vue';
+import MenuNavigationPartial from '@/components/partials/menu-navigation.partial.vue';
+import OverlayBackgroundPartial from '@/components/partials/overlay-background.partial.vue';
+import PicturePartial from './components/partials/picture.partial.vue';
+import QuotePartial from '@/components/partials/quote.partial.vue';
+import SelectCategoryPartial from '@/components/partials/select-category.partial.vue';
+import SelectPartial from '@/components/partials/select.partial.vue';
+import TextareaPartial from '@/components/partials/textarea.partial.vue';
+import TextblockPartial from '@/components/partials/textblock.partial.vue';
+import VideoPartial from '@/components/partials/video.partial.vue';
+import EventgroupPartial from '@/components/partials/eventgroup.partial.vue';
+import StoryPartial from '@/components/partials/story.partial.vue';
+import VideoControlsStoryPartial from '@/components/partials/video-controls-story.partial.vue';
+import LocationPartial from '@/components/partials/location.partial.vue';
+import DatepickerPartial from '@/components/partials/datepicker.partial.vue';
+import HighlightPartial from '@/components/partials/highlight.partial.vue';
+
 export default [
   {
     name     : 'accordion',
-    component: () => import('@/components/partials/accordion.partial.vue'),
+    component: AccordionPartial
   },
   {
     name     : 'action-notice',
-    component: () => import('@/components/partials/action-notice.partial.vue'),
+    component: ActionNoticePartial
   },
   {
     name     : 'address',
-    component: () => import('@/components/partials/address.partial.vue'),
+    component: AddressPartial
   },
   {
     name     : 'agreement',
-    component: () => import('@/components/partials/agreement.partial.vue'),
+    component: AgreementPartial
   },
   {
     name     : 'button-group',
-    component: () => import('@/components/partials/button-group.partial.vue'),
+    component: ButtonGroupPartial
   },
   {
     name     : 'button',
-    component: () => import('@/components/partials/button.partial.vue'),
+    component: ButtonPartial
   },
   {
     name     : 'checkbox',
-    component: () => import('@/components/partials/checkbox.partial.vue'),
+    component: CheckboxPartial
   },
   {
     name     : 'client-only',
-    component: () => import('@/components/partials/client-only.partial.vue'),
+    component: ClientOnlyPartial
   },
   {
     name     : 'content-container',
-    component: () => import('@/components/partials/content-container.partial.vue'),
+    component: ContentContainerPartial
   },
   {
     name     : 'content-head',
-    component: () => import('@/components/partials/content-head.partial.vue'),
+    component: ContentHeadPartial
   },
   {
     name     : 'description',
-    component: () => import('@/components/partials/description.partial.vue'),
+    component: DescriptionPartial
   },
   {
     name     : 'dialog',
-    component: () => import('@/components/partials/dialog.partial.vue'),
+    component: DialogPartial
   },
   {
     name     : 'error',
-    component: () => import('@/components/partials/error.partial.vue'),
+    component: ErrorPartial
   },
   {
     name     : 'fact',
-    component: () => import('@/components/partials/fact.partial.vue'),
+    component: FactPartial
   },
   {
     name     : 'fieldset',
-    component: () => import('@/components/partials/fieldset.partial.vue'),
+    component: FieldsetPartial
   },
-  // {
-  //   name     : 'highlight',
-  //   component: () => import('@/components/partials/highlight.partial.vue'),
-  // },
+  {
+    name     : 'highlight',
+    component: HighlightPartial
+  },
   {
     name     : 'icons',
-    component: () => import('@/components/partials/icons.partial.vue'),
+    component: IconsPartial
   },
   {
     name     : 'indicator',
-    component: () => import('@/components/partials/indicator.partial.vue'),
+    component: IndicatorPartial
   },
   {
     name     : 'input-labels',
-    component: () => import('@/components/partials/input-labels.partial.vue'),
+    component: InputLabelsPartial
   },
   {
     name     : 'input',
-    component: () => import('@/components/partials/input.partial.vue'),
+    component: InputPartial
   },
   {
     name     : 'legend',
-    component: () => import('@/components/partials/legend.partial.vue'),
+    component: LegendPartial
   },
   {
     name     : 'link-group',
-    component: () => import('@/components/partials/link-group.partial.vue'),
+    component: LinkGroupPartial
   },
   {
     name     : 'link',
-    component: () => import('@/components/partials/link.partial.vue'),
+    component: LinkPartial
   },
   {
     name     : 'list',
-    component: () => import('@/components/partials/list.partial.vue'),
+    component: ListPartial
   },
   {
     name     : 'main-components',
-    component: () => import('@/components/partials/main-components.partial.vue'),
+    component: MainComponentsPartial
   },
   {
     name     : 'mediadetection',
-    component: () => import('@/components/partials/mediadetection.partial.vue'),
+    component: MediadetectionPartial
   },
   {
     name     : 'menu-allergens',
-    component: () => import('@/components/partials/menu-allergens.partial.vue'),
+    component: MenuAllergensPartial
   },
   {
     name     : 'menu-category',
-    component: () => import('@/components/partials/menu-category.partial.vue'),
+    component: MenuCategoryPartial
   },
   {
     name     : 'menu-item',
-    component: () => import('@/components/partials/menu-item.partial.vue'),
+    component: MenuItemPartial
   },
   {
     name     : 'menu-navigation',
-    component: () => import('@/components/partials/menu-navigation.partial.vue'),
+    component: MenuNavigationPartial
   },
   {
     name     : 'overlay-background',
-    component: () => import('@/components/partials/overlay-background.partial.vue'),
+    component: OverlayBackgroundPartial
   },
   {
     name     : 'picture',
-    component: () => import('@/components/partials/picture.partial.vue'),
+    component: PicturePartial
   },
   {
     name     : 'quote',
-    component: () => import('@/components/partials/quote.partial.vue'),
+    component: QuotePartial
   },
   {
     name     : 'select-category',
-    component: () => import('@/components/partials/select-category.partial.vue'),
+    component: SelectCategoryPartial
   },
   {
     name     : 'select',
-    component: () => import('@/components/partials/select.partial.vue'),
+    component: SelectPartial
   },
   {
     name     : 'textarea',
-    component: () => import('@/components/partials/textarea.partial.vue'),
+    component: TextareaPartial
   },
   {
     name     : 'textblock',
-    component: () => import('@/components/partials/textblock.partial.vue'),
+    component: TextblockPartial
   },
   {
     name     : 'video',
-    component: () => import('@/components/partials/video.partial.vue'),
+    component: VideoPartial
   },
   {
     name     : 'eventgroup',
-    component: () => import('@/components/partials/eventgroup.partial.vue'),
+    component: EventgroupPartial
   },
   {
     name     : 'story',
-    component: () => import('@/components/partials/story.partial.vue'),
+    component: StoryPartial
   },
   {
     name     : 'video-controls-story',
-    component: () => import('@/components/partials/video-controls-story.partial.vue'),
+    component: VideoControlsStoryPartial
   },
   {
     name     : 'location',
-    component: () => import('@/components/partials/location.partial.vue'),
+    component: LocationPartial
   }, 
   {
     name     : 'datepicker',
-    component: () => import('@/components/partials/datepicker.partial.vue'),
-  } 
+    component: DatepickerPartial
+  }, 
 ]

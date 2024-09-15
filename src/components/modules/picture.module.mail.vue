@@ -23,15 +23,17 @@ const showText = computed((): boolean => {
 </script>
 <template>
   <table :id="id" v-if="props.picture" border="0" cellspacing="0" cellpadding="0" style="padding-bottom: 40px;">
-    <tr>
-      <td>
-        <lila-picture-partial v-bind="picture" />
-      </td>
-    </tr>
-    <tr v-if="showText" class="position-container">
-      <td style="padding: 20px;">
-        <lila-textblock-partial v-bind="textblock" />
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td>
+          <lila-picture-partial v-bind="picture" />
+        </td>
+      </tr>
+      <tr v-if="showText" class="position-container">
+        <td style="padding: 20px;">
+          <lila-textblock-partial v-bind="textblock" />
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>

@@ -1,3 +1,36 @@
+import ConnectUserModule from '@/components/modules/connect-user.module.vue';
+import ContentModule from './components/modules/content.module.vue';
+import PartialsPreviewModule from './components/modules/partials-preview.module.vue';
+import ConfirmEmailModule from '@/components/modules/confirm-email.module.vue';
+import BlogIntroModule from './components/modules/blog-intro.module.vue';
+import CompareModule from '@/components/modules/compare.module.vue';
+import ContactModule from '@/components/modules/contact.module.vue';
+import CookiesModule from '@/components/modules/cookies.module.vue';
+import EmotionModule from './components/modules/emotion.module.vue';
+import FactsModule from './components/modules/facts.module.vue';
+import FaqModule from '@/components/modules/faq.module.vue';
+import FooterModule from '@/components/modules/footer.module.vue';
+import GalleryModule from './components/modules/gallery.module.vue';
+import IndexModule from './components/modules/index.module.vue';
+import MenuModule from './components/modules/menu.module.vue';
+import NavigationModule from '@/components/modules/navigation.module.vue';
+import PartialModule from '@/components/modules/partial.module.vue';
+import PictureModule from '@/components/modules/picture.module.vue';
+import PictureandtextModule from '@/components/modules/pictureandtext.module.vue';
+import PicturegroupModule from '@/components/modules/picturegroup.module.vue';
+import PricesModule from '@/components/modules/prices.module.vue';
+import PlaceholderModule from '@/components/modules/placeholder.module.vue';
+import QuoteModule from '@/components/modules/quote.module.vue';
+import TextModule from '@/components/modules/text.module.vue';
+import TrainingModule from '@/components/modules/training.module.vue';
+import VideoModule from '@/components/modules/video.module.vue';
+import TimelineModule from '@/components/modules/timeline.module.vue';
+import EventsListModule from '@/components/modules/events-list.module.vue';
+import EventModule from '@/components/modules/event.module.vue';
+import StoryModule from '@/components/modules/story.module.vue';
+import LocationModule from '@/components/modules/location.module.vue';
+import QuellcodeModule from './components/modules/quellcode.module.vue';
+
 export default
 {
   revision: 2,
@@ -6,25 +39,25 @@ export default
       name             : 'partials-preview',
       variants         : [],
       availableInEditor: false,
-      component        : () => import('@/components/modules/partials-preview.module.vue'),
+      component        : PartialsPreviewModule
     },
     {
       name             : 'content',
       variants         : [],
       availableInEditor: false,
-      component        : () => import('@/components/modules/content.module.vue'),
+      component        : ContentModule
     },
     {
       name             : 'connect-user',
       variants         : [],
       availableInEditor: false,
-      component        : () => import('@/components/modules/connect-user.module.vue'),
+      component        : ConnectUserModule
     },
     {
       name             : 'confirm-email',
       variants         : [],
       availableInEditor: false,
-      component        : () => import('@/components/modules/confirm-email.module.vue'),
+      component        : ConfirmEmailModule
     },
     {
       name    : 'blog-intro',
@@ -53,7 +86,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/blog-intro.module.vue'),
+      component: BlogIntroModule
     },
     {
       name    : 'compare',
@@ -82,7 +115,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/compare.module.vue'),
+      component: CompareModule
     },
     {
       name    : 'contact',
@@ -96,7 +129,7 @@ export default
           },
         ],
       },
-      component: () => import('@/components/modules/contact.module.vue'),
+      component: ContactModule
     },
     {
       name    : 'cookies',
@@ -134,7 +167,7 @@ export default
         },
       ],
 
-      component: () => import('@/components/modules/cookies.module.vue'),
+      component: CookiesModule
     },
     {
       name    : 'emotion',
@@ -194,8 +227,14 @@ export default
           name : 'Wird nicht in PDF angezeigt',
           group: 'pdf',
         },
+        {
+          key        : 'align',
+          name       : 'Modul ausrichten',
+          description: 'Wenn das Module im Fokus steht und nicht richtig ausgerichtet ist, wird aktuelle Position automatisch angepasst.',
+          group      : 'behaviour',
+        },
       ],
-      component: () => import('@/components/modules/emotion.module.vue'),
+      component: EmotionModule
     },
     {
       name    : 'facts',
@@ -239,7 +278,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/facts.module.vue'),
+      component: FactsModule
     },
     {
       name    : 'faq',
@@ -274,7 +313,7 @@ export default
         },
       ],
 
-      component: () => import('@/components/modules/faq.module.vue'),
+      component: FaqModule
     },
     {
       name    : 'footer',
@@ -303,7 +342,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/footer.module.vue'),
+      component: FooterModule
     },
     {
       name    : 'gallery',
@@ -358,7 +397,7 @@ export default
         },
       ],
 
-      component: () => import('@/components/modules/gallery.module.vue'),
+      component: GalleryModule
     },
     {
       name    : 'index',
@@ -412,7 +451,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/index.module.vue'),
+      component: IndexModule
     },
     {
       name    : 'menu',
@@ -441,7 +480,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/menu.module.vue'),
+      component: MenuModule
     },
     {
       name    : 'navigation',
@@ -474,12 +513,12 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/navigation.module.vue'),
+      component: NavigationModule
     },
     {
       name     : 'partial',
       variants : [],
-      component: () => import('@/components/modules/partial.module.vue'),
+      component: PartialModule
     },
     {
       name    : 'picture',
@@ -541,7 +580,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/picture.module.vue'),
+      component: PictureModule
     },
     {
       name    : 'pictureandtext',
@@ -585,7 +624,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/pictureandtext.module.vue'),
+      component: PictureandtextModule
     },
     {
       name    : 'picturegroup',
@@ -653,7 +692,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/picturegroup.module.vue'),
+      component: PicturegroupModule
     },
     {
       name    : 'prices',
@@ -682,24 +721,24 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/prices.module.vue'),
+      component: PricesModule
     },
     {
       name     : 'placeholder',
       variants : [],
-      component: () => import('@/components/modules/placeholder.module.vue'),
+      component: PlaceholderModule
     },
-    // {
-    //   name    : 'quellcode',
-    //   variants: [
-    //     {
-    //       key        : 'darkmode',
-    //       name       : 'Dunkle Darstellung',
-    //       description: 'Darstellung von Code',
-    //     }
-    //   ],
-    //   component: () => import('@/components/modules/quellcode.module.vue'),
-    // },
+    {
+      name    : 'quellcode',
+      variants: [
+        {
+          key        : 'darkmode',
+          name       : 'Dunkle Darstellung',
+          description: 'Darstellung von Code',
+        }
+      ],
+      component: QuellcodeModule
+    },
     {
       name    : 'quote',
       variants: [
@@ -732,7 +771,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/quote.module.vue'),
+      component: QuoteModule
     },
     {
       name    : 'text',
@@ -769,7 +808,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/text.module.vue'),
+      component: TextModule
     },
     {
       name    : 'training',
@@ -803,7 +842,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/training.module.vue'),
+      component: TrainingModule
     },
     {
       name    : 'video',
@@ -832,7 +871,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/video.module.vue'),
+      component: VideoModule
     },
     {
       name    : 'timeline',
@@ -861,7 +900,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/timeline.module.vue'),
+      component: TimelineModule
     },
     {
       name    : 'events-list',
@@ -890,7 +929,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/events-list.module.vue'),
+      component: EventsListModule
     },
     {
       name    : 'event',
@@ -929,7 +968,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/event.module.vue'),
+      component: EventModule
     },
     {
       name    : 'story',
@@ -1005,7 +1044,7 @@ export default
           },
         ],
       },
-      component: () => import('@/components/modules/story.module.vue'),
+      component: StoryModule
     },
     {
       name    : 'location',
@@ -1034,7 +1073,7 @@ export default
           group: 'pdf',
         },
       ],
-      component: () => import('@/components/modules/location.module.vue'),
+      component: LocationModule
     },
   ]
 }
