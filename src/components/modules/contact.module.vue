@@ -460,8 +460,8 @@ const handleForm = async (event: Event) => {
 
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
-        <lila-select-category-partial v-if="list.mode !== 'contact' && model.category" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
-        <lila-select-partial v-if="list.mode === 'contact' && selectCategories && model.category" v-model="model.category" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
+        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
+        <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
       <template v-if="!userStore.isUser">
