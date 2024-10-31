@@ -106,9 +106,11 @@ function updateElements () {
     const newElement = { ...element, active: false };
 
     if (newElement.links) {
+
       if (!newElement.links[0]?.text?.length) {
         delete newElement.links;
       }
+
     }
 
     newElements.push(newElement);
@@ -360,8 +362,10 @@ const calculateOptionsStyle = () => {
 
     .basicHover;
 
-    &.isActive {
-      color: @color3
+    &.isActive, &.router-link-active {
+      // color: @color3;
+      background-color: @color1;
+      color: @white;
     }
 
   }
@@ -399,7 +403,6 @@ const calculateOptionsStyle = () => {
     }
   }
 
-
   .trigger {
     display: grid;
     position: relative;
@@ -436,7 +439,6 @@ const calculateOptionsStyle = () => {
     }
 
     span {
-
     
       display: grid;
 
@@ -490,7 +492,6 @@ const calculateOptionsStyle = () => {
     }
 
   }
-
 
   &.left {
 

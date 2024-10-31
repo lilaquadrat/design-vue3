@@ -29,7 +29,7 @@ import EventsListModule from '@/components/modules/events-list.module.vue';
 import EventModule from '@/components/modules/event.module.vue';
 import StoryModule from '@/components/modules/story.module.vue';
 import LocationModule from '@/components/modules/location.module.vue';
-import QuellcodeModule from './components/modules/quellcode.module.vue';
+// import QuellcodeModule from './components/modules/quellcode.module.vue';
 
 export default
 {
@@ -728,17 +728,17 @@ export default
       variants : [],
       component: PlaceholderModule
     },
-    {
-      name    : 'quellcode',
-      variants: [
-        {
-          key        : 'darkmode',
-          name       : 'Dunkle Darstellung',
-          description: 'Darstellung von Code',
-        }
-      ],
-      component: QuellcodeModule
-    },
+    // {
+    //   name    : 'quellcode',
+    //   variants: [
+    //     {
+    //       key        : 'darkmode',
+    //       name       : 'Dunkle Darstellung',
+    //       description: 'Darstellung von Code',
+    //     }
+    //   ],
+    //   component: QuellcodeModule
+    // },
     {
       name    : 'quote',
       variants: [

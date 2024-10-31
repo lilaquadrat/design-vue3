@@ -57,13 +57,13 @@ function getStoreContent () {
 async function getContent () {
 
   getStoreContent();
-
+  
   const contentId = HelpersPlugin.getFilename(route.meta.contentType as 'public' | 'members', props.type);
-
+  
   if(data.value?.data?.id === contentId) {
-
+    
     return;
-
+    
   }
 
   if(isLocked.value) {

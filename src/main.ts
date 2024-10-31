@@ -1,5 +1,5 @@
 import { createApp, createSSRApp } from 'vue';
-import { createPinia } from 'pinia';
+import { createPinia, type StateTree } from 'pinia';
 import App from './App.vue';
 import createRouter from '@/mixins/createRouter';
 import { loadViaDeclarationSync } from '@/mixins/loadComponents';
@@ -17,6 +17,7 @@ import partials from './partials.browser';
 import modulesMail from './modules.mail';
 import partialsMail from './partials.mail';
 import type { RouteRecordRaw } from 'vue-router';
+import logger from './mixins/logger';
 import useMainStore from './stores/main.store';
 
 export function getAppInstance (context: any, routes: readonly RouteRecordRaw[], isSSR: boolean) {
@@ -28,7 +29,21 @@ export function getAppInstance (context: any, routes: readonly RouteRecordRaw[],
 
   app.use(pinia);
 
-  const mainStore = useMainStore();
+  if (isSSR) {
+
+    logger.ssr('set initial state');
+    pinia.state.value = window.__INITIAL_STATE__ as Record<string, StateTree>;
+    
+  } else {
+
+    const mainStore = useMainStore();
+  
+    mainStore.data = context.data;
+    mainStore.layout = context.layout;
+    mainStore.target = context.data.target || 'browser';
+    mainStore.configuration = context.settings;
+
+  }
 
   if(context.data.target === 'mail') {
 
@@ -42,11 +57,7 @@ export function getAppInstance (context: any, routes: readonly RouteRecordRaw[],
 
   }
 
-  mainStore.target = context.data.target || 'browser';
-
   const router = createRouter(routes);
-
-  app.use(router);
 
   app.use(translations);
   app.use(HelpersPlugin);

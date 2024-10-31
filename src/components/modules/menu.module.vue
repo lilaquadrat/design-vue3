@@ -19,7 +19,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 const titleVariants = ['center', 'font-extra', 'horizontalLine'];
 const introVariants = ['center'];
 const removeItems = computed(() => ({
-  allergens: props.categories.find(single => single)
+  allergens: props.categories?.find(single => single)
 }));
 
 </script>
@@ -44,7 +44,7 @@ const removeItems = computed(() => ({
     </section>
 
     <section class="allegene-container" :variant="removeItems">
-      <lila-menu-allergens-partial /> 
+      <lila-menu-allergens-partial :variant="[]"/> 
     </section>
     
   </section>

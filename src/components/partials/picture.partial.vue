@@ -56,7 +56,8 @@ onServerPrefetch(() => {
 
 onBeforeMount(() => {
 
-  if(store.configuration.preloadImages) loading.value = true;
+  console.log(store.configuration, store);
+  // if(store.configuration.preloadImages) loading.value = true;
 
 });
 

@@ -7,7 +7,7 @@ import useMainStore from '@/stores/main.store';
 import type { Address, ListOfModels, Location } from '@lilaquadrat/interfaces';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import { convertCountryISO2 } from '@lilaquadrat/studio/lib/esm/frontend';
-import { watch } from 'vue';
+import { onServerPrefetch, watch } from 'vue';
 import { computed, onBeforeMount } from 'vue';
 import { ref } from 'vue';
 
@@ -24,11 +24,11 @@ const props = defineProps<{
   required?: boolean
   error?: ParsedError
 }>();
-const model = ref<Address>();
+const model = ref<Address>({});
 const selectedAddress = ref<Address>();
 const loading = ref<boolean>(false);
 const autocomplete = ref<Location[]>();
-const search = ref<string>();
+const search = ref<string>('');
 const minLength = ref<number>(5);
 const calculatedOptions = ref();
 const open = ref<boolean>();
@@ -38,8 +38,13 @@ const optionsElement = ref<HTMLElement>();
 onBeforeMount(() => {
 
   model.value = ModelsClass.add(props.modelValue, 'address');
-
+  
 });
+onServerPrefetch(() => {
+  
+  model.value = ModelsClass.add(props.modelValue, 'address');
+
+})
 
 watch(search, () => update());
 watch([resized, scrolled], () => calculateOptionsStyle())
@@ -182,7 +187,7 @@ async function update () {
       </lila-description-partial>
     </section>
 
-    <lila-input-partial placeholder="address addition">
+    <lila-input-partial placeholder="address addition" v-model="model.addressAddition">
       {{$translate('address addition')}}
     </lila-input-partial>
 

@@ -113,6 +113,7 @@ function updateCategories () {
   } else {
 
     categoriesExtended.value = undefined;
+
   }
 
 }
@@ -458,6 +459,7 @@ const handleForm = async (event: Event) => {
 
       </lila-fieldset-partial>
 
+      {{ model.category }}
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
         <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
