@@ -1,22 +1,22 @@
 import type { Content } from '@lilaquadrat/interfaces';
 
 const content: Content = {
-  id      : 'home',
-  company : 'company',
-  project : 'project',
+  id: 'home',
+  company: 'company',
+  project: 'project',
   settings: {
-    mode       : 'presentation',
-    title      : 'Footer',
-    description: 'Sitemap, Social Links and legal infos'
+    mode: 'presentation',
+    title: 'Footer',
+    description: 'Sitemap, Social Links and legal infos',
   },
-  state  : 'publish',
+  state: 'publish',
   modules: [
     {
-      type  : 'footer-module',
-      legal : 'some legal information',
+      type: 'footer-module',
+      legal: 'some legal information',
       variant: ['noPicture'],
       social: {
-        title   : 'Social',
+        title: 'Social',
         elements: [
           {
             link: {
@@ -24,8 +24,8 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
           {
@@ -34,151 +34,25 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
         ],
       },
       contact: {
         title: 'Contact',
-        link : {
+        link: {
           text: 'Call us: +012283838',
           link: 'tel:012222',
         },
-        lists : [1],
+        lists: [1],
         editor: [2],
       },
       sitemap: [
         {
-          links: {
-            value: [
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-            ],
-            title: 'Follow up Details',
-            variant:['noIcon']
-          },
-        },
-        {
-          links: {
-            value: [
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-            ],
-            title: 'Follow up links',
-            variant:['noIcon']
-          },
-        },
-        {
-          links: {
-            value: [
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-            ],
-            title: 'Follow up links',
-            variant:['noIcon']
-          },
-        },
-  
-        {
-          links: {
-            value: [
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-            ],
-            title: 'Details',
-            variant:['noIcon']
-          },
-        },
-        {
-          links: {
-            value: [
-              {
-                text: 'Link with some longer text',
-                link: 'https://testlink',
-              },
-              {
-                text: 'Normal link',
-                link: 'https://testlink',
-              },
-            ],
-            title: 'sitemap',
-            variant:['noIcon']
-          },
-        },
-  
-       ],
-  
-    },
-    {
-      type  : 'footer-module',
-      variant: ['footerWithIcon'],
-      legal : 'some legal information',
-      picture: {
-        source: [],
-        alt   : 'IMAGE ALT',
-        src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/lilaquadrat-logo.png',
-      },
-        textblock: {
-          headline: 'headline',
-          subline: 'subline',
-          intro: 'Kontakt',
-          text: [
-            'Streetnane of company Postcode Streetname Number',
-            'Postcode Streetname'
-          ],
-        },
-        list: {
-          value: [
-            'This is a list item',
-            'this an other list item',
-            'I am a third list item',
-          ],
-          title: 'some nice list',
-        },
-        links: {
-          value: [
+          title: 'sitemap1',
+          elements: [
             {
               text: 'Link with some longer text',
               link: 'https://testlink',
@@ -188,12 +62,119 @@ const content: Content = {
               link: 'https://testlink',
             },
           ],
-          title: 'Follow up links',
-          variant:['noIcon']
+          variant: ['noIcon'],
         },
- 
+        {
+          title: 'Follow up links',
+          elements: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          variant: ['noIcon'],
+        },
+        {
+          title: 'Follow up links',
+          elements: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          variant: ['noIcon'],
+        },
+
+        {
+          title: 'Details',
+          elements: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          variant: ['noIcon'],
+        },
+        {
+          title: 'sitemap',
+          elements: [
+            {
+              text: 'Link with some longer text',
+              link: 'https://testlink',
+            },
+            {
+              text: 'Normal link',
+              link: 'https://testlink',
+            },
+          ],
+          variant: ['noIcon'],
+        },
+      ],
+    },
+    {
+      type: 'footer-module',
+      variant: ['footerWithIcon'],
+      legal: 'some legal information',
+      picture: {
+        source: [],
+        alt: 'IMAGE ALT',
+        src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/lilaquadrat-logo.png',
+      },
+      textblock: {
+        headline: 'headline',
+        subline: 'subline',
+        intro: 'Kontakt',
+        text: ['Streetnane of company Postcode Streetname Number', 'Postcode Streetname'],
+      },
+      list: {
+        value: ['This is a list item', 'this an other list item', 'I am a third list item'],
+        title: 'some nice list',
+      },
+      links: {
+        value: [
+          {
+            text: 'Link with some longer text',
+            link: 'https://testlink',
+          },
+          {
+            text: 'Normal link',
+            link: 'https://testlink',
+          },
+        ],
+        title: 'Follow up links',
+        variant: ['noIcon'],
+      },
+
       social: {
-         title   : 'Social',
+        title: 'Social',
         elements: [
           {
             link: {
@@ -201,8 +182,8 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
           {
@@ -211,8 +192,8 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
           {
@@ -221,8 +202,8 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
           {
@@ -231,17 +212,16 @@ const content: Content = {
             },
             picture: {
               source: [],
-              alt   : 'IMAGE ALT',
-              src   : 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
+              alt: 'IMAGE ALT',
+              src: 'https://cdn2.lilaquadrat.de/lilaquadrat/homepage/icon-32x32.png',
             },
           },
-          
         ],
       },
-     sitemap: [
-      {
-        links: {
-          value: [
+      sitemap: [
+        {
+          title: 'Follow up links',
+          elements: [
             {
               text: 'Link with some longer text',
               link: 'https://testlink',
@@ -251,14 +231,12 @@ const content: Content = {
               link: 'https://testlink',
             },
           ],
-          title: 'Follow up links',
-          variant:['noIcon']
+          variant: ['noIcon'],
         },
-      },
-      
-      {
-        links: {
-          value: [
+
+        {
+          title: 'Follow up links',
+          elements: [
             {
               text: 'Link with some longer text',
               link: 'https://testlink',
@@ -300,13 +278,10 @@ const content: Content = {
               link: 'https://testlink',
             },
           ],
-          title: 'Follow up links',
-          // variant:['noIcon']
         },
-      },
-      {
-        links: {
-          value: [
+        {
+          title: 'Follow up links',
+          elements: [
             {
               text: 'Link with some longer text',
               link: 'https://testlink',
@@ -316,11 +291,9 @@ const content: Content = {
               link: 'https://testlink',
             },
           ],
-          title: 'Follow up links',
-          variant:['noIcon']
+          variant: ['noIcon'],
         },
-      },
-     ],
+      ],
     },
   ],
 };
