@@ -29,37 +29,41 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 </script>
 <template>
   <footer :id="id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
-    <section class="footer-container">
-      <lila-picture-partial v-if="picture" v-bind="picture" class="picture-container" />
-      <section class="informations-container">
-        <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-        <lila-list-partial class="list-container" v-if="list" v-bind="list" />
-        <lila-list-partial class="link-container" v-if="links" v-bind="links" />
+    <section class="content-container">
+
+      <section class="footer-container">
+        <lila-picture-partial v-if="picture" v-bind="picture" class="picture-container" />
+        <section class="informations-container">
+          <lila-textblock-partial v-if="textblock" v-bind="textblock" />
+          <lila-list-partial class="list-container" v-if="list" v-bind="list" />
+          <lila-list-partial class="link-container" v-if="links" v-bind="links" />
+        </section>
+
+        <template v-if="sitemap">
+          <li v-for="(element, index) in sitemap" :key="`sitemap-element-links-${index}`" class="link-container">
+            <lila-list-partial class="link-container" v-if="element" :title="element.title" :value="element.elements" />
+          </li>
+        </template>
       </section>
 
-      <template v-if="sitemap">
-        <li v-for="(element, index) in sitemap" :key="`sitemap-element-links-${index}`" class="link-container">
-          <lila-list-partial class="link-container" v-if="element.links" v-bind="element.links" />
-        </li>
-      </template>
-    </section>
+      <section class="contact-social-container">
+        <section v-if="contact" class="contact">
+          <h3>{{ contact.title }}</h3>
+          <h3><lila-link-partial v-bind="contact.link" /></h3>
+        </section>
 
-    <section class="contact-social-container">
-      <section v-if="contact" class="contact">
-        <h3>{{ contact.title }}</h3>
-        <h3><lila-link-partial v-bind="contact.link" /></h3>
+        <section v-if="social" class="social">
+          <h3>{{ social.title }}</h3>
+
+          <div class="icon-container">
+            <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
+              :link="element.link.link">
+              <lila-picture-partial v-bind="element.picture" />
+            </lila-link-partial>
+          </div>
+        </section>
       </section>
 
-      <section v-if="social" class="social">
-        <h3>{{ social.title }}</h3>
-
-        <div class="icon-container">
-          <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
-            :link="element.link.link">
-            <lila-picture-partial v-bind="element.picture" />
-          </lila-link-partial>
-        </div>
-      </section>
     </section>
 
     <section class="legal">{{ legal }}</section>
@@ -73,7 +77,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
   display: grid;
   grid-template-rows: min-content min-content min-content;
-  gap: 40px;
+  gap: 20px;
   width: 100%;
   max-width: @desktopWidthExt;
   margin: auto;
@@ -82,6 +86,11 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
   @media @desktop {
     .multi(margin-top, 80);
+  }
+
+  .content-container {
+    display: grid;
+    gap: 40px;
   }
 
   h3 {
@@ -109,11 +118,13 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
     display: grid;
     grid-template-columns: 1fr;
     gap: 40px 20px;
+
     @media @desktop {
       grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
     }
 
   }
+
   .social {
 
     display: grid;
@@ -167,7 +178,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
   }
 
   .content {
-    border: red solid 3px; 
+    border: red solid 3px;
     display: grid;
     grid-template-rows: min-content 1fr;
     gap: 10px;
@@ -185,30 +196,34 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
   }
 
   &.noPicture {
-    .footer-container > *:first-child {
+    .footer-container>*:first-child {
       visibility: hidden;
       position: absolute;
     }
   }
 
+  .informations-container {
+    display: grid;
+    gap: 20px;
+    align-content: start;
+  }
+
   &.footerWithIcon {
 
     .footer-container {
-    display: grid;
-    grid-template-columns: 1fr;
-
-    @media @desktop {
-      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-    }
-  }
-    .informations-container {
       display: grid;
-      gap: 20px
+      grid-template-columns: 1fr;
+
+      @media @desktop {
+        grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      }
     }
 
     .contact {
       display: none;
-    };
+    }
+
+    ;
 
     .social {
       @media @tablet, @desktop {
@@ -216,4 +231,5 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
       }
     }
   }
-}</style>
+}
+</style>

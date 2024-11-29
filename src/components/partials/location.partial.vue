@@ -1,20 +1,12 @@
 <script setup lang="ts">
+import { computed, onBeforeMount, ref, } from 'vue';
 
-import type Iframemap from '@/interfaces/Iframemap.interface';
-import type Textblock from '@/interfaces/textblock.interface';
-import { computed, onBeforeMount, ref, type Ref, } from 'vue';
-import type Picture from '../../interfaces/picture.interface';
-
-const props = defineProps<Iframemap & {
-    width?: string;
-    height?: string;
-    showMaps: string;
-    textblock?: Textblock;
-    variant?: string[];
-    background?: Picture;
+const props = defineProps<{
+    map: string,
+    variant: string[]
 }>();
-const mapType = computed(() => (props.src.match('^https://(www.)?google.com/maps') ? 'google.com/maps' : 'basic'));
-const mapId = computed(() => (mapType.value !== 'google.com/maps' ? false : new URL(props.src)));
+const mapType = computed(() => (props.map?.match('^https://(www.)?google.com/maps') ? 'google.com/maps' : 'basic'));
+const mapId = computed(() => (mapType.value !== 'google.com/maps' ? false : new URL(props.map)));
 const loadIframe = ref<boolean>(false);
 const loadIframeElement = () => {
   loadIframe.value = true
@@ -37,100 +29,56 @@ function mapIframe () {
 </script>
 <template>
     <section class="lila-location-partial" :class="[variant, { loadIframe }]">
-    
+
         <section class="iframe" v-if="loadIframe">
-            <iframe title="iframe" v-if="src" :src="src"></iframe>
+            <iframe title="iframe" v-if="map" :src="map"></iframe>
         </section>
+
         <section class="confirm-container" v-if="!loadIframe" :variant="variant">
-            <lila-picture-partial v-if="background" v-bind="background" />
-            <div class="text-container">
-                <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-                <lila-button-group-partial gap center>
-                    <lila-button-partial colorScheme="colorScheme1" @click="loadIframeElement">
-                        {{ showMaps }}
-                    </lila-button-partial>
-                </lila-button-group-partial>
-            </div>
+            <lila-button-partial colorScheme="colorScheme1" @click="loadIframeElement">
+                {{ $translate('location_module_show_map') }}
+            </lila-button-partial>
         </section>
     </section>
 </template>
 <style lang="less" scoped>
 .lila-location-partial {
-    .confirm-container {
-        background: @grey; 
-        text-align: center;
-        align-content: end;
-        justify-content: center;
-        height: 0;
-        padding-top: 56.25%; /* Aspect Ratio 16:9 */
-        position: relative;
 
-        :deep(figure) {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            filter: blur(5px);
-            padding-top: 56.25%; 
+.confirm-container {
+  position: relative;
+  display: grid;
+  align-content: center;
 
-            img {
-                position: absolute;
-                top: 0;
-                left: 0;
-                object-fit: cover;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-            }
-        }
+  justify-content: center;
+  background: @grey2;
+  text-align: center;
+  aspect-ratio: 5/4;
 
-        .text-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+  .activate-map-button {
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+  }
+}
 
-            :deep(.lila-textblock) {
-                padding-bottom: 20px;
-            }
-        }
+.iframe {
+  position: relative;
+  display: block;
+  aspect-ratio: 5/4;
+  width: 100%;
 
-    }
-
-    .iframe {
-        padding-top: 56.25%;
-        position: relative;
-        display: block;
-
-
-        iframe {
-
-            display: block;
-            border: 0;
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    &.square {
-        .confirm-container {
-            padding-top: 100%;
-        }
-
-        .iframe {
-            padding-top: 100%;
-        }
-    }
+  iframe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
 
 }
 </style>

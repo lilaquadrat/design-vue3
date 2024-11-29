@@ -8,3 +8,7 @@
 lilaquadrat STUDIO is a modular and extensible SaaS Enterprise CMS.
 
 [https://lilaquadrat.de](https://lilaquadrat.de)
+
+## create a new project
+
+yarn create @lilaquadrat/studio-design

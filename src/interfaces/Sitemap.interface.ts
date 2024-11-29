@@ -1,15 +1,6 @@
-import type LinkListWithTitle from './LinkListWithTitle.interface';
-
-// export default interface Sitemap {
-//     title?: string
-//     elements: {
-//         title?: string
-//         elements: Link[]
-//     }[]
-// }
+import type Link from './link.interface';
 
 export default interface Sitemap {
-    elements?: {
-        links: LinkListWithTitle;
-    }
+    title?: string
+    elements: Link[]
 }

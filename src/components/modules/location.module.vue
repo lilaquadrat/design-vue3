@@ -21,8 +21,8 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
 </script>
 <template>
-    <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-location-module lila-module">
-        <lila-location-partial ref="iframeElement" v-bind="map" class="iframe-container" :variant="variant" />
+    <section ref="element" :class="[variant, inviewState]" class="lila-location-module lila-module">
+        <lila-location-partial ref="iframeElement" :map="map" class="iframe-container" :variant="variant" />
         <section class="text-container">
             <lila-textblock-partial v-if="textblock" v-bind="textblock" />
             <lila-list-partial class="list-container" v-if="list" v-bind="list" />
@@ -32,36 +32,34 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 </template>
 <style lang="less" scoped>
 .lila-location-module {
-    .modulePadding('none');
+    .module;
+    .modulePadding();
     max-width: @moduleWidth_M;
-    margin: auto;
     display: grid;
-    .multi(margin-bottom, 8);
-
-    .text-container {
-        .multi(padding-top, 8);
-    }
+    gap: 20px;
 
     @media @desktop {
         grid-template-columns: 1fr 1fr;
         gap: 40px;
 
         .text-container {
-        .multi(padding-top, 0);
+            .multi(padding-top, 0);
+        }
     }
-    }
-
 
     .link-container,
     .list-container {
         .multi(padding-top, 5)
-
     }
 
     &.bright {
         .iframe-container {
-            :deep(.lila-textblock)  {
-                h1,h2,h3,p  {
+            :deep(.lila-textblock) {
+
+                h1,
+                h2,
+                h3,
+                p {
                     color: @white
                 }
             }
