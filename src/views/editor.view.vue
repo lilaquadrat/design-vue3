@@ -9,6 +9,7 @@ import type { AppEditorConfiguration } from '@lilaquadrat/interfaces';
 import { loadViaDeclarationSync } from '@/mixins/loadComponents';
 import useContentStore from '@/stores/content.store';
 import useMainStore from '@/stores/main.store';
+import { eventDeclaration } from '@/plugins/events';
 
 const currentInstance = getCurrentInstance();
 const editorStore = useEditorStore();
@@ -37,6 +38,7 @@ watch(siteSettings, () => {
       : siteSettings.value?.target
 
     postModules();
+    postCustomModules();
     
     if (currentInstance) {
 
@@ -79,6 +81,8 @@ function messageHandler (message: StudioIframeMessage) {
     if(!init.value) {
 
       postModules();
+      postCustomModules();
+      postEvents();
       init.value = true;
 
     }
@@ -148,6 +152,34 @@ function postModules () {
     {
       type: 'studio-design-modules-with-revision',
       data: hardCopy(modules),
+    },
+    '*',
+  );
+
+}
+
+function postCustomModules () {
+
+  const modules = mainStore.target === 'browser'
+    ? mainStore.customModulesBrowser 
+    : mainStore.customModulesMail
+
+  window.parent.postMessage(
+    {
+      type: 'studio-design-custom-modules',
+      data: hardCopy(modules),
+    },
+    '*',
+  );
+
+}
+
+function postEvents () {
+
+  window.parent.postMessage(
+    {
+      type: 'studio-design-events',
+      data: eventDeclaration,
     },
     '*',
   );

@@ -28,7 +28,6 @@ const textBottom = computed(() => ({
   intro: props.textblock?.intro,
   text : props.textblock?.text,
 }));
-const hasLink = computed(() => !!props.link?.link);
 
 </script>
 <template>
@@ -36,21 +35,15 @@ const hasLink = computed(() => !!props.link?.link);
     class="lila-blog-intro-module lila-module">
 
     <header>
-      <template v-if="!hasLink">
+      <lila-action-partial v-bind="link">
         <time v-if="date">{{ date }}</time>
         <lila-textblock-partial class="top" v-bind="textTop" />
-      </template>
-
-      <lila-link-partial v-if="hasLink" v-bind="link">
-        <time v-if="date">{{ date }}</time>
-        <lila-textblock-partial class="top" v-bind="textTop" />
-      </lila-link-partial>
+      </lila-action-partial>
     </header>
 
-    <lila-link-partial v-bind="link" v-if="hasLink">
-      <lila-picture-partial v-if="picture" v-bind="picture" />
-    </lila-link-partial>
-    <lila-picture-partial v-else-if="picture" v-bind="picture" />
+    <lila-action-partial v-bind="link" v-if="picture">
+      <lila-picture-partial v-bind="picture" />
+    </lila-action-partial>
 
     <lila-textblock-partial class="bottom" v-bind="textBottom" />
 
@@ -130,17 +123,17 @@ const hasLink = computed(() => !!props.link?.link);
       .trans(color);
     }
 
-    &:hover {
+    // &:hover {
 
-      h1 {
-        color: @color3;
-      }
+    //   h1 {
+    //     color: @color3;
+    //   }
 
-      picture {
-        opacity: .5;
-      }
+    //   picture {
+    //     opacity: .5;
+    //   }
 
-    }
+    // }
 
   }
 

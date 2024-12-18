@@ -10,6 +10,7 @@ const props = withDefaults(
     description?: string
     disabled?: boolean
     noIndicator?: boolean
+    compact?: boolean
     text?: string
   }>(),
   {
@@ -56,7 +57,7 @@ onBeforeUpdate(() => setTextType());
 
 </script>
 <template>
-  <section class="lila-checkbox-parent-container" :class="{error}">
+  <section class="lila-checkbox-parent-container" :class="{error, compact}">
     <label :class="[textType, { checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
       <div class="indicator-text">
         <span class="indicator">
@@ -82,7 +83,8 @@ onBeforeUpdate(() => setTextType());
       </span>
 
     </div>
-    <lila-input-labels-partial hideLabel :error="error" :required="required" :disabled="disabled" />
+
+    <lila-input-labels-partial v-if="!compact" hideLabel :error="error" :required="required" :disabled="disabled" />
   </section>
 </template>
 <style lang="less" scoped>
@@ -106,6 +108,10 @@ onBeforeUpdate(() => setTextType());
       grid-column-start: 2;
       text-align: right;
     }
+  }
+
+  &.compact {
+    grid-template-columns: 1fr;
   }
 
 }

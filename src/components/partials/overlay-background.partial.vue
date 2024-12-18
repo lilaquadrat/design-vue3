@@ -1,7 +1,17 @@
 <template>
   <Teleport to="body">
-    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="checkClose" @click="checkClose">
-      <slot />
+    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="animationAwareClose" @click="animationAwareClose">
+
+      <template v-if="transition">
+        <transition name="fade" @after-leave="closeAfterTransition">
+          <slot v-if="showContent" />
+        </transition>
+      </template>
+
+      <template v-if="!transition">
+        <slot />
+      </template>
+
     </section>
   </Teleport>
 </template>
@@ -16,6 +26,21 @@ const props = defineProps<{
   background: 'none' | 'mobile' | 'tablet' | 'desktop'
   index?: number
   inactive?: boolean
+  /**
+   * if transition is true the slot will be called in transition and enables a animation
+   * to close the overlay from the outside in a way that the animation is played out correctly
+   * you need to use the exposed animationAwareClose
+   * ```TS
+   const overlay = ref<OverlayBackgroundExposure>();
+   
+   function close () {
+
+      return overlay.value?.animationAwareClose();
+
+   }
+   ```
+   */
+  transition?: boolean
 }>();
 const emit = defineEmits<{
     (e: 'mounted'): void
@@ -25,6 +50,7 @@ const backgroundMode = computed(() => props.background || 'mobile');
 const customIndex = computed(() => props.index ? `index${props.index}` : false);
 const hasCustomIndex = computed(() => props.index);
 const element = ref<HTMLElement>();
+const showContent = ref<boolean>(false);
 
 watch(() => props.inactive, () => {
 
@@ -39,6 +65,7 @@ watch(() => props.inactive, () => {
 onMounted(() => {
 
   emit('mounted');
+  showContent.value = true;
 
   if(!props.inactive) mainStore.setFullscreen(true);
 
@@ -50,14 +77,35 @@ onUnmounted(() => {
 
 });
 
-function checkClose (event: Event) {
-
-  if (element.value !== event.target) return;
+function closeAfterTransition () {
 
   emit('close');
 
 }
 
+function animationAwareClose (event?: Event) {
+
+  if(event) {
+
+    if (element.value !== event.target) return;
+
+  }
+
+  if(props.transition) {
+
+    showContent.value = false;
+
+  } else {
+    
+    emit('close');
+
+  }
+
+}
+
+defineExpose({
+  animationAwareClose
+});
 </script>
 <style lang="less" scoped>
 

@@ -1,61 +1,44 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
-import { onBeforeMount } from 'vue';
-import { computed, inject, ref } from 'vue';
-import triggerEvent from '@/plugins/events';
+import { computed, inject } from 'vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
-  link: string
+  link?: string
   text?: string
   icon?: IconsPartial['type']
   attributes?: string[]
   classes?: string[]
   variant?: string[]
   callToAction?: boolean
+  additionalData?: string
   button?: boolean
+  disabled?: boolean
   [key: string]: any,
 }>();
-const linkMode: 'event' | 'link' | undefined = inject('linkMode');
+// const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
 const linkWithBase = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
-const isWhite = computed(() => props.variant?.includes('white'));
-const isStatic = computed(() => props.attributes?.includes('static'));
-const isEvent = computed(() => props.attributes?.includes('event'));
-const type = computed(() => linkMode !== 'event' && !isStatic.value && !isEvent.value && !isExternal.value ? 'router-link': 'a');
-const isExternal = ref<boolean>(false);
+const isWhite = computed(() => props.variant?.includes('white') || props.callToAction);
+const mode = computed(() => props.link?.startsWith('http') ? 'external' : 'internal');
+const type = computed(() => {
 
-onBeforeMount(() => {
+  if(mode.value === 'external') return 'a';
 
-  analyse(props.link);
+  return 'router-link';
 
-})
-
-function analyse (link: string) {
-
-  if (typeof link !== 'string') return;
-
-  isExternal.value = !!link?.match(/^http/i);
-
-}
-
-function event ($event: MouseEvent) {
-
-  if (isEvent.value || linkMode === 'event') {
-
-    $event.preventDefault();
-
-    triggerEvent(props.link);
-
-  }
-
-}
+});
 
 </script>
 <template>
-  <component v-if="link" :class="[variant, classes, { hasIcon: icon, callToAction: props.callToAction, button: props.button }]" class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase" @click="event">
-    {{ $replacer(text) }}
+  <component v-if="link"
+    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text }]"
+    class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase">
+    <template v-if="text">{{ $replacer(text) }}</template>
     <slot v-if="!text"></slot>
-    <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'colorScheme1'" :type="icon" size="smaller" />
+    <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'colorScheme1'" :type="icon"
+      :size="callToAction || !text && icon ? 'medium' : 'smaller'" />
   </component>
 </template>
 <style lang="less" scoped>
@@ -63,13 +46,22 @@ function event ($event: MouseEvent) {
   color: @link;
   .font-normal;
   .trans(color);
+
   &:hover {
     color: @linkHover;
   }
 
   &.hasIcon {
+    display: grid;
     grid-template-columns: max-content 15px;
-    gap: 5px
+    gap: 5px;
+
+    &.noText {
+      grid-template-columns: 40px;
+      justify-items: center;
+
+      .basicHover;
+    }
   }
 
   &.white {
@@ -93,6 +85,10 @@ function event ($event: MouseEvent) {
 
     .font-head;
     .multi(padding, 0, 3);
+
+    &.hasIcon {
+      display: grid;
+    }
 
     &:hover {
       background-color: @color5;
@@ -125,6 +121,12 @@ function event ($event: MouseEvent) {
         border-color: @color1;
         color: @color1;
       }
+    }
+
+    &.disabled {
+      background-color: @grey;
+      pointer-events: none;
+      user-select: none;
     }
   }
 }

@@ -60,8 +60,7 @@ const filteredLinks = computed(() => {
       <ul v-if="filteredLinks" class="list-links">
         <li v-for="(single, index) in filteredLinks" :key="`emotion-link-${index}`">
 
-          <lila-button-partial class="more" @click="scrollToNext" v-if="single.link === '#more'">{{ single.text }}</lila-button-partial>
-          <lila-link-partial v-if="single.link !== '#more'" v-bind="single"></lila-link-partial>
+          <lila-action-partial v-bind="single" />
 
         </li>
       </ul>
@@ -176,8 +175,7 @@ const filteredLinks = computed(() => {
     color: @white;
   }
 
-  a,
-  .more {
+  :deep(.lila-link) {
     line-height: @buttonLineHeight;
 
     &.callToAction {
@@ -185,10 +183,10 @@ const filteredLinks = computed(() => {
     }
   }
 
-  .more {
-    .font-head;
-    font-size: @fontText;
-  }
+  // .more {
+  //   .font-head;
+  //   font-size: @fontText;
+  // }
 
   .lila-textblock {
     max-width: @moduleWidth_S;
@@ -196,8 +194,7 @@ const filteredLinks = computed(() => {
 
   &.bright {
 
-    a:not(.callToAction),
-    .more {
+    :deep(.lila-link):not(.callToAction) {
       .trans(color);
       color: @white;
 

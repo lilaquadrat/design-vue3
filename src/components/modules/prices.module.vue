@@ -48,8 +48,8 @@ function highlight (element: { variant: string | string[] }) {
         </section>
 
         <footer>
-          <lila-link-partial button callToAction :class="{ colorScheme1: highlight(element), colorScheme2: !highlight(element) }" v-if="element.callToAction" v-bind="element.callToAction" />
-          <lila-link-partial v-if="element.more" v-bind="element.more" />
+          <lila-action-partial button callToAction :class="{ colorScheme1: highlight(element), colorScheme2: !highlight(element) }" v-if="element.callToAction" v-bind="element.callToAction" />
+          <lila-action-partial v-if="element.more" v-bind="element.more" />
         </footer>
       </section>
     </div>
@@ -153,8 +153,9 @@ function highlight (element: { variant: string | string[] }) {
       footer {
         display: grid;
         gap: 10px;
+        justify-content: center;
 
-        a {
+        :deep(.lila-link), :deep(.lila-button) {
           display: block;
 
           line-height: 35px;

@@ -134,5 +134,11 @@ export default {
   'datepicker-range-days_plural'                                                                          : '%s Tage',
   'datepicker-predefined-now'                                                                             : 'jetzt',
   'datepicker-select-button'                                                                              : 'Datum auswählen',
-  'datepicker-select-time-button'                                                                         : 'Zeit auswählen'
+  'datepicker-select-time-button'                                                                         : 'Zeit auswählen',
+  'shopping-cart-checkout'                                                                                : 'Zur Kasse',
+  'shopping-cart-title'                                                                                   : 'Warenkorb',
+  'shopping-cart-cost-summary'                                                                            : 'Zwischensumme •',
+  'shopping-cart-cost-summary-quantity_plural'                                                            : '%s Artikel',
+  'shopping-cart-cost-summary-quantity_singular'                                                          : '%s Artikel',
+  'shopping-cart-no-products'                                                                             : 'Du hast keine Produkte im Warenkorb'
 };

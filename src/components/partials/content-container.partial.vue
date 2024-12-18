@@ -15,6 +15,7 @@ const props = defineProps<{
   categories?: string[]
   latest?: boolean
   predefined?: boolean
+  autoVisible?: boolean
   full?: boolean
 }>();
 const emits = defineEmits(['open', 'closed']);
@@ -106,17 +107,18 @@ const close = () => {
 };
 const contentOrError = computed(() => (loading.value === 200 || content.value) || error.value);
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
 
-  if (props.id || props.latest) {
-    getContent();
+  if (props.id || props.latest || props.autoVisible) {
+    await getContent();
+    if(props.autoVisible) visible.value = true;
   }
 
 });
 </script>
 <template>
   <section class="content-container-full" :class="{ overlay, inline: !overlay, full, visible }">
-    <button v-if="overlay" class="preview-text" type="button" @click="open"><slot /></button>
+    <button v-if="overlay && !autoVisible" class="preview-text" type="button" @click="open"><slot /></button>
 
     <lila-client-only-partial>
       <Teleport :disabled="!overlay" to="body">

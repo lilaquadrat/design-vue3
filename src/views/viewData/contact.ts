@@ -233,7 +233,7 @@ const content: Content = {
         },
         lists: [1],
       },
-    }
+    },
   ],
 };
 

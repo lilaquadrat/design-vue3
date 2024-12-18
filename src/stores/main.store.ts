@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { BasicData, Content } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, CustomModule } from '@lilaquadrat/interfaces';
 import type EditorConfiguration from '@/interfaces/EditorConfiguration.interface';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import { useAuth } from '@/plugins/auth';
@@ -8,7 +8,6 @@ import type FrontendConfig from '@/interfaces/FrontendConfig.interface';
 import type { AxiosError } from 'node_modules/axios/index.cjs';
 import { computed } from 'vue';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
-import type CustomModule from '@/interfaces/CustomModul.interface';
 
 export const useMainStore = defineStore('main', () => {
 
@@ -19,7 +18,8 @@ export const useMainStore = defineStore('main', () => {
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
-  const customModules = ref<CustomModule[]>();
+  const customModulesBrowser = ref<CustomModule[]>();
+  const customModulesMail = ref<CustomModule[]>();
   const target = ref<'browser'|'mail'>();
 
   function setData (value: BasicData<Content>) {
@@ -163,7 +163,8 @@ export const useMainStore = defineStore('main', () => {
     config,
     staticData,
     apiConfig,
-    customModules,
+    customModulesBrowser,
+    customModulesMail,
     target
   }
 

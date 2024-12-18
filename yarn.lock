@@ -601,10 +601,10 @@
   dependencies:
     typescript "^5.3.3"
 
-"@lilaquadrat/interfaces@^1.12.0", "@lilaquadrat/interfaces@^1.8.0":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.12.0.tgz#8526b2158278910b9b3dac32f99757f348983c6a"
-  integrity sha512-oKT/liOwUpdxUfu8PjD937hK9DKDj0/T4WMyAhwEHawifhtXrdVtXqw+qXqzFHzYeA5JGCkLs0j0UumMuY3NzA==
+"@lilaquadrat/interfaces@^1.12.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.14.0.tgz#5dc3607a11bbe1e052410c1842d2f158869fe1c9"
+  integrity sha512-YE5HJy6qoQ5cDb2w6E6UrCoAyuTGFUNNHDpYz5RuaTkY/bKaqiRtOsgKvMq4ewRwIq7K0hDClUH6c9BBLLzfsQ==
   dependencies:
     typescript "^5.3.3"
 
@@ -612,6 +612,13 @@
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.4.0.tgz#0fa088abf22cef3cb5b09dba4c613c2f94db0ba0"
   integrity sha512-zL075PVPsxULxV0WM70bIPyui6Quf1tE1dk+hgOXfPJZpkw1OOBv4l0pufSCI01i8HmQONPPP24tcoZNNp2beg==
+  dependencies:
+    typescript "^5.3.3"
+
+"@lilaquadrat/interfaces@^1.8.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.12.0.tgz#8526b2158278910b9b3dac32f99757f348983c6a"
+  integrity sha512-oKT/liOwUpdxUfu8PjD937hK9DKDj0/T4WMyAhwEHawifhtXrdVtXqw+qXqzFHzYeA5JGCkLs0j0UumMuY3NzA==
   dependencies:
     typescript "^5.3.3"
 
@@ -5092,10 +5099,15 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript@^5.0.4, typescript@^5.2.2, typescript@^5.3.3:
+typescript@^5.0.4, typescript@^5.2.2:
   version "5.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
   integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
+
+typescript@^5.3.3:
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.2.tgz#3169cf8c4c8a828cde53ba9ecb3d2b1d5dd67be6"
+  integrity sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==
 
 typescript@~5.6.2:
   version "5.6.2"

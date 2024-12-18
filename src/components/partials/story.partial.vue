@@ -93,7 +93,7 @@ defineExpose({
         <lila-textblock-partial v-bind="textblock" :variant="['bright']" />
     </section>
 
-    <lila-link-partial v-if="link" v-bind="link" callToAction />
+    <lila-action-partial v-if="link" v-bind="link" callToAction />
 
   </section>
 </template>
@@ -138,7 +138,7 @@ defineExpose({
         }
     }
 
-    .lila-link {
+    :deep(.lila-link), :deep(.lila-button) {
         position: absolute;
         justify-self: center;
         bottom: 20px;

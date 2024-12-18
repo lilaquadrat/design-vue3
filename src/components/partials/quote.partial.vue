@@ -6,7 +6,7 @@
     <figcaption ref='figcaption' :class="variant">
       <span v-if="citation || linkExists">{{ citation }}</span><span v-if="citation && linkExists">,</span>
       <cite v-if="linkExists">
-        <lila-link-partial v-bind="link"></lila-link-partial>
+        <lila-link-partial v-bind="link" />
       </cite>
 
     </figcaption>

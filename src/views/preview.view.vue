@@ -35,6 +35,7 @@ import story from './viewData/story';
 import location from './viewData/location'
 import partialsPreview from './viewData/partials-preview';
 import datepicker from './viewData/datepicker';
+import shoppingCart from './viewData/shopping-cart';
 import type Textblock from '@/interfaces/textblock.interface';
 
 const modules: Record<string, Partial<Content>> = {
@@ -63,6 +64,7 @@ const modules: Record<string, Partial<Content>> = {
   eventslist,
   event,
   story, 
+  shoppingCart,
   location
 };
 const partials: Record<string, {settings?: {title?: string, description?: string}, partials: {textblock?: Textblock, props: Record<string, unknown>}[]}> = {

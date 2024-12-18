@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
+import triggerEvent from '@/plugins/events';
 import useCallStore from '@/stores/calls.store';
 import { computed, ref, useSlots } from 'vue';
 
@@ -8,15 +9,20 @@ defineOptions({
 })
 
 type buttonProps = {
-  doublecheck?: string,
-  disabled?: boolean,
-  icon?: IconsPartial['type'],
-  noPadding?: boolean,
-  colorScheme?: string,
-  save?: boolean,
-  active?: boolean,
+  doublecheck?: string
+  disabled?: boolean
+  text?: string
+  icon?: IconsPartial['type']
+  iconSize?: IconsPartial['size']
+  noPadding?: boolean
+  colorScheme?: string
+  save?: boolean
+  active?: boolean
+  event?: string
+  additionalData?: string
   type?: 'submit' | 'button'
   callId?: string
+  variant?: string[]
 } 
 
 const callStore = useCallStore();
@@ -26,12 +32,22 @@ const props = withDefaults(defineProps<buttonProps>(),
     colorScheme: 'colorScheme1'
   }
 );
-const showCheck = ref(false);
-const timeout = ref<number>();
 const confirmed = ref(false);
 const emit = defineEmits<{(e: string, event?: Event): void}>();
-const iconColorScheme = computed(() => ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark')
-const slotUsed = computed(() => !!useSlots().default);
+const iconColorScheme = computed(() => {
+
+  if(props.variant?.includes('callToAction')) return 'bright';
+  return ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark'
+
+})
+const slotUsed = computed(() => !!useSlots().default?.().length);
+const iconSize = computed(() => {
+
+  if(props.iconSize) return props.iconSize;
+  if(props.icon && !props.text) return 'medium';
+  return props.icon ? 'smaller' : 'medium'
+
+});
 const state = computed(() => {
 
   if(props.callId) return callStore.calls[props.callId];
@@ -40,60 +56,52 @@ const state = computed(() => {
 
 })
 
-function check () {
+function triggerEventOnClick (event: MouseEvent) {
 
-  if (!showCheck.value) {
+  triggerEvent(props.event as string, props.additionalData, event);
 
-    showCheck.value = true;
-    timeout.value = window.setTimeout(() => {
-
-      showCheck.value = false;
-
-    }, 5000);
-
-  } else {
-
-    showCheck.value = false;
-    confirmed.value = true;
-
-    clearTimeout(timeout.value);
-
-    timeout.value = window.setTimeout(() => {
-
-      confirmed.value = false;
-
-    }, 15000);
-
-    emit('confirmed');
-    // emit('click');
-
-  }
 }
 
-const confirm = (event: MouseEvent): void => {
+function confirm (event: MouseEvent): void {
 
   event.preventDefault();
 
-  if (props.doublecheck) {
+  if(props.event) {
 
-    check();
+    triggerEventOnClick(event);
 
   } else {
 
     emit('click', event);
     if(props.type === 'submit') emit('submit', event);
-
+  
   }
-};
+
+}
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" :type="props.type" :class="[colorScheme, state, { doublecheck, showCheck, confirmed, icon, noPadding, active, iconText: icon && slotUsed, save }, $attrs.class]" @click.stop="confirm">
+  <button class="lila-button" :disabled="disabled" :type="props.type" 
+    :class="[
+      colorScheme, 
+      state, 
+      variant, 
+      {
+        confirmed, 
+        icon, 
+        noPadding, 
+        active, 
+        iconText: icon && slotUsed, 
+        iconWithoutText: icon && !text,
+        eventWithSlot: event && !text,
+        save 
+      }, 
+      $attrs.class
+    ]" @click.stop="confirm">
     <span v-if="save"></span>
-    <slot v-if="!showCheck && !confirmed" />
-    <span v-if="showCheck">Please confirm your action.</span>
-    <span v-if="confirmed">confirmed</span>
-    <lila-icons-partial v-if="icon" :colorScheme="iconColorScheme" :size="icon && slotUsed ? 'smaller' : 'medium'" :type="icon" animate :class="{rotate90: active}" />
+    <template v-if="text">{{ $replacer(text) }}</template>
+    <slot v-if="!text"></slot>
+    <lila-icons-partial v-if="icon" :colorScheme="iconColorScheme" :size="iconSize" :type="icon" animate :class="{rotate90: active}" />
   </button>
 </template>
 <style lang="less" scoped>
@@ -241,6 +249,36 @@ const confirm = (event: MouseEvent): void => {
     &.iconText {
       grid-template-columns: max-content 15px;
       gap: 5px;
+      .multi(padding, 0, 3);
+      
+      &.transparent {
+        padding: 0;
+      }
+      
+      &.callToAction {
+        .multi(padding, 0, 3);
+        &:hover {
+          color: @white;
+          background-color: @color3;
+        }
+      }
+
+      &.iconWithoutText {
+        justify-items: center;
+        grid-template-columns: 1fr;
+      }
+
+    }
+    
+    .lila-icons-partial {
+      pointer-events: none;
+      .trans(opacity);
+    }
+
+    &:hover {
+      .lila-icons-partial {
+        opacity: .5;
+      }
     }
 
   }
@@ -254,6 +292,10 @@ const confirm = (event: MouseEvent): void => {
     text-align: center;
   }
 
+  &.navigation {
+    padding: 0;
+  }
+
   &:disabled {
     background-color: @grey;
     pointer-events: none;
@@ -261,8 +303,14 @@ const confirm = (event: MouseEvent): void => {
   }
 
   &.callToAction {
+
     .colorScheme1;
     .trans(background);
+    .multi(padding, 0, 2);
+
+    &:hover {
+      color: @white;
+    }
   }
 
   &.save {
@@ -306,6 +354,31 @@ const confirm = (event: MouseEvent): void => {
       color: @white;
     }
 
+  }
+
+  &.eventWithSlot {
+    background-color: inherit;
+    text-align: inherit;
+    height: inherit;
+    text-transform: inherit;
+
+    padding: 0;
+
+    &:hover {
+      background-color: inherit;
+    }
+
+    &.iconText {
+      text-align: center;
+    }
+
+    &.callToAction {
+      background-color: @color1;
+
+    &:hover {
+      background-color: @color3;
+    }
+    }
   }
 
   &:not(.icon) {

@@ -40,6 +40,7 @@ import StoryPartial from '@/components/partials/story.partial.vue';
 import VideoControlsStoryPartial from '@/components/partials/video-controls-story.partial.vue';
 import LocationPartial from '@/components/partials/location.partial.vue';
 import DatepickerPartial from '@/components/partials/datepicker.partial.vue';
+import ActionPartial from '@/components/partials/action.partial.vue';
 // import HighlightPartial from '@/components/partials/highlight.partial.vue';
 
 export default [
@@ -214,5 +215,9 @@ export default [
   {
     name     : 'datepicker',
     component: DatepickerPartial
+  }, 
+  {
+    name     : 'action',
+    component: ActionPartial
   }, 
 ]

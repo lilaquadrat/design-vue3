@@ -29,6 +29,7 @@ import EventsListModule from '@/components/modules/events-list.module.vue';
 import EventModule from '@/components/modules/event.module.vue';
 import StoryModule from '@/components/modules/story.module.vue';
 import LocationModule from '@/components/modules/location.module.vue';
+import ShoppingCartModule from '@/components/modules/shopping-cart.module.vue';
 // import QuellcodeModule from './components/modules/quellcode.module.vue';
 
 export default
@@ -1075,5 +1076,17 @@ export default
       ],
       component: LocationModule
     },
+    {
+      name     : 'shopping-cart',
+      component: ShoppingCartModule,
+      editor   : {
+        modes: [
+          {
+            key : 'success',
+            name: 'Zeigt die Ergebnissseite nach dem Checkout',
+          },
+        ],
+      },
+    }
   ]
 }

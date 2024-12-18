@@ -18,6 +18,11 @@ export default interface FrontendConfig {
         customEndpoints?: StudioSDK['customEndpoints']
     }
 
+    payment?: {
+        type: 'internal' | 'shopify',
+        options: Record<string, string>
+    }
+
     /**
      * base path for loading files
      */

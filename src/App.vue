@@ -6,7 +6,8 @@ import modulesBrowser from './modules.browser';
 import modulesMail from './modules.mail';
 import useMainStore from '@/stores/main.store';
 import staticData from './staticData';
-import customModules from './customModules';
+import customModulesBrowser from './customModules.browser';
+import customModulesMail from './customModules.mail';
 import partialsBrowser from './partials.browser';
 import partialsMail from './partials.mail';
 
@@ -29,9 +30,15 @@ onMounted(() => {
 
   }
 
-  if(customModules.length) {
+  if(customModulesBrowser.length) {
 
-    mainStore.customModules = customModules;
+    mainStore.customModulesBrowser = customModulesBrowser;
+
+  }
+
+  if(customModulesMail.length) {
+
+    mainStore.customModulesMail = customModulesMail;
 
   }
 
@@ -44,9 +51,15 @@ onServerPrefetch(() => {
 
   }
 
-  if(customModules.length) {
+  if(customModulesBrowser.length) {
 
-    mainStore.customModules = customModules;
+    mainStore.customModulesBrowser = customModulesBrowser;
+
+  }
+
+  if(customModulesMail.length) {
+
+    mainStore.customModulesMail = customModulesMail;
 
   }
 

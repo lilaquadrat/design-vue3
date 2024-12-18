@@ -28,6 +28,7 @@ const notEmpty = computed(() => !!(props.headline?.length || props.subline?.leng
 </template>
 
 <style lang="less" scoped>
+
 .lila-textblock {
   display: grid;
   gap: 15px;
@@ -49,9 +50,12 @@ const notEmpty = computed(() => !!(props.headline?.length || props.subline?.leng
     font-size: @fontText;
   }
 
+  h1, h2, h3, h4, h5 {
+    .trans(color);
+  }
+
   h2 + h3 {
     .multi(margin-top, 2);
-    
   }
 
   &.bright {
@@ -63,6 +67,16 @@ const notEmpty = computed(() => !!(props.headline?.length || props.subline?.leng
 
   &:empty {
     display: none;
+  }
+}
+
+.lila-link, .lila-button {
+  &:hover {
+    .lila-textblock {
+      h1, h2, h3, h4, h5 {
+        color: @color2;
+      }
+    }
   }
 }
 </style>

@@ -87,44 +87,24 @@ function setElements () {
             </section>
 
             <section class="title">
-              <template v-if="!single.link?.link">
+              
+              <lila-action-partial v-bind="single.link">
                 <h2 v-if="single.artist && single.name" class="artist">{{ single.artist }}</h2>
-              </template>
-
-              <template v-if="single.link?.link">
-                <lila-link-partial v-bind="single.link">
-                  <h2 v-if="single.artist && single.name" class="artist">{{ single.artist }}</h2>
-                </lila-link-partial>
-              </template>
-
-              <template v-if="single.link?.link">
-                <lila-link-partial v-bind="single.link">
-                  <h1 class="name">
-                    <template v-if="single.name && single.artist || single.name && !single.artist">
-                      {{ single.name }}
-                    </template>
-                    <template v-if="!single.name && single.artist">
-                      {{ single.artist }}
-                    </template>
-                  </h1>
-                </lila-link-partial>
-              </template>
-              <template v-if="!single.link?.link">
-                  <h1 class="name">
-                    <template v-if="single.name && single.artist || single.name && !single.artist">
-                      {{ single.name }}
-                    </template>
-                    <template v-if="!single.name && single.artist">
-                      {{ single.artist }}
-                    </template>
-                  </h1>
-              </template>
+                <h1 class="name">
+                  <template v-if="single.name && single.artist || single.name && !single.artist">
+                    {{ single.name }}
+                  </template>
+                  <template v-if="!single.name && single.artist">
+                    {{ single.artist }}
+                  </template>
+                </h1>
+              </lila-action-partial>
 
               <p v-if="single.description || single.textblock?.intro">{{ single.description || single.textblock?.intro }}</p>
             </section>
 
             <section class="callToAction" v-if="single.callToAction">
-              <lila-link-partial callToAction v-bind="single.callToAction" />
+              <lila-action-partial callToAction v-bind="single.callToAction" />
             </section>
 
         </section>
@@ -152,33 +132,41 @@ function setElements () {
 
   .headlines;
 
-    .time-container {
-      display: grid;
+  .time-container {
+    display: grid;
 
-      .font-head;
+    .font-head;
 
-      font-size: @headline_L;
-      line-height: @headlineLineHeight_L;
+    font-size: @headline_L;
+    line-height: @headlineLineHeight_L;
 
-      // font-variant-numeric: tabular-nums;
+    // font-variant-numeric: tabular-nums;
 
-      text-align: right;
+    text-align: right;
 
-      text-transform: uppercase;
-      
-      align-self: start;
-      justify-self: center;
+    text-transform: uppercase;
+    
+    align-self: start;
+    justify-self: center;
 
-      position: sticky;
-      top: 20px;
+    position: sticky;
+    top: 20px;
 
-      color: @color1;
-      
-      .year {
-        color: @grey;
-      }
-      
+    color: @color1;
+    
+    .year {
+      color: @grey;
     }
+    
+  }
+
+  .lila-link, .lila-button {
+    &:hover {
+      h1, h2, h3, h4, h5 {
+        color: @color2;
+      }
+    }
+  }
 
   .events-container {
 
@@ -253,6 +241,16 @@ function setElements () {
           .title {
             display: grid;
             gap: 15px;
+
+            :deep(.lila-button), :deep(.lila-link) {
+              max-width: fit-content;
+              display: grid;
+              gap: 15px;
+            }
+
+            h1, h2, h3, h4, h5 {
+              .trans(color);
+            }
 
             h1 {
               font-size: @headline_S;

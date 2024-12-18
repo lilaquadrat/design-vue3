@@ -142,7 +142,7 @@ function handleChildEvent (event: string) {
           <p v-if="description || list?.description">{{ description || list?.description }}</p>
           <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
           <section v-if="callToAction" class="callToAction-container">
-            <lila-link-partial v-bind="callToAction" />
+            <lila-action-partial v-bind="callToAction" />
           </section>
         </section>
 

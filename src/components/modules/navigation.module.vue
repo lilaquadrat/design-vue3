@@ -247,14 +247,14 @@ const calculateOptionsStyle = () => {
 </script>
 <template>
   <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]"
-    class="lila-navigation-module lila-module"> {{ useTriggerMenu }}
+    class="lila-navigation-module lila-module">
     <section class="placeholder"></section>
 
     <section class="overflow-container">
       <section ref="linksContainer" class="links-container">
         <section ref="logoContainer" class="logo-container">
-          <a class="logo" href="/">
-            <lila-picture-partial v-if="picture" v-bind="picture" />
+          <a class="logo lila-link" href="/">
+            <lila-picture-partial v-if="picture?.src.length" v-bind="picture" />
             <template v-if="name">{{ name }}</template>
           </a>
         </section>
@@ -271,10 +271,10 @@ const calculateOptionsStyle = () => {
         <section ref="links" class="links">
           <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
 
-            <lila-link-partial :key="`link-${index}`" class="main" :class="{ isActive: element.active }"
-              v-if="!element.links" v-bind="element" />
+            <lila-action-partial :key="`link-${index}`" :class="{ isActive: element.active }"
+              v-if="!element.links" colorScheme="navigation" v-bind="element" />
 
-            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="white" v-bind="element"
+            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="navigation" v-bind="element"
               icon="arrow-right" @click="openElement($event, element)">
               {{ element.text }}
             </lila-button-partial>
@@ -293,7 +293,7 @@ const calculateOptionsStyle = () => {
             v-if="overlayContent && open && !useTriggerMenu" background="none" @close="toggle">
             <ul class="lila-navigation-module-overlay" v-if="overlayContent" ref="overlay" :style="style">
               <li :key="`sublinks-${index}`" v-for="(single, index) in overlayContent">
-                <lila-link-partial v-if="single.text" v-bind="single" />
+                <lila-action-partial v-if="single.text" v-bind="single" />
               </li>
             </ul>
           </lila-overlay-background-partial>
@@ -308,19 +308,19 @@ const calculateOptionsStyle = () => {
               :class="[variant, { open }]" :style="style">
               <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
 
-                <lila-link-partial :key="`link-${index}`" class="main" :class="{ isActive: element.active }"
+                <lila-action-partial :key="`link-${index}`" :class="{ isActive: element.active }"
                   v-if="!element.links" v-bind="element" />
 
                 <section :key="`group-${index}`" v-if="element.links" class="link-group main">
 
-                  <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="white"
+                  <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="navigation"
                     @click="toggleTriggerElement($event, element)">
                     {{ element.text }}
                   </lila-button-partial>
 
                   <ul class="link-list" v-show="element.links && element.active">
                     <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
-                      <lila-link-partial v-if="single.text" v-bind="single"></lila-link-partial>
+                      <lila-action-partial v-if="single.text" v-bind="single"></lila-action-partial>
                     </li>
                   </ul>
 
@@ -339,7 +339,7 @@ const calculateOptionsStyle = () => {
 .lila-navigation-module-overlay,
 .lila-navigation-module {
 
-  a,
+  :deep(.lila-link),
   :deep(.lila-button) {
     .font-head;
 
@@ -360,12 +360,8 @@ const calculateOptionsStyle = () => {
     text-transform: none;
     cursor: pointer;
 
-    .basicHover;
-
     &.isActive, &.router-link-active {
-      // color: @color3;
-      background-color: @color1;
-      color: @white;
+      color: @color3;
     }
 
   }
@@ -382,10 +378,10 @@ const calculateOptionsStyle = () => {
   background-color: transparent;
   transition-delay: 0s;
 
-  a,
-  :deep(.lila-button.icon.iconText) {
-    .multi(padding, 0, 2);
-  }
+  // :deep(a),
+  // :deep(.lila-button.icon.iconText) {
+  //   .multi(padding, 0, 2);
+  // }
 
   .logo,
   .trigger {
@@ -572,6 +568,7 @@ const calculateOptionsStyle = () => {
       justify-content: end;
       grid-auto-flow: column;
       grid-column-start: 3;
+      gap: 20px;
     }
 
   }
@@ -589,9 +586,9 @@ const calculateOptionsStyle = () => {
 }
 
 .lila-navigation-module-overlay {
-  a {
-    .multi(padding, 0, 4);
-  }
+  .multi(padding, 2);
+  display: grid;
+  gap: 5px;
 
   :deep(.lila-button) {
     &.icon.iconText {
@@ -600,8 +597,8 @@ const calculateOptionsStyle = () => {
   }
 
   &.useTriggerMenu {
-
     width: 100%;
+    .multi(padding, 2, 4);
 
     @media @desktop {
       max-width: 100%;
@@ -612,9 +609,14 @@ const calculateOptionsStyle = () => {
       padding: 0;
     }
 
+    :deep(.lila-link), :deep(.lila-button) {
+      display: grid;
+      max-width: fit-content;
+    }
+
     &.left {
 
-      a,
+      :deep(a),
       :deep(.lila-button) {
         .multi(padding, 0, 4);
         border-bottom: solid 1px @color3;
@@ -635,7 +637,9 @@ const calculateOptionsStyle = () => {
 
     .link-group {
       .link-list {
-        a {
+        display: grid;
+        gap: 5px;
+        :deep(.lila-link) {
           .multi(padding, 0, 8);
         }
 

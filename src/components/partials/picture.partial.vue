@@ -50,14 +50,13 @@ watch(image, () => {
 
 onServerPrefetch(() => {
 
-  if(store.configuration.preloadImages) loading.value = true;
+  if(store.configuration?.preloadImages) loading.value = true;
   
 })
 
 onBeforeMount(() => {
 
-  console.log(store.configuration, store);
-  // if(store.configuration.preloadImages) loading.value = true;
+  if(store.configuration?.preloadImages) loading.value = true;
 
 });
 
@@ -119,7 +118,18 @@ const sourceMedia = computed((): PictureMedia[] => {
 </template>
 <style lang="less" scoped>
 
+.lila-link, .lila-button {
+  &:hover {
+    .lila-figure {
+      img {
+        opacity: .5;
+      }
+    }
+  }
+}
+
 .lila-figure {
+
   position: relative;
   display: grid;
   justify-content: center;
@@ -134,6 +144,7 @@ const sourceMedia = computed((): PictureMedia[] => {
     transition: opacity .5s ease, transform .5s ease;
 
     img {
+      .trans(opacity);
       max-width: 100%;
       max-height: 100%;
       width: 100%;

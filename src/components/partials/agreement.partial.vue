@@ -4,6 +4,7 @@ defineProps<{
   error?: boolean,
   contentId: string,
   required?: boolean,
+  compact?: boolean,
   predefined?: boolean,
 }>();
 
@@ -14,9 +15,10 @@ const changeHandler = (checked: boolean) => {
 
 </script>
 <template>
-  <section class="lila-agreement-partial">
-    <lila-checkbox-partial name="agreement" :required="required" :error="error" :modelValue="modelValue" @change="changeHandler"><slot /></lila-checkbox-partial>
+  <section class="lila-agreement-partial" :class="{compact, required}">
+    <lila-checkbox-partial name="agreement" :compact="compact" :required="required" :error="error" :modelValue="modelValue" @change="changeHandler"><slot /></lila-checkbox-partial>
 
+    <lila-input-labels-partial v-if="compact" hideLabel :error="error" :required="required" />
     <lila-content-container-partial :predefined="predefined" :id="predefined ? contentId : undefined" :internalId="!predefined ? contentId : undefined" overlay>{{$translate('show content')}}</lila-content-container-partial>
 
   </section>
@@ -33,6 +35,19 @@ const changeHandler = (checked: boolean) => {
   .lila-checkbox-parent-container {
     grid-column-start: 1;
     grid-column-end: 3;
+  }
+
+  &.compact.required {
+    grid-template-columns: 45px 1fr 1fr;
+
+    .lila-checkbox-parent-container {
+      grid-column-start: 1;
+      grid-column-end: 4;
+    }
+
+    .label-container {
+      grid-column-start: 3;
+    }
   }
 
   .content-container-full {

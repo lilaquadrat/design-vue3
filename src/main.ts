@@ -11,6 +11,7 @@ import youtubePlugin from '@/plugins/youtube';
 import traceablePlugin from '@/plugins/traceable';
 import authPlugin from '@/plugins/auth';
 import replacerPlugin from '@/plugins/replacer';
+import currencyPlugin from '@/plugins/currency';
 import './models';
 import modules from './modules.browser';
 import partials from './partials.browser';
@@ -66,6 +67,7 @@ export function getAppInstance (context: any, routes: readonly RouteRecordRaw[],
   app.use(traceablePlugin);
   app.use(authPlugin);
   app.use(replacerPlugin);
+  app.use(currencyPlugin);
 
   app.config.globalProperties.$translations.add(de, 'de');
   app.config.globalProperties.$translations.select('de');

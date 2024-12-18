@@ -49,17 +49,17 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
       <section class="contact-social-container">
         <section v-if="contact" class="contact">
           <h3>{{ contact.title }}</h3>
-          <h3><lila-link-partial v-bind="contact.link" /></h3>
+          <h3><lila-action-partial v-bind="contact.link" /></h3>
         </section>
 
         <section v-if="social" class="social">
           <h3>{{ social.title }}</h3>
 
           <div class="icon-container">
-            <lila-link-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
+            <lila-action-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
               :link="element.link.link">
               <lila-picture-partial v-bind="element.picture" />
-            </lila-link-partial>
+            </lila-action-partial>
           </div>
         </section>
       </section>

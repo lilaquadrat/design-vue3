@@ -16,7 +16,7 @@ const { apiConfig } = useMainStore();
 const userStore = useUserStore();
 const { traceable } = useTraceable();
 const element = ref<HTMLElement>();
-const props = defineProps<ModuleBaseProps & {hint: string, hintData: any}>();
+const props = defineProps<ModuleBaseProps & {hint: string, additionalData: any}>();
 const { inviewState } = useInview(element, {align: props.variant?.includes('align')});
 const state = ref<string>();
 const traceId = ref<string>();
@@ -53,7 +53,7 @@ async function handleForm () {
 
 </script>
 <template>
-    <article ref="element" :class="[inviewState]" class="lila-module lila-connect-user-module">
+    <article ref="element" :class="[inviewState]" class="lila-module lila-confirm-email-module">
 
         <form>
             <lila-fieldset-partial>
@@ -67,7 +67,7 @@ async function handleForm () {
     </article>
 </template>
 <style lang="less" scoped>
-.lila-connect-user-module {
+.lila-confirm-email-module {
     .module;
     width: @moduleWidth_S;
 }

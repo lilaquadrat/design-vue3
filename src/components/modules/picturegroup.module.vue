@@ -5,6 +5,7 @@ import type PictureGroupElement from '@interfaces/PictureGroupElement.interface'
 import { computed, ref } from 'vue';
 import { useInview } from '@/plugins/inview';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import { isDeepEmpty } from '@lilaquadrat/studio/lib/esm/frontend';
 
 defineOptions({ inheritAttrs: false });
 
@@ -15,11 +16,11 @@ const props = defineProps<ModuleBaseProps & {
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
 
-function componentType(link?: Link): 'lila-link-partial' | 'section' {
+function componentType (link?: Link): 'lila-link-partial' | 'section' {
 
   return link?.link?.length
     ? 'lila-link-partial'
-    : 'section'; link?.link?.length
+    : 'section';
 
 }
 
@@ -50,6 +51,10 @@ const brightTextIntro = computed(() => {
   return variantsArray;
 
 });
+const filteredElements: PictureGroupElement & {hasContent: boolean} = computed(() => props.elements.map((single) => ({
+  ...single,
+  hasContent: !isDeepEmpty(single.textblock) || !isDeepEmpty(single.links) || !isDeepEmpty(single.list)
+})));
 
 </script>
 <template>
@@ -60,14 +65,16 @@ const brightTextIntro = computed(() => {
 
       <section class="elements-container">
 
-        <component v-for="(element, index) in elements" :key="`picturegroup-element-${index}`" class="element" :is="componentType(element.link)" v-bind="element.link" v-memo="elements">
-          <lila-picture-partial v-if="element.picture" center :fit="fitVariant" v-bind="element.picture" />
-          <section class="text-container" v-if="element.textblock || element.links || element.list">
-            <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
-            <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
-            <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
-          </section>
-        </component>
+        <section v-for="(element, index) in filteredElements" :key="`picturegroup-element-${index}`" class="element" v-memo="elements">
+          <lila-action-partial v-bind="element.link">
+            <lila-picture-partial v-if="element.picture?.src?.length" center :fit="fitVariant" v-bind="element.picture" />
+            <section class="text-container" v-if="element.hasContent">
+              <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
+              <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
+              <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
+            </section>
+          </lila-action-partial>
+        </section>
 
       </section>
 

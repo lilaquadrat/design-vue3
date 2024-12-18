@@ -25,11 +25,11 @@ const mainStore = useMainStore();
 const userStore = useUserStore();
 const {setCustomer} = useUserStore();
 const props = defineProps<ModuleBaseProps & {
-    textblock?: Textblock;
-    categoryTextblock?: Textblock;
-    genericData: GenericDataDistributed;
-    editor?: {modes: string[]},
-    agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {};
+    textblock?: Textblock
+    categoryTextblock?: Textblock
+    genericData: GenericDataDistributed
+    editor?: {modes: string[]}
+    agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {}
 }>();
 const state = ref<string>();
 const traceId = ref<string>();
@@ -47,6 +47,7 @@ const emit = defineEmits<{
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
     (e: 'event', data: 'success' | 'reset'): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
+const mode = computed(() => list.value?.mode);
 const list = computed<BasicData<List> | undefined>(() => {
 
   if(props.genericData.data) {
@@ -434,7 +435,7 @@ const handleForm = async (event: Event) => {
 
 </script>
 <template>
-  <section class="lila-contact-module lila-module">
+  <section class="lila-contact-module lila-module" :class="[mode]">
 
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />
@@ -459,7 +460,6 @@ const handleForm = async (event: Event) => {
 
       </lila-fieldset-partial>
 
-      {{ model.category }}
       <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
         <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />

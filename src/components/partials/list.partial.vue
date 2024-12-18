@@ -22,7 +22,7 @@ const notEmpty: ComputedRef<boolean> = computed(() => !!props.value?.find((singl
 const filteredValues: ComputedRef<(string | Link)[] | undefined> = computed(() => props.value?.filter((single) => {
 
   if (typeof single === 'string' && single.length) return single;
-  if (typeof single === 'object' && single.text && single.link) return single;
+  if (typeof single === 'object' && single.text && (single.link || single.event)) return single;
   return false;
 
 }));
@@ -39,7 +39,7 @@ const filteredValues: ComputedRef<(string | Link)[] | undefined> = computed(() =
         <lila-icons-partial v-if="!isNumbered && !noStyle && !noIcon" size="small"
           :color-scheme="white ? 'white' : 'colorScheme1'" :type="'arrow-right'" />
 
-        <lila-link-partial v-if="typeof (single) === 'object'" v-bind="single" />
+        <lila-action-partial v-if="typeof (single) === 'object'" v-bind="single" />
         <template v-if="typeof (single) === 'string'">{{ $replacer(single) }}</template>
 
       </li>
@@ -48,7 +48,7 @@ const filteredValues: ComputedRef<(string | Link)[] | undefined> = computed(() =
     <lila-link-group-partial :variant="variant" v-if="actions">
 
       <template v-for="(single, index) in filteredValues">
-        <lila-link-partial v-if="typeof (single) === 'object'" v-bind="single" :key="`list-actions-element-${index}`" />
+        <lila-action-partial v-if="typeof (single) === 'object'" v-bind="single" :key="`list-actions-element-${index}`" />
       </template>
 
     </lila-link-group-partial>
@@ -75,7 +75,8 @@ const filteredValues: ComputedRef<(string | Link)[] | undefined> = computed(() =
     li {
 
       display: grid;
-      grid-template-columns: 20px auto;
+      grid-template-columns: 20px 1fr;
+      max-width: fit-content;
 
       align-content: start;
 

@@ -1,3 +1,3 @@
 export default interface GenericEvents {
-    [key: string]: (params?: Record<string, unknown>) => void;
+    [key: string]: (additionalData: string | undefined, mouseEvent: MouseEvent) => void;
 }
