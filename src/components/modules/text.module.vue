@@ -67,7 +67,7 @@ const linkVariant = computed(() => {
 </script>
 <template>
   <article :id="id" ref="element" class="lila-text-module lila-module" :class="[inviewState, variant, {sub}]">
-
+   
     <lila-textblock-partial v-bind="props" />
     <lila-list-partial v-bind="list" mode="list" :variant="listVariant" />
     <lila-list-partial v-bind="links" mode="links" :variant="linkVariant" />

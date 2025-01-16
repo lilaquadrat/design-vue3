@@ -5,9 +5,12 @@ import { basename } from 'path';
 import type { Content, Customers } from '@lilaquadrat/interfaces';
 import useContentStore from '@/stores/content.store';
 import { dynamicRoutes } from './routes';
+import hooks from './mixins/hooks';
 
 export async function render (url: string, context: any, contextData: Content[], recipientData: Customers, manifest: Record<string, string[]>) {
   const { app, router, pinia } = getAppInstance(context, dynamicRoutes, false);
+
+  hooks(router, { initAuth: false });
 
   await router.push(url);
   await router.isReady();

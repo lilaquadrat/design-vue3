@@ -5,6 +5,8 @@ import useMainStore from '@/stores/main.store';
 import type { Agreement, BasicData, GenericDataDistributed, List } from '@lilaquadrat/interfaces';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
     genericData: GenericDataDistributed
     editor?: {modes: string[]}
@@ -184,14 +186,26 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
 
     <lila-overlay-background-partial ref="overlay" v-if="viewMode === 'full'" transition background="none"
       @close="switchMode" @mounted="showContent = true">
-      <article class="lila-shopping-cart-full">
+      <article class="lila-shopping-cart-full" :class="{showAgreements}">
         <header class="cart-header">
           <h1>
             {{ $translate('shopping-cart-title') }}
           </h1>
           <lila-button-partial color-scheme="colorScheme2" icon="close" @click="close" />
         </header>
-        <section class="products-container">
+        <section v-if="showAgreements" class="agreements">
+
+          <lila-agreement-partial v-for="(single, index) in agreementsExtended" :key="`agreement-${index}`" 
+            v-model="single.value" 
+            compact
+            :required="single.required" 
+            :predefined="single.predefined"
+            :contentId="single.contentId">
+            {{$translate(single.text)}}
+          </lila-agreement-partial>
+
+        </section>
+        <section v-if="!showAgreements" class="products-container">
           <p v-if="!cartStore.products.length" class="no-products-note">{{ $translate('shopping-cart-no-products') }} </p>
           <article class="product" v-for="(product, index) in cartStore.products" :class="{ hasImage: product.image }"
             :key="`single-product-${index}`">
@@ -222,30 +236,22 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
           <span class="costs-summary-amount">{{ $currency(cartStore.costSummary) }}</span>
         </section>
         <footer class="cart-footer">
-          <section class="agreements" v-if="showAgreements">
-
-            <lila-agreement-partial v-for="(single, index) in agreementsExtended" :key="`agreement-${index}`" 
-              v-model="single.value" 
-              compact
-              :required="single.required" 
-              :predefined="single.predefined"
-              :contentId="single.contentId">
-              {{$translate(single.text)}}
-            </lila-agreement-partial>
-          
-          </section>
 
           <lila-button-group-partial>
             <lila-button-partial v-if="!showAgreements" icon="arrow-right-long" icon-size="medium" @click="toggleAgreements">{{ $translate('shopping-cart-checkout') }} </lila-button-partial>
+            <lila-button-partial v-if="showAgreements" color-scheme="transparent" @click="toggleAgreements">
+              {{ $translate('shopping-cart-show-items') }} 
+            </lila-button-partial>
             <lila-action-partial v-if="showAgreements" call-to-action icon="arrow-right-long" :disabled="!agreementsAccepted" :link="cartStore.cart.checkoutUrl" @click="updateAgreementsAndCheckout">
               {{ $translate('shopping-cart-checkout') }} 
             </lila-action-partial>
           </lila-button-group-partial>
+
         </footer>
       </article>
     </lila-overlay-background-partial>
 
-    <button class="cart-button" :class="{ animate }" @click="switchMode">
+    <button class="cart-button" type="button" :class="{ animate }" @click="switchMode">
       <lila-icons-partial size="larger" type="cart" />
       <span class="items-amount">{{ cartStore.itemsQuantity }}</span>
     </button>
@@ -263,7 +269,8 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
 
   .cart-button {
     display: grid;
-    .multi(padding, 2);
+    width: 40px;
+    height: 40px;
 
     position: relative;
 
@@ -271,7 +278,8 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
     cursor: pointer;
     border: 0;
 
-    justify-items: end;
+    align-items: center;
+    justify-items: center;
 
     .basicHover;
 
@@ -286,6 +294,9 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
       line-height: 15px;
 
       font-size: 10px;
+
+      top: 5px;
+      right: 5px;
     }
 
     &.animate {
@@ -319,7 +330,6 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
   box-shadow: 0 0 5px @grey;
   border: solid 1px @grey2;
   background-color: @grey2;
-  align-content: start;
   grid-template-rows: max-content 1fr max-content max-content;
 
   right: 0;
@@ -362,18 +372,21 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
   .cart-footer {
     display: grid;
     gap: 40px;
+    overflow: hidden;
     .multi(padding, 2, 4, 4, 2);
     
-    .agreements {
-      .multi(padding, 0, 4);
-      display: grid;
-      gap: 20px;
-    }
-
     a {
       text-align: center;
     }
 
+  }
+      
+  .agreements {
+    .multi(padding, 0, 4);
+    overflow-y: auto;
+    align-content: start;
+    display: grid;
+    gap: 20px;
   }
 
   .products-container {
@@ -381,6 +394,7 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
     align-content: start;
     gap: 10px;
     .multi(padding, 0, 2);
+    overflow-y: auto;
 
     .no-products-note {
       .multi(padding, 2);
@@ -446,6 +460,15 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
       .font-bold;
       font-size: @headline_XS;
       color: @color1;
+    }
+  }
+
+  &.showAgreements {
+    // grid-template-rows: max-content max-content max-content;
+
+    .cart-footer {
+      // align-self: end;
+      // grid-template-rows: minmax(40px, auto) max-content;
     }
   }
 

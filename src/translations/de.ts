@@ -140,5 +140,6 @@ export default {
   'shopping-cart-cost-summary'                                                                            : 'Zwischensumme •',
   'shopping-cart-cost-summary-quantity_plural'                                                            : '%s Artikel',
   'shopping-cart-cost-summary-quantity_singular'                                                          : '%s Artikel',
-  'shopping-cart-no-products'                                                                             : 'Du hast keine Produkte im Warenkorb'
+  'shopping-cart-no-products'                                                                             : 'Du hast keine Produkte im Warenkorb',
+  'shopping-cart-show-items'                                                                              : 'zurück',
 };

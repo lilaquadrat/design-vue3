@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
-import { computed, inject } from 'vue';
+import { computed, inject, useSlots } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
+// Access all available slots
+const slots = useSlots();
 const props = defineProps<{
   link?: string
   text?: string
@@ -29,11 +31,18 @@ const type = computed(() => {
   return 'router-link';
 
 });
+const isSlotEmpty = computed(() => {
+  // defaultSlot() returns an array of VNodes if present
+  // => If undefined or zero-length, the slot is empty
+  const defaultSlot = slots.default?.({});
+
+  return !defaultSlot || defaultSlot.length === 0;
+});
 
 </script>
 <template>
   <component v-if="link"
-    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text }]"
+    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text && isSlotEmpty }]"
     class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase">
     <template v-if="text">{{ $replacer(text) }}</template>
     <slot v-if="!text"></slot>

@@ -5,7 +5,7 @@ import useMainStore from './main.store';
 import type { Agreement } from '@lilaquadrat/interfaces';
 
 export const useCartStore = defineStore('cart', () => {
-
+  
   const products = ref<any[]>([]);
   const costSummary = ref<number>(0);
   const itemsQuantity = ref<number>(0);

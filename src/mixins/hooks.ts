@@ -4,7 +4,7 @@ import logger from './logger';
 import { auth } from '@/plugins/auth';
 import useUserStore from '@/stores/user.store';
 
-export default (router: Router) => {
+export default (router: Router, options?: {initAuth?: boolean}) => {
 
   router.beforeEach(async (to, from, next) => {
 
@@ -17,13 +17,15 @@ export default (router: Router) => {
 
       mainStore.config = __FRONTEND_CONFIG__;
 
-      if (mainStore.config?.auth0Options) {
-
-        await auth.init(mainStore.config.auth0Options);
-
+      if(options?.initAuth !== false){
+        if (mainStore.config?.auth0Options) {
+  
+          await auth.init(mainStore.config.auth0Options);
+  
+        }
+  
+        await userStore.initCustomer();
       }
-
-      await userStore.initCustomer();
 
       mainStore.startupDone = true;
 
