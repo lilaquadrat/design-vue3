@@ -2,10 +2,10 @@
 import type Link from '@interfaces/link.interface';
 import type Textblock from '@interfaces/textblock.interface';
 import type PictureGroupElement from '@interfaces/PictureGroupElement.interface';
-import { computed, ref } from 'vue';
+import { computed, ref, type ComputedRef } from 'vue';
 import { useInview } from '@/plugins/inview';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
-// import { isDeepEmpty } from '@lilaquadrat/studio';
+import { isDeepEmpty } from '@lilaquadrat/studio/lib/esm/frontend';
 
 defineOptions({ inheritAttrs: false });
 
@@ -15,15 +15,6 @@ const props = defineProps<ModuleBaseProps & {
 }>();
 const element = ref<HTMLElement>();
 const { inviewState } = useInview(element, { align: props.variant?.includes('align') });
-
-function componentType (link?: Link): 'lila-link-partial' | 'section' {
-
-  return link?.link?.length
-    ? 'lila-link-partial'
-    : 'section';
-
-}
-
 const linkVariant = computed(() => {
 
   if (props.variant?.includes('product')) return ['actions', 'center'];
@@ -51,9 +42,9 @@ const brightTextIntro = computed(() => {
   return variantsArray;
 
 });
-const filteredElements: PictureGroupElement & {hasContent: boolean} = computed(() => props.elements.map((single) => ({
+const filteredElements: ComputedRef<(PictureGroupElement & { hasContent: boolean })[]> = computed(() => props.elements.map((single) => ({
   ...single,
-  hasContent: true
+  hasContent: !isDeepEmpty(single.textblock) || !isDeepEmpty(single.links) || !isDeepEmpty(single.list)
 })));
 
 </script>
