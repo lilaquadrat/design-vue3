@@ -5,7 +5,7 @@ import type PictureGroupElement from '@interfaces/PictureGroupElement.interface'
 import { computed, ref } from 'vue';
 import { useInview } from '@/plugins/inview';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
-import { isDeepEmpty } from '@lilaquadrat/studio/lib/esm/frontend';
+// import { isDeepEmpty } from '@lilaquadrat/studio';
 
 defineOptions({ inheritAttrs: false });
 
@@ -53,7 +53,7 @@ const brightTextIntro = computed(() => {
 });
 const filteredElements: PictureGroupElement & {hasContent: boolean} = computed(() => props.elements.map((single) => ({
   ...single,
-  hasContent: !isDeepEmpty(single.textblock) || !isDeepEmpty(single.links) || !isDeepEmpty(single.list)
+  hasContent: true
 })));
 
 </script>
