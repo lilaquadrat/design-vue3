@@ -74,6 +74,8 @@ const rotateClass: ComputedRef<string | undefined> = computed(() => (props.rotat
 </template>
 
 <!-- https://heroicons.com/ -->
+<!-- https://www.svgrepo.com/svg -->
+<!-- https://www.freeconvert.com/de -->
 <style lang="less" scoped>
 .lila-icons-partial {
   display: grid;
