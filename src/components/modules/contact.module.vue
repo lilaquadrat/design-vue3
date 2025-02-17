@@ -47,15 +47,6 @@ const emit = defineEmits<{
     (e: string, data: any): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
     (e: 'event', data: 'success' | 'reset'): void; //Argument of type '{}' is not assignable to parameter of type 'boolean'.
 }>();
-const  title = computed(() => ({
-  headline: props.textblock?.headline
-})); 
-const contactContent = computed(() => ({
-  subline:  props.textblock?.subline,
-  intro: props.textblock?.intro,
-  text: props.textblock?.text
-}));
-
 const mode = computed(() => list.value?.mode);
 const list = computed<BasicData<List> | undefined>(() => {
 
@@ -447,13 +438,13 @@ const handleForm = async (event: Event) => {
   <section class="lila-contact-module lila-module" :class="[mode]">
 
     <section class="intro-container">
-      <lila-textblock-partial v-bind="title" /> 
+      <lila-textblock-partial v-bind="textblock" />
 
-      <!-- <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
+      <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
       <h3 class="limited" v-if="limited && !disabled && !hideFreeSlots">
         <template v-if="!participantsState && !disabled">{{ $translateWithDiff('LIST_LIMITED_AVAILABILITY', limited) }}</template>
         <template v-if="participantsState && !disabled">{{ $translate('LIST_LIMITED_AVAILABILITY_STATE', [slotsAvailable.toString(), limited.toString()]) }}</template>
-      </h3> -->
+      </h3>
     </section>
 
     <section v-if="showFeedback" :content="feedbackContent">
@@ -479,17 +470,17 @@ const handleForm = async (event: Event) => {
 
         <lila-fieldset-partial legend="personal"> 
   
-          <lila-input-partial :error="errorsObject?.prename" required v-model="model.prename" :placeholder="$translate('name')">
+          <lila-input-partial :error="errorsObject?.prename" required v-model="model.prename">
             {{$translate('prename')}}
           </lila-input-partial>
   
-          <lila-input-partial :error="errorsObject?.name" required v-model="model.name" :placeholder="$translate('name')">
+          <lila-input-partial :error="errorsObject?.name" required v-model="model.name">
             {{$translate('name')}}
           </lila-input-partial>
   
         </lila-fieldset-partial>
   
-        <lila-address-partial v-if="addressModel" v-model="addressModel" :error="errorsObject?.address" required />\
+        <lila-address-partial v-if="addressModel" v-model="addressModel" :error="errorsObject?.address" required />
   
         <lila-fieldset-partial legend="contact">
   
@@ -500,7 +491,7 @@ const handleForm = async (event: Event) => {
           <lila-input-partial v-model="model.phone">
             {{$translate('phone')}}
           </lila-input-partial>
-ﬁ  
+  
         </lila-fieldset-partial>
 
       </template>
