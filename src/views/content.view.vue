@@ -27,6 +27,13 @@ watch(() => userStore.locked, () => getContent());
 onBeforeMount(async () => await getContent());
 onServerPrefetch(() => getStoreContent());
 
+const linkMode = computed(() => {
+
+  if(mainStore.config?.dynamic === false) return 'link';
+
+  return undefined
+
+});
 const contentType = computed(() => route.meta.contentType as 'public' | 'members');
 const isLocked = computed(() => contentType.value == 'members' && userStore.locked?.length);
 const hint = computed(() => {
@@ -185,6 +192,6 @@ function mergeContent (baseContent: Partial<BasicData<Content>>, layout?: Conten
 <template>
     <article class="content-screen screen">
         <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
-        <lila-content-module v-if="dataMerged" :content="dataMerged" />
+        <lila-content-module v-if="dataMerged" :linkMode="linkMode" :content="dataMerged" />
     </article>
 </template>

@@ -2,15 +2,14 @@ import type { RouteRecordRaw } from 'vue-router';
 import PreviewView from '@/views/preview.view.vue';
 import ContentView from '@/views/content.view.vue';
 import EditorView from '@/views/editor.view.vue';
-import MainViewStatic from '@/views/main-static.view.vue';
-import MainViewDynamic from '@/views/main-dynamic.view.vue';
+import MainView from '@/views/main.view.vue';
 import LoginView from '@/views/login.view.vue';
 import RegisterView from '@/views/register.view.vue';
 
 const dynamicRoutes: readonly RouteRecordRaw[] = [
   {
     path     : '/',
-    component: MainViewDynamic,
+    component: MainView,
     children : [
       {
         path     : '/m/:pathMatch(.*)?',
@@ -52,7 +51,7 @@ const dynamicRoutes: readonly RouteRecordRaw[] = [
 const previewRoutes: readonly RouteRecordRaw[] = [
   {
     path     : '/',
-    component: MainViewStatic,
+    component: MainView,
     children : [
       {
         path     : '/:pathMatch(.*)*',

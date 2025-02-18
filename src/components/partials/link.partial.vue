@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
+import { hasSlotContent } from '@/mixins/hasSlotContent';
 import { computed, inject, useSlots } from 'vue';
 
 defineOptions({ inheritAttrs: false });
@@ -19,25 +20,21 @@ const props = defineProps<{
   disabled?: boolean
   [key: string]: any,
 }>();
-// const linkMode: 'event' | 'link' | undefined = inject('linkMode');
+const linkMode: 'event' | 'link' | undefined = inject('linkMode');
 const linkBase = inject('linkBase');
 const linkWithBase = computed(() => (linkBase ? `${linkBase}/${props.link}` : props.link));
 const isWhite = computed(() => props.variant?.includes('white') || props.callToAction);
 const mode = computed(() => props.link?.startsWith('http') ? 'external' : 'internal');
 const type = computed(() => {
 
+  if(linkMode === 'link') return 'a';
+
   if(mode.value === 'external') return 'a';
 
   return 'router-link';
 
 });
-const isSlotEmpty = computed(() => {
-  // defaultSlot() returns an array of VNodes if present
-  // => If undefined or zero-length, the slot is empty
-  const defaultSlot = slots.default?.({});
-
-  return !defaultSlot || defaultSlot.length === 0;
-});
+const isSlotEmpty = computed(() => hasSlotContent(slots.default));
 
 </script>
 <template>

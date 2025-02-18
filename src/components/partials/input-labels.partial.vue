@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { hasSlotContent } from '@/mixins/hasSlotContent';
 import { computed, useSlots } from 'vue';
   
 defineProps<{
@@ -8,7 +9,8 @@ defineProps<{
     error?: boolean;
   }>();
   
-const slotUsed = computed(() => !!useSlots().default?.length);
+const slots = useSlots();
+const slotUsed = computed(() => hasSlotContent(slots.default));
   
 </script>
 <template>

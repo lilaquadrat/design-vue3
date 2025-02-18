@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
+import { hasSlotContent } from '@/mixins/hasSlotContent';
 import triggerEvent from '@/plugins/events';
 import useCallStore from '@/stores/calls.store';
 import { computed, ref, useSlots } from 'vue';
@@ -40,7 +41,7 @@ const iconColorScheme = computed(() => {
   return ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark'
 
 })
-const slotUsed = computed(() => !!useSlots().default?.().length);
+const slotUsed = computed(() => hasSlotContent(useSlots().default));
 const iconSize = computed(() => {
 
   if(props.iconSize) return props.iconSize;
