@@ -28,7 +28,7 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
 </script>
 <template>
-  <footer :id="id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
+  <footer :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
     <section class="content-container">
 
       <section class="footer-container">

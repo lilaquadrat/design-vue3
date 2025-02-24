@@ -1,4 +1,5 @@
 import { createMemoryHistory, createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import { smartScrollBehavior } from './scroll';
 
 export default (routes: readonly RouteRecordRaw[]) => {
 
@@ -6,8 +7,9 @@ export default (routes: readonly RouteRecordRaw[]) => {
     ? createMemoryHistory('/')
     : createWebHistory('/');
   const router = createRouter({
-    history: historyMode,
-    routes
+    history       : historyMode,
+    routes,
+    scrollBehavior: smartScrollBehavior
   });
 
   return router;

@@ -10,6 +10,7 @@ import { loadViaDeclarationSync } from '@/mixins/loadComponents';
 import useContentStore from '@/stores/content.store';
 import useMainStore from '@/stores/main.store';
 import { eventDeclaration } from '@/plugins/events';
+import { scrollToSelector } from '@/mixins/scroll';
 
 const currentInstance = getCurrentInstance();
 const editorStore = useEditorStore();
@@ -218,15 +219,8 @@ function scrollToModule (active: EditorActiveModule): void {
 
     if (!index && index !== 0) return;
 
-    const module = document.querySelector(
-      `${containerSelector} .lila-module:nth-child(${index + 1}), ${containerSelector} .partial-container:nth-child(${index + 1})`,
-    );
+    scrollToSelector(`${containerSelector} .lila-module:nth-child(${index + 1}), ${containerSelector} .partial-container:nth-child(${index + 1})`,)
 
-    if (!module) return;
-
-    module.scrollIntoView({
-      behavior: 'smooth',
-    });
   });
 
 }

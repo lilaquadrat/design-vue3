@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import type { ModuleGeneric } from '@lilaquadrat/interfaces';
+import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+
+defineOptions({ inheritAttrs: false });
+
+defineProps<ModuleBaseProps & {
+  modules: ModuleGeneric[];
+}>();
+
+</script>
 <template>
   <section  ref="element" class="lila-partial-container lila-module" v-if="modules">
 
@@ -6,15 +17,6 @@
 
   </section>
 </template>
-<script setup lang="ts">
-import type { ModuleGeneric } from '@lilaquadrat/interfaces';
-import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
-
-defineProps<ModuleBaseProps & {
-  modules: ModuleGeneric[];
-}>();
-
-</script>
 <style lang="less" scoped>
 .lila-partial-container {
   display: grid;

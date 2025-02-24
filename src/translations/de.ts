@@ -129,7 +129,7 @@ export default {
   'connect-to-user'                                                                                       : 'Account verbinden',
   'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen',
   'event-until'                                                                                           : '%s bis %s Uhr',
-  'event-short'                                                                                           : '%s bis %s',
+  'event-short'                                                                                           : '%s bis %s Uhr',
   'datepicker-range-days_singular'                                                                        : '%s Tag',
   'datepicker-range-days_plural'                                                                          : '%s Tage',
   'datepicker-predefined-now'                                                                             : 'jetzt',

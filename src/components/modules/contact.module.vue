@@ -50,7 +50,7 @@ const emit = defineEmits<{
 const mode = computed(() => list.value?.mode);
 const list = computed<BasicData<List> | undefined>(() => {
 
-  if(props.genericData.data) {
+  if(props.genericData?.data) {
 
     const lists = props.genericData.lists;
 
@@ -240,6 +240,8 @@ function updateErrors (newErrorsObject?: ErrorsObject) {
 function updateAgreements () {
   const agreements = {} as Record<string, Agreement & { value: boolean, error: boolean }>;
   let values: string[];
+
+  if(!list.value) return;
 
   list.value?.agreements.forEach((single) => {
 

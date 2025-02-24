@@ -22,7 +22,7 @@ const showText = computed((): boolean => {
 
 </script>
 <template>
-  <table :id="id" v-if="props.picture" border="0" cellspacing="0" cellpadding="0" style="padding-bottom: 40px;">
+  <table :id="props.index?.anchor || props.id" v-if="props.picture" border="0" cellspacing="0" cellpadding="0" style="padding-bottom: 40px;">
     <tbody>
       <tr>
         <td>

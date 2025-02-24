@@ -51,7 +51,7 @@ const hasText = computed(() => !!props.textblock);
 
 </script>
 <template>
-  <table :id="id" class="callToAction-module" ref="element" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; width: 100%;">
+  <table :id="props.index?.anchor || props.id" class="callToAction-module" ref="element" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; width: 100%;">
     <tbody>
       <tr v-if="hasText">
         <td>

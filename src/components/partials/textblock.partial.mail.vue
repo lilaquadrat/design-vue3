@@ -31,7 +31,7 @@ const style = computed(() => {
 </script>
 
 <template >
-  <table :id="id" v-if="notEmpty" border="0" cellspacing="0" cellpadding="0" :style="style">
+  <table :id="props.index?.anchor || props.id" v-if="notEmpty" border="0" cellspacing="0" cellpadding="0" :style="style">
     <tbody>
       <tr v-if="headline">
         <td><h1 style="text-transform: uppercase; padding: 0; margin: 0; font-weight: bold; color: #3f2d56; font-size: 34px; line-height: 36px; padding-bottom: 10px; font-family: Arial, Helvetica, sans-serif; letter-spacing: -1.5px;">{{ $replacer(headline) }}</h1></td>

@@ -165,7 +165,7 @@ function getCookies () {
 
 </script>
 <template>
-  <section :id="id" v-if="visible && isOverlay || !isOverlay" :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition, inviewState]" class="lila-cookies-module">
+  <section :id="props.index?.anchor || props.id" v-if="visible && isOverlay || !isOverlay" :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition, inviewState]" class="lila-cookies-module">
 
     <lila-overlay-background-partial v-if="visible && isOverlay && overlayPosition === 'overlayFull'" background="mobile">
       <lila-dialog-partial class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">

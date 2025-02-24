@@ -256,7 +256,7 @@ function restartCurrentStory () {
 
 </script>
 <template>
-  <article :id="id" ref="element" class="lila-story-module lila-module fullscreen" :class="[inviewState, variant, {sub}]">
+  <article :id="props.index?.anchor || props.id" ref="element" class="lila-story-module lila-module fullscreen" :class="[inviewState, variant, {sub}]">
     <lila-picture-partial v-if="activeElement?.media && activeElement?.media.type === 'image'" v-bind="activeElement.media" class="background" fit />
 
     <section class="position-container">

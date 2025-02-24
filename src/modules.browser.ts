@@ -429,6 +429,12 @@ export default
           description: 'Farbe des hintergrunds ist in grau'
         },
         {
+          key        : 'auto',
+          name       : 'Automatische Indexerstellung',
+          description: 'Index wird automatisch anhand der Werte pro Module erstellt',
+          group      : 'behaviour',
+        },
+        {
           key        : 'pdf-single-page',
           name       : 'Eigene Seite',
           description: 'Ist Innerhalb der PDF eine eigene Seite ohne andere Module',

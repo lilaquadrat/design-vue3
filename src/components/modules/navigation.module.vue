@@ -246,11 +246,11 @@ const calculateOptionsStyle = () => {
 
 </script>
 <template>
-  <nav ref="element" :id="id" :class="[inviewState, variant, { open, useTriggerMenu }]"
+  <nav ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, variant, { open, useTriggerMenu }]"
     class="lila-navigation-module lila-module">
     <section class="placeholder"></section>
 
-    <section class="overflow-container">
+    <section class="overflow-container anchor-calculation">
       <section ref="linksContainer" class="links-container">
         <section ref="logoContainer" class="logo-container">
           <a class="logo lila-link" href="/">

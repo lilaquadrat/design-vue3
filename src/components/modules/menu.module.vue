@@ -24,7 +24,7 @@ const removeItems = computed(() => ({
 
 </script>
 <template>
-  <section :id="id" ref="element" :class="[variant, inviewState]" class="lila-menu-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState]" class="lila-menu-module lila-module">
 
     <header>
 

@@ -5,8 +5,6 @@ import { computed, inject, useSlots } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-// Access all available slots
-const slots = useSlots();
 const props = defineProps<{
   link?: string
   text?: string
@@ -34,13 +32,14 @@ const type = computed(() => {
   return 'router-link';
 
 });
-const isSlotEmpty = computed(() => hasSlotContent(slots.default));
+const slotContent = computed(() => hasSlotContent(useSlots().default));
 
 </script>
 <template>
   <component v-if="link"
-    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text && isSlotEmpty }]"
+    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text && !slotContent }]"
     class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase">
+
     <template v-if="text">{{ $replacer(text) }}</template>
     <slot v-if="!text"></slot>
     <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'colorScheme1'" :type="icon"

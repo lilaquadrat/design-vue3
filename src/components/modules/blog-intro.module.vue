@@ -31,7 +31,7 @@ const textBottom = computed(() => ({
 
 </script>
 <template>
-  <article ref="element" :id="id" :class="[inviewState, { hasImage: picture, sub }]"
+  <article ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, { hasImage: picture, sub }]"
     class="lila-blog-intro-module lila-module">
 
     <header>

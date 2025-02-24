@@ -54,7 +54,7 @@ function setElements (elements: any[]) {
 
 </script>
 <template>
-  <section ref="element" :id="id" :class="[inviewState, variant]" class="lila-events-list-module lila-module">
+  <section ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, variant]" class="lila-events-list-module lila-module">
 
     <section class="elements-container">
       <header v-if="textblock" class="title-container">

@@ -49,7 +49,7 @@ const filteredElements: ComputedRef<(PictureGroupElement & { hasContent: boolean
 
 </script>
 <template>
-  <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
+  <section ref="element" :id="props.index?.anchor || props.id" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
 
     <section class="content-container">
       <lila-textblock-partial :variant="brightTextIntro" v-if="textblock" v-bind="textblock" />
@@ -140,6 +140,11 @@ const filteredElements: ComputedRef<(PictureGroupElement & { hasContent: boolean
 
       display: grid;
       gap: 20px;
+
+      :deep(.lila-link) {
+        display: grid;
+        gap: 20px;
+      }
 
       .lila-figure {
         width: 100%;

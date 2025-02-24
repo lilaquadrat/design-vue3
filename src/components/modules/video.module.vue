@@ -55,7 +55,7 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
 
 </script>
 <template>
-  <section ref="element" :id="id" @click="start" @keypress="start" :class="[variant, inviewState, { started, controls }]" class="lila-video-module lila-module">
+  <section ref="element" :id="props.index?.anchor || props.id" @click="start" @keypress="start" :class="[variant, inviewState, { started, controls }]" class="lila-video-module lila-module">
     <section class="video-container">
       <lila-video-partial :trigger="trigger" v-bind="video" @playing="toggle" @loading="updateLoading" @ended="ended" />
 

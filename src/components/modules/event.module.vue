@@ -113,9 +113,41 @@ function handleChildEvent (event: string) {
 
 }
 
+const date = computed(() => {
+
+  let dateString: string = '';
+
+  if(props.start && props.end) {
+
+    if (dayjs(props.end).diff(props.start, 'hours') > 24) {
+
+      dateString = translate.translate('event-until', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), dayjs(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+
+    }
+
+    if (dayjs(props.end).diff(props.start, 'hours') < 24) {
+
+      dateString = translate.translate('event-short', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), dayjs(props.end).locale('de').format('HH:mm').toString()]);
+
+    }
+
+  } else if(props.start) {
+
+    dateString = translate.translate('event-single', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+  
+  } else if(props.end) {
+  
+    dateString = translate.translate('event-single', [dayjs(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+
+  }
+
+  return dateString
+
+})
+
 </script>
 <template>
-  <article :id="id" ref="element" class="lila-event-module lila-module" :class="[inviewState, variant, {sub, noMedia}]">
+  <article :id="props.index?.anchor || props.id" ref="element" class="lila-event-module lila-module" :class="[inviewState, variant, {sub, noMedia}]">
 
       <section class="main-container" v-if="!onlyContent">
 
@@ -133,8 +165,7 @@ function handleChildEvent (event: string) {
           <div class="date-artist">
               <h2 class="artist">{{ artist }}</h2>
               <h4 v-if="start || end" class="date">
-                <template v-if="start">{{ $helpers.date(start, 'DD.MM.YYYY HH:mm') }}</template>
-                <template v-if="end"> - {{ $helpers.date(end, 'DD.MM.YYYY HH:mm') }}</template>
+                {{ date }}
               </h4>
           </div>
           <h1 class="name">{{ name || list?.name }}</h1>

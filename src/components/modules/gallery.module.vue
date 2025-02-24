@@ -193,7 +193,7 @@ function indicatorchange (index: number): void {
 }
 </script>
 <template>
-  <section :id="id" ref="element" class="gallery-module lila-module" :class="[variant, inviewState, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
+  <section :id="props.index?.anchor || props.id" ref="element" class="gallery-module lila-module" :class="[variant, inviewState, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
     <section ref="contentContainer" class="content-container">
       <section ref="elementsContainer" class="elements">
         <div ref="scrollContainer" :style="cssElementsLength" :class="{ transition: !dragging }" v-if="elements.length > 0" class="scroll-container">

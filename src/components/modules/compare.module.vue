@@ -65,7 +65,7 @@ function elementsLength (getLength: boolean) {
 }
 </script>
 <template>
-  <section :id="id" ref="element" class="lila-compare-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" class="lila-compare-module lila-module">
     <lila-textblock-partial v-bind="textblock" />
 
     <section v-if="modifiedElements" class="compare-container">

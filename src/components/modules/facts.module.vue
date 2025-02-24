@@ -25,7 +25,7 @@ function setActive (index: number) {
 
 </script>
 <template>
-  <section :id="id" ref="element" :class="[inviewState, variant]" class="lila-facts-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant]" class="lila-facts-module lila-module">
     <lila-textblock-partial class="intro-textblock" v-bind="textblock" />
 
     <section class="complete-container">

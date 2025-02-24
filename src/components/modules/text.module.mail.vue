@@ -55,7 +55,7 @@ const hasText = computed(() => props.headline?.length || props.subline?.length |
 
 </script>
 <template>
-  <table :id="id" ref="element" border="0" cellspacing="0" cellpadding="0">
+  <table :id="props.index?.anchor || props.id" ref="element" border="0" cellspacing="0" cellpadding="0">
     <tr v-if="hasText">
       <td style="padding-bottom: 40px">
         <lila-textblock-partial v-bind="props" />

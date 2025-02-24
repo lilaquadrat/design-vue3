@@ -15,7 +15,7 @@ const notEmpty = computed(() => !!(props.headline?.length || props.subline?.leng
 </script>
 
 <template >
-  <section :id="id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
+  <section :id="props.index?.anchor || props.id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
     <h1 v-if="headline">{{ $replacer(headline) }}</h1>
     <h2 v-if="subline">{{ $replacer(subline) }}</h2>
     <h3 v-if="intro">{{ $replacer(intro) }}</h3>

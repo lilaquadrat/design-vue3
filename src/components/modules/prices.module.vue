@@ -20,7 +20,7 @@ function highlight (element: { variant: string | string[] }) {
 
 </script>
 <template>
-  <section ref="element" :id="id" :class="[variant, inviewState]" class="lila-prices-module lila-module">
+  <section ref="element" :id="props.index?.anchor || props.id" :class="[variant, inviewState]" class="lila-prices-module lila-module">
     <lila-textblock-partial v-bind="textblock" />
 
     <div class="prices-container">

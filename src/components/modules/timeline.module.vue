@@ -73,7 +73,7 @@ function activeMedia () {
 </script>
 
 <template>
-  <section ref="element" :id="id" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
+  <section ref="element" :id="props.index?.anchor || props.id" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
     <section class="elements-container">  
       <section class="singleelement-container" v-for="(element, index) in elementsExtended"
         :class="[element.position, { noMedia: !element.media }]" :key="`timeline-withpositions${index}`">

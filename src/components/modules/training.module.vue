@@ -108,7 +108,7 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
 }
 </script>
 <template>
-  <section :id="id" ref="element" :class="[inviewState, variant, { mobileIndex: forceMobileIndex }]" class="lila-training-module lila-module fullscreen">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant, { mobileIndex: forceMobileIndex }]" class="lila-training-module lila-module fullscreen">
     <section v-if="textblock" class="module generic-module">
       <lila-textblock-partial v-bind="textblock" />
     </section>
