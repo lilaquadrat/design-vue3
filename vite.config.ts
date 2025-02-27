@@ -64,6 +64,7 @@ export default defineConfig((settings) => {
     },
     define: {
       '__FRONTEND_CONFIG__'                  : JSON.stringify(config),
+      '__TARGET__'                           : JSON.stringify(target),
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: isProduction ? 'false' : 'true',
       __VUE_PROD_DEVTOOLS__                  : isProduction ? 'false' : 'true'
     }

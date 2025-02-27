@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type SelectOption from '@/interfaces/selectOption.interface';
 import type { ParsedError } from '@/libs/ActionNotice';
 import ModelsClass from '@/libs/Models.class';
 import { useInview } from '@/plugins/inview';
@@ -6,7 +7,7 @@ import { useResize } from '@/plugins/resize';
 import useMainStore from '@/stores/main.store';
 import type { Address, ListOfModels, Location } from '@lilaquadrat/interfaces';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
-import { convertCountryISO2 } from '@lilaquadrat/studio/lib/esm/frontend';
+import { convertCountryISO2, hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import { onServerPrefetch, watch } from 'vue';
 import { computed, onBeforeMount } from 'vue';
 import { ref } from 'vue';
@@ -23,6 +24,7 @@ const props = defineProps<{
   disabled?: boolean
   required?: boolean
   error?: ParsedError
+  fullAddressRequired?: boolean
 }>();
 const model = ref<Address>({});
 const selectedAddress = ref<Address>();
@@ -34,6 +36,11 @@ const calculatedOptions = ref();
 const open = ref<boolean>();
 const anchorElement = ref<HTMLElement>();
 const optionsElement = ref<HTMLElement>();
+const availableCountries: SelectOption[] = [
+  { value: 'deu', text: 'country-deu' },
+  { value: 'aut', text: 'country-aut' },
+  { value: 'che', text: 'country-che' },
+];
 
 onBeforeMount(() => {
 
@@ -67,6 +74,12 @@ function select (address: Location) {
 
 }
 
+function updateOnInput () {
+
+  emit('update:modelValue', hardCopy(model.value));
+
+}
+
 function remove () {
 
   selectedAddress.value = undefined;
@@ -91,6 +104,8 @@ function closeOptions () {
 }
 
 function calculateOptionsStyle () {
+
+  if(!props.fullAddressRequired) return;
 
   const element = anchorElement.value as HTMLElement;
   const optionsContainer = optionsElement.value;
@@ -166,45 +181,67 @@ async function update () {
 
 </script>
 <template>
-  <lila-fieldset-partial class="lila-address-partial" :class="{open}" legend="address">
+  <lila-fieldset-partial class="lila-address-partial" :class="{open, simple: !fullAddressRequired}" legend="address">
 
-    <section ref="anchorElement" class="input-container">
-      <div v-if="selectedAddress" class="selected">
-        <div class="address-elements-container">
-          <span class="address-element">{{selectedAddress.street}} {{ selectedAddress.streetNumber }},</span>
-          <span class="address-element">{{selectedAddress.zipcode}} {{ selectedAddress.city }},</span>
-          <span class="address-element">{{selectedAddress.country_name}}</span>
+    <template v-if="fullAddressRequired">
+
+      <section ref="anchorElement" class="input-container">
+        <div v-if="selectedAddress" class="selected">
+          <div class="address-elements-container">
+            <span class="address-element">{{selectedAddress.street}} {{ selectedAddress.streetNumber }},</span>
+            <span class="address-element">{{selectedAddress.zipcode}} {{ selectedAddress.city }},</span>
+            <span class="address-element">{{selectedAddress.country_name}}</span>
+          </div>
+          <lila-button-partial class="remove-button" colorScheme="transparent" icon="close" @click="remove" />
         </div>
-        <lila-button-partial class="remove-button" colorScheme="transparent" icon="close" @click="remove" />
-      </div>
-
-      <lila-input-partial @focus="tryOpen" v-model="search" v-if="!selectedAddress" placeholder="type your street and number">
-        {{$translate('address search')}}
-      </lila-input-partial>
-      <lila-indicator-partial v-if="loading" small />
-      <lila-description-partial v-if="!selectedAddress">
-        {{$translate('provide at least your street and housenumber to find your address. city and zipcode increase accuracy.')}}
-      </lila-description-partial>
-    </section>
-
-    <lila-input-partial placeholder="address addition" v-model="model.addressAddition">
-      {{$translate('address addition')}}
-    </lila-input-partial>
-
-    <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
-      <slot/>
-    </lila-input-labels-partial>
-
-    <lila-overlay-background-partial v-if="open" background="none" @mounted="calculateOptionsStyle" @close="closeOptions">
-      <section ref="optionsElement" class="options-container address-container" :style="optionsStyle">
-        <h4 class="no-matching" v-if="!autocomplete?.length && isValidSearch && !loading">{{ $translate('no matching addresses') }}</h4>
-
-        <button class="single-address" type="button" v-for="(single, index) in autocomplete" :key="`single-address-${index}`" @click="select(single)">
-          {{ single.address.road }} {{ single.address.house_number }}, {{ single.address.postcode }} {{ single.address.city }}, {{ single.address.country }}
-        </button>
-
+  
+        <lila-input-partial @focus="tryOpen" v-model="search" v-if="!selectedAddress" placeholder="type your street and number">
+          {{$translate('address search')}}
+        </lila-input-partial>
+        <lila-indicator-partial v-if="loading" small />
+        <lila-description-partial v-if="!selectedAddress">
+          {{$translate('provide at least your street and housenumber to find your address. city and zipcode increase accuracy.')}}
+        </lila-description-partial>
       </section>
-    </lila-overlay-background-partial>
+  
+      <lila-input-partial placeholder="address addition" v-model="model.addressAddition">
+        {{$translate('address addition')}}
+      </lila-input-partial>
+  
+      <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
+        <slot/>
+      </lila-input-labels-partial>
+  
+      <lila-overlay-background-partial v-if="open" background="none" @mounted="calculateOptionsStyle" @close="closeOptions">
+        <section ref="optionsElement" class="options-container address-container" :style="optionsStyle">
+          <h4 class="no-matching" v-if="!autocomplete?.length && isValidSearch && !loading">{{ $translate('no matching addresses') }}</h4>
+  
+          <button class="single-address" type="button" v-for="(single, index) in autocomplete" :key="`single-address-${index}`" @click="select(single)">
+            {{ single.address.road }} {{ single.address.house_number }}, {{ single.address.postcode }} {{ single.address.city }}, {{ single.address.country }}
+          </button>
+  
+        </section>
+      </lila-overlay-background-partial>
+
+    </template>
+
+    <template v-if="!fullAddressRequired">
+
+      <section class="street-container">
+        <lila-input-partial v-model="model.street" class="street" placeholder="street" @update:modelValue="updateOnInput">{{$translate('street')}}</lila-input-partial>
+        <lila-input-partial v-model="model.streetNumber" class="streetNumber" placeholder="streetNumber" @update:modelValue="updateOnInput">{{$translate('streetNumber')}}</lila-input-partial>
+      </section>
+      
+      <section class="city-container">
+        <lila-input-partial v-model="model.city" class="city" placeholder="city" @update:modelValue="updateOnInput">{{$translate('city')}}</lila-input-partial>
+        <lila-input-partial v-model="model.zipcode" class="zipcode" placeholder="zipcode" @update:modelValue="updateOnInput">{{$translate('zipcode')}}</lila-input-partial>
+      </section>
+
+      <lila-select-partial v-model="model.country" :multiple="false" placeholder="country" :options="availableCountries" @update:modelValue="updateOnInput">{{$translate('country')}}</lila-select-partial>
+
+      <lila-input-partial v-model="model.addressAddition" placeholder="addressAddition" @update:modelValue="updateOnInput">{{$translate('addressAddition')}}</lila-input-partial>
+
+    </template>
 
   </lila-fieldset-partial>
 </template>
@@ -313,5 +350,31 @@ async function update () {
     color: @color1;
   }
 
+}
+
+&.simple {
+
+  display: grid;
+  .street-container, .city-container {
+    display: grid;
+    gap: 20px;
+
+    :deep(input) {
+      width: 100%;
+    }
+    
+  }
+
+  @media @tablet, @desktop {
+
+    .street-container {
+      grid-template-columns: 5fr 1fr;
+    }
+    .city-container {
+      grid-template-columns: 4fr 2fr;
+    }
+
+  }
+  
 }
 </style>

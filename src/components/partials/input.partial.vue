@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, useAttrs } from 'vue';
 import type { ParsedError } from '../../libs/ActionNotice';
 import { computed, watch, ref } from 'vue';
 
@@ -25,12 +25,24 @@ const props = defineProps<{
    */
   outputValidation?: string
 }>();
+const attrs = useAttrs()
 const inputElement = ref<HTMLInputElement>();
 let tempValue: string = '';
 const debounceTime: number = 50;
 const timeout = ref<ReturnType<typeof setTimeout>>();
 const emit = defineEmits(['update:modelValue', 'focus', 'enter', 'keydown', 'blur']);
-const whitelistedKeys = ['Escape', 'Backspace', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Delete', 'Tab'];
+const whitelistedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'Delete', 'Tab'];
+const classes = computed(() => {
+
+  const inheritedClasses = attrs.class as string;
+
+  if(inheritedClasses?.length) {
+    return inheritedClasses.split(' ');
+  }
+
+  return [];
+  
+})
 
 watch(() => props.modelValue, () => {
 
@@ -160,7 +172,7 @@ const hasError = computed(() => !!props.error?.error);
 
 </script>
 <template>
-  <label ref="element" class="lila-input" :class="{ error: hasError }">
+  <label ref="element" class="lila-input" :class="[...classes, { error: hasError }]">
     <input ref="inputElement" type="text" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
       <slot />

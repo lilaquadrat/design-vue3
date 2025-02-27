@@ -3,12 +3,12 @@
 import type Link from '@interfaces/link.interface';
 import type Textblock from '@interfaces/textblock.interface';
 
-import dayjs from 'dayjs';
 import { computed, onMounted, ref } from 'vue';
 
 import useMainStore from '@/stores/main.store';
 import { useInview } from '@/plugins/inview';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
+import createCookieString from '@/mixins/createCookieString';
 
 defineOptions({ inheritAttrs: false });
 
@@ -64,6 +64,8 @@ function calcVisibilty () {
 
   if (props.variant?.includes('overlay')) {
 
+    console.log(cookies);
+
     visible.value = !cookies.find((single) => single.name === 'lila-cookies');
 
     if (overlayPosition.value === 'overlayFull') {
@@ -108,7 +110,10 @@ function consent (type: 'all' | 'selection') {
 
   if (type === 'all') {
 
-    Object.keys(currCookies).forEach((single) => { cookies.value[single] = true; });
+    Object.keys(cookies.value).forEach((single) => {
+      console.log(single);
+      cookies.value[single] = true; 
+    });
 
   }
 
@@ -138,23 +143,31 @@ function consent (type: 'all' | 'selection') {
 
   }
 
-  const cookieKeys = Object.keys(cookies).filter((single) => (cookies.value[single] ? single : null));
+  const cookieKeys = Object.keys(cookies.value).filter((single) => (cookies.value[single] ? single : null));
 
   cookieKeys.push('technical');
 
-  document.cookie = `lila-cookies=1; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
-  document.cookie = `lila-cookies-accepted=${cookieKeys.join(',')}; expires=${dayjs().add(2, 'years').toString()}; SameSite=None;`;
+  document.cookie = createCookieString('lila-cookies', '1', {expires: {value: 2, unit: 'years'}, dev: __TARGET__ === 'local'});
+  document.cookie = createCookieString('lila-cookies-accepted', cookieKeys.join(','), {expires: {value: 2, unit: 'years'}, dev: __TARGET__ === 'local'});
 
   calcVisibilty();
 
 }
 
+/**
+ * Retrieves all cookies that start with 'lila-' prefix.
+ * 
+ * This function parses the document.cookie string, filters for cookies
+ * with the 'lila-' prefix, and returns them as an array of objects
+ * where each object contains the cookie name and value.
+ * 
+ */
 function getCookies () {
 
-  const cookies = document.cookie.split(';').filter((single) => single);
+  const cookies = document.cookie.split(';').map((single) => single.trim()).filter((single) => single?.startsWith('lila-'));
 
   return cookies.map((single) => {
-
+    
     const name = single.split('=');
 
     return { name: name[0].trim(), value: name[1] };
@@ -168,6 +181,7 @@ function getCookies () {
   <section :id="props.index?.anchor || props.id" v-if="visible && isOverlay || !isOverlay" :class="[{ 'lila-module': !isOverlay, isOverlay, }, overlayPosition, inviewState]" class="lila-cookies-module">
 
     <lila-overlay-background-partial v-if="visible && isOverlay && overlayPosition === 'overlayFull'" background="mobile">
+      {{ cookies }}
       <lila-dialog-partial class="lila-cookies-module-dialog" type="check" @confirm="consent('all')" @cancel="consent('selection')" :translations="translations">
         <lila-textblock-partial v-if="textblock" v-bind="textblock" />
         <section class="checkbox-container">
@@ -196,8 +210,8 @@ function getCookies () {
         <lila-checkbox-partial name="analytics" v-model="cookies.analytics">{{$translate('cookies-module-analytic-cookies')}}</lila-checkbox-partial>
       </section>
       <lila-button-group-partial gap>
-        <lila-button-partial @confirmed="consent('all')" colorScheme="colorScheme1">{{ $translate(translations.confirm) }}</lila-button-partial>
-        <lila-button-partial @confirmed="consent('selection')" colorScheme="transparent">{{ $translate(translations.cancel) }}</lila-button-partial>
+        <lila-button-partial @click="consent('all')" colorScheme="colorScheme1">{{ $translate(translations.confirm) }}</lila-button-partial>
+        <lila-button-partial @click="consent('selection')" colorScheme="transparent">{{ $translate(translations.cancel) }}</lila-button-partial>
       </lila-button-group-partial>
     </template>
 

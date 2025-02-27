@@ -313,6 +313,8 @@ function toggleOptions () {
     text-overflow: ellipsis;
     white-space: nowrap;
 
+    cursor: pointer;
+
     span {
       padding-right: 2px;
     }
@@ -491,8 +493,7 @@ function toggleOptions () {
     justify-self: center;
     width: 100%;
     position: absolute;
-    // .basePadding;
-
+    
     @media @tablet, @desktop {
       max-height: 30vh;
       padding: 0;

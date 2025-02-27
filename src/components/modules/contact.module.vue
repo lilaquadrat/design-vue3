@@ -482,7 +482,7 @@ const handleForm = async (event: Event) => {
   
         </lila-fieldset-partial>
   
-        <lila-address-partial v-if="addressModel" v-model="addressModel" :error="errorsObject?.address" required />
+        <lila-address-partial v-if="addressModel" :fullAddressRequired="list.participants?.addressRequired" v-model="addressModel" :error="errorsObject?.address" required />
   
         <lila-fieldset-partial legend="contact">
   

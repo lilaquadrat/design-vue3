@@ -234,9 +234,6 @@ const calculateOptionsStyle = () => {
     left -= 20;
   }
 
-  // add one px to prevent overlaying border or box-shadow
-  // top += 1;
-
   style.value = {
     top : `${top}px`,
     left: `${left}px`,

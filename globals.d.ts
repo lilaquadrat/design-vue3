@@ -8,6 +8,7 @@ declare global {
   }
 
   const __FRONTEND_CONFIG__: FrontendConfig;
+  const __TARGET__: string;
 }
 
 export { };

@@ -10,12 +10,12 @@
     </section>
 
     <lila-button-group-partial v-if="type === 'check'" gap>
-      <lila-button-partial @confirmed="confirm" :colorScheme="colorScheme">{{$translate(CONFIRM)}}</lila-button-partial>
-      <lila-button-partial @confirmed="cancel" colorScheme="transparent">{{$translate(CANCEL)}}</lila-button-partial>
+      <lila-button-partial @click="confirm" :colorScheme="colorScheme">{{$translate(CONFIRM)}}</lila-button-partial>
+      <lila-button-partial @click="cancel" colorScheme="transparent">{{$translate(CANCEL)}}</lila-button-partial>
     </lila-button-group-partial>
 
     <lila-button-group-partial v-if="type === 'confirm'" gap>
-      <lila-button-partial @confirmed="confirm" colorScheme="transparent">{{$translate(ACKNOWLEDGE)}}</lila-button-partial>
+      <lila-button-partial @click="confirm" colorScheme="transparent">{{$translate(ACKNOWLEDGE)}}</lila-button-partial>
     </lila-button-group-partial>
 
   </section>
