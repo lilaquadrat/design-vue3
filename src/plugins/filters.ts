@@ -1,5 +1,5 @@
+import useDate from '@/mixins/date';
 import logger from '@/mixins/logger';
-import dayjs from 'dayjs';
 import type { App } from 'vue';
 
 const HelpersPlugin = {
@@ -24,7 +24,7 @@ const HelpersPlugin = {
 
   date (date: string | Date, format?: string) {
 
-    return dayjs(date).locale('de').format(format || 'DD.MM.YYYY HH:mm');
+    return useDate(date).locale('de').format(format || 'DD.MM.YYYY HH:mm');
 
   }
 

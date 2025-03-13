@@ -41,12 +41,12 @@ export function getAppInstance (context: any, routes: readonly RouteRecordRaw[],
   
     mainStore.data = context.data;
     mainStore.layout = context.layout;
-    mainStore.target = context.data.target || 'browser';
+    mainStore.target = context.data?.target || 'browser';
     mainStore.configuration = context.settings;
 
   }
 
-  if(context.data.target === 'mail') {
+  if(context.data?.target === 'mail') {
 
     loadViaDeclarationSync(modulesMail.modules, 'lila', 'module', app);
     loadViaDeclarationSync(partialsMail, 'lila', 'partial', app);

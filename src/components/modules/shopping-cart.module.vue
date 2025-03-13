@@ -10,6 +10,7 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<{
     genericData: GenericDataDistributed
     editor?: {modes: string[]}
+    variant?: string[]
 }>();
 const viewMode = ref<'compact' | 'full'>('compact');
 const cartStore = useCartStore();
@@ -22,6 +23,7 @@ const showAgreements = ref<boolean>(false);
 const mainStore = useMainStore();
 const agreementsExtended = ref<(Agreement & { value: boolean })[]>([]);
 const showSuccess = computed(() => props.editor?.modes?.includes('success'));
+const cartIsReady = ref<boolean>(false);
 const list = computed<BasicData<List> | undefined>(() => {
 
   const firstList = props.genericData?.lists[0];
@@ -47,8 +49,6 @@ const agreementsAccepted = computed(() => {
 
 watch(() => props.genericData, async () => {
 
-  console.log('props changed');
-
   await getCart();
   updateAgreements();
 
@@ -61,11 +61,16 @@ watch(() => cartStore.itemsQuantity, () => {
     animate.value = false;
   }, 1000);
 
+  if(props.variant?.includes('openOnChange') && cartIsReady.value) {
+   
+    viewMode.value = 'full';
+    
+  }
+
 })
 
 onBeforeMount(async () => {
 
-  console.log(props.genericData);
   await getCart();
   updateAgreements();
 
@@ -106,6 +111,8 @@ async function getCart () {
     {key: 'project', value: mainStore.apiConfig.project as string},
     {key: 'list', value: list.value._id?.toString()},
   ]);
+
+  cartIsReady.value = true;
   
 }
 

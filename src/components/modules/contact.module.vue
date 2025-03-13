@@ -5,7 +5,7 @@ import type Textblock from '@/interfaces/textblock.interface';
 import type Address from '@/models/Address.model'; 
 import { type ErrorsObject, type ParsedError } from '../../libs/ActionNotice';
 import { prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
-import { computed, onBeforeMount, onServerPrefetch, ref} from 'vue';
+import { computed, onBeforeMount, onServerPrefetch, ref, watch} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
@@ -41,6 +41,7 @@ const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
 const categoriesExtended = ref<ListCategoryExtended[]>();
 const participantsState = ref<ListPartiticpantsDetails>();
+const showFeedback = ref<boolean>(false);
 const emit = defineEmits<{
     (e: string): void;
     (e: string, i:boolean): void;
@@ -68,6 +69,12 @@ const list = computed<BasicData<List> | undefined>(() => {
 
 });
 
+watch(() => props.editor?.modes, () => {
+
+  updateFeedbackState();
+
+}, {immediate: true, deep: true});
+
 /**
  * fills the categoriesExtended with the categories
  * 
@@ -78,7 +85,7 @@ function updateCategories () {
   if(!list.value) return
 
   // only show categories if there is more than one and the user has a choice
-  if (list.value?.categories.length > 1) {
+  if (list.value?.categories?.length > 1) {
 
     const categories = list.value.categories as ListCategoryExtended[];
 
@@ -119,6 +126,22 @@ function updateCategories () {
 
 }
 
+function updateFeedbackState () {
+
+  console.log('updateFeedbackState', state.value, props.editor?.modes?.includes('feedback'))
+
+  if(state.value === 'success' || !!props.editor?.modes?.includes('feedback')) {
+
+    showFeedback.value = true;
+
+  } else {
+
+    showFeedback.value = false;
+
+  }
+
+}
+
 /**
  * if more than one category exists returns an array for selection
  */
@@ -126,7 +149,7 @@ const selectCategories = computed<SelectOption[] | null>(() => {
 
   if(!list.value) return null;
 
-  if(list.value?.categories.length > 1) {
+  if(list.value?.categories?.length > 1) {
     
     return list.value.categories.map((single) => ({
       value      : single.id,
@@ -159,7 +182,6 @@ const hideFreeSlots = computed(() => props.variant?.includes('hide-free-slots'))
  ** state is sucess
  ** editor modes inlcudes feedback
  */
-const showFeedback = computed(() => state.value && state.value === 'success' || props.editor?.modes?.includes('feedback'));
 const feedbackContent = computed(() => {
 
   if(feedback.value) {
@@ -224,6 +246,8 @@ function resetForm () {
   addressModel.value = ModelsClass.add({}, 'address');
   errorsObject.value = {};
   emit('event', 'reset');
+
+  updateFeedbackState()
    
 }
 
@@ -336,7 +360,7 @@ const handleForm = async (event: Event) => {
 
   });
 
-  if (list.value?.categories.length === 1 && !category) {
+  if (list.value?.categories?.length === 1 && !category) {
 
     category = list.value.categories[0].id;
 
@@ -345,21 +369,28 @@ const handleForm = async (event: Event) => {
   try {
     
     const sdk = new StudioSDK(mainStore.apiConfig);
-    const call = auth.isAuth.value 
+    const call = auth.isAuth.value && userStore.isFullUser
       ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements)
       : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
     const customerResponse = await traceable<SDKResponse<string|{_id: string, id: string}>>(call, traceId);
 
-    if(!auth.isAuth.value) {
+    if(!auth.isAuth.value || !userStore.isFullUser) {
       setCustomer(customerResponse.data as {_id: string, id?: string});
     }
 
-    //   await props.$traceable(call);
-
-    //   //this.state = 'success';
     state.value = 'success';
     StudioSDK.flushCache('lists', 'state');
     emit('event', 'success');
+
+    updateFeedbackState();
+
+    if(!userStore.isFullUser) {
+
+      mainStore.disabledLockUpdate = true;
+      await traceable(sdk.members.me.connect(userStore.customer?._id!), traceId);
+      await userStore.updateLock();
+
+    }
 
   } catch (e) {
 
@@ -468,7 +499,7 @@ const handleForm = async (event: Event) => {
         <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
       </lila-fieldset-partial>
 
-      <template v-if="!userStore.isUser">
+      <template v-if="!userStore.isFullUser">
 
         <lila-fieldset-partial legend="personal"> 
   
@@ -498,7 +529,7 @@ const handleForm = async (event: Event) => {
 
       </template>
 
-      <template v-if="userStore.isUser">
+      <template v-if="userStore.isFullUser">
 
         <lila-fieldset-partial legend="personal"> 
   

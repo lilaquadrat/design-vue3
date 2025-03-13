@@ -1085,7 +1085,14 @@ export default
     {
       name     : 'shopping-cart',
       component: ShoppingCartModule,
-      editor   : {
+      variants : [
+        {
+          key        : 'openOnChange',
+          name       : 'Automatisch öffnen',
+          description: 'Das Modul wird automatisch geöffnet, wenn dem Warenkorb etwas hinzugefügt wird.',
+        },
+      ],
+      editor: {
         modes: [
           {
             key : 'success',

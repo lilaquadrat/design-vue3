@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, onServerPrefetch } from 'vue';
-import dayjs from 'dayjs';
 import type Event from '../../interfaces/Event.interface';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 import { useTranslations } from '@/plugins/translations';
+import useDate from '@/mixins/date';
 
 defineOptions({ inheritAttrs: false });
 
@@ -28,15 +28,15 @@ function setElements () {
 
     if(single.start && single.end) {
 
-      if (dayjs(single.end).diff(single.start, 'hours') > 24) {
+      if (useDate(single.end).diff(single.start, 'hours') > 24) {
 
-        single.dateString = translate.translate('event-until', [dayjs(single.start).locale('de').format('HH:mm').toString(), dayjs(single.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+        single.dateString = translate.translate('event-until', [useDate(single.start).locale('de').format('HH:mm').toString(), useDate(single.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
 
       }
 
-      if (dayjs(single.end).diff(single.start, 'hours') < 24) {
+      if (useDate(single.end).diff(single.start, 'hours') < 24) {
 
-        single.dateString = translate.translate('event-short', [dayjs(single.start).locale('de').format('HH:mm').toString(), dayjs(single.end).locale('de').format('HH:mm').toString()]);
+        single.dateString = translate.translate('event-short', [useDate(single.start).locale('de').format('HH:mm').toString(), useDate(single.end).locale('de').format('HH:mm').toString()]);
 
       }
 

@@ -7,6 +7,8 @@ import StudioSDK from '@lilaquadrat/sdk';
 import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio/lib/esm/frontend';
 import { computed, onBeforeMount, ref } from 'vue';
 import type Event from '@interfaces/Event.interface';
+import useDate from '@/mixins/date';
+import { useTranslations } from '@/plugins/translations';
 
 defineOptions({ inheritAttrs: false });
 
@@ -26,6 +28,7 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 const noMedia = computed(() => !props.media?.src);
 const noContent = computed(() => props.variant?.includes('noContent'));
 const onlyContent = computed(() => props.variant?.includes('onlyContent'));
+const translate = useTranslations().translate;
 
 async function init () {
 
@@ -119,25 +122,25 @@ const date = computed(() => {
 
   if(props.start && props.end) {
 
-    if (dayjs(props.end).diff(props.start, 'hours') > 24) {
+    if (useDate(props.end).diff(props.start, 'hours') > 24) {
 
-      dateString = translate.translate('event-until', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), dayjs(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+      dateString = translate.translate('event-until', [useDate(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), useDate(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
 
     }
 
-    if (dayjs(props.end).diff(props.start, 'hours') < 24) {
+    if (useDate(props.end).diff(props.start, 'hours') < 24) {
 
-      dateString = translate.translate('event-short', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), dayjs(props.end).locale('de').format('HH:mm').toString()]);
+      dateString = translate.translate('event-short', [useDate(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString(), useDate(props.end).locale('de').format('HH:mm').toString()]);
 
     }
 
   } else if(props.start) {
 
-    dateString = translate.translate('event-single', [dayjs(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+    dateString = translate.translate('event-single', [useDate(props.start).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
   
   } else if(props.end) {
   
-    dateString = translate.translate('event-single', [dayjs(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
+    dateString = translate.translate('event-single', [useDate(props.end).locale('de').format('DD.MM.YYYY HH:mm').toString()]);
 
   }
 

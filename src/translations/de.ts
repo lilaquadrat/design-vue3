@@ -136,6 +136,7 @@ export default {
   'confirm-email'                                                                                         : 'E-Mail Adresse bestätigen',
   'event-until'                                                                                           : '%s bis %s Uhr',
   'event-short'                                                                                           : '%s bis %s Uhr',
+  'event-single'                                                                                          : '%s  Uhr',
   'datepicker-range-days_singular'                                                                        : '%s Tag',
   'datepicker-range-days_plural'                                                                          : '%s Tage',
   'datepicker-predefined-now'                                                                             : 'jetzt',

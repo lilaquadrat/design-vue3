@@ -4,7 +4,7 @@ import logger from './logger';
 import { auth } from '@/plugins/auth';
 import useUserStore from '@/stores/user.store';
 
-export default (router: Router, options?: {initAuth?: boolean}) => {
+export default (router: Router, options?: {initAuth?: boolean}, target: 'server' | 'client' = 'server') => {
 
   router.beforeEach(async (to, from, next) => {
 
@@ -15,7 +15,9 @@ export default (router: Router, options?: {initAuth?: boolean}) => {
 
       logger.startup('start');
 
-      mainStore.config = __FRONTEND_CONFIG__;
+      if(!mainStore.config) {
+        mainStore.config = __FRONTEND_CONFIG__;
+      }
 
       if(options?.initAuth !== false){
         if (mainStore.config?.auth0Options) {
@@ -30,7 +32,33 @@ export default (router: Router, options?: {initAuth?: boolean}) => {
       mainStore.startupDone = true;
 
       logger.startup('done');
+
+    } else {
+
+      if(target === 'client') {
+
+        if(!mainStore.clientOnlyStartupDone) {
+
+          if(options?.initAuth !== false) {
+            
+            if (mainStore.config?.auth0Options) {
+      
+              await auth.init(mainStore.config.auth0Options);
+      
+            }
+      
+            await userStore.initCustomer();
+          }
+    
+          mainStore.clientOnlyStartupDone = true;
+
+        }
+
+      }
+
     }
+
+    if(mainStore.disabledLockUpdate) mainStore.disabledLockUpdate = false;
 
     next();
 

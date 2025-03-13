@@ -165,6 +165,8 @@ function postCustomModules () {
     ? mainStore.customModulesBrowser 
     : mainStore.customModulesMail
 
+  if (!modules) return;
+
   window.parent.postMessage(
     {
       type: 'studio-design-custom-modules',

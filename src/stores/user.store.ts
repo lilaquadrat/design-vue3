@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', () => {
   const emailConfirmationCode = ref<string>();
   const userData = ref<CustomerPerson>();
   const isUser = ref<boolean>(false);
+  const isFullUser = ref<boolean>(false);
 
   function setCustomer (customerData: {_id: string, id?: string}) {
 
@@ -37,6 +38,12 @@ export const useUserStore = defineStore('user', () => {
       
       await updateLock();
       isUser.value = true;
+
+      if(locked.value === 'user-connect') {
+        isFullUser.value = false;
+      } else {
+        isFullUser.value = true;
+      }
 
     }
 
@@ -72,6 +79,7 @@ export const useUserStore = defineStore('user', () => {
       }
 
       locked.value = undefined;
+      isFullUser.value = true;
 
     }
     
@@ -106,6 +114,7 @@ export const useUserStore = defineStore('user', () => {
     customer,
     userData,
     isUser,
+    isFullUser,
     getUser,
     emailConfirmationCode
   }

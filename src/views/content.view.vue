@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { distributeGenericData, generateDataWithContent, hardCopy, prepareContent } from '@lilaquadrat/studio';
-import type { BasicData, Content, ContentWithPositions, GenericData, HttpStatusCode } from '@lilaquadrat/interfaces';
+import type { BasicData, Content, ContentWithPositions, GenericData } from '@lilaquadrat/interfaces';
 import useMainStore from '@/stores/main.store';
 import { useRoute } from 'vue-router';
 import { onBeforeMount } from 'vue';
@@ -10,13 +10,11 @@ import useUserStore from '@/stores/user.store';
 import { onServerPrefetch } from 'vue';
 import useContentStore from '@/stores/content.store';
 import { HelpersPlugin } from '@/plugins/filters';
-import type { AxiosError } from 'node_modules/axios/index.cjs';
 
 const route = useRoute();
 const userStore = useUserStore();
 const mainStore = useMainStore();
 const contentStore = useContentStore();
-const data = ref<SDKResponse<BasicData<Partial<Content>> | undefined>>();
 const dataMerged = ref<ContentWithPositions>();
 const layout = ref<SDKResponse<BasicData<Content>> | undefined>();
 const loading = ref<number>(0);
@@ -25,7 +23,7 @@ const error = ref<boolean>(false);
 watch(route, async () => await getContent());
 watch(() => userStore.locked, () => getContent());
 onBeforeMount(async () => await getContent());
-onServerPrefetch(() => getStoreContent());
+onServerPrefetch(() => getStoreContent(HelpersPlugin.getFilename(contentType.value, route.path)));
 
 const linkMode = computed(() => {
 
@@ -52,29 +50,32 @@ const hint = computed(() => {
 
 });
 
-function getStoreContent () {
+function getStoreContent (filename: string) {
 
   const storeContent = mainStore.data;
   const storeLayout = mainStore.layout;
-  
-  if(!storeContent) return;
-  
-  data.value = {
-    data  : storeContent,
-    status: 200,
-  };
-  
-  loading.value = 200;
-  
-  updateContext();
 
-  if(data.value.data) {
+  console.log('storeContent', storeContent, filename);
+  
+  if(!storeContent) return false;
 
-    dataMerged.value = mergeContent(data.value.data, storeLayout);
+  /**
+  *  if the current data matches the required filename or the target is mail, because emails dont have filenames
+  *  we can use the store data
+  */
+  if(storeContent && storeContent.settings?.filename?.includes(filename) || storeContent.target === 'mail') {
+    
+    dataMerged.value = mergeContent(storeContent, storeLayout);
+    loading.value = 200;
+    error.value = false;
+
+    updateContext();
+    return true;
 
   } else {
 
     dataMerged.value = undefined;
+    return false;
 
   }
 
@@ -91,73 +92,75 @@ function updateContext () {
 
 async function getContent () {
 
-  getStoreContent();
-
-  const filename = HelpersPlugin.getFilename(contentType.value, route.path);
-
-  if(data.value?.data?.settings?.filename?.includes(filename)) return;
-
-  let content: SDKResponse<BasicData<Content>>;
-
-  loading.value = 0;
-  error.value = false;
-
   if(isLocked.value) {
 
     error.value = true;
     loading.value = 403;
     return;
 
-  }
-
-  try {
-    
-    content = await mainStore.getContent({filename}, contentType.value) as SDKResponse<BasicData<Content>>;
-    data.value = content;
-  
-  } catch (error) {
-
-    const typedError = error as AxiosError;
-
-    data.value = {data: undefined, status: typedError.response?.status as HttpStatusCode}
-    
   } 
 
-  loading.value = 200;
+  const filename = HelpersPlugin.getFilename(contentType.value, route.path);
 
-  if(data.value.status === 200) {
+  /**
+  * while hydration we need to check if the store has the content
+  * to avoid fetching it again from the server
+  */
+
+  if(getStoreContent(filename)) return;
+
+  // if(data.value?.data?.settings?.filename?.includes(filename)) return;
+
+  loading.value = 0;
+  error.value = false;
+    
+  const content: SDKResponse<BasicData<Content>> = await mainStore.getContent({filename}, contentType.value) as SDKResponse<BasicData<Content>>;
+
+  mainStore.data = content.data;
+  loading.value = content.status;
+  updateContext();
+
+  if(loading.value === 200) {
 
     error.value = false;
 
-    if(data.value?.data?.settings?.useLayout) {
+    if(mainStore.config?.dynamic) {
 
-      layout.value = await mainStore.getContent({internalId: data.value.data.settings.useLayout.toString()}, contentType.value) as SDKResponse<BasicData<Content>>;
-      loading.value = 200;
+      layout.value = await mainStore.getContent({id: `${contentType.value}-layout`}, contentType.value) as SDKResponse<BasicData<Content>>;
+      mainStore.layout = layout.value.data;
 
     } else {
 
-      layout.value = undefined;
-      loading.value = 200;
+      if(mainStore.data?.settings?.useLayout) {
+  
+        layout.value = await mainStore.getContent({internalId: mainStore.data.settings.useLayout.toString()}, contentType.value) as SDKResponse<BasicData<Content>>;
+        mainStore.layout = layout.value.data;
+  
+      } else {
+  
+        mainStore.layout = undefined;
+        layout.value = undefined;
+  
+      }
 
     }
 
   } 
 
-  if ([400, 401, 403].includes(data.value.status)) {
+  if ([400, 401, 403].includes(loading.value)) {
 
     error.value = true;
-    loading.value = data.value.status;
 
-  } else if ([204, 404].includes(data.value.status) || !data.value.status) {
+  } else if ([204, 404].includes(loading.value) || !loading.value) {
 
     error.value = true;
     loading.value = 404;
 
   }
 
-  if(data.value.data) {
+  if(mainStore.data) {
 
-    dataMerged.value = mergeContent(data.value.data);
+    dataMerged.value = mergeContent(mainStore.data, mainStore.layout);
 
   } else {
 

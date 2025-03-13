@@ -52,13 +52,13 @@ class Auth {
 
   async getToken () {
 
-    this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access', audience: 'https://testapi.lilaquadrat.de' } });
+    this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access' } });
 
   }
 
   async refreshToken () {
 
-    this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access', audience: 'https://testapi.lilaquadrat.de' } });
+    this.token.value = await this.auth0.getTokenSilently({ authorizationParams: { scope: 'openid profile email offline_access' } });
 
   }
 

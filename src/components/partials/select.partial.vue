@@ -5,7 +5,7 @@ import { useInview } from '@/plugins/inview';
 import { useResize } from '@/plugins/resize';
 import { useTranslations } from '@/plugins/translations';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onServerPrefetch } from 'vue';
 import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
@@ -90,6 +90,12 @@ const optionsStyle = computed(() => media.value === 'mobile'
   : calculatedOptions.value)
 
 onBeforeMount(() => {
+
+  setSelected();
+  updateSelectedText();
+
+});
+onServerPrefetch(() => {
 
   setSelected();
   updateSelectedText();

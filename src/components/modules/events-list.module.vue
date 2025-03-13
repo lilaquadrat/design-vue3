@@ -4,8 +4,8 @@ import { useInview } from '../../plugins/inview';
 import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 import type Textblock from '../../interfaces/textblock.interface';
 import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
-import dayjs from 'dayjs';
 import type Event from '@/interfaces/Event.interface';
+import useDate from '@/mixins/date';
 
 defineOptions({ inheritAttrs: false });
 
@@ -34,9 +34,9 @@ function setElements (elements: any[]) {
 
   safeElements.forEach((single) => {
 
-    if(!dayjs(single.start).isValid()) return;
+    if(!useDate(single.start).isValid()) return;
 
-    const dateString = dayjs(single.start).format('YYYY-MM-DD');
+    const dateString = useDate(single.start).format('YYYY-MM-DD');
 
     if(!target[dateString]) {
       target[dateString] = {

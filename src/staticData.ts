@@ -28,21 +28,15 @@ export default {
         links   : {
           'value': [
             {
-              'text'      : 'login',
-              'link'      : 'login',
-              'attributes': [
-                'event'
-              ],
+              'text'   : 'login',
+              'event'  : 'login',
               'variant': [
                 'callToAction'
               ],
             },
             {
-              'text'      : 'register',
-              'link'      : 'register',
-              'attributes': [
-                'events'
-              ],
+              'text'   : 'register',
+              'event'  : 'register',
               'variant': [
                 'callToAction'
               ],
@@ -77,7 +71,27 @@ export default {
       {
         type    : 'text-module',
         variant : ['center'],
-        headline: 'you have to verify your email adress to use this application',
+        headline: 'you have to verify your email address to use this application',
+        links   : {
+          'value': [
+            {
+              'text'   : 'back to home',
+              'link'   : '/',
+              'variant': [
+                'callToAction'
+              ],
+            },
+          ]
+        }
+      }
+    ]
+  },
+  'user-connect': {
+    modules: [
+      {
+        type    : 'text-module',
+        variant : ['center'],
+        headline: 'you have to verify your email address to use this application',
         links   : {
           'value': [
             {

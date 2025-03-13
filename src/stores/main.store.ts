@@ -12,11 +12,18 @@ import { hardCopy } from '@lilaquadrat/studio/lib/esm/frontend';
 export const useMainStore = defineStore('main', () => {
 
   const startupDone = ref<boolean>(false);
+  const clientOnlyStartupDone = ref<boolean>(false);
   const data = ref<BasicData<Content>>();
   const layout = ref<BasicData<Content>>();
   const editorConfiguration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
+  /**
+   * there are case where the content should not update if the lock state changed
+   * e.g. the user is connected after using register-main
+   * this state will be set to false by the next navigation
+   */
+  const disabledLockUpdate = ref<boolean>(false);
   const staticData = ref<Record<string, Partial<BasicData<Content>>>>();
   const customModulesBrowser = ref<CustomModule[]>();
   const customModulesMail = ref<CustomModule[]>();
@@ -160,12 +167,14 @@ export const useMainStore = defineStore('main', () => {
     configuration: editorConfiguration,
     getContent,
     startupDone,
+    clientOnlyStartupDone,
     config,
     staticData,
     apiConfig,
     customModulesBrowser,
     customModulesMail,
-    target
+    target,
+    disabledLockUpdate
   }
 
 });
