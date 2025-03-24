@@ -14,7 +14,7 @@ type SingleDeclaration = { type: 'string', default?: string } |
 //   [key in keyof T]: SingleDeclaration
 // }
 
-type ModelDeclaration<T > = Record<keyof T, SingleDeclaration>;
+type ModelDeclaration<T> = Record<keyof T, SingleDeclaration>;
 type ModelDeclarationExtended<T, E> = Record<Exclude<keyof T, keyof E>, SingleDeclaration>;
 
 interface ModelOptions {
@@ -137,9 +137,9 @@ class Models {
 
   }
 
-  add<T> (data: Partial<T>, name: string): T {
+  add<T> (data: Partial<T>, name: string, declaration?: ModelDeclaration<T>): T {
 
-    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'add'), this.getDeclaration(name), name, 'add');
+    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'add'), declaration || this.getDeclaration(name), name, 'add');
 
     // if (this.hooks[name]?.preAdd) this.hooks[name].preAdd(modelData);
 
@@ -147,9 +147,9 @@ class Models {
 
   }
 
-  save<T> (data: Partial<T>, name: string): T {
+  save<T> (data: Partial<T>, name: string, declaration?: ModelDeclaration<T>): T {
 
-    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'save'), this.getDeclaration(name), name, 'save') as T;
+    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'save'), declaration || this.getDeclaration(name), name, 'save') as T;
 
     // if (this.hooks[name]?.postSave) this.hooks[name].postSave(modelData);
 
@@ -157,9 +157,9 @@ class Models {
 
   }
 
-  clone<T> (data: Partial<T>, name: string): T {
+  clone<T> (data: Partial<T>, name: string, declaration?: ModelDeclaration<T>): T {
 
-    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'clone'), this.getDeclaration(name), name, 'clone') as T;
+    const modelData = this.setDataV2(data, this.prepareTargetObject(name, data, 'clone'), declaration || this.getDeclaration(name), name, 'clone') as T;
 
     // if (this.hooks[name].postClone) this.hooks[name].postClone(data);
 

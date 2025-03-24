@@ -18,6 +18,7 @@ export const useMainStore = defineStore('main', () => {
   const editorConfiguration = ref<EditorConfiguration>({});
   const fullscreen = ref<boolean>(false);
   const config = ref<FrontendConfig>();
+  const isEditor = ref<boolean>(typeof window !== 'undefined' && window !== window.top);
   /**
    * there are case where the content should not update if the lock state changed
    * e.g. the user is connected after using register-main
@@ -174,7 +175,8 @@ export const useMainStore = defineStore('main', () => {
     customModulesBrowser,
     customModulesMail,
     target,
-    disabledLockUpdate
+    disabledLockUpdate,
+    isEditor
   }
 
 });

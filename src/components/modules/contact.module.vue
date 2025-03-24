@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ModelsClass from '@/libs/Models.class';
+import ModelsClass, { type ModelDeclaration } from '@/libs/Models.class';
 import type Textblock from '@/interfaces/textblock.interface';
 import type Address from '@/models/Address.model'; 
 import { type ErrorsObject, type ParsedError } from '../../libs/ActionNotice';
@@ -9,7 +9,8 @@ import { computed, onBeforeMount, onServerPrefetch, ref, watch} from 'vue';
 import type {ListCategoryExtended} from '@/interfaces/ListCategoryExtended.interface';
 import useMainStore from '@/stores/main.store';
 import { type Agreement, type BasicData, type Contact, type ContactAgreement, type Content, 
-  type ErrorObject, type GenericDataDistributed, type List, type ListPartiticpantsDetails, type ResponseError} from '@lilaquadrat/interfaces';
+  type ErrorObject, type GenericData, type GenericDataDistributed, type List, type ListPartiticpantsDetails, type ResponseError,
+  type Structure} from '@lilaquadrat/interfaces';
 import StudioSDK, { type SDKResponse } from '@lilaquadrat/sdk';
 import type ModuleBaseProps from '@/interfaces/ModuleBaseProps.interface';
 import type { AxiosError } from 'axios';
@@ -17,6 +18,7 @@ import { useTraceable } from '@/plugins/traceable';
 import useUserStore from '@/stores/user.store';
 import type SelectOption from '@/interfaces/selectOption.interface';
 import { auth } from '@/plugins/auth';
+import type CategoryStructure from '@/interfaces/CategoryStructure.interface';
 
 defineOptions({ inheritAttrs: false });
 
@@ -29,12 +31,16 @@ const props = defineProps<ModuleBaseProps & {
     categoryTextblock?: Textblock
     genericData: GenericDataDistributed
     editor?: {modes: string[]}
+    categories?: {title?: string, description?: string, required: string[], genericData?: GenericData}[]
     agreements?: Record<string, Agreement & { value: boolean, error: boolean }> | {}
 }>();
 const state = ref<string>();
 const traceId = ref<string>();
 const model = ref<Contact>();
 const addressModel = ref<Address>();
+const structuresModelDeclaration = ref<ModelDeclaration<unknown>>();
+const structuresModel = ref<Record<string, string | number | boolean | string[] | undefined>>({});
+const categoryStructure = ref<CategoryStructure[]>([]);
 const errors = ref<ResponseError>();
 const errorsObject = ref<ErrorsObject>();
 const translationPre = '';
@@ -69,11 +75,53 @@ const list = computed<BasicData<List> | undefined>(() => {
 
 });
 
-watch(() => props.editor?.modes, () => {
+watch(() => props.editor?.modes, () => updateFeedbackState(), {immediate: true, deep: true});
 
-  updateFeedbackState();
+watch(() => props.categories, () => updateStructuresAndModels());
 
-}, {immediate: true, deep: true});
+function updateStructuresAndModels () {
+
+  if (!props.categories?.length) {
+    return undefined;
+  }
+
+  const localCategoriesWithData: CategoryStructure[] = [];
+  const localModelDeclaration: ModelDeclaration<Record<string, string>> = {};
+
+  props.categories.forEach((category) => {
+
+    const singleCategory: CategoryStructure = {
+      title      : category.title,
+      description: category.description,
+      structures : []
+    };
+
+    /**
+    * get the data from genericData and add required from category.required
+    */
+    category.genericData?.structures.forEach((singleStructure) => {
+
+      const structureWithRequired = props.genericData.data[singleStructure.toString()] as BasicData<Structure & {required: boolean}>;
+
+      if(!structureWithRequired) return;
+
+      structureWithRequired.required = category.required?.includes(singleStructure.toString());
+
+      singleCategory.structures.push(structureWithRequired);
+
+      localModelDeclaration[structureWithRequired.id] = {type: structureWithRequired.type};
+
+    });
+
+    localCategoriesWithData.push(singleCategory);
+
+  });
+
+  structuresModelDeclaration.value = localModelDeclaration;
+
+  categoryStructure.value = localCategoriesWithData;
+
+}
 
 /**
  * fills the categoriesExtended with the categories
@@ -228,14 +276,20 @@ onBeforeMount(() => {
 
   updateAgreements();
   getparticipantsState();
+  updateStructuresAndModels();
 
+  structuresModel.value = ModelsClass.add({}, 'structure', structuresModelDeclaration.value);
+  
 }) 
 
 onServerPrefetch(() => {
   model.value = ModelsClass.add<Contact>({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
-
+  
   updateAgreements();
+  updateStructuresAndModels();
+
+  structuresModel.value = ModelsClass.add({}, 'structure', structuresModelDeclaration.value);
 })
 
 function resetForm () {
@@ -336,6 +390,10 @@ const handleForm = async (event: Event) => {
   if(!list.value?._id) return
   
   const address = ModelsClass.save(addressModel.value as Address, 'address');
+  const structure = ModelsClass.save<Record<string, string>>(structuresModel.value as Record<string, string>, 'structure', structuresModelDeclaration.value);
+
+  console.log(structure);
+
   const customer = ModelsClass.save<Contact>({...model.value, ...address}, 'contact');
   const agreements: ContactAgreement[] = [];
   let category: string;
@@ -369,9 +427,9 @@ const handleForm = async (event: Event) => {
   try {
     
     const sdk = new StudioSDK(mainStore.apiConfig);
-    const call = auth.isAuth.value && userStore.isFullUser
-      ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements)
-      : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements);
+    const call = auth.isAuth.value 
+      ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements, structure, {parentId: props.parentId, uuid: props.uuid})
+      : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements, structure, {parentId: props.parentId, uuid: props.uuid});
     const customerResponse = await traceable<SDKResponse<string|{_id: string, id: string}>>(call, traceId);
 
     if(!auth.isAuth.value || !userStore.isFullUser) {
@@ -538,6 +596,33 @@ const handleForm = async (event: Event) => {
         </lila-fieldset-partial>
 
       </template>
+
+      <lila-fieldset-partial v-for="(single) in categoryStructure" :key="single.title" :legend="single.title">
+
+        <lila-description-partial v-if="single.description">
+        {{$translate(single.description)}}
+      </lila-description-partial>
+
+        <template v-for="(structure) in single.structures">
+          <lila-input-partial v-if="structure.type === 'string'" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+            {{ structure.question }}
+          </lila-input-partial>
+          <lila-input-partial v-if="structure.type === 'number'" type="number" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+            {{ structure.question }}
+          </lila-input-partial>
+          <lila-textarea-partial v-if="structure.type === 'text'" :max-length="structure.max" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+            {{ structure.question }}
+          </lila-textarea-partial>
+          <lila-checkbox-partial v-if="structure.type === 'boolean'" :name="structure.id" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+            {{ structure.question }}
+          </lila-checkbox-partial>
+          <lila-select-partial v-if="structure.type === 'select'" :placeholder="structure.question" :options="structure.options" :multiple="structure.multiple === true" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+            {{ structure.question }}
+          </lila-select-partial>
+
+        </template>
+
+      </lila-fieldset-partial>
 
       <lila-fieldset-partial v-if="list" class="agreements">
 

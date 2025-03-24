@@ -19,7 +19,7 @@ export default (router: Router, options?: {initAuth?: boolean}, target: 'server'
         mainStore.config = __FRONTEND_CONFIG__;
       }
 
-      if(options?.initAuth !== false){
+      if(options?.initAuth !== false && !mainStore.isEditor){
         if (mainStore.config?.auth0Options) {
   
           await auth.init(mainStore.config.auth0Options);

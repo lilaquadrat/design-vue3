@@ -38,7 +38,7 @@ function handleEvents (event: string) {
 
     <article class="container" :class="[mode, {inline, sub}]" :inline="inline" v-if="!!content.content.length">
       <template v-for="single in content.content" :key="single.uuid">
-        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :sub="sub" :additional="content.additional" position="content" @event="handleEvents($event)" />
+        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :parentId="content.id" :sub="sub" :additional="content.additional" position="content" @event="handleEvents($event)" />
       </template>
     </article>
 
