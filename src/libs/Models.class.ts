@@ -480,5 +480,5 @@ export {
   Models
 };
 export type {
-  ModelDeclaration, ModelDeclarationExtended, ModelOptions, ModelHooks,
+  ModelDeclaration, ModelDeclarationExtended, ModelOptions, ModelHooks, SingleDeclaration
 };

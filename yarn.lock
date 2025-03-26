@@ -634,14 +634,7 @@
     open "^8.4.2"
     typescript "^5.0.4"
 
-"@lilaquadrat/interfaces@^1.12.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.19.0.tgz#cf29f2cc1338743a81a00e45ed1dc595cb889cca"
-  integrity sha512-KQka0+j2+ta2CLIVWMe3sVEJZ9UGcXgUOMU+6lUQ8bTOKeeqp1QUdZJgBxGSzg2F3QHNi9G8nfEmaxJG8qkWTw==
-  dependencies:
-    typescript "^5.3.3"
-
-"@lilaquadrat/interfaces@^1.18.1":
+"@lilaquadrat/interfaces@^1.12.0", "@lilaquadrat/interfaces@^1.18.1":
   version "1.21.0"
   resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.21.0.tgz#00a5fc6e7125d926594972ac63dd14b660395f05"
   integrity sha512-TFqkzrTksnDfbwdemtQ0xRqIq1isNpXZ/HeL/36q5s2SYP7T2Lhq0mfFY30zftL0E49o1B8irJIch5RB3DbWqg==

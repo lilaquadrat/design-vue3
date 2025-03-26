@@ -21,13 +21,13 @@ export interface ErrorsObject {
 export default class ActionNotice {
   error: any;
 
-  static parse (errors: ErrorObject[], translationPre?: string): ErrorsObject {
+  static parse (errors: ErrorObject[], translationPre: string | undefined, structureMappings: Record<string, string> | undefined): ErrorsObject {
 
     const parsedErrors: ErrorsObject = {};
 
     errors?.forEach((single) => {
 
-      ActionNotice.parseSingle(single, translationPre, parsedErrors);
+      ActionNotice.parseSingle(single, translationPre, parsedErrors, structureMappings);
 
     });
 
@@ -35,12 +35,12 @@ export default class ActionNotice {
 
   }
 
-  static parseSingle (error: ErrorObject, translationPre: string | undefined, errors: ErrorsObject) {
+  static parseSingle (error: ErrorObject, translationPre: string | undefined, errors: ErrorsObject, structureMappings: Record<string, string> | undefined) {
 
     const pathArray = error.instancePath.split('/').filter((single) => single);
     // check if the second element is a number, to determine if we are inside of a array
     const arrayElementIndex = !Number.isNaN(pathArray[1]) ? +pathArray[1] + 1 : null;
-    const messageResponse = ActionNotice.getParsedError(error, pathArray[0], undefined, translationPre);
+    const messageResponse = ActionNotice.getParsedError(error, pathArray[0], undefined, translationPre, structureMappings);
     const path = messageResponse.path || pathArray[0];
 
     /**
@@ -57,7 +57,7 @@ export default class ActionNotice {
 
     if (arrayElementIndex) {
 
-      const arrayMessageResponse = ActionNotice.getParsedError(error, pathArray[0], pathArray[0], translationPre);
+      const arrayMessageResponse = ActionNotice.getParsedError(error, pathArray[0], pathArray[0], translationPre, structureMappings);
       const useKey = `${pathArray[0]}-elements`;
       const useIndex = (arrayElementIndex - 1).toString();
       let useError = errors[useKey] as unknown as Record<string, Record<string, ParsedError>>;
@@ -76,12 +76,17 @@ export default class ActionNotice {
 
   }
 
-  static getParsedError (error: ErrorObject, usePath: string, basePath: string | undefined, translationPre: string | undefined): ParsedError {
+  static getParsedError (error: ErrorObject, usePath: string, basePath: string | undefined, translationPre: string | undefined, structureMappings: Record<string, string> | undefined): ParsedError {
 
     let message: string = '';
     let path = usePath;
     let translatedPath: string = '';
     const {translate} = useTranslations();
+    const mappedErrorParams = ActionNotice.mapErrorParams(Object.values(error.params), structureMappings);
+
+    console.log('error', mappedErrorParams);
+
+    console.log('error', Object.values(error.params));
 
     if (error.keyword === 'type') {
 
@@ -95,7 +100,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams
       );
 
     }
@@ -104,7 +109,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams
       );
 
     }
@@ -113,7 +118,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams
       );
 
     }
@@ -122,7 +127,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams,
       );
 
       translatedPath = 'main';
@@ -133,7 +138,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams
       );
 
       translatedPath = '';
@@ -145,7 +150,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        [Object.values(error.params).join(',')],
+        [mappedErrorParams.join(',')],
       );
 
     }
@@ -166,7 +171,7 @@ export default class ActionNotice {
 
       message = translate.translate(
         `validation-error-${error.keyword}`,
-        Object.values(error.params),
+        mappedErrorParams
       );
 
       translatedPath = 'main';
@@ -203,6 +208,28 @@ export default class ActionNotice {
   static reset () {
 
     return {};
+
+  }
+
+  static mapErrorParams (keys: string[], mappings: Record<string, string> | undefined): string[] {
+
+    console.log('keys', keys, mappings);
+
+    if (!mappings) return keys;
+
+    const mappedKeys = keys.map((key) => {
+
+      if (mappings[key]) {
+
+        return mappings[key];
+
+      }
+
+      return key;
+
+    });
+
+    return mappedKeys;
 
   }
 

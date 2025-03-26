@@ -38,6 +38,8 @@ watch(siteSettings, () => {
       ? 'browser' 
       : siteSettings.value?.target
 
+    mainStore.target = useTarget;
+
     postModules();
     postCustomModules();
     
@@ -48,8 +50,6 @@ watch(siteSettings, () => {
 
     }
 
-    mainStore.target = useTarget;
-
   }
     
 })
@@ -58,6 +58,7 @@ function messageHandler (message: StudioIframeMessage) {
 
   if (message.data.type === 'studio-content') {
     console.groupCollapsed('MESSAGE_STUDIO_CONTENT');
+    console.debug(message.data.data);
     console.groupEnd();
 
     contentCache.value = message.data.data;
@@ -67,6 +68,7 @@ function messageHandler (message: StudioIframeMessage) {
   //editor main configuration
   if (message.data.type === 'studio-settings') {
     console.groupCollapsed('MESSAGE_STUDIO_SETTINGS');
+    console.debug(message.data.data);
     console.groupEnd();
 
     settingsCache.value = message.data.data;
@@ -75,6 +77,7 @@ function messageHandler (message: StudioIframeMessage) {
 
   if (message.data.type === 'studio-editor-settings') {
     console.groupCollapsed('MESSAGE_STUDIO_EDITOR_SETTINGS');
+    console.debug(message.data.data);
     console.groupEnd();
 
     siteSettings.value = message.data.data;
@@ -95,6 +98,7 @@ function messageHandler (message: StudioIframeMessage) {
 
   if (message.data.type === 'studio-active') {
     console.groupCollapsed('MESSAGE_STUDIO_ACTIVE');
+    console.debug(message.data.data);
     console.groupEnd();
 
     active.value = message.data.data;
@@ -108,6 +112,7 @@ function messageHandler (message: StudioIframeMessage) {
 
   if (message.data.type === 'studio-cookie-reset') {
     console.groupCollapsed('MESSAGE_STUDIO_COOKIE_RESET');
+    console.debug(message.data.data);
     console.groupEnd();
 
     resetCookies();
@@ -144,6 +149,8 @@ function updateContent () {
 }
 
 function postModules () {
+
+  console.log('POST MODULES', mainStore.target);
 
   const modules = mainStore.target === 'browser'
     ? editorStore.availableModulesWithRevision 

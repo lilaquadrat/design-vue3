@@ -5,8 +5,8 @@ import { computed, watch, ref } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
-  modelValue?: string
+const props = withDefaults(defineProps<{
+  modelValue?: string | number
   placeholder?: string
   required?: boolean
   disabled?: boolean
@@ -14,6 +14,7 @@ const props = defineProps<{
   error?: ParsedError
   selectOnFocus?: boolean
   dontClear?: boolean
+  type?: 'text' | 'number'
   /**
    * defines with keys are allowed as input
    */
@@ -24,10 +25,10 @@ const props = defineProps<{
    * the update will  not be sent if the produced string does not match this validation
    */
   outputValidation?: string
-}>();
+}>(), {type: 'text'});
 const attrs = useAttrs()
 const inputElement = ref<HTMLInputElement>();
-let tempValue: string = '';
+let tempValue: string | number;
 const debounceTime: number = 50;
 const timeout = ref<ReturnType<typeof setTimeout>>();
 const emit = defineEmits(['update:modelValue', 'focus', 'enter', 'keydown', 'blur']);
@@ -67,17 +68,23 @@ const update = (event: KeyboardEvent) => {
   clearTimeout(timeout.value);
 
   timeout.value = setTimeout(() => {
+    let valueToEmit = event ? target.value : '';
+    
+    // Convert to number if type is 'number' and we have a value
+    if (props.type === 'number' && valueToEmit !== '') {
+      const numValue = Number(valueToEmit);
 
-    if(props.outputValidation) {
-
-      if(tempValue.match(props.outputValidation)) {
-        emit('update:modelValue', event ? target.value : '');
+      if (!isNaN(numValue)) {
+        valueToEmit = numValue;
       }
+    }
 
+    if(props.outputValidation && typeof tempValue === 'string') {
+      if(tempValue.match(props.outputValidation)) {
+        emit('update:modelValue', valueToEmit);
+      }
     } else {
-
-      emit('update:modelValue', event ? target.value : '');
-
+      emit('update:modelValue', valueToEmit);
     }
 
   }, debounceTime);
@@ -104,6 +111,13 @@ function checkInput (event: KeyboardEvent) {
   }
 
   if (whitelistedKeys.includes(event.key)) return;
+  
+  // For number type, restrict input to digits, dot, and comma
+  if (props.type === 'number' && 
+      !(/^\d$/.test(event.key) || event.key === '.')) {
+    event.preventDefault();
+    return;
+  }
 
   if(input.selectionStart !== null && input.selectionEnd && (input.selectionStart < input.selectionEnd)) {
 
@@ -173,7 +187,7 @@ const hasError = computed(() => !!props.error?.error);
 </script>
 <template>
   <label ref="element" class="lila-input" :class="[...classes, { error: hasError }]">
-    <input ref="inputElement" type="text" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
+    <input ref="inputElement" :type="type" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
       <slot />
     </lila-input-labels-partial>

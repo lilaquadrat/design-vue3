@@ -19,6 +19,7 @@ import useUserStore from '@/stores/user.store';
 import type SelectOption from '@/interfaces/selectOption.interface';
 import { auth } from '@/plugins/auth';
 import type CategoryStructure from '@/interfaces/CategoryStructure.interface';
+import createModelDeclaration from '@/mixins/createModelDeclaration';
 
 defineOptions({ inheritAttrs: false });
 
@@ -42,11 +43,12 @@ const structuresModelDeclaration = ref<ModelDeclaration<unknown>>();
 const structuresModel = ref<Record<string, string | number | boolean | string[] | undefined>>({});
 const categoryStructure = ref<CategoryStructure[]>([]);
 const errors = ref<ResponseError>();
-const errorsObject = ref<ErrorsObject>();
+const errorsObject = ref<ErrorsObject>({});
 const translationPre = '';
 const agreementsExtended = ref<Record<string, Agreement & { value: boolean, error: boolean }>>({});
 const categoriesExtended = ref<ListCategoryExtended[]>();
 const participantsState = ref<ListPartiticpantsDetails>();
+const structureMappings = ref<Record<string, string>>({});
 const showFeedback = ref<boolean>(false);
 const emit = defineEmits<{
     (e: string): void;
@@ -76,8 +78,8 @@ const list = computed<BasicData<List> | undefined>(() => {
 });
 
 watch(() => props.editor?.modes, () => updateFeedbackState(), {immediate: true, deep: true});
-
 watch(() => props.categories, () => updateStructuresAndModels());
+watch(() => props.genericData.lists, () => updateAgreements());
 
 function updateStructuresAndModels () {
 
@@ -100,16 +102,17 @@ function updateStructuresAndModels () {
     * get the data from genericData and add required from category.required
     */
     category.genericData?.structures.forEach((singleStructure) => {
-
-      const structureWithRequired = props.genericData.data[singleStructure.toString()] as BasicData<Structure & {required: boolean}>;
-
+      
+      const structureWithRequired: BasicData<Structure & {required: boolean}> = props.genericData.data[singleStructure.toString()] as BasicData<Structure & {required: boolean}>;
+        
       if(!structureWithRequired) return;
+      structureMappings.value[structureWithRequired.id] = structureWithRequired.question;
 
       structureWithRequired.required = category.required?.includes(singleStructure.toString());
 
       singleCategory.structures.push(structureWithRequired);
 
-      localModelDeclaration[structureWithRequired.id] = {type: structureWithRequired.type};
+      localModelDeclaration[structureWithRequired.id] = createModelDeclaration(structureWithRequired);
 
     });
 
@@ -131,6 +134,7 @@ function updateStructuresAndModels () {
 function updateCategories () {
 
   if(!list.value) return
+  if(!list.value.categories) return
 
   // only show categories if there is more than one and the user has a choice
   if (list.value?.categories?.length > 1) {
@@ -176,8 +180,6 @@ function updateCategories () {
 
 function updateFeedbackState () {
 
-  console.log('updateFeedbackState', state.value, props.editor?.modes?.includes('feedback'))
-
   if(state.value === 'success' || !!props.editor?.modes?.includes('feedback')) {
 
     showFeedback.value = true;
@@ -194,22 +196,17 @@ function updateFeedbackState () {
  * if more than one category exists returns an array for selection
  */
 const selectCategories = computed<SelectOption[] | null>(() => {
-
-  if(!list.value) return null;
-
-  if(list.value?.categories?.length > 1) {
-    
-    return list.value.categories.map((single) => ({
-      value      : single.id,
-      text       : single.name,
-      description: single.description,
-      disabled   : single.disabled,
-    }));
-  }
-
-  return null;
-
-})
+  // Early return if no categories or only one category exists
+  if (!list.value?.categories || list.value.categories.length <= 1) return null;
+  
+  // Map categories to select options
+  return list.value.categories.map(single => ({
+    value      : single.id,
+    text       : single.name,
+    description: single.description,
+    disabled   : single.disabled,
+  }));
+});
 const feedback = computed<BasicData<Content>|undefined>(() => {
 
   if(props.genericData?.editor && props.genericData?.data && Array.isArray(props.genericData.editor)){
@@ -278,7 +275,7 @@ onBeforeMount(() => {
   getparticipantsState();
   updateStructuresAndModels();
 
-  structuresModel.value = ModelsClass.add({}, 'structure', structuresModelDeclaration.value);
+  structuresModel.value = ModelsClass.add<Record<string, string | number | boolean | string[] | undefined>>({}, 'structure', structuresModelDeclaration.value);
   
 }) 
 
@@ -289,7 +286,7 @@ onServerPrefetch(() => {
   updateAgreements();
   updateStructuresAndModels();
 
-  structuresModel.value = ModelsClass.add({}, 'structure', structuresModelDeclaration.value);
+  structuresModel.value = ModelsClass.add<Record<string, string | number | boolean | string[] | undefined>>({}, 'structure', structuresModelDeclaration.value);
 })
 
 function resetForm () {
@@ -307,7 +304,7 @@ function resetForm () {
 
 function updateErrors (newErrorsObject?: ErrorsObject) {
 
-  errorsObject.value = newErrorsObject
+  errorsObject.value = newErrorsObject || {}
   updateAgreements();
 
 }
@@ -391,9 +388,6 @@ const handleForm = async (event: Event) => {
   
   const address = ModelsClass.save(addressModel.value as Address, 'address');
   const structure = ModelsClass.save<Record<string, string>>(structuresModel.value as Record<string, string>, 'structure', structuresModelDeclaration.value);
-
-  console.log(structure);
-
   const customer = ModelsClass.save<Contact>({...model.value, ...address}, 'contact');
   const agreements: ContactAgreement[] = [];
   let category: string;
@@ -604,19 +598,19 @@ const handleForm = async (event: Event) => {
       </lila-description-partial>
 
         <template v-for="(structure) in single.structures">
-          <lila-input-partial v-if="structure.type === 'string'" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-input-partial v-if="structure.type === 'string'" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
             {{ structure.question }}
           </lila-input-partial>
-          <lila-input-partial v-if="structure.type === 'number'" type="number" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-input-partial v-if="structure.type === 'number'" type="number" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
             {{ structure.question }}
           </lila-input-partial>
-          <lila-textarea-partial v-if="structure.type === 'text'" :max-length="structure.max" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-textarea-partial v-if="structure.type === 'text'" :max-length="structure.max" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
             {{ structure.question }}
           </lila-textarea-partial>
-          <lila-checkbox-partial v-if="structure.type === 'boolean'" :name="structure.id" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-checkbox-partial v-if="structure.type === 'boolean'" :name="structure.id" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
             {{ structure.question }}
           </lila-checkbox-partial>
-          <lila-select-partial v-if="structure.type === 'select'" :placeholder="structure.question" :options="structure.options" :multiple="structure.multiple === true" :required="structure.required" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-select-partial v-if="structure.type === 'select'" :placeholder="structure.question" :options="structure.options" :multiple="structure.multiple === true" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
             {{ structure.question }}
           </lila-select-partial>
 
@@ -636,7 +630,7 @@ const handleForm = async (event: Event) => {
         <lila-description-partial v-if="mainErrors" type="error">{{$translate(mainErrors)}}</lila-description-partial>
       </lila-fieldset-partial>
 
-      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
+      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :structureMappings="structureMappings" :errors="errors" @update="updateErrors">
         <lila-button-partial save :disabled="disabled" :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">
           <template v-if="list.payment === 'required'">{{$translate('order with payment')}}</template>
           <template v-if="list.payment !== 'required' && list.mode === 'contact'">{{$translate('send contactform')}}</template>

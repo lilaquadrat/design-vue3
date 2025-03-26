@@ -12,7 +12,8 @@ const emit = defineEmits<{
 }>();
 const props = defineProps<{
   errors?: ResponseError
-  preparsedErrors?: ErrorsObject,
+  structureMappings: Record<string, string>
+  preparsedErrors?: ErrorsObject
   translationPre?: string
 }>();
 const { scrolled } = useInview();
@@ -28,8 +29,8 @@ watch(() => props.errors, () => {
 
   if (props.errors?.errors) {
 
-    parsedErrors.value = ActionNotice.parse(props.errors.errors, props.translationPre);
-    flattenedErrors.value = flattenErrors(parsedErrors.value);
+    parsedErrors.value = ActionNotice.parse(props.errors.errors, props.translationPre, props.structureMappings);
+    flattenedErrors.value = flattenErrors(parsedErrors.value, props.structureMappings);
 
   } else {
 
@@ -67,7 +68,7 @@ watch(errorsElement, () => {
 
 watch([() => resized, () => scrolled], () => closeOptions())
 
-function flattenErrors (errors: ErrorsObject) {
+function flattenErrors (errors: ErrorsObject, structureMappings: Record<string, string> | undefined) {
 
   const flattenedErrors: Record<string, ParsedError> = {};
 
@@ -75,8 +76,10 @@ function flattenErrors (errors: ErrorsObject) {
 
     if (errors[single].translatedPath) {
 
-      flattenedErrors[single] = errors[single] as ParsedError;
-
+      const mappedPath = structureMappings?.[errors[single].translatedPath.path as string] || errors[single].translatedPath.path;
+      
+      flattenedErrors[single] = {...errors[single], translatedPath: {path: mappedPath, values: errors[single].translatedPath.values}} as ParsedError;
+      
     } else {
 
       Object.values(errors[single]).forEach((child, index) => {
