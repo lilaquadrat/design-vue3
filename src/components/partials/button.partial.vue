@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<buttonProps>(),
   }
 );
 const confirmed = ref(false);
+// eslint-disable-next-line no-unused-vars
 const emit = defineEmits<{(e: string, event?: Event): void}>();
 const iconColorScheme = computed(() => {
 

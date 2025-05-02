@@ -285,7 +285,7 @@ const calculateOptionsStyle = () => {
               color-scheme="navigation"
               v-bind="element"
               icon="arrow-right"
-              @click="openElement($event, element)"
+              @click="openElement($event as Event, element)"
             >
               {{ element.text }}
             </lila-button-partial>
@@ -343,7 +343,7 @@ const calculateOptionsStyle = () => {
                     v-bind="element"
                     icon="arrow-right"
                     color-scheme="navigation"
-                    @click="toggleTriggerElement($event, element)"
+                    @click="toggleTriggerElement($event as Event, element)"
                   >
                     {{ element.text }}
                   </lila-button-partial>
