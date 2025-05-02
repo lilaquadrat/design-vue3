@@ -3,6 +3,7 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import pluginVue from 'eslint-plugin-vue'
 import typescriptParser from '@typescript-eslint/parser';
 import vueParser from 'vue-eslint-parser';
+import globals from 'globals';
 
 export default [
   // Default ignores - including all patterns from .eslintignore
@@ -62,6 +63,7 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       globals    : {
+        ...globals.browser, 
         // Browser globals
         console  : 'readonly',
         document : 'readonly',

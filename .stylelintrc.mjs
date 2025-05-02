@@ -18,6 +18,7 @@ export default {
     }
   ],
   'rules': {
-    'media-query-no-invalid': null
+    'media-query-no-invalid': null,
+    'declaration-property-value-no-unknown': null
   }
 }
