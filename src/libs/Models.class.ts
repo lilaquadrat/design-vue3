@@ -243,11 +243,9 @@ class Models {
       if ('type' in currentDeclaration) {
 
         if (currentData) {
-
-          // eslint-disable-next-line valid-typeof
+           
           if (this.debug) console.debug('CHECK CURRENTDATA TYPE', typeof currentData === currentDeclaration.type, currentDeclaration.type, keyName, currentData, currentDeclaration);
-
-          // eslint-disable-next-line valid-typeof
+           
           if (typeof currentData !== currentDeclaration.type && currentDeclaration.type !== 'array' && !Models.isModel(currentDeclaration)) currentData = undefined;
 
         }

@@ -14,7 +14,9 @@ withDefaults(
 </script>
 <template>
   <section class="lila-description-partial" :class="[type, { padding, margin, background }]">
-    <h4 v-if="label">{{ $translate(label) }}</h4>
+    <h4 v-if="label">
+      {{ $translate(label) }}
+    </h4>
     <p>
       <slot />
     </p>

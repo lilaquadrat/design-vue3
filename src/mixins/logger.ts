@@ -14,7 +14,7 @@ const categoryColors: { [key: string]: string } = {
   // Add other predefined categories and colors as needed
 };
 const logger = new Proxy<Logger>({}, {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   get: function (target, propKey, receiver) {
     // Method to log messages with dynamic category-based styling and optional color for the category
     const log = (category: string, message: string, color?: string): void => {

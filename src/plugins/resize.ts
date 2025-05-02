@@ -18,7 +18,7 @@ class Resize {
   realHeight = ref<number>(0);
 
   /**
-  * if true we fire an inital resied event to indicate that resizing has started without waiting for the debounce
+  * if true we fire an inital resized event to indicate that resizing has started without waiting for the debounce
   */
   triggerStart = ref<boolean>(true); 
 

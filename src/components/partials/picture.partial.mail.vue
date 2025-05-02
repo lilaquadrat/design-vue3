@@ -19,11 +19,13 @@ defineProps<{
 
 </script>
 <template>
-  <div class="lila-figure" ref="element">
+  <div ref="element" class="lila-figure">
     <section class="picture-container">
-      <img :src="src" :alt="alt" style="max-width: 100%; height: auto;" width="600" />
+      <img :src="src" :alt="alt" style="max-width: 100%; height: auto;" width="600">
   
-      <figcaption v-if="copyright">{{ copyright }}</figcaption>
+      <figcaption v-if="copyright">
+        {{ copyright }}
+      </figcaption>
     </section>
   </div>
 </template>

@@ -7,5 +7,5 @@ onMounted(() => isClient.value = true);
 
 </script>
 <template>
-    <slot v-if="isClient" />
+  <slot v-if="isClient" />
 </template>

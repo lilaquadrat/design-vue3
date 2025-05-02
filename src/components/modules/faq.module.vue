@@ -18,10 +18,8 @@ const { inviewState } = useInview(element, {align: props.variant?.includes('alig
 </script>
 <template>
   <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState]" class="lila-faq-module lila-module">
-
     <lila-textblock-partial v-if="props.textblock" v-bind="props.textblock" />
     <lila-accordion-partial v-if="props.accordion" v-bind="props.accordion" />
-
   </section>
 </template>
 <style lang="less" scoped>

@@ -16,11 +16,14 @@ const changeHandler = (checked: boolean) => {
 </script>
 <template>
   <section class="lila-agreement-partial" :class="{compact, required}">
-    <lila-checkbox-partial name="agreement" :compact="compact" :required="required" :error="error" :modelValue="modelValue" @change="changeHandler"><slot /></lila-checkbox-partial>
+    <lila-checkbox-partial name="agreement" :compact="compact" :required="required" :error="error" :model-value="modelValue" @change="changeHandler">
+      <slot />
+    </lila-checkbox-partial>
 
-    <lila-input-labels-partial v-if="compact" hideLabel :error="error" :required="required" />
-    <lila-content-container-partial :predefined="predefined" :id="predefined ? contentId : undefined" :internalId="!predefined ? contentId : undefined" overlay>{{$translate('show content')}}</lila-content-container-partial>
-
+    <lila-input-labels-partial v-if="compact" hide-label :error="error" :required="required" />
+    <lila-content-container-partial :id="predefined ? contentId : undefined" :predefined="predefined" :internal-id="!predefined ? contentId : undefined" overlay>
+      {{ $translate('show content') }}
+    </lila-content-container-partial>
   </section>
 </template>
 <style lang="less" scoped>

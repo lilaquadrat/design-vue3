@@ -1224,226 +1224,288 @@ function setPredefinedTime (hours?: number, minutes?: number, seconds?: number, 
 
 </script>
 <template>
-    <section class="datepicker-partial" ref="datepickerElement" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon, time, seconds}]" :style="monthVisibleCss">
-        <section class="input-container" ref="triggerElement">
+  <section ref="datepickerElement" class="datepicker-partial" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon, time, seconds}]" :style="monthVisibleCss">
+    <section ref="triggerElement" class="input-container">
+      <lila-button-partial v-if="icon" class="front-toggle-icon" color-scheme="transparent" @click="toggleCalendar()">
+        <lila-icons-partial size="small" :type="icon" />
+      </lila-button-partial>
 
-          <lila-button-partial v-if="icon" @click="toggleCalendar()" class="front-toggle-icon" color-scheme="transparent"><lila-icons-partial size="small" :type="icon" /></lila-button-partial>
+      <section class="input-group from">
+        <input ref="dayFrom" v-model="tempDayFrom" class="dayFrom" @keydown="checkInput('date', $event)" @focus="focus" @blur="blur">
+        <span class="delimiter">.</span>
+        <input ref="monthFrom" v-model="tempMonthFrom" class="monthFrom" @keydown="checkInput('month', $event)" @focus="focus" @blur="blur">
+        <span class="delimiter">.</span>
+        <input ref="yearFrom" v-model="tempYearFrom" class="yearFrom" @keydown="checkInput('year', $event)" @focus="focus" @blur="blur">
+        <template v-if="time">
+          <lila-button-partial color-scheme="icon" @click="toggleCalendar">
+            <lila-icons-partial size="small" type="chevron-down" />
+          </lila-button-partial>
+          <input ref="hoursFrom" v-model="tempHoursFrom" class="hoursFrom" @keydown="checkInput('hours', $event)" @focus="focus" @blur="blur">
+          <span class="delimiter">:</span>
+          <input ref="minutesFrom" v-model="tempMinutesFrom" class="minutesFrom" @keydown="checkInput('minutes', $event)" @focus="focus" @blur="blur">
+          <template v-if="seconds">
+            <span class="delimiter">:</span>
+            <input ref="secondsFrom" v-model="tempSecondsFrom" class="secondsFrom" @keydown="checkInput('seconds', $event)" @focus="focus" @blur="blur">
+          </template>
+          <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'from')">
+            <lila-icons-partial size="small" type="chevron-down" />
+          </lila-button-partial>
+        </template>
+      </section>
 
-            <section class="input-group from">
-              <input @keydown="checkInput('date', $event)" class="dayFrom" ref="dayFrom" @focus="focus" @blur="blur" v-model="tempDayFrom"  />
-              <span class="delimiter">.</span>
-              <input @keydown="checkInput('month', $event)" class="monthFrom" ref="monthFrom" @focus="focus" @blur="blur" v-model="tempMonthFrom" />
-              <span class="delimiter">.</span>
-              <input @keydown="checkInput('year', $event)" class="yearFrom" ref="yearFrom" @focus="focus" @blur="blur" v-model="tempYearFrom" />
-              <template v-if="time">
-                <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
-                <input @keydown="checkInput('hours', $event)" class="hoursFrom" ref="hoursFrom" @focus="focus" @blur="blur" v-model="tempHoursFrom"  />
-                <span class="delimiter">:</span>
-                <input @keydown="checkInput('minutes', $event)" class="minutesFrom" ref="minutesFrom" @focus="focus" @blur="blur" v-model="tempMinutesFrom" />
-                <template v-if="seconds">
-                  <span class="delimiter">:</span>
-                  <input @keydown="checkInput('seconds', $event)" class="secondsFrom" ref="secondsFrom" @focus="focus" @blur="blur" v-model="tempSecondsFrom" />
-                </template>
-                <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'from')"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
-              </template>
-            </section>
-
-            <template v-if="range">
-
-              <lila-icons-partial class="range-separator-icon" size="medium" type="arrow-right-long" />
+      <template v-if="range">
+        <lila-icons-partial class="range-separator-icon" size="medium" type="arrow-right-long" />
               
-              <section class="input-group to">
-                <input @keydown="checkInput('date', $event, 'to')" class="dayTo" ref="dayTo" @focus="focus" @blur="blur" v-model="tempDayTo"  />
-                <span class="delimiter">.</span>
-                <input @keydown="checkInput('month', $event, 'to')" class="monthTo" ref="monthTo" @focus="focus" @blur="blur" v-model="tempMonthTo" />
-                <span class="delimiter">.</span>
-                <input @keydown="checkInput('year', $event, 'to')" class="yearTo" ref="yearTo" @focus="focus" @blur="blur" v-model="tempYearTo" />
-                <template v-if="time">
-                  <lila-button-partial color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
-                  <input @keydown="checkInput('hours', $event, 'to')" class="hoursTo" ref="hoursTo" @focus="focus" @blur="blur" v-model="tempHoursTo"  />
-                  <span class="delimiter">:</span>
-                  <input @keydown="checkInput('minutes', $event, 'to')" class="minutesTo" ref="minutesTo" @focus="focus" @blur="blur" v-model="tempMinutesTo" />
-                  <template v-if="seconds">
-                    <span class="delimiter">:</span>
-                    <input @keydown="checkInput('seconds', $event, 'to')" class="secondsTo" ref="secondsTo" @focus="focus" @blur="blur" v-model="tempSecondsTo" />
-                  </template>
-                  <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'to')"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
-                </template>
-        
-              </section>
-
+        <section class="input-group to">
+          <input ref="dayTo" v-model="tempDayTo" class="dayTo" @keydown="checkInput('date', $event, 'to')" @focus="focus" @blur="blur">
+          <span class="delimiter">.</span>
+          <input ref="monthTo" v-model="tempMonthTo" class="monthTo" @keydown="checkInput('month', $event, 'to')" @focus="focus" @blur="blur">
+          <span class="delimiter">.</span>
+          <input ref="yearTo" v-model="tempYearTo" class="yearTo" @keydown="checkInput('year', $event, 'to')" @focus="focus" @blur="blur">
+          <template v-if="time">
+            <lila-button-partial color-scheme="icon" @click="toggleCalendar">
+              <lila-icons-partial size="small" type="chevron-down" />
+            </lila-button-partial>
+            <input ref="hoursTo" v-model="tempHoursTo" class="hoursTo" @keydown="checkInput('hours', $event, 'to')" @focus="focus" @blur="blur">
+            <span class="delimiter">:</span>
+            <input ref="minutesTo" v-model="tempMinutesTo" class="minutesTo" @keydown="checkInput('minutes', $event, 'to')" @focus="focus" @blur="blur">
+            <template v-if="seconds">
+              <span class="delimiter">:</span>
+              <input ref="secondsTo" v-model="tempSecondsTo" class="secondsTo" @keydown="checkInput('seconds', $event, 'to')" @focus="focus" @blur="blur">
             </template>
+            <lila-button-partial color-scheme="icon" @click="toggleCalendar(undefined, 'time', 'to')">
+              <lila-icons-partial size="small" type="chevron-down" />
+            </lila-button-partial>
+          </template>
+        </section>
+      </template>
 
-            <lila-button-partial v-if="!time" color-scheme="icon" @click="toggleCalendar"><lila-icons-partial size="small" type="chevron-down" /></lila-button-partial>
+      <lila-button-partial v-if="!time" color-scheme="icon" @click="toggleCalendar">
+        <lila-icons-partial size="small" type="chevron-down" />
+      </lila-button-partial>
+    </section>
+
+    <lila-overlay-background-partial v-if="renderCalendar" ref="options" background="none" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
+      <article v-if="calendarMode === 'time'" ref="calendarContainer" class="calendar-container time" :style="calculatedOptions">
+        <header class="main">
+          <section class="controls">
+            <lila-button-group-partial>
+              <lila-button-partial color-scheme="transparent" @click="toggleCalendar()">
+                <lila-icons-partial size="small" type="chevron-up" />
+              </lila-button-partial>
+            </lila-button-group-partial>
+          </section>
+        </header>
+        <section class="time-selector-container" :class="{seconds}">
+          <div class="scroll-overlay-gradient top" />
+          <section ref="hoursScroll" class="scroll-container" @scroll="handleScroll($event as UIEvent)">
+            <section class="hours-container">
+              <div class="scroll-space" />
+              <button @click="setPredefinedTime(0, undefined, undefined)">
+                00
+              </button>
+              <button v-for="number in 23" :key="`hours-${number}`" @click="setPredefinedTime(number, undefined, undefined)">
+                {{ number.toString().padStart(2, '0') }}
+              </button>
+              <div class="scroll-space" />
+            </section>
+          </section>
+          <section ref="minutesScroll" class="scroll-container" @scroll="handleScroll($event as UIEvent)">
+            <section class="minutes-container">
+              <div class="scroll-space" />
+              <button @click="setPredefinedTime(undefined, 0, undefined)">
+                00
+              </button>
+              <button v-for="number in 59" :key="`minutes-${number}`" @click="setPredefinedTime(undefined, number, undefined)">
+                {{ number.toString().padStart(2, '0') }}
+              </button>
+              <div class="scroll-space" />
+            </section>
+          </section>
+          <section v-if="seconds" ref="secondsScroll" class="scroll-container" @scroll="handleScroll($event as UIEvent)">
+            <section class="seconds-container">
+              <div class="scroll-space" />
+              <button @click="setPredefinedTime(undefined, undefined, 0)">
+                00
+              </button>
+              <button v-for="number in 59" :key="`seconds-${number}`" @click="setPredefinedTime(undefined, undefined, number)">
+                {{ number.toString().padStart(2, '0') }}
+              </button>
+              <div class="scroll-space" />
+            </section>
+          </section>
+          <div class="scroll-overlay-gradient bottom" />
+        </section>
+        <section class="time-selector-predefined-container">
+          <section class="border-container">
+            <section class="time-predefined-group">
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(0)">
+                00:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(9)">
+                09:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(12)">
+                12:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(15)">
+                15:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(18)">
+                18:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(20)">
+                20:00
+              </lila-button-partial>
+            </section>
+                
+            <section class="time-predefined-group">
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 0)">
+                00:00
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 15)">
+                00:15
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 30)">
+                00:30
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 45)">
+                00:45
+              </lila-button-partial>
+              <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, undefined, undefined, true)">
+                {{ $translate('datepicker-predefined-now') }}
+              </lila-button-partial>
+            </section>
+          </section>
+        </section>
+        <footer class="main">
+          <lila-button-partial color-scheme="colorScheme1" @click="toggleCalendar()">
+            {{ $translate('datepicker-select-time-button') }}
+          </lila-button-partial>
+        </footer>
+      </article>
+
+      <article
+        v-if="calendarMode === 'date'"
+        ref="calendarContainer" 
+        :key="$helpers.date(useMonthForCalender, 'MMYYYY')"
+        class="calendar-container"
+        :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]"
+        :style="calculatedOptions"
+      >
+        <header class="main">
+          <section class="details">
+            <h3 v-if="range">
+              {{ $translateWithDiff('datepicker-range-days', rangeDuration) }}
+            </h3>
+          </section>
+          <section class="controls">
+            <lila-button-group-partial>
+              <lila-button-partial color-scheme="transparent" @click="toggleCalendar()">
+                <lila-icons-partial size="small" type="chevron-up" />
+              </lila-button-partial>
+              <lila-button-partial color-scheme="transparent" @click="modifyCalendarMonth('prev', monthVisibleMediaAware)">
+                <lila-icons-partial size="small" type="chevron-left" />
+              </lila-button-partial>
+              <lila-button-partial color-scheme="transparent" @click="modifyCalendarMonth('next', monthVisibleMediaAware)">
+                <lila-icons-partial size="small" type="chevron-right" />
+              </lila-button-partial>
+            </lila-button-group-partial>
+          </section>
+        </header>
+        <section class="scroll-container">
+          <section class="elements-container">
+            <article v-for="(singleElement, index) in calendarElements" :key="`month-${index}`" class="single-element">
+              <template v-if="mode ==='days'">
+                <h3 class="selectTitle" role="button" @click="toggleMode">
+                  {{ $helpers.date(singleElement.month, 'MMMM') }} {{ $helpers.date(singleElement.month, 'YYYY') }}
+                </h3>
+                <header>
+                  <section class="header-day">
+                    MO
+                  </section>
+                  <section class="header-day">
+                    DI
+                  </section>
+                  <section class="header-day">
+                    MI
+                  </section>
+                  <section class="header-day">
+                    DO
+                  </section>
+                  <section class="header-day">
+                    FR
+                  </section>
+                  <section class="header-day">
+                    SA
+                  </section>
+                  <section class="header-day">
+                    SO
+                  </section>
+                </header>
+                <section class="days-container">
+                  <template v-for="(singleDay, dayIndex) in singleElement.days" :key="`day-${dayIndex}`">
+                    <div
+                      v-if="singleDay.isCurrentMonth && !singleDay.isAfter && !singleDay.isBefore"
+                      role="button"
+                      class="day active" 
+                      :class="{
+                        currentMonth: singleDay.isCurrentMonth, 
+                        today: singleDay.isToday, 
+                        isSelected: singleDay.isSelected, 
+                        isFrom: singleDay.isFrom, 
+                        isTo: singleDay.isTo,
+                        inRange: singleDay.inRange,
+                        isHover: singleDay.isHover,
+                        isBefore: singleDay.isBefore,
+                        isAfter: singleDay.isAfter
+                      }" 
+                      @mouseenter="updateHover(singleDay.day)" 
+                      @mouseleave="updateHover()" 
+                      @click="selectDate(singleDay, selectMode)"
+                    >
+                      {{ $helpers.date(singleDay.day, 'D') }}
+                    </div>
+                    <div v-if="!singleDay.isCurrentMonth || singleDay.isAfter || singleDay.isBefore" class="day">
+                      {{ $helpers.date(singleDay.day, 'D') }}
+                    </div>
+                  </template>
+                </section>
+              </template>
+  
+              <template v-if="mode ==='month'">
+                <h3 class="selectTitle" role="button" @click="toggleMode">
+                  {{ $helpers.date(singleElement.year, 'YYYY') }}
+                </h3>
+                <article class="selection-container">
+                  <section v-for="(singleMonth, index) in singleElement.months" :key="`month-${index}`" role="button" class="single-month" @click="selectCalendarMonth(singleMonth)">
+                    {{ $helpers.date(singleMonth, 'MMMM') }}
+                  </section>
+                </article>
+              </template>
+  
+              <template v-if="mode ==='years'">
+                <h3 class="selectTitle" role="button" @click="toggleMode">
+                  {{ $helpers.date(singleElement.from, 'YYYY') }} - {{ $helpers.date(singleElement.to, 'YYYY') }}
+                </h3>
+                <article class="selection-container">
+                  <section v-for="(singleYear, index) in singleElement.years" :key="`month-${index}`" role="button" class="single-year" @click="selectCalendarYear(singleYear)">
+                    {{ $helpers.date(singleYear, 'YYYY') }}
+                  </section>
+                </article>
+              </template>
+            </article>
+          </section>
         </section>
 
-        <lila-overlay-background-partial v-if="renderCalendar" background="none" ref="options" @mounted="calculateOptionsStyle" @close="toggleCalendar(false)">
-          <article class="calendar-container time" v-if="calendarMode === 'time'" ref="calendarContainer" :style="calculatedOptions">
-            <header class="main">
-                <section class="controls">
-                  <lila-button-group-partial>
-                    <lila-button-partial @click="toggleCalendar()" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-up" /></lila-button-partial>
-                  </lila-button-group-partial>
-                </section>
-              </header>
-            <section class="time-selector-container" :class="{seconds}">
-              <div class="scroll-overlay-gradient top"></div>
-              <section class="scroll-container" ref="hoursScroll" @scroll="handleScroll($event as UIEvent)">
-                <section class="hours-container">
-                  <div class="scroll-space"></div>
-                  <button @click="setPredefinedTime(0, undefined, undefined)">00</button>
-                  <button v-for="number in 23" @click="setPredefinedTime(number, undefined, undefined)" :key="`hours-${number}`">
-                    {{ number.toString().padStart(2, '0') }}
-                  </button>
-                  <div class="scroll-space"></div>
-                </section>
-              </section>
-              <section class="scroll-container" ref="minutesScroll" @scroll="handleScroll($event as UIEvent)">
-                <section class="minutes-container">
-                  <div class="scroll-space"></div>
-                  <button @click="setPredefinedTime(undefined, 0, undefined)">00</button>
-                  <button v-for="number in 59" @click="setPredefinedTime(undefined, number, undefined)" :key="`minutes-${number}`">
-                    {{ number.toString().padStart(2, '0') }}
-                  </button>
-                  <div class="scroll-space"></div>
-                </section>
-              </section>
-              <section v-if="seconds" class="scroll-container" ref="secondsScroll" @scroll="handleScroll($event as UIEvent)">
-                <section class="seconds-container">
-                  <div class="scroll-space"></div>
-                  <button @click="setPredefinedTime(undefined, undefined, 0)">00</button>
-                  <button v-for="number in 59" @click="setPredefinedTime(undefined, undefined, number)" :key="`seconds-${number}`">
-                    {{ number.toString().padStart(2, '0') }}
-                  </button>
-                  <div class="scroll-space"></div>
-                </section>
-              </section>
-              <div class="scroll-overlay-gradient bottom"></div>
-            </section>
-            <section class="time-selector-predefined-container">
-              <section class="border-container">
-                <section class="time-predefined-group">
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(0)">00:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(9)">09:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(12)">12:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(15)">15:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(18)">18:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(20)">20:00</lila-button-partial>
-                </section>
-                
-                <section class="time-predefined-group">
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 0)">00:00</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 15)">00:15</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 30)">00:30</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, 45)">00:45</lila-button-partial>
-                  <lila-button-partial color-scheme="colorScheme2" @click="setPredefinedTime(undefined, undefined, undefined, true)">{{$translate('datepicker-predefined-now')}}</lila-button-partial>
-                </section>
-                
-              </section>
-            </section>
-            <footer class="main">
-              <lila-button-partial @click="toggleCalendar()" color-scheme="colorScheme1">{{ $translate('datepicker-select-time-button') }}</lila-button-partial>
-            </footer>
-          </article>
-
-          <article class="calendar-container" v-if="calendarMode === 'date'" 
-            ref="calendarContainer" :key="$helpers.date(useMonthForCalender, 'MMYYYY')" :class="[`monthVisible${monthVisibleMediaAware}`, {range, icon}]" :style="calculatedOptions">
-              <header class="main">
-                <section class="details">
-                  <h3 v-if="range">
-                    {{ $translateWithDiff('datepicker-range-days', rangeDuration) }}
-                  </h3>
-                </section>
-                <section class="controls">
-                  <lila-button-group-partial>
-                    <lila-button-partial @click="toggleCalendar()" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-up" /></lila-button-partial>
-                    <lila-button-partial @click="modifyCalendarMonth('prev', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-left" /></lila-button-partial>
-                    <lila-button-partial @click="modifyCalendarMonth('next', monthVisibleMediaAware)" color-scheme="transparent"><lila-icons-partial size="small" type="chevron-right" /></lila-button-partial>
-                  </lila-button-group-partial>
-                </section>
-              </header>
-              <section class="scroll-container">
-
-                <section class="elements-container">
-                  <article class="single-element" v-for="(singleElement, index) in calendarElements" :key="`month-${index}`">
-  
-                    <template v-if="mode ==='days'">
-  
-                      <h3 class="selectTitle" role="button" @click="toggleMode">{{ $helpers.date(singleElement.month, 'MMMM') }} {{ $helpers.date(singleElement.month, 'YYYY') }}</h3>
-                      <header>
-                        <section class="header-day">MO</section>
-                        <section class="header-day">DI</section>
-                        <section class="header-day">MI</section>
-                        <section class="header-day">DO</section>
-                        <section class="header-day">FR</section>
-                        <section class="header-day">SA</section>
-                        <section class="header-day">SO</section>
-                      </header>
-                      <section class="days-container">
-                        <template v-for="(singleDay, dayIndex) in singleElement.days" :key="`day-${dayIndex}`">
-    
-                          <div v-if="singleDay.isCurrentMonth && !singleDay.isAfter && !singleDay.isBefore" role="button" class="day active" 
-                            :class="{
-                                currentMonth: singleDay.isCurrentMonth, 
-                                today: singleDay.isToday, 
-                                isSelected: singleDay.isSelected, 
-                                isFrom: singleDay.isFrom, 
-                                isTo: singleDay.isTo,
-                                inRange: singleDay.inRange,
-                                isHover: singleDay.isHover,
-                                isBefore: singleDay.isBefore,
-                                isAfter: singleDay.isAfter
-                              }" 
-                              @mouseenter="updateHover(singleDay.day)" 
-                              @mouseleave="updateHover()" 
-                              @click="selectDate(singleDay, selectMode)"
-                            >
-                            {{ $helpers.date(singleDay.day, 'D') }}
-                          </div>
-                          <div v-if="!singleDay.isCurrentMonth || singleDay.isAfter || singleDay.isBefore" class="day">
-                            {{ $helpers.date(singleDay.day, 'D') }}
-                          </div>
-    
-                        </template>
-                      </section>
-                      
-                    </template>
-  
-                    <template v-if="mode ==='month'">
-  
-                      <h3 class="selectTitle" role="button" @click="toggleMode">{{ $helpers.date(singleElement.year, 'YYYY') }}</h3>
-                      <article class="selection-container">
-                        <section role="button" class="single-month" v-for="(singleMonth, index) in singleElement.months" :key="`month-${index}`" @click="selectCalendarMonth(singleMonth)">
-                          {{ $helpers.date(singleMonth, 'MMMM') }}
-                        </section>
-                      </article>
-  
-                    </template>
-  
-                    <template v-if="mode ==='years'">
-  
-                      <h3 class="selectTitle" role="button" @click="toggleMode">{{ $helpers.date(singleElement.from, 'YYYY') }} - {{ $helpers.date(singleElement.to, 'YYYY') }}</h3>
-                      <article class="selection-container">
-                        <section role="button" class="single-year" v-for="(singleYear, index) in singleElement.years" :key="`month-${index}`" @click="selectCalendarYear(singleYear)">
-                          {{ $helpers.date(singleYear, 'YYYY') }}
-                        </section>
-                      </article>
-  
-                    </template>
-  
-                  </article>
-                </section>
-
-              </section>
-
-              <footer class="main">
-                <lila-button-partial @click="toggleCalendar()" color-scheme="colorScheme1">{{ $translate('datepicker-select-button') }}</lila-button-partial>
-              </footer>
-
-          </article>
-      </lila-overlay-background-partial>
-
-    </section>
+        <footer class="main">
+          <lila-button-partial color-scheme="colorScheme1" @click="toggleCalendar()">
+            {{ $translate('datepicker-select-button') }}
+          </lila-button-partial>
+        </footer>
+      </article>
+    </lila-overlay-background-partial>
+  </section>
 </template>
 <style lang="less" scoped>
 .datepicker-partial {

@@ -9,10 +9,10 @@ onMounted(() => plugin.getMediaQuery());
 </script>
 <template>
   <section id="mediadetection" class="mediadetection">
-    <div class="mobile"></div>
-    <div class="tablet"></div>
-    <div class="desktop"></div>
-    <div class="wide"></div>
+    <div class="mobile" />
+    <div class="tablet" />
+    <div class="desktop" />
+    <div class="wide" />
   </section>
 </template>
 <style lang="less" scoped>

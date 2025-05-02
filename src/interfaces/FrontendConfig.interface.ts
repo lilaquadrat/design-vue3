@@ -3,7 +3,7 @@ import type StudioSDK from '@lilaquadrat/sdk';
 
 export default interface FrontendConfig {
 
-    auth0Options: Auth0ClientOptions
+    auth0Options?: Auth0ClientOptions
 
     /**
      * for identification at the backend
@@ -19,8 +19,8 @@ export default interface FrontendConfig {
     }
 
     payment?: {
-        type: 'internal' | 'shopify',
-        options: Record<string, string>
+        type?: 'internal' | 'shopify' | 'stripe',
+        options?: Record<string, string>
     }
 
     /**

@@ -1,7 +1,6 @@
 <template>
   <Teleport to="body">
-    <section class="lila-overlay-background" ref="element" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="animationAwareClose" @click="animationAwareClose">
-
+    <section ref="element" class="lila-overlay-background" :class="[backgroundMode, customIndex, {hasCustomIndex, inactive}]" @keydown="animationAwareClose" @click="animationAwareClose">
       <template v-if="transition">
         <transition name="fade" @after-leave="closeAfterTransition">
           <slot v-if="showContent" />
@@ -11,7 +10,6 @@
       <template v-if="!transition">
         <slot />
       </template>
-
     </section>
   </Teleport>
 </template>

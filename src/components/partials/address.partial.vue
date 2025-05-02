@@ -182,67 +182,74 @@ async function update () {
 </script>
 <template>
   <lila-fieldset-partial class="lila-address-partial" :class="{open, simple: !fullAddressRequired}" legend="address">
-
     <template v-if="fullAddressRequired">
-
       <section ref="anchorElement" class="input-container">
         <div v-if="selectedAddress" class="selected">
           <div class="address-elements-container">
-            <span class="address-element">{{selectedAddress.street}} {{ selectedAddress.streetNumber }},</span>
-            <span class="address-element">{{selectedAddress.zipcode}} {{ selectedAddress.city }},</span>
-            <span class="address-element">{{selectedAddress.country_name}}</span>
+            <span class="address-element">{{ selectedAddress.street }} {{ selectedAddress.streetNumber }},</span>
+            <span class="address-element">{{ selectedAddress.zipcode }} {{ selectedAddress.city }},</span>
+            <span class="address-element">{{ selectedAddress.country_name }}</span>
           </div>
-          <lila-button-partial class="remove-button" colorScheme="transparent" icon="close" @click="remove" />
+          <lila-button-partial class="remove-button" color-scheme="transparent" icon="close" @click="remove" />
         </div>
   
-        <lila-input-partial @focus="tryOpen" v-model="search" v-if="!selectedAddress" placeholder="type your street and number">
-          {{$translate('address search')}}
+        <lila-input-partial v-if="!selectedAddress" v-model="search" placeholder="type your street and number" @focus="tryOpen">
+          {{ $translate('address search') }}
         </lila-input-partial>
         <lila-indicator-partial v-if="loading" small />
         <lila-description-partial v-if="!selectedAddress">
-          {{$translate('provide at least your street and housenumber to find your address. city and zipcode increase accuracy.')}}
+          {{ $translate('provide at least your street and housenumber to find your address. city and zipcode increase accuracy.') }}
         </lila-description-partial>
       </section>
   
-      <lila-input-partial placeholder="address addition" v-model="model.addressAddition">
-        {{$translate('address addition')}}
+      <lila-input-partial v-model="model.addressAddition" placeholder="address addition">
+        {{ $translate('address addition') }}
       </lila-input-partial>
   
       <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
-        <slot/>
+        <slot />
       </lila-input-labels-partial>
   
       <lila-overlay-background-partial v-if="open" background="none" @mounted="calculateOptionsStyle" @close="closeOptions">
         <section ref="optionsElement" class="options-container address-container" :style="optionsStyle">
-          <h4 class="no-matching" v-if="!autocomplete?.length && isValidSearch && !loading">{{ $translate('no matching addresses') }}</h4>
+          <h4 v-if="!autocomplete?.length && isValidSearch && !loading" class="no-matching">
+            {{ $translate('no matching addresses') }}
+          </h4>
   
-          <button class="single-address" type="button" v-for="(single, index) in autocomplete" :key="`single-address-${index}`" @click="select(single)">
+          <button v-for="(single, index) in autocomplete" :key="`single-address-${index}`" class="single-address" type="button" @click="select(single)">
             {{ single.address.road }} {{ single.address.house_number }}, {{ single.address.postcode }} {{ single.address.city }}, {{ single.address.country }}
           </button>
-  
         </section>
       </lila-overlay-background-partial>
-
     </template>
 
     <template v-if="!fullAddressRequired">
-
       <section class="street-container">
-        <lila-input-partial v-model="model.street" class="street" placeholder="street" @update:modelValue="updateOnInput">{{$translate('street')}}</lila-input-partial>
-        <lila-input-partial v-model="model.streetNumber" class="streetNumber" placeholder="streetNumber" @update:modelValue="updateOnInput">{{$translate('streetNumber')}}</lila-input-partial>
+        <lila-input-partial v-model="model.street" class="street" placeholder="street" @update:model-value="updateOnInput">
+          {{ $translate('street') }}
+        </lila-input-partial>
+        <lila-input-partial v-model="model.streetNumber" class="streetNumber" placeholder="streetNumber" @update:model-value="updateOnInput">
+          {{ $translate('streetNumber') }}
+        </lila-input-partial>
       </section>
       
       <section class="city-container">
-        <lila-input-partial v-model="model.city" class="city" placeholder="city" @update:modelValue="updateOnInput">{{$translate('city')}}</lila-input-partial>
-        <lila-input-partial v-model="model.zipcode" class="zipcode" placeholder="zipcode" @update:modelValue="updateOnInput">{{$translate('zipcode')}}</lila-input-partial>
+        <lila-input-partial v-model="model.city" class="city" placeholder="city" @update:model-value="updateOnInput">
+          {{ $translate('city') }}
+        </lila-input-partial>
+        <lila-input-partial v-model="model.zipcode" class="zipcode" placeholder="zipcode" @update:model-value="updateOnInput">
+          {{ $translate('zipcode') }}
+        </lila-input-partial>
       </section>
 
-      <lila-select-partial v-model="model.country" :multiple="false" placeholder="country" :options="availableCountries" @update:modelValue="updateOnInput">{{$translate('country')}}</lila-select-partial>
+      <lila-select-partial v-model="model.country" :multiple="false" placeholder="country" :options="availableCountries" @update:model-value="updateOnInput">
+        {{ $translate('country') }}
+      </lila-select-partial>
 
-      <lila-input-partial v-model="model.addressAddition" placeholder="addressAddition" @update:modelValue="updateOnInput">{{$translate('addressAddition')}}</lila-input-partial>
-
+      <lila-input-partial v-model="model.addressAddition" placeholder="addressAddition" @update:model-value="updateOnInput">
+        {{ $translate('addressAddition') }}
+      </lila-input-partial>
     </template>
-
   </lila-fieldset-partial>
 </template>
 <style lang="less" scoped>

@@ -72,7 +72,7 @@ const emitChanges = (value: string) => {
 <template>
   <label class="lila-textarea" tabindex="">
     <span class="textarea-placement-container">
-      <textarea ref="textareaElement" :disabled="disabled" :read-only="readonly" @keyup="checkInput($event)" :placeholder="placeholder" />
+      <textarea ref="textareaElement" :disabled="disabled" :read-only="readonly" :placeholder="placeholder" @keyup="checkInput($event)" />
 
       <div class="length">
         {{ length }}

@@ -61,30 +61,29 @@ onBeforeUpdate(() => setTextType());
     <label :class="[textType, { checked: modelValue, disabled: disabled, noIndicator }]" class="checkbox" tabindex="">
       <div class="indicator-text">
         <span class="indicator">
-          <lila-icons-partial type="checked" size="small" colorScheme="white" />
+          <lila-icons-partial type="checked" size="small" color-scheme="white" />
         </span>
 
-        <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-          <slot v-if="!text"></slot>
-          <lila-description-partial inline v-if="description && !text">{{$translate(description)}}</lila-description-partial>
+        <span v-if="textType !== 'noText'" class="label" :class="[textType]">
+          <slot v-if="!text" />
+          <lila-description-partial v-if="description && !text" inline>{{ $translate(description) }}</lila-description-partial>
           {{ text }}
         </span>
 
       </div>
 
-      <input type="checkbox" :name="name" :disabled="disabled" :checked="modelValue" @change="changeHandler" />
+      <input type="checkbox" :name="name" :disabled="disabled" :checked="modelValue" @change="changeHandler">
     </label>
 
     <div v-if="text" class="indicator-text">
-      <span class="indicator"> </span>
-      <span class="label" v-if="textType !== 'noText'" :class="[textType]">
-        <slot></slot>
-        <lila-description-partial inline v-if="description">{{$translate(description)}}</lila-description-partial>
+      <span class="indicator" />
+      <span v-if="textType !== 'noText'" class="label" :class="[textType]">
+        <slot />
+        <lila-description-partial v-if="description" inline>{{ $translate(description) }}</lila-description-partial>
       </span>
-
     </div>
 
-    <lila-input-labels-partial v-if="!compact" hideLabel :error="error" :required="required" :disabled="disabled" />
+    <lila-input-labels-partial v-if="!compact" hide-label :error="error" :required="required" :disabled="disabled" />
   </section>
 </template>
 <style lang="less" scoped>

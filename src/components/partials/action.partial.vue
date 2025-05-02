@@ -22,7 +22,9 @@ const props = defineProps<{
 
 </script>
 <template>
-  <component v-if="event || link"  :is="event ? 'lila-button-partial' : 'lila-link-partial'" v-bind="props"><slot /></component>
+  <component :is="event ? 'lila-button-partial' : 'lila-link-partial'" v-if="event || link" v-bind="props">
+    <slot />
+  </component>
   <slot v-if="!link && !event" />
 </template>
 

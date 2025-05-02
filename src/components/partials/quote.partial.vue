@@ -1,14 +1,13 @@
 <template>
   <figure class="lila-quote">
-    <blockquote :class="[variant, textSize]" v-if="notEmpty">
+    <blockquote v-if="notEmpty" :class="[variant, textSize]">
       "{{ quote }}"
     </blockquote>
-    <figcaption ref='figcaption' :class="variant">
+    <figcaption ref="figcaption" :class="variant">
       <span v-if="citation || linkExists">{{ citation }}</span><span v-if="citation && linkExists">,</span>
       <cite v-if="linkExists">
         <lila-link-partial v-bind="link" />
       </cite>
-
     </figcaption>
   </figure>
 </template>

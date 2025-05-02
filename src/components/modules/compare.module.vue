@@ -78,16 +78,26 @@ function elementsLength (getLength: boolean) {
 
       <table>
         <tbody>
-          <tr :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle" v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`">
-            <td :class="{ structure: singleIndex === 0 }" v-for="(single, singleIndex) in line" :colspan="elementsLength(line.length === 1)" :key="`line-${singleIndex}`">
+          <tr v-for="(line, lineIndex) in modifiedElements" :key="`elements-${lineIndex}`" :class="{ head: lineIndex === 0, group: line.length === 1 }" :style="amountStyle">
+            <td v-for="(single, singleIndex) in line" :key="`line-${singleIndex}`" :class="{ structure: singleIndex === 0 }" :colspan="elementsLength(line.length === 1)">
               <template v-if="(typeof single !== 'string')">
-                <h3 :title="single.headline" v-if="single.headline">{{ single.headline }}</h3>
-                <p v-if="single.description">{{ single.description }}</p>
-                <h4 class="index">{{ singleIndex }}*</h4>
+                <h3 v-if="single.headline" :title="single.headline">
+                  {{ single.headline }}
+                </h3>
+                <p v-if="single.description">
+                  {{ single.description }}
+                </p>
+                <h4 class="index">
+                  {{ singleIndex }}*
+                </h4>
               </template>
               <template v-else>
-                <lila-icons-partial type="checked" size="small" v-if="single === 'yes'" class="icon checkbox-checked_color1">{{ $translate('yes') }}</lila-icons-partial>
-                <lila-icons-partial type="close" size="small" v-else-if="single === 'no'" class="icon cancel_color1">{{ $translate('no') }}</lila-icons-partial>
+                <lila-icons-partial v-if="single === 'yes'" type="checked" size="small" class="icon checkbox-checked_color1">
+                  {{ $translate('yes') }}
+                </lila-icons-partial>
+                <lila-icons-partial v-else-if="single === 'no'" type="close" size="small" class="icon cancel_color1">
+                  {{ $translate('no') }}
+                </lila-icons-partial>
                 <template v-else>
                   <abbr :title="single">{{ single }}</abbr>
                 </template>

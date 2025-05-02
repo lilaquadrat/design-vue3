@@ -36,14 +36,17 @@ const slotContent = computed(() => hasSlotContent(useSlots().default));
 
 </script>
 <template>
-  <component v-if="link"
-    :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text && !slotContent }]"
-    class="lila-link" :is="type" :to="linkWithBase" :href="linkWithBase">
-
-    <template v-if="text">{{ $replacer(text) }}</template>
-    <slot v-if="!text"></slot>
-    <lila-icons-partial v-if="icon" :color-scheme="isWhite ? 'white' : 'colorScheme1'" :type="icon"
-      :size="callToAction || !text && icon ? 'medium' : 'smaller'" />
+  <component :is="type" v-if="link" :class="[variant, classes, $attrs.class, { hasIcon: icon, callToAction: props.callToAction, button: props.button, disabled: props.disabled, noText: !text && !slotContent }]" class="lila-link" :to="linkWithBase" :href="linkWithBase">
+    <template v-if="text">
+      {{ $replacer(text) }}
+    </template>
+    <slot v-if="!text" />
+    <lila-icons-partial
+      v-if="icon"
+      :color-scheme="isWhite ? 'white' : 'colorScheme1'"
+      :type="icon"
+      :size="callToAction || !text && icon ? 'medium' : 'smaller'"
+    />
   </component>
 </template>
 <style lang="less" scoped>

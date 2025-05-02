@@ -250,43 +250,44 @@ function toggleOptions () {
 </script>
 <template>
   <section :class="{ error: error, options: open, disabled }" class="lila-select-input label-replacement" tabindex="">
-    <button type="button" ref="triggerElement" class="options-trigger" @click="toggleOptions">
-      <span class="selected-container" v-if="(selected.length === 0 || selected === 0) && placeholder">{{$translate(placeholder)}}</span>
-      <span class="selected-container" v-if="(selected.length > 0 || selected > 0)">
-       {{ selectedText }}
+    <button ref="triggerElement" type="button" class="options-trigger" @click="toggleOptions">
+      <span v-if="(selected.length === 0 || selected === 0) && placeholder" class="selected-container">{{ $translate(placeholder) }}</span>
+      <span v-if="(selected.length > 0 || selected > 0)" class="selected-container">
+        {{ selectedText }}
       </span>
       <lila-icons-partial type="chevron-down" size="small" />
     </button>
 
     <lila-client-only-partial>
       <teleport to="body">
-  
-        <lila-overlay-background-partial v-if="open" background="none" ref="options" @mounted="calculateOptionsStyle" @close="closeOptions">
+        <lila-overlay-background-partial v-if="open" ref="options" background="none" @mounted="calculateOptionsStyle" @close="closeOptions">
           <section ref="options" class="options-container content-container" :style="optionsStyle">
-            
             <section class="select-options">
-              <button class="single-option-button" type="button" v-for="(option, index) in filteredOptions" :title="$translate(option.text)" :key="`option-index-${index}`" :value="option.value" :class="[{ selected: isSelected(option.value), hasDescription: option.description, disabled: option.disabled }]" @click="toggle(option)">
-                <span v-if="!isSelected(option.value)" class="box"></span>
+              <button v-for="(option, index) in filteredOptions" :key="`option-index-${index}`" class="single-option-button" type="button" :title="$translate(option.text)" :value="option.value" :class="[{ selected: isSelected(option.value), hasDescription: option.description, disabled: option.disabled }]" @click="toggle(option)">
+                <span v-if="!isSelected(option.value)" class="box" />
                 <lila-icons-partial v-if="isSelected(option.value)" type="checked" size="small" />
-                <span v-if="option.text" class="text">{{$translate(option.text)}}</span>
-                <p v-if="option.description" class="description">{{$translate(option.description)}}</p>
+                <span v-if="option.text" class="text">{{ $translate(option.text) }}</span>
+                <p v-if="option.description" class="description">
+                  {{ $translate(option.description) }}
+                </p>
               </button>
             </section>
-    
           </section>
         </lila-overlay-background-partial>
-  
       </teleport>
     </lila-client-only-partial>
 
-    <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled"><slot /></lila-input-labels-partial>
+    <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
+      <slot />
+    </lila-input-labels-partial>
 
     <lila-description-partial v-if="errorMessage" :background="false" type="error">
-      {{errorMessage}}
+      {{ errorMessage }}
     </lila-description-partial>
 
-    <lila-description-partial class="input-description" v-if="description">{{$translate(description)}}</lila-description-partial>
-
+    <lila-description-partial v-if="description" class="input-description">
+      {{ $translate(description) }}
+    </lila-description-partial>
   </section>
 </template>
 <style lang="less" scoped>

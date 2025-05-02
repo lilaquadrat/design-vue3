@@ -47,7 +47,7 @@ const listVariant = computed(() => {
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, variant]" class="lila-index-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant]" class="lila-index-module lila-module">
     <section class="index-container">
       <lila-list-partial mode="links" v-bind="useLinks" :variant="listVariant" />
     </section>

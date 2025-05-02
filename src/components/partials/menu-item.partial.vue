@@ -37,15 +37,23 @@ function switchContent () {
 <template>
   <article class="lila-menu-item">
     <header>
-      <h3 class="title">{{ title }}</h3>
-      <h5 v-if="translatedProperties" class="properties">{{ translatedProperties.join(', ') }}</h5>
+      <h3 class="title">
+        {{ title }}
+      </h3>
+      <h5 v-if="translatedProperties" class="properties">
+        {{ translatedProperties.join(', ') }}
+      </h5>
     </header>
 
-    <h4 v-if="price" class="price">{{ price }}</h4>
+    <h4 v-if="price" class="price">
+      {{ price }}
+    </h4>
 
-    <p v-if="description" class="description">{{ description }}</p>
+    <p v-if="description" class="description">
+      {{ description }}
+    </p>
 
-    <footer @click="switchContent" v-if="allergensNumbers" @key-up="switchContent" role="button" tabindex="0">
+    <footer v-if="allergensNumbers" role="button" tabindex="0" @click="switchContent" @key-up="switchContent">
       <template v-if="!showAllergensText">
         {{ allergensNumbers.join(', ') }}
       </template>
@@ -53,7 +61,7 @@ function switchContent () {
         {{ translatedAllergens.join(', ') }}
       </template>
     </footer>
-    <slot></slot>
+    <slot />
   </article>
 </template>
 <style lang="less" scoped>

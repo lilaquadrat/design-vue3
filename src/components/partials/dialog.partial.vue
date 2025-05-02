@@ -1,23 +1,32 @@
 <template>
   <section :class="[variant, {hasBackground: colorScheme === 'transparent'}]" class="lila-dialog-partial">
     <section class="dialog-content-container">
-      <slot></slot>
+      <slot />
 
       <section class="message-container">
-        <h3 v-if="message">{{ $translate(message) }}</h3>
-        <p v-if="description">{{ $translate(description)}}</p>
+        <h3 v-if="message">
+          {{ $translate(message) }}
+        </h3>
+        <p v-if="description">
+          {{ $translate(description) }}
+        </p>
       </section>
     </section>
 
     <lila-button-group-partial v-if="type === 'check'" gap>
-      <lila-button-partial @click="confirm" :colorScheme="colorScheme">{{$translate(CONFIRM)}}</lila-button-partial>
-      <lila-button-partial @click="cancel" colorScheme="transparent">{{$translate(CANCEL)}}</lila-button-partial>
+      <lila-button-partial :color-scheme="colorScheme" @click="confirm">
+        {{ $translate(CONFIRM) }}
+      </lila-button-partial>
+      <lila-button-partial color-scheme="transparent" @click="cancel">
+        {{ $translate(CANCEL) }}
+      </lila-button-partial>
     </lila-button-group-partial>
 
     <lila-button-group-partial v-if="type === 'confirm'" gap>
-      <lila-button-partial @click="confirm" colorScheme="transparent">{{$translate(ACKNOWLEDGE)}}</lila-button-partial>
+      <lila-button-partial color-scheme="transparent" @click="confirm">
+        {{ $translate(ACKNOWLEDGE) }}
+      </lila-button-partial>
     </lila-button-group-partial>
-
   </section>
 </template>
 <script setup lang="ts">

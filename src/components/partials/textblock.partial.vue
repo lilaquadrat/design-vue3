@@ -14,16 +14,22 @@ const notEmpty = computed(() => !!(props.headline?.length || props.subline?.leng
 
 </script>
 
-<template >
-  <section :id="props.index?.anchor || props.id" :class="[variant]" v-if="notEmpty" class="lila-textblock">
-    <h1 v-if="headline">{{ $replacer(headline) }}</h1>
-    <h2 v-if="subline">{{ $replacer(subline) }}</h2>
-    <h3 v-if="intro">{{ $replacer(intro) }}</h3>
+<template>
+  <section v-if="notEmpty" :id="props.index?.anchor || props.id" :class="[variant]" class="lila-textblock">
+    <h1 v-if="headline">
+      {{ $replacer(headline) }}
+    </h1>
+    <h2 v-if="subline">
+      {{ $replacer(subline) }}
+    </h2>
+    <h3 v-if="intro">
+      {{ $replacer(intro) }}
+    </h3>
     <p v-for="(singleText, index) in text" :key="`text-${index}`">
       {{ $replacer(singleText) }}
     </p>
 
-    <slot></slot>
+    <slot />
   </section>
 </template>
 

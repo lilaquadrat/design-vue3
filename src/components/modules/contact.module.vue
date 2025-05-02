@@ -79,7 +79,12 @@ const list = computed<BasicData<List> | undefined>(() => {
 
 watch(() => props.editor?.modes, () => updateFeedbackState(), {immediate: true, deep: true});
 watch(() => props.categories, () => updateStructuresAndModels());
-watch(() => props.genericData.lists, () => updateAgreements());
+watch(() => props.genericData.lists, () => {
+
+  updateAgreements();
+  updateCategories();
+
+});
 
 function updateStructuresAndModels () {
 
@@ -133,11 +138,13 @@ function updateStructuresAndModels () {
  */
 function updateCategories () {
 
+  categoriesExtended.value = undefined;
+
   if(!list.value) return
   if(!list.value.categories) return
 
   // only show categories if there is more than one and the user has a choice
-  if (list.value?.categories?.length > 1) {
+  if (list.value?.categories?.length > 1 || (list.value?.categories?.length === 1 && props.variant?.includes('show-single-category'))) {
 
     const categories = list.value.categories as ListCategoryExtended[];
 
@@ -166,15 +173,7 @@ function updateCategories () {
 
     categoriesExtended.value = categories;
 
-  } else if(list.value.mode !== 'contact') {
-    
-    categoriesExtended.value = list.value.categories;
-
-  } else {
-
-    categoriesExtended.value = undefined;
-
-  }
+  } 
 
 }
 
@@ -274,19 +273,23 @@ onBeforeMount(() => {
   updateAgreements();
   getparticipantsState();
   updateStructuresAndModels();
+  updateCategories();
 
   structuresModel.value = ModelsClass.add<Record<string, string | number | boolean | string[] | undefined>>({}, 'structure', structuresModelDeclaration.value);
   
 }) 
 
 onServerPrefetch(() => {
+
   model.value = ModelsClass.add<Contact>({}, 'contact');
   addressModel.value = ModelsClass.add({}, 'address');
   
   updateAgreements();
   updateStructuresAndModels();
+  updateCategories();
 
   structuresModel.value = ModelsClass.add<Record<string, string | number | boolean | string[] | undefined>>({}, 'structure', structuresModelDeclaration.value);
+
 })
 
 function resetForm () {
@@ -421,7 +424,7 @@ const handleForm = async (event: Event) => {
   try {
     
     const sdk = new StudioSDK(mainStore.apiConfig);
-    const call = auth.isAuth.value 
+    const call = userStore.isFullUser
       ? sdk.members.lists.join(list.value._id.toString(), message, category, agreements, structure, {parentId: props.parentId, uuid: props.uuid})
       : sdk.public.lists.join(list.value._id.toString(), customer, message, category, agreements, structure, {parentId: props.parentId, uuid: props.uuid});
     const customerResponse = await traceable<SDKResponse<string|{_id: string, id: string}>>(call, traceId);
@@ -521,126 +524,129 @@ const handleForm = async (event: Event) => {
 </script>
 <template>
   <section class="lila-contact-module lila-module" :class="[mode]">
-
     <section class="intro-container">
       <lila-textblock-partial v-bind="textblock" />
 
-      <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
-      <h3 class="limited" v-if="limited && !disabled && !hideFreeSlots">
-        <template v-if="!participantsState && !disabled">{{ $translateWithDiff('LIST_LIMITED_AVAILABILITY', limited) }}</template>
-        <template v-if="participantsState && !disabled">{{ $translate('LIST_LIMITED_AVAILABILITY_STATE', [slotsAvailable.toString(), limited.toString()]) }}</template>
+      <lila-description-partial v-if="disabled" type="error">
+        {{ $translate('LIST_SOLD_OUT') }}
+      </lila-description-partial>
+      <h3 v-if="limited && !disabled && !hideFreeSlots" class="limited">
+        <template v-if="!participantsState && !disabled">
+          {{ $translateWithDiff('LIST_LIMITED_AVAILABILITY', limited) }}
+        </template>
+        <template v-if="participantsState && !disabled">
+          {{ $translate('LIST_LIMITED_AVAILABILITY_STATE', [slotsAvailable.toString(), limited.toString()]) }}
+        </template>
       </h3>
     </section>
 
     <section v-if="showFeedback" :content="feedbackContent">
-      <lila-button-partial @click="resetForm" colorScheme="colorScheme1">{{ $translate('back to the form') }}</lila-button-partial>
+      <lila-button-partial color-scheme="colorScheme1" @click="resetForm">
+        {{ $translate('back to the form') }}
+      </lila-button-partial>
     </section>
 
     <lila-content-module v-if="showFeedback" sub :content="feedbackContent" />
 
     <form v-if="!showFeedback && list && model">
       <lila-fieldset-partial legend="message">
-
-        <lila-textarea-partial :required="list.mode === 'contact'" :error="errorsObject?.message" :maxLength="2500" v-model="model.message">{{$translate('message')}}</lila-textarea-partial>
-
+        <lila-textarea-partial v-model="model.message" :required="list.mode === 'contact'" :error="errorsObject?.message" :max-length="2500">
+          {{ $translate('message') }}
+        </lila-textarea-partial>
       </lila-fieldset-partial>
 
-      <lila-fieldset-partial v-if="categoriesExtended" extendedGap legend="category">
+      <lila-fieldset-partial v-if="categoriesExtended" extended-gap legend="category">
         <lila-textblock-partial v-bind="categoryTextblock" />
-        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
-        <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">{{$translate('category')}}</lila-select-partial>
+        <lila-select-category-partial v-if="list.mode !== 'contact'" v-model="model.category!" required :error="errorsObject?.category" :variant="variant" :categories="categoriesExtended" />
+        <lila-select-partial v-if="list.mode === 'contact' && selectCategories" v-model="model.category!" :multiple="false" :error="errorsObject?.category" required :options="selectCategories" placeholder="select category">
+          {{ $translate('category') }}
+        </lila-select-partial>
       </lila-fieldset-partial>
 
       <template v-if="!userStore.isFullUser">
-
-        <lila-fieldset-partial legend="personal"> 
-  
-          <lila-input-partial :error="errorsObject?.prename" required v-model="model.prename">
-            {{$translate('prename')}}
+        <lila-fieldset-partial legend="personal">
+          <lila-input-partial v-model="model.prename" :error="errorsObject?.prename" required>
+            {{ $translate('prename') }}
           </lila-input-partial>
   
-          <lila-input-partial :error="errorsObject?.name" required v-model="model.name">
-            {{$translate('name')}}
+          <lila-input-partial v-model="model.name" :error="errorsObject?.name" required>
+            {{ $translate('name') }}
           </lila-input-partial>
-  
         </lila-fieldset-partial>
   
-        <lila-address-partial v-if="addressModel" :fullAddressRequired="list.participants?.addressRequired" v-model="addressModel" :error="errorsObject?.address" required />
+        <lila-address-partial v-if="addressModel" v-model="addressModel" :full-address-required="list.participants?.addressRequired" :error="errorsObject?.address" required />
   
         <lila-fieldset-partial legend="contact">
-  
-          <lila-input-partial :error="errorsObject?.email" required v-model="model.email">
-            {{$translate('email')}}
+          <lila-input-partial v-model="model.email" :error="errorsObject?.email" required>
+            {{ $translate('email') }}
           </lila-input-partial>
   
           <lila-input-partial v-model="model.phone">
-            {{$translate('phone')}}
+            {{ $translate('phone') }}
           </lila-input-partial>
-  
         </lila-fieldset-partial>
-
       </template>
 
       <template v-if="userStore.isFullUser">
-
-        <lila-fieldset-partial legend="personal"> 
-  
+        <lila-fieldset-partial legend="personal">
           <h3>Eingeloggt als {{ userStore.userData?.prename }} {{ userStore.userData?.name }}</h3>
-
         </lila-fieldset-partial>
-
       </template>
 
       <lila-fieldset-partial v-for="(single) in categoryStructure" :key="single.title" :legend="single.title">
-
         <lila-description-partial v-if="single.description">
-        {{$translate(single.description)}}
-      </lila-description-partial>
+          {{ $translate(single.description) }}
+        </lila-description-partial>
 
         <template v-for="(structure) in single.structures">
-          <lila-input-partial v-if="structure.type === 'string'" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-input-partial v-if="structure.type === 'string'" :key="structure.id" v-model="structuresModel[structure.id]" :required="structure.required" :error="errorsObject[structure.id]">
             {{ structure.question }}
           </lila-input-partial>
-          <lila-input-partial v-if="structure.type === 'number'" type="number" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-input-partial v-if="structure.type === 'number'" :key="structure.id" v-model="structuresModel[structure.id]" type="number" :required="structure.required" :error="errorsObject[structure.id]">
             {{ structure.question }}
           </lila-input-partial>
-          <lila-textarea-partial v-if="structure.type === 'text'" :max-length="structure.max" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-textarea-partial v-if="structure.type === 'text'" :key="structure.id" v-model="structuresModel[structure.id]" :max-length="structure.max" :required="structure.required" :error="errorsObject[structure.id]">
             {{ structure.question }}
           </lila-textarea-partial>
-          <lila-checkbox-partial v-if="structure.type === 'boolean'" :name="structure.id" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-checkbox-partial v-if="structure.type === 'boolean'" :key="structure.id" v-model="structuresModel[structure.id]" :name="structure.id" :required="structure.required" :error="errorsObject[structure.id]">
             {{ structure.question }}
           </lila-checkbox-partial>
-          <lila-select-partial v-if="structure.type === 'select'" :placeholder="structure.question" :options="structure.options" :multiple="structure.multiple === true" :required="structure.required" :error="errorsObject[structure.id]" v-model="structuresModel[structure.id]" :key="structure.id">
+          <lila-select-partial v-if="structure.type === 'select'" :key="structure.id" v-model="structuresModel[structure.id]" :placeholder="structure.question" :options="structure.options!" :multiple="structure.multiple === true" :required="structure.required" :error="errorsObject[structure.id]">
             {{ structure.question }}
           </lila-select-partial>
-
         </template>
-
       </lila-fieldset-partial>
 
       <lila-fieldset-partial v-if="list" class="agreements">
-
-        <lila-agreement-partial v-for="(single, index) in agreementsExtended" :error="single.error" :key="`agreement-${index}`" 
-        v-model="single.value" :required="single.required" :predefined="single.predefined" :contentId="single.contentId">{{$translate(single.text)}}</lila-agreement-partial>
-
+        <lila-agreement-partial
+          v-for="(single, index) in agreementsExtended"
+          :key="`agreement-${index}`"
+          v-model="single.value" 
+          :error="single.error"
+          :required="single.required"
+          :predefined="single.predefined"
+          :content-id="single.contentId"
+        >
+          {{ $translate(single.text) }}
+        </lila-agreement-partial>
       </lila-fieldset-partial>
 
       <lila-fieldset-partial v-if="disabled || mainErrors">
-        <lila-description-partial v-if="disabled" type="error">{{$translate('LIST_SOLD_OUT')}}</lila-description-partial>
-        <lila-description-partial v-if="mainErrors" type="error">{{$translate(mainErrors)}}</lila-description-partial>
+        <lila-description-partial v-if="disabled" type="error">
+          {{ $translate('LIST_SOLD_OUT') }}
+        </lila-description-partial>
+        <lila-description-partial v-if="mainErrors" type="error">
+          {{ $translate(mainErrors) }}
+        </lila-description-partial>
       </lila-fieldset-partial>
 
-      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :structureMappings="structureMappings" :errors="errors" @update="updateErrors">
-        <lila-button-partial save :disabled="disabled" :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">
-          <template v-if="list.payment === 'required'">{{$translate('order with payment')}}</template>
-          <template v-if="list.payment !== 'required' && list.mode === 'contact'">{{$translate('send contactform')}}</template>
-          <template v-if="list.payment !== 'required' && list.mode === 'reservation'">{{$translate('send reservation')}}</template>
+      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :structure-mappings="structureMappings" :errors="errors" @update="updateErrors">
+        <lila-button-partial save :disabled="disabled" :call-id="traceId" color-scheme="colorScheme1" type="submit" @click="handleForm">
+          {{ $translate(`contact-${list.mode}-submit-button`) }}
         </lila-button-partial>
       </lila-action-notice-partial>
-
     </form>
-
-</section>
+  </section>
 </template>
 <style lang="less" scoped>
 

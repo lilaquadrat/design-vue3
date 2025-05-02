@@ -22,7 +22,10 @@ export default defineConfig((settings) => {
       vue(),
       visualizer()
     ],
-    base : './',
+    base  : './',
+    server: {
+      host: '0.0.0.0', // This allows access from other devices on the network
+    },
     build: {
       cssCodeSplit : false,
       cssMinify    : isProduction,
@@ -30,12 +33,15 @@ export default defineConfig((settings) => {
       minify       : isProduction,
       rollupOptions: {
         output: {
-          dir           : 'dist/app',
+          dir         : 'dist/app',
+          manualChunks: {
+            'qrcode': ['qrcode'],
+          },
           assetFileNames: (assetInfo) => {
             if (assetInfo.name?.endsWith('woff') || assetInfo.name?.endsWith('png')) {
               return '[name][extname]';
             }
-  
+
             return '[name]-[hash][extname]';
           },
           chunkFileNames: '[name]-[hash].js',
@@ -78,6 +84,7 @@ export default defineConfig((settings) => {
         input : '/src/server-entry.ts',
         output: {
           ...viteConfig.build?.rollupOptions?.output,
+          manualChunks        : null,
           inlineDynamicImports: true,
           dir                 : 'dist/server',
           entryFileNames      : '[name].js',

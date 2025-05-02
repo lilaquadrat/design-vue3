@@ -41,6 +41,7 @@ import VideoControlsStoryPartial from '@/components/partials/video-controls-stor
 import LocationPartial from '@/components/partials/location.partial.vue';
 import DatepickerPartial from '@/components/partials/datepicker.partial.vue';
 import ActionPartial from '@/components/partials/action.partial.vue';
+import QrcodePartial from '@/components/partials/qrcode.partial.vue';
 // import HighlightPartial from '@/components/partials/highlight.partial.vue';
 
 export default [
@@ -219,5 +220,9 @@ export default [
   {
     name     : 'action',
     component: ActionPartial
+  }, 
+  {
+    name     : 'qrcode',
+    component: QrcodePartial
   }, 
 ]

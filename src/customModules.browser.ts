@@ -14,15 +14,12 @@ const customModules: DesignCustomModule[] = [
     description: 'Gibt dem Nutzer die Möglichkeit seine E-Mail Adresse zu verifizieren'
   },
   {
-    hint          : 'confirm-email-1',
-    module        : 'confirm-email-module',
-    name          : 'mit daten',
-    description   : 'Gibt dem Nutzer die Möglichkeit seine E-Mail Adresse zu verifizieren',
-    additionalData: {
-      name       : 'some data',
-      description: 'some description for some data'
-    }
+    hint       : 'order-success',
+    module     : 'order-success-module',
+    name       : 'Abgeschlossene Bestellung einsehen',
+    description: 'Zeigt dem Nutzer eine abgeschlossene Bestellung an'
   },
+
 ]
 
 export default customModules;

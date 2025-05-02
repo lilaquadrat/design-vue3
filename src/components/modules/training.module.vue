@@ -114,32 +114,38 @@ function toggleIndex (event: MouseEvent | null, hint?: boolean) {
     </section>
 
     <article ref="mainGridContainer" class="main-grid-container">
-      <section :class="{ open: headIndexOpen }" class="current-content-container" ref="currentContentContainer" v-if="currentContent">
-
+      <section v-if="currentContent" ref="currentContentContainer" :class="{ open: headIndexOpen }" class="current-content-container">
         <section class="content-head">
           <div class="grid-container">
-            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">{{ currentContent.settings.title }} 11</lila-button-partial>
-            <div class="current-indicator">{{ currentIndex + 1 }} von {{ contentCount }}</div>
+            <lila-button-partial class="base transparent titleButton" @click="toggleIndex">
+              {{ currentContent.settings.title }} 11
+            </lila-button-partial>
+            <div class="current-indicator">
+              {{ currentIndex + 1 }} von {{ contentCount }}
+            </div>
           </div>
 
           <div :class="{ open: headIndexOpen }" class="headIndex">
             <ul>
               <li v-for="(teaser, index) in indexTeaser" :key="`teaser-head-index-${index}`" v-memo="[teaser.id]">
-                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">{{ teaser.settings?.title }}</lila-button-partial>
+                <lila-button-partial :class="{ active: index === currentIndex }" class="base transparent titleButton" @click="setIndex(index)">
+                  {{ teaser.settings?.title }}
+                </lila-button-partial>
               </li>
             </ul>
           </div>
-
         </section>
-        <lila-content-module ref="currentContentContainer" class="currentContent" :key="currentContent.id" :routeBase="linkBase" :linkEvents="linkMode === 'event' ? true : false" :content="currentContent" />
+        <lila-content-module ref="currentContentContainer" :key="currentContent.id" class="currentContent" :route-base="linkBase" :link-events="linkMode === 'event' ? true : false" :content="currentContent" />
       </section>
-      <section class="current-content-container" v-if="!currentContent">
-        <section class="content-module"></section>
+      <section v-if="!currentContent" class="current-content-container">
+        <section class="content-module" />
       </section>
 
       <section class="index-container">
-        <div class="index-element" :class="{ active: index === currentIndex }" v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`">
-          <div class="index-indicator">{{ index + 1 }}.</div>
+        <div v-for="(teaser, index) in indexTeaser" :key="`teaser-index-${index}`" class="index-element" :class="{ active: index === currentIndex }">
+          <div class="index-indicator">
+            {{ index + 1 }}.
+          </div>
 
           <button @click="setIndex(index)">
             <h2>{{ teaser.settings?.title }}</h2>

@@ -1,6 +1,6 @@
 <template>
   <section :class="{gap:gap, center: center }" class="lila-button-group">
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <script setup lang="ts">

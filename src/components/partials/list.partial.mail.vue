@@ -49,27 +49,24 @@ const filteredValues: ComputedRef<(string | Link)[]|undefined> = computed(() => 
 </script>
 
 <template>
-
-  <section class="lila-list-links" v-if="notEmpty" :class="variant">
-    <h4 style="padding: 0; margin: 0; color: #555; font-weight: bold; font-size: 15px; padding-bottom: 20px; font-family: Arial, Helvetica, sans-serif;" v-if="title">{{ $replacer(title) }}</h4>
+  <section v-if="notEmpty" class="lila-list-links" :class="variant">
+    <h4 v-if="title" style="padding: 0; margin: 0; color: #555; font-weight: bold; font-size: 15px; padding-bottom: 20px; font-family: Arial, Helvetica, sans-serif;">
+      {{ $replacer(title) }}
+    </h4>
 
     <ul v-if="!actions || mode === 'list'" style="padding: 0; margin: 0;">
       <li v-for="(single, index) in filteredValues" :key="`list-element-${index}`" :style="listStyle">
-
         <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" />
-        <template v-if="typeof(single) === 'string'">{{ $replacer(single) }}</template>
-
+        <template v-if="typeof(single) === 'string'">
+          {{ $replacer(single) }}
+        </template>
       </li>
     </ul>
 
-    <lila-link-group-partial :variant="variant" v-if="actions">
-
-      <template v-for="(single, index) in filteredValues" >
+    <lila-link-group-partial v-if="actions" :variant="variant">
+      <template v-for="(single, index) in filteredValues">
         <lila-link-partial v-if="typeof(single) === 'object'" v-bind="single" :key="`list-actions-element-${index}`" />
       </template>
-
     </lila-link-group-partial>
-
   </section>
-
 </template>

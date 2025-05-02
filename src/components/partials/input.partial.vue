@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, useAttrs } from 'vue';
 import type { ParsedError } from '../../libs/ActionNotice';
-import { computed, watch, ref } from 'vue';
+import { computed, watch, ref, onServerPrefetch } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -58,6 +58,11 @@ onBeforeMount(() => {
   tempValue = props.modelValue as string;
 
 })
+onServerPrefetch(() => {
+
+  tempValue = props.modelValue as string;
+
+});
 
 const update = (event: KeyboardEvent) => {
 
@@ -187,7 +192,7 @@ const hasError = computed(() => !!props.error?.error);
 </script>
 <template>
   <label ref="element" class="lila-input" :class="[...classes, { error: hasError }]">
-    <input ref="inputElement" :type="type" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur" />
+    <input ref="inputElement" :type="type" :placeholder="$translate(placeholder as string)" :disabled="disabled" :value="tempValue" @keydown="checkInput($event)" @keyup="update" @focus="focus" @blur="blur">
     <lila-input-labels-partial :error="hasError" :required="required" :disabled="disabled">
       <slot />
     </lila-input-labels-partial>

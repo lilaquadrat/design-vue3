@@ -21,14 +21,14 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 
 </script>
 <template>
-    <section ref="element" :class="[variant, inviewState]" class="lila-location-module lila-module">
-        <lila-location-partial ref="iframeElement" :map="map" class="iframe-container" :variant="variant" />
-        <section class="text-container">
-            <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-            <lila-list-partial class="list-container" v-if="list" v-bind="list" />
-            <lila-list-partial class="link-container" v-if="links" v-bind="links" />
-        </section>
+  <section ref="element" :class="[variant, inviewState]" class="lila-location-module lila-module">
+    <lila-location-partial ref="iframeElement" :map="map" class="iframe-container" :variant="variant" />
+    <section class="text-container">
+      <lila-textblock-partial v-if="textblock" v-bind="textblock" />
+      <lila-list-partial v-if="list" class="list-container" v-bind="list" />
+      <lila-list-partial v-if="links" class="link-container" v-bind="links" />
     </section>
+  </section>
 </template>
 <style lang="less" scoped>
 .lila-location-module {

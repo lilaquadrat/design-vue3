@@ -260,32 +260,32 @@ function restartCurrentStory () {
     <lila-picture-partial v-if="activeElement?.media && activeElement?.media.type === 'image'" v-bind="activeElement.media" class="background" fit />
 
     <section class="position-container">
-
-        <div class="mobile-navigation left" @click="control('prev')" role="button"></div>
-        <lila-button-partial @click="control('prev')" class="control" color-scheme="white"><lila-icons-partial color-scheme="colorScheme1" size="large" type="chevron-left"/></lila-button-partial>
+      <div class="mobile-navigation left" role="button" @click="control('prev')" />
+      <lila-button-partial class="control" color-scheme="white" @click="control('prev')">
+        <lila-icons-partial color-scheme="colorScheme1" size="large" type="chevron-left" />
+      </lila-button-partial>
         
-        <section class="stories-container">
-
-          <section class="indicator-container" :style="percentStyle">
-            <section class="indicator" v-for="(story, index) in props.elements" :key="`story-${index}`" :class="{active: index === activeIndex, played: index < activeIndex, unplayed: index > activeIndex}">
-              <div class="progress"></div>
-            </section>
+      <section class="stories-container">
+        <section class="indicator-container" :style="percentStyle">
+          <section v-for="(story, index) in props.elements" :key="`story-${index}`" class="indicator" :class="{active: index === activeIndex, played: index < activeIndex, unplayed: index > activeIndex}">
+            <div class="progress" />
           </section>
-
-          <section v-if="!isVideo" class="pause-container">
-            <lila-button-partial class="pause" color-scheme="transparent" @click="playPause">
-              <lila-icons-partial color-scheme="white" size="large" :type="timerId> 0 ? 'pause' : 'play'"/></lila-button-partial>
-          </section>
-
-          <lila-story-partial ref="stories" v-for="(story, index) in props.elements" :key="`story-${index}`" :parentVisible="isVisible" :active="index === activeIndex" @progress="updateProgress" v-bind="story" />
-       
         </section>
 
-        <div class="mobile-navigation right" @click="control('next')" role="button"></div>
-        <lila-button-partial @click="control('next')" :disabled="isLast" class="control" color-scheme="white"><lila-icons-partial color-scheme="colorScheme1" size="large" type="chevron-right"/></lila-button-partial>
+        <section v-if="!isVideo" class="pause-container">
+          <lila-button-partial class="pause" color-scheme="transparent" @click="playPause">
+            <lila-icons-partial color-scheme="white" size="large" :type="timerId> 0 ? 'pause' : 'play'" />
+          </lila-button-partial>
+        </section>
 
+        <lila-story-partial v-for="(story, index) in props.elements" ref="stories" :key="`story-${index}`" :parent-visible="isVisible" :active="index === activeIndex" v-bind="story" @progress="updateProgress" />
+      </section>
+
+      <div class="mobile-navigation right" role="button" @click="control('next')" />
+      <lila-button-partial :disabled="isLast" class="control" color-scheme="white" @click="control('next')">
+        <lila-icons-partial color-scheme="colorScheme1" size="large" type="chevron-right" />
+      </lila-button-partial>
     </section>
-
   </article>
 </template>
 

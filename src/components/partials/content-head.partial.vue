@@ -14,7 +14,7 @@ function close () {
 <template>
   <section class="content-head">
     <h3><slot /></h3>
-    <lila-button-partial v-if="!hideButton" type="button" icon="close" size="medium" color-scheme="transparent" @click="close"></lila-button-partial>
+    <lila-button-partial v-if="!hideButton" type="button" icon="close" size="medium" color-scheme="transparent" @click="close" />
   </section>
 </template>
 <style lang="less" scoped>

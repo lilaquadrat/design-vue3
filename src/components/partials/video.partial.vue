@@ -442,22 +442,20 @@ defineExpose({
 
 </script>
 <template>
-  <section @click="toggle" @keyup="toggle" class="lila-video-partial" :class="[{ noPreload: preload === 'none', fit }, state]">
+  <section class="lila-video-partial" :class="[{ noPreload: preload === 'none', fit }, state]" @click="toggle" @keyup="toggle">
+    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder" />
     
-    <section v-if="preload === 'none' && state !== 'ready' && videoType !== 'youtube'" class="preload-placeholder"></section>
-    
-    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :preload="preload" :poster="poster" :class="[state, { loading: loading }]" :key="src">
-      <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source" />
-      <track kind="captions" />
-      <source v-if="src" :data-src="src" />
+    <video v-if="renderVideo" v-bind="attributesObject" ref="videoElement" :key="src" :preload="preload" :poster="poster" :class="[state, { loading: loading }]">
+      <source v-for="single in filteredSource" :key="single.media" :class="single.media" :data-src="single.source">
+      <track kind="captions">
+      <source v-if="src" :data-src="src">
     </video>
 
-    <component v-if="customControls && videoElement" :is="customControls" :element="videoElement" :muted="isMuted" :playing="isPlaying" @togglePlay="toggle" @toggleSound="toggleSound"/>
+    <component :is="customControls" v-if="customControls && videoElement" :element="videoElement" :muted="isMuted" :playing="isPlaying" @toggle-play="toggle" @toggle-sound="toggleSound" />
     
     <section v-if="youtubeId" class="youtube-container">
-      <div ref="youtubePlayerElement" class="youtube-video"></div>
+      <div ref="youtubePlayerElement" class="youtube-video" />
     </section>
-
   </section>
 </template>
 <style lang="less" scoped>

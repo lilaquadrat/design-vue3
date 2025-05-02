@@ -99,20 +99,22 @@ const sourceMedia = computed((): PictureMedia[] => {
 
 </script>
 <template>
-  <figure :class="[loading, animation, { notLoaded: !loading, noLoadAnimation, fit, center, animation, activeAnimation }]" class="lila-figure" ref="element">
+  <figure ref="element" :class="[loading, animation, { notLoaded: !loading, noLoadAnimation, fit, center, animation, activeAnimation }]" class="lila-figure">
     <section class="picture-container">
       <picture>
         <template v-if="loading">
-          <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src" />
-          <img ref="image" :src="src" :alt="alt" />
+          <source v-for="(source, i) in sourceMedia" :key="`p-${i}`" :media="`${source.media}`" :srcset="source.src">
+          <img ref="image" :src="src" :alt="alt">
         </template>
   
         <template v-if="!loading">
-          <img :alt="alt" />
+          <img :alt="alt">
         </template>
       </picture>
   
-      <figcaption v-if="copyright">{{ copyright }}</figcaption>
+      <figcaption v-if="copyright">
+        {{ copyright }}
+      </figcaption>
     </section>
   </figure>
 </template>

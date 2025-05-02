@@ -85,16 +85,14 @@ defineExpose({
 </script>
 <template>
   <section class="lila-story" :class="[variant, media.type, {active}]">
-
-    <lila-video-partial ref="video" v-if="media && media.type === 'video'" @progress="updateProgress" v-bind="media" customControls="lila-video-controls-story-partial" fit />
-    <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" :activeAnimation="active" :animation="animation" fit />
+    <lila-video-partial v-if="media && media.type === 'video'" ref="video" v-bind="media" custom-controls="lila-video-controls-story-partial" fit @progress="updateProgress" />
+    <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" :active-animation="active" :animation="animation" fit />
     
     <section class="position-container">
-        <lila-textblock-partial v-bind="textblock" :variant="['bright']" />
+      <lila-textblock-partial v-bind="textblock" :variant="['bright']" />
     </section>
 
-    <lila-action-partial v-if="link" v-bind="link" callToAction />
-
+    <lila-action-partial v-if="link" v-bind="link" call-to-action />
   </section>
 </template>
 <style lang="less" scoped>

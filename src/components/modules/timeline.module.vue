@@ -73,25 +73,29 @@ function activeMedia () {
 </script>
 
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
+  <section :id="props.index?.anchor || props.id" ref="element" class="lila-timeline-module lila-module" :class="[inviewState, variant, { active: active }]">
     <section class="elements-container">  
-      <section class="singleelement-container" v-for="(element, index) in elementsExtended"
-        :class="[element.position, { noMedia: !element.media }]" :key="`timeline-withpositions${index}`">
+      <section
+        v-for="(element, index) in elementsExtended"
+        :key="`timeline-withpositions${index}`"
+        class="singleelement-container"
+        :class="[element.position, { noMedia: !element.media }]"
+      >
         <section ref="timeContainer" class="time-container" @click="activeMedia">
           <time v-if="date" class="year">{{ date.year }}</time>
           <time v-if="date" class="dayMonth">{{ date.dayMonth }}</time>
         </section>
 
-        <section class="timeline-container"></section>
+        <section class="timeline-container" />
 
-        <section ref="mediaContainer" v-if="element.media" class="media-container" @click="activated()">
+        <section v-if="element.media" ref="mediaContainer" class="media-container" @click="activated()">
           <template v-for="(item, mediaIndex) in element.media" :key="`media-element-${mediaIndex}`">
             <lila-picture-partial v-if="item.type === 'picture'" v-bind="item" />
             <lila-video-partial v-if="item.type === 'video'" v-bind="item" />
           </template>
         </section>
 
-        <section ref="textContainer" v-if="element" class="text-container" @click="activeMedia">
+        <section v-if="element" ref="textContainer" class="text-container" @click="activeMedia">
           <lila-textblock-partial v-if="element.textblock" v-bind="element.textblock" />
           <lila-quote-partial v-if="element.quote" v-bind="element.quote" />
           <lila-list-partial v-if="element.list" v-bind="element.list" />

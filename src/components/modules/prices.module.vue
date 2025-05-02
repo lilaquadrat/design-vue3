@@ -20,22 +20,31 @@ function highlight (element: { variant: string | string[] }) {
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" :class="[variant, inviewState]" class="lila-prices-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState]" class="lila-prices-module lila-module">
     <lila-textblock-partial v-bind="textblock" />
 
     <div class="prices-container">
-      <section class="single-price" v-for="(element, elementIndex) in elements" :class="[variant, element.variant]" :key="`price-${elementIndex}`">
-        
+      <section v-for="(element, elementIndex) in elements" :key="`price-${elementIndex}`" class="single-price" :class="[variant, element.variant]">
         <header v-if="element.textblock">
-          <h1 v-if="element.textblock.headline">{{ element.textblock.headline }}</h1>
-          <h2 v-if="element.textblock.subline">{{ element.textblock.subline }}</h2>
-          <h3 v-if="element.textblock.intro">{{ element.textblock.intro }}</h3>
+          <h1 v-if="element.textblock.headline">
+            {{ element.textblock.headline }}
+          </h1>
+          <h2 v-if="element.textblock.subline">
+            {{ element.textblock.subline }}
+          </h2>
+          <h3 v-if="element.textblock.intro">
+            {{ element.textblock.intro }}
+          </h3>
         </header>
 
         <section class="content">
           <div class="price-container">
-            <h2 class="price" v-if="element.price">{{ element.price }}</h2>
-            <h3 class="interval" v-if="element.interval">{{ element.interval }}</h3>
+            <h2 v-if="element.price" class="price">
+              {{ element.price }}
+            </h2>
+            <h3 v-if="element.interval" class="interval">
+              {{ element.interval }}
+            </h3>
           </div>
 
           <p v-for="(singleText, index) in element.textblock.text" :key="`text-${index}-${elementIndex}`">
@@ -48,7 +57,7 @@ function highlight (element: { variant: string | string[] }) {
         </section>
 
         <footer>
-          <lila-action-partial button callToAction :class="{ colorScheme1: highlight(element), colorScheme2: !highlight(element) }" v-if="element.callToAction" v-bind="element.callToAction" />
+          <lila-action-partial v-if="element.callToAction" button call-to-action :class="{ colorScheme1: highlight(element), colorScheme2: !highlight(element) }" v-bind="element.callToAction" />
           <lila-action-partial v-if="element.more" v-bind="element.more" />
         </footer>
       </section>

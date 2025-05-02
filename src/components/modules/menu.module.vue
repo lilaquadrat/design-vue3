@@ -25,28 +25,25 @@ const removeItems = computed(() => ({
 </script>
 <template>
   <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState]" class="lila-menu-module lila-module">
-
     <header>
-
       <lila-textblock-partial class="title" :variant="titleVariants" v-bind="textblock" />
 
       <lila-menu-navigation-partial :categories="categories" />
 
       <lila-textblock-partial class="intro" :variant="introVariants" v-bind="intro" />
-
     </header>
 
     <section class="category-container">
-
-      <lila-menu-category-partial v-for="(category, index) in categories" v-bind="category" 
-        :key="`single-category-${index}`" /> 
-
+      <lila-menu-category-partial
+        v-for="(category, index) in categories"
+        v-bind="category" 
+        :key="`single-category-${index}`"
+      />
     </section>
 
     <section class="allegene-container" :variant="removeItems">
-      <lila-menu-allergens-partial :variant="[]"/> 
+      <lila-menu-allergens-partial :variant="[]" /> 
     </section>
-    
   </section>
 </template>
 <style lang="less" scoped>

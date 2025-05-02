@@ -54,18 +54,21 @@ async function handleForm () {
 
 </script>
 <template>
-    <article ref="element" :class="[inviewState]" class="lila-module lila-connect-user-module">
+  <article ref="element" :class="[inviewState]" class="lila-module lila-connect-user-module">
+    <form>
+      <lila-fieldset-partial>
+        <lila-input-partial v-model="customerId" :error="errorsObject?.customerId" required>
+          {{ $translate('customerId') }}
+        </lila-input-partial>
+      </lila-fieldset-partial>
 
-        <form>
-            <lila-fieldset-partial>
-                <lila-input-partial v-model="customerId" :error="errorsObject?.customerId" required>{{ $translate('customerId') }}</lila-input-partial>
-            </lila-fieldset-partial>
-
-            <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
-                <lila-button-partial save :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">{{$translate('connect-to-user')}}</lila-button-partial>
-            </lila-action-notice-partial>
-        </form>
-    </article>
+      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
+        <lila-button-partial save :call-id="traceId" color-scheme="colorScheme1" type="submit" @click="handleForm">
+          {{ $translate('connect-to-user') }}
+        </lila-button-partial>
+      </lila-action-notice-partial>
+    </form>
+  </article>
 </template>
 <style lang="less" scoped>
 .lila-connect-user-module {

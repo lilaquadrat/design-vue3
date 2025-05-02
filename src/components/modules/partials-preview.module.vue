@@ -8,13 +8,13 @@ const props = defineProps<{
 
 </script>
 <template>
-    <section class="partials-preview-module">
-        <section class="single-partial" v-for="(single, index) in partialData" :key="`single-partial-${index}`">
-            <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
+  <section class="partials-preview-module">
+    <section v-for="(single, index) in partialData" :key="`single-partial-${index}`" class="single-partial">
+      <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
 
-            <lila-datepicker-partial v-if="props.partial === 'datepicker'" v-bind="single.props" v-model:from="single.props.form" v-model="single.props.to"/>
-        </section>
-    </section> 
+      <lila-datepicker-partial v-if="props.partial === 'datepicker'" v-bind="single.props" v-model:from="single.props.form" v-model="single.props.to" />
+    </section>
+  </section> 
 </template>
 <style lang="less" scoped>
 .partials-preview-module {

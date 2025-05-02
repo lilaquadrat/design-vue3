@@ -55,8 +55,6 @@ function getStoreContent (filename: string) {
   const storeContent = mainStore.data;
   const storeLayout = mainStore.layout;
 
-  console.log('storeContent', storeContent, filename);
-  
   if(!storeContent) return false;
 
   /**
@@ -92,6 +90,8 @@ function updateContext () {
 
 async function getContent () {
 
+  let content: SDKResponse<BasicData<Content>> | undefined;
+
   if(isLocked.value) {
 
     error.value = true;
@@ -114,38 +114,51 @@ async function getContent () {
   loading.value = 0;
   error.value = false;
     
-  const content: SDKResponse<BasicData<Content>> = await mainStore.getContent({filename}, contentType.value) as SDKResponse<BasicData<Content>>;
-
-  mainStore.data = content.data;
-  loading.value = content.status;
-  updateContext();
-
-  if(loading.value === 200) {
-
-    error.value = false;
-
-    if(mainStore.config?.dynamic) {
-
-      layout.value = await mainStore.getContent({id: `${contentType.value}-layout`}, contentType.value) as SDKResponse<BasicData<Content>>;
-      mainStore.layout = layout.value.data;
-
-    } else {
-
-      if(mainStore.data?.settings?.useLayout) {
+  try {
+    
+    content = await mainStore.getContent({filename}, contentType.value) as SDKResponse<BasicData<Content>>;
   
-        layout.value = await mainStore.getContent({internalId: mainStore.data.settings.useLayout.toString()}, contentType.value) as SDKResponse<BasicData<Content>>;
+  } catch (e) {
+    
+    console.error(error);
+    loading.value = e.response.status;
+
+  }
+
+  if(content) {
+
+    mainStore.data = content.data;
+    loading.value = content.status;
+    updateContext();
+  
+    if(loading.value === 200) {
+  
+      error.value = false;
+  
+      if(mainStore.config?.dynamic) {
+  
+        layout.value = await mainStore.getContent({id: `${contentType.value}-layout`}, contentType.value) as SDKResponse<BasicData<Content>>;
         mainStore.layout = layout.value.data;
   
       } else {
   
-        mainStore.layout = undefined;
-        layout.value = undefined;
+        if(mainStore.data?.settings?.useLayout) {
+    
+          layout.value = await mainStore.getContent({internalId: mainStore.data.settings.useLayout.toString()}, contentType.value) as SDKResponse<BasicData<Content>>;
+          mainStore.layout = layout.value.data;
+    
+        } else {
+    
+          mainStore.layout = undefined;
+          layout.value = undefined;
+    
+        }
   
       }
-
-    }
-
-  } 
+  
+    } 
+    
+  }
 
   if ([400, 401, 403].includes(loading.value)) {
 
@@ -193,8 +206,8 @@ function mergeContent (baseContent: Partial<BasicData<Content>>, layout?: Conten
 </script>
 
 <template>
-    <article class="content-screen screen">
-        <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
-        <lila-content-module v-if="dataMerged" :linkMode="linkMode" :content="dataMerged" />
-    </article>
+  <article class="content-screen screen">
+    <lila-error-partial v-if="error" :status="loading" :hint="hint" :type="contentType" />
+    <lila-content-module v-if="dataMerged && !error" :link-mode="linkMode" :content="dataMerged" />
+  </article>
 </template>

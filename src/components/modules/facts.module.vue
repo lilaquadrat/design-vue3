@@ -29,7 +29,6 @@ function setActive (index: number) {
     <lila-textblock-partial class="intro-textblock" v-bind="textblock" />
 
     <section class="complete-container">
-
       <section v-if="topics" class="list-links">
         <ul>
           <li v-for="(element, index) in elements" :key="`elements-${index}`">
@@ -46,10 +45,10 @@ function setActive (index: number) {
       </div>
 
       <div v-if="!topics" class="facts-container">
-        <lila-fact-partial v-for="(element, index) in elements" :variant="variant" :key="`fact-index-${index}`" v-bind="element" />
+        <lila-fact-partial v-for="(element, index) in elements" :key="`fact-index-${index}`" :variant="variant" v-bind="element" />
       </div>
 
-      <slot></slot>
+      <slot />
     </section>
   </section>
 </template>

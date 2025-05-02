@@ -82,7 +82,10 @@ function confirm (event: MouseEvent): void {
 
 </script>
 <template>
-  <button class="lila-button" :disabled="disabled" :type="props.type" 
+  <button
+    class="lila-button"
+    :disabled="disabled"
+    :type="props.type" 
     :class="[
       colorScheme, 
       state, 
@@ -98,11 +101,15 @@ function confirm (event: MouseEvent): void {
         save 
       }, 
       $attrs.class
-    ]" @click.stop="confirm">
-    <span v-if="save"></span>
-    <template v-if="text">{{ $replacer(text) }}</template>
-    <slot v-if="!text"></slot>
-    <lila-icons-partial v-if="icon" :colorScheme="iconColorScheme" :size="iconSize" :type="icon" animate :class="{rotate90: active}" />
+    ]"
+    @click.stop="confirm"
+  >
+    <span v-if="save" />
+    <template v-if="text">
+      {{ $replacer(text) }}
+    </template>
+    <slot v-if="!text" />
+    <lila-icons-partial v-if="icon" :color-scheme="iconColorScheme" :size="iconSize" :type="icon" animate :class="{rotate90: active}" />
   </button>
 </template>
 <style lang="less" scoped>

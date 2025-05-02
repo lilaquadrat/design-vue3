@@ -28,18 +28,19 @@ const allergenTranslatedSorted = computed(() => allergens.map((single) => ({ tit
 const props = defineProps<{
   variant: string[];
 }>();
+
 </script>
 <template>
   <section class="lila-menu-allergens" :class="[variant]">
     <h3>{{ $translate('allergens') }}</h3>
-    <section class="allergens-container" v-if="allergenTranslatedSorted"> 
+    <section v-if="allergenTranslatedSorted" class="allergens-container"> 
       <h5 v-for="(allergen, index) in allergenTranslatedSorted" :key="`single-allergen-${index}`">
         <span>{{ $translate(`${allergen.value}Number`) }}</span>
         <span>{{ allergen.title }}</span>
       </h5>
     </section>
 
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <style lang="less" scoped>

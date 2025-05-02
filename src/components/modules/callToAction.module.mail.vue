@@ -51,7 +51,7 @@ const hasText = computed(() => !!props.textblock);
 
 </script>
 <template>
-  <table :id="props.index?.anchor || props.id" class="callToAction-module" ref="element" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; width: 100%;">
+  <table :id="props.index?.anchor || props.id" ref="element" class="callToAction-module" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed; width: 100%;">
     <tbody>
       <tr v-if="hasText">
         <td>
@@ -65,12 +65,12 @@ const hasText = computed(() => !!props.textblock);
       </tr>
       <tr v-if="hasList">
         <td style="padding-bottom: 40px">
-          <lila-list-partial v-bind="list" mode="list" :variant="listVariant"></lila-list-partial>
+          <lila-list-partial v-bind="list" mode="list" :variant="listVariant" />
         </td>
       </tr>
       <tr v-if="hasLinks">
         <td style="padding-bottom: 40px">
-          <lila-list-partial v-bind="links" mode="links" :variant="linkVariant"></lila-list-partial>
+          <lila-list-partial v-bind="links" mode="links" :variant="linkVariant" />
         </td>
       </tr>
     </tbody>

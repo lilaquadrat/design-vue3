@@ -49,26 +49,22 @@ const filteredElements: ComputedRef<(PictureGroupElement & { hasContent: boolean
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
-
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState]" class="lila-picture-group-module lila-module">
     <section class="content-container">
-      <lila-textblock-partial :variant="brightTextIntro" v-if="textblock" v-bind="textblock" />
+      <lila-textblock-partial v-if="textblock" :variant="brightTextIntro" v-bind="textblock" />
 
       <section class="elements-container">
-
-        <section v-for="(element, index) in filteredElements" :key="`picturegroup-element-${index}`" class="element" v-memo="elements">
+        <section v-for="(element, index) in filteredElements" :key="`picturegroup-element-${index}`" v-memo="elements" class="element">
           <lila-action-partial v-bind="element.link">
             <lila-picture-partial v-if="element.picture?.src?.length" center :fit="fitVariant" v-bind="element.picture" />
-            <section class="text-container" v-if="element.hasContent">
-              <lila-textblock-partial :variant="brightText" v-if="element.textblock" v-bind="element.textblock" />
-              <lila-list-partial :variant="['noStyle']" v-bind="element.list"></lila-list-partial>
-              <lila-list-partial :variant="linkVariant" v-bind="element.links"></lila-list-partial>
+            <section v-if="element.hasContent" class="text-container">
+              <lila-textblock-partial v-if="element.textblock" :variant="brightText" v-bind="element.textblock" />
+              <lila-list-partial :variant="['noStyle']" v-bind="element.list" />
+              <lila-list-partial :variant="linkVariant" v-bind="element.links" />
             </section>
           </lila-action-partial>
         </section>
-
       </section>
-
     </section>
   </section>
 </template>

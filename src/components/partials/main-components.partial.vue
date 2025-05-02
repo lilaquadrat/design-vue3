@@ -154,5 +154,5 @@ function mergeContent (baseContent: BasicData<Content>) {
 
 </script>
 <template>
-    <lila-content-module v-if="dataMerged" :content="dataMerged" />
+  <lila-content-module v-if="dataMerged" :content="dataMerged" />
 </template>

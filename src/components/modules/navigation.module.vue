@@ -243,9 +243,13 @@ const calculateOptionsStyle = () => {
 
 </script>
 <template>
-  <nav ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, variant, { open, useTriggerMenu }]"
-    class="lila-navigation-module lila-module">
-    <section class="placeholder"></section>
+  <nav
+    :id="props.index?.anchor || props.id"
+    ref="element"
+    :class="[inviewState, variant, { open, useTriggerMenu }]"
+    class="lila-navigation-module lila-module"
+  >
+    <section class="placeholder" />
 
     <section class="overflow-container anchor-calculation">
       <section ref="linksContainer" class="links-container">
@@ -257,39 +261,52 @@ const calculateOptionsStyle = () => {
         </section>
 
         <button v-if="useTriggerMenu" class="trigger" :class="{ open }" @click="toggle">
-          <div class="placeholder"></div>
+          <div class="placeholder" />
           <div class="trigger-container">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
           </div>
         </button>
 
         <section ref="links" class="links">
           <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
+            <lila-action-partial
+              v-if="!element.links"
+              :key="`link-${index}`"
+              :class="{ isActive: element.active }"
+              color-scheme="navigation"
+              v-bind="element"
+            />
 
-            <lila-action-partial :key="`link-${index}`" :class="{ isActive: element.active }"
-              v-if="!element.links" colorScheme="navigation" v-bind="element" />
-
-            <lila-button-partial v-if="element.links" class="rotate90" colorScheme="navigation" v-bind="element"
-              icon="arrow-right" @click="openElement($event, element)">
+            <lila-button-partial
+              v-if="element.links"
+              class="rotate90"
+              color-scheme="navigation"
+              v-bind="element"
+              icon="arrow-right"
+              @click="openElement($event, element)"
+            >
               {{ element.text }}
             </lila-button-partial>
-
           </template>
         </section>
       </section>
-
     </section>
 
     <lila-client-only-partial>
-
       <teleport to="body">
         <transition name="menu">
-          <lila-overlay-background-partial :index="5" :key="activeKey" class="lila-navigation-module-overlay-background"
-            v-if="overlayContent && open && !useTriggerMenu" background="none" @close="toggle">
-            <ul class="lila-navigation-module-overlay" v-if="overlayContent" ref="overlay" :style="style">
-              <li :key="`sublinks-${index}`" v-for="(single, index) in overlayContent">
+          <lila-overlay-background-partial
+            v-if="overlayContent && open && !useTriggerMenu"
+            :key="activeKey"
+            :index="5"
+            class="lila-navigation-module-overlay-background"
+            background="none"
+            @close="toggle"
+          >
+            <ul v-if="overlayContent" ref="overlay" class="lila-navigation-module-overlay" :style="style">
+              <li v-for="(single, index) in overlayContent" :key="`sublinks-${index}`">
                 <lila-action-partial v-if="single.text" v-bind="single" />
               </li>
             </ul>
@@ -299,37 +316,50 @@ const calculateOptionsStyle = () => {
 
       <teleport to="body">
         <transition name="menu">
-          <lila-overlay-background-partial :index="isLeft ? 7 : 5" class="lila-navigation-module-overlay-background"
-            v-if="open && useTriggerMenu || isLeft" :inactive="isLeft && !open" background="none" @close="toggle">
-            <section ref="triggerMenuOverlay" class="lila-navigation-module-overlay useTriggerMenu"
-              :class="[variant, { open }]" :style="style">
+          <lila-overlay-background-partial
+            v-if="open && useTriggerMenu || isLeft"
+            :index="isLeft ? 7 : 5"
+            class="lila-navigation-module-overlay-background"
+            :inactive="isLeft && !open"
+            background="none"
+            @close="toggle"
+          >
+            <section
+              ref="triggerMenuOverlay"
+              class="lila-navigation-module-overlay useTriggerMenu"
+              :class="[variant, { open }]"
+              :style="style"
+            >
               <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
+                <lila-action-partial
+                  v-if="!element.links"
+                  :key="`link-${index}`"
+                  :class="{ isActive: element.active }"
+                  v-bind="element"
+                />
 
-                <lila-action-partial :key="`link-${index}`" :class="{ isActive: element.active }"
-                  v-if="!element.links" v-bind="element" />
-
-                <section :key="`group-${index}`" v-if="element.links" class="link-group main">
-
-                  <lila-button-partial v-bind="element" icon="arrow-right" colorScheme="navigation"
-                    @click="toggleTriggerElement($event, element)">
+                <section v-if="element.links" :key="`group-${index}`" class="link-group main">
+                  <lila-button-partial
+                    v-bind="element"
+                    icon="arrow-right"
+                    color-scheme="navigation"
+                    @click="toggleTriggerElement($event, element)"
+                  >
                     {{ element.text }}
                   </lila-button-partial>
 
-                  <ul class="link-list" v-show="element.links && element.active">
-                    <li :key="`sublinks-${index}`" v-for="(single, index) in element.links">
-                      <lila-action-partial v-if="single.text" v-bind="single"></lila-action-partial>
+                  <ul v-show="element.links && element.active" class="link-list">
+                    <li v-for="(single, index) in element.links" :key="`sublinks-${index}`">
+                      <lila-action-partial v-if="single.text" v-bind="single" />
                     </li>
                   </ul>
-
                 </section>
               </template>
             </section>
           </lila-overlay-background-partial>
         </transition>
       </teleport>
-
     </lila-client-only-partial>
-
   </nav>
 </template>
 <style lang="less" scoped>

@@ -63,14 +63,13 @@ const hasText = computed(() => props.headline?.length || props.subline?.length |
     </tr>
     <tr v-if="hasList">
       <td style="padding-bottom: 40px">
-        <lila-list-partial v-bind="list" mode="list" :variant="listVariant"></lila-list-partial>
+        <lila-list-partial v-bind="list" mode="list" :variant="listVariant" />
       </td>
     </tr>
     <tr v-if="hasLinks">
       <td style="padding-bottom: 40px">
-        <lila-list-partial v-bind="links" mode="links" :variant="linkVariant"></lila-list-partial>
+        <lila-list-partial v-bind="links" mode="links" :variant="linkVariant" />
       </td>
     </tr>
-    
   </table>
 </template>

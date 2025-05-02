@@ -69,5 +69,5 @@ const contentMerged = computed(() => {
 
 </script>
 <template>
-    <lila-content-module v-if="contentMerged" :content="contentMerged" />
+  <lila-content-module v-if="contentMerged" :content="contentMerged" />
 </template>

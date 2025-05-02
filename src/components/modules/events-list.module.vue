@@ -54,18 +54,16 @@ function setElements (elements: any[]) {
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, variant]" class="lila-events-list-module lila-module">
-
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant]" class="lila-events-list-module lila-module">
     <section class="elements-container">
       <header v-if="textblock" class="title-container">
         <lila-textblock-partial v-bind="textblock" />
       </header>
-      <section class="single-day-container" v-for="(day, index) in groupedEvents" :key="`event-${index}`">
+      <section v-for="(day, index) in groupedEvents" :key="`event-${index}`" class="single-day-container">
         <lila-eventgroup-partial v-bind="day" :variant="variant" />
-        <hr class="separator" />
+        <hr class="separator">
       </section>
     </section>
-
   </section>
 </template>
 

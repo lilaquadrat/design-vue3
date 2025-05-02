@@ -154,28 +154,28 @@ const optionsStyle = computed(() => calculatedOptions.value);
 </script>
 <template>
   <section class="action-notice-partial">
-
-    <lila-overlay-background-partial background="none" v-if="open" @close="closeOptions">
-      <ul class="error-list" ref="errorsElement" :style="optionsStyle">
+    <lila-overlay-background-partial v-if="open" background="none" @close="closeOptions">
+      <ul ref="errorsElement" class="error-list" :style="optionsStyle">
         <li v-for="(error, index) in flattenedErrors" :key="`parsedErrors-${index}`">
           <template v-if="error.translatedPath?.path">
             <template v-if="error.translatedPath.path !== 'main'">
               <template v-if="error.parentPath?.path">
-                {{$translate(error.parentPath.path, error.parentPath.values as string[])}}
+                {{ $translate(error.parentPath.path, error.parentPath.values as string[]) }}
               </template>
-              {{$translate(error.translatedPath.path, error.translatedPath.values as string[])}}
+              {{ $translate(error.translatedPath.path, error.translatedPath.values as string[]) }}
             </template>
           </template>
-          {{error.error}}
+          {{ error.error }}
         </li>
       </ul>
     </lila-overlay-background-partial>
 
-    <section class="buttons-container" ref="triggerElement">
-      <div class="slot-container"><slot /></div>
-      <lila-button-partial v-if="hasErrors" @click="toggleErrors" colorScheme="error" icon="warning"  type="button" />
+    <section ref="triggerElement" class="buttons-container">
+      <div class="slot-container">
+        <slot />
+      </div>
+      <lila-button-partial v-if="hasErrors" color-scheme="error" icon="warning" type="button" @click="toggleErrors" />
     </section>
-
   </section>
 </template>
 <style lang="less" scoped>

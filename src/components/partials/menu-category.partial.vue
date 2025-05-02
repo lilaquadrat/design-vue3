@@ -19,7 +19,7 @@ const anchor = computed(() => getAnchor(props.textblock.headline as string));
       <lila-menu-item-partial v-for="(item, index) in items" v-bind="item" :key="`single-category-item-${index}`" />
     </section>
 
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <style lang="less" scoped>

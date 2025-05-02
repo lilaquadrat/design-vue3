@@ -137,10 +137,10 @@ function getListVariant (type: string): string[] {
 </script>
 <template>
   <section class="lila-accordion" :class="{ noControls: disableControls || renderTarget === 'pdf' }">
-    <slot></slot>
+    <slot />
 
-    <section v-for="(single, index) in useElements" ref="items" class="single-accordion" :class="{ visible: single.visible }" :key="`accordion-${index}`">
-      <component class="headline" :is="disableControls || renderTarget === 'pdf' ? 'h3' : 'button'" @click="toggle(single, index)">
+    <section v-for="(single, index) in useElements" ref="items" :key="`accordion-${index}`" class="single-accordion" :class="{ visible: single.visible }">
+      <component :is="disableControls || renderTarget === 'pdf' ? 'h3' : 'button'" class="headline" @click="toggle(single, index)">
         <span>{{ single.headline }}</span>
         <lila-icons-partial v-if="!disableControls && renderTarget !== 'pdf'" animate :rotate="single.visible ? 90 : 0" type="arrow-right" />
       </component>
@@ -148,16 +148,16 @@ function getListVariant (type: string): string[] {
       <section :style="`height: ${single.visible ? single.height : '0px'}`" class="accordion-content-container">
         <section class="accordion-content">
           <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
-          <lila-list-partial v-bind="single.list" mode="list" :variant="getListVariant('list')"></lila-list-partial>
-          <lila-list-partial v-bind="single.links" mode="links" :variant="getListVariant('links')"></lila-list-partial>
+          <lila-list-partial v-bind="single.list" mode="list" :variant="getListVariant('list')" />
+          <lila-list-partial v-bind="single.links" mode="links" :variant="getListVariant('links')" />
         </section>
       </section>
 
       <div class="accordion-content-placeholder">
         <section class="accordion-content">
           <lila-textblock-partial v-if="single.textblock" v-bind="single.textblock" />
-          <lila-list-partial v-bind="single.list" mode="list" :variant="getListVariant('list')"></lila-list-partial>
-          <lila-list-partial v-bind="single.links" mode="links" :variant="getListVariant('links')"></lila-list-partial>
+          <lila-list-partial v-bind="single.list" mode="list" :variant="getListVariant('list')" />
+          <lila-list-partial v-bind="single.links" mode="links" :variant="getListVariant('links')" />
         </section>
       </div>
     </section>

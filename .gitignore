@@ -34,3 +34,5 @@ coverage
 
 config.ts
 stats.html
+
+pnpm-workspace.yaml

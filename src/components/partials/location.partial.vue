@@ -28,18 +28,17 @@ function mapIframe () {
 }
 </script>
 <template>
-    <section class="lila-location-partial" :class="[variant, { loadIframe }]">
-
-        <section class="iframe" v-if="loadIframe">
-            <iframe title="iframe" v-if="map" :src="map"></iframe>
-        </section>
-
-        <section class="confirm-container" v-if="!loadIframe" :variant="variant">
-            <lila-button-partial colorScheme="colorScheme1" @click="loadIframeElement">
-                {{ $translate('location_module_show_map') }}
-            </lila-button-partial>
-        </section>
+  <section class="lila-location-partial" :class="[variant, { loadIframe }]">
+    <section v-if="loadIframe" class="iframe">
+      <iframe v-if="map" title="iframe" :src="map" />
     </section>
+
+    <section v-if="!loadIframe" class="confirm-container" :variant="variant">
+      <lila-button-partial color-scheme="colorScheme1" @click="loadIframeElement">
+        {{ $translate('location_module_show_map') }}
+      </lila-button-partial>
+    </section>
+  </section>
 </template>
 <style lang="less" scoped>
 .lila-location-partial {

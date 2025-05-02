@@ -25,20 +25,17 @@ const fitVariant = computed(() => props.variant?.includes('fit'));
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, { hasImage: picture }, variant]" class="lila-pictureandtext-module lila-module">
     <lila-picture-partial :fit="fitVariant" v-bind="picture" />
 
     <section class="grid-container">
-
       <lila-textblock-partial v-bind="textblock" />
 
       <lila-list-partial v-if="list" v-bind="list" />
       <lila-list-partial v-if="links" v-bind="links" />
 
       <lila-legend-partial v-if="legend" :text="legend" />
-
     </section>
-
   </section>
 </template>
 <style lang="less" scoped>

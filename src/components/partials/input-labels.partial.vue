@@ -15,11 +15,11 @@ const slotUsed = computed(() => hasSlotContent(slots.default));
 </script>
 <template>
   <div v-if="slotUsed || required || disabled" class="label-container" :class="{error, hideLabel}">
-    <span class="label" v-if="!hideLabel">
+    <span v-if="!hideLabel" class="label">
       <slot />
     </span>
-    <span class="required" v-if="required && !disabled">{{ $translate('required') }}</span>
-    <span class="disabled" v-if="disabled">{{ $translate('disabled') }}</span>
+    <span v-if="required && !disabled" class="required">{{ $translate('required') }}</span>
+    <span v-if="disabled" class="disabled">{{ $translate('disabled') }}</span>
   </div>
 </template>
 <style lang="less" scoped>

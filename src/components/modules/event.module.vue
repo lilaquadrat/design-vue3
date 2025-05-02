@@ -151,39 +151,43 @@ const date = computed(() => {
 </script>
 <template>
   <article :id="props.index?.anchor || props.id" ref="element" class="lila-event-module lila-module" :class="[inviewState, variant, {sub, noMedia}]">
-
-      <section class="main-container" v-if="!onlyContent">
-
-        <section class="media-container">
-          <lila-video-partial v-if="media && media.type === 'video'" v-bind="media" />
-          <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" fit />
-          <div class="details-container">
-            <h3 v-if="location" class="location"><lila-icons-partial type="location" size="large" class="icon green" /> {{ location }}</h3>
-            <lila-list-partial v-bind="props.list" mode="list" :variant="['noStyle', 'bold']" />
-            <lila-list-partial v-bind="links" mode="links" :variant="['noStyle', 'bold']" />
-          </div>
-        </section>
-    
-        <section class="intro-container">
-          <div class="date-artist">
-              <h2 class="artist">{{ artist }}</h2>
-              <h4 v-if="start || end" class="date">
-                {{ date }}
-              </h4>
-          </div>
-          <h1 class="name">{{ name || list?.name }}</h1>
-    
-          <p v-if="description || list?.description">{{ description || list?.description }}</p>
-          <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
-          <section v-if="callToAction" class="callToAction-container">
-            <lila-action-partial v-bind="callToAction" />
-          </section>
-        </section>
-
+    <section v-if="!onlyContent" class="main-container">
+      <section class="media-container">
+        <lila-video-partial v-if="media && media.type === 'video'" v-bind="media" />
+        <lila-picture-partial v-if="media && media.type === 'image'" v-bind="media" fit />
+        <div class="details-container">
+          <h3 v-if="location" class="location">
+            <lila-icons-partial type="location" size="large" class="icon green" /> {{ location }}
+          </h3>
+          <lila-list-partial v-bind="props.list" mode="list" :variant="['noStyle', 'bold']" />
+          <lila-list-partial v-bind="links" mode="links" :variant="['noStyle', 'bold']" />
+        </div>
       </section>
+    
+      <section class="intro-container">
+        <div class="date-artist">
+          <h2 class="artist">
+            {{ artist }}
+          </h2>
+          <h4 v-if="start || end" class="date">
+            {{ date }}
+          </h4>
+        </div>
+        <h1 class="name">
+          {{ name || list?.name }}
+        </h1>
+    
+        <p v-if="description || list?.description">
+          {{ description || list?.description }}
+        </p>
+        <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
+        <section v-if="callToAction" class="callToAction-container">
+          <lila-action-partial v-bind="callToAction" />
+        </section>
+      </section>
+    </section>
 
     <lila-content-module v-if="contentMerged && !noContent" sub :content="contentMerged" @event="handleChildEvent" />
-    
   </article>
 </template>
 

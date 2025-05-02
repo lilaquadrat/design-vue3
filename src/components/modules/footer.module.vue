@@ -30,18 +30,17 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
 <template>
   <footer :id="props.index?.anchor || props.id" ref="element" :class="[inviewState, variant]" class="lila-footer-module lila-module">
     <section class="content-container">
-
       <section class="footer-container">
         <lila-picture-partial v-if="picture" v-bind="picture" class="picture-container" />
         <section class="informations-container">
           <lila-textblock-partial v-if="textblock" v-bind="textblock" />
-          <lila-list-partial class="list-container" v-if="list" v-bind="list" />
-          <lila-list-partial class="link-container" v-if="links" v-bind="links" />
+          <lila-list-partial v-if="list" class="list-container" v-bind="list" />
+          <lila-list-partial v-if="links" class="link-container" v-bind="links" />
         </section>
 
         <template v-if="sitemap">
           <li v-for="(element, index) in sitemap" :key="`sitemap-element-links-${index}`" class="link-container">
-            <lila-list-partial class="link-container" v-if="element" :title="element.title" :value="element.elements" />
+            <lila-list-partial v-if="element" class="link-container" :title="element.title" :value="element.elements" />
           </li>
         </template>
       </section>
@@ -56,17 +55,21 @@ const { inviewState } = useInview(element, { align: props.variant?.includes('ali
           <h3>{{ social.title }}</h3>
 
           <div class="icon-container">
-            <lila-action-partial v-for="(element, index) in social.elements" :key="`social-elements-${index}`"
-              :link="element.link.link">
+            <lila-action-partial
+              v-for="(element, index) in social.elements"
+              :key="`social-elements-${index}`"
+              :link="element.link?.link"
+            >
               <lila-picture-partial v-bind="element.picture" />
             </lila-action-partial>
           </div>
         </section>
       </section>
-
     </section>
 
-    <section class="legal">{{ legal }}</section>
+    <section class="legal">
+      {{ legal }}
+    </section>
   </footer>
 </template>
 <style lang="less" scoped>

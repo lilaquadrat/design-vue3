@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+ 
 export default {
   home                                                                                                    : 'Home',
   'blog-intro-author'                                                                                     : 'Von %s',
@@ -42,8 +42,9 @@ export default {
   'select category'                                                                                       : 'Kategorie auswählen',
   category                                                                                                : 'Kategorie',
   message                                                                                                 : 'Nachricht',
-  'send contactform'                                                                                      : 'Kontaktformular senden',
-  'send reservation'                                                                                      : 'Reservierung senden',
+  'contact-contact-submit-button'                                                                         : 'Kontaktformular senden',
+  'contact-reservation-submit-button'                                                                     : 'Reservierung senden',
+  'contact-content-submit-button'                                                                         : 'Inhalt bestellen',
   'order with payment'                                                                                    : 'Zahlungspflichtig bestellen',
   'back to the form'                                                                                      : 'Zurück zum Formular',
   'not available'                                                                                         : 'nicht verfügbar',
@@ -79,6 +80,7 @@ export default {
   LIST_SOLD_OUT                                                                                           : 'Es sind keine weiteren Plätze verfügbar',
   EMAIL_INVALID_contact                                                                                   : 'Bitte überprüfe deine E-Mail Adresse',
   EMAIL_INVALID_reservation                                                                               : 'Bitte überprüfe deine E-Mail Adresse',
+  EMAIL_INVALID_content                                                                                   : 'Bitte überprüfe deine E-Mail Adresse',
   allergens                                                                                               : 'Allergene',
   euro                                                                                                    : '€',
   'gluten-containing-grains'                                                                              : 'Glutenhaltiges Getreide',
@@ -149,4 +151,10 @@ export default {
   'shopping-cart-cost-summary-quantity_singular'                                                          : '%s Artikel',
   'shopping-cart-no-products'                                                                             : 'Du hast keine Produkte im Warenkorb',
   'shopping-cart-show-items'                                                                              : 'zurück',
+  'ORDER_SUCCESS_TITLE'                                                                                   : 'Vielen Dank für deinen Kauf',
+  'INVOICE_NOT_YET_READY_TITLE'                                                                           : 'Deine Rechnung ist noch nicht verfügbar.',
+  'INVOICE_NOT_YET_READY_DESCRIPTION'                                                                     : 'Du kannst diese Seite neu laden um den Status zu aktualisieren.',
+  'INVOICE_DOWNLOAD'                                                                                      : 'Rechnung herunterladen',
+  'ORDER_ERROR_TITLE'                                                                                     : 'Ein Fehler ist aufgetreten',
+  'ORDER_ERROR_DESCRIPTION'                                                                               : 'Deine Bestellung konnte leider nicht gefunden werden. Bitte versuche es später erneut.',
 };

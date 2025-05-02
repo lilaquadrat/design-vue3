@@ -81,10 +81,13 @@ export default class ShopifyGraphQLAPI {
 
     // const cleanedProduct = this.transformProduct(product);
     const cleanedProduct = {
-      name       : product.product.title,
-      id         : product.product.id,
-      variantId  : product.product.variants.edges[0].node.id,
-      price      : product.product.variants.edges[0].node.price.amount,
+      name     : product.product.title,
+      id       : product.product.id,
+      variantId: product.product.variants.edges[0].node.id,
+      price    : {
+        amount  : +product.product.variants.edges[0].node.price.amount,
+        currency: product.product.variants.edges[0].node.price.currencyCode
+      },
       description: product.product.description
     }
 
@@ -223,7 +226,9 @@ export default class ShopifyGraphQLAPI {
     };
     const cartLinesAdd = await this.makeGraphQLRequest(mutation, variables);
 
-    return cartLinesAdd.cartLinesAdd.cart.lines.edges[0].node.id;
+    product.lineId = cartLinesAdd.cartLinesAdd.cart.lines.edges[0].node.id;
+
+    return product;
   }
 
   // Remove product from the cart
@@ -350,8 +355,11 @@ export default class ShopifyGraphQLAPI {
         name       : edge.node.merchandise.product.title,
         id         : edge.node.merchandise.product.id,
         description: edge.node.merchandise.product.description,
-        price      : edge.node.merchandise.price.amount,
-        currency   : edge.node.merchandise.price.currencyCode,
+        price      : {
+          amount  : +edge.node.merchandise.price.amount,
+          currency: edge.node.merchandise.price.currencyCode,
+        },
+        currency: edge.node.merchandise.price.currencyCode,
       }
         
       console.log(edge.node);

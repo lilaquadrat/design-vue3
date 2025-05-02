@@ -46,29 +46,26 @@ const filteredLinks = computed(() => {
 
 </script>
 <template>
-  <section ref="element" :class="[inviewState, props.variant, { hasImage: background }]"
-    class="lila-module emotion-module fullscreen">
-
-    <lila-picture-partial class="background" v-if="background" v-bind="background" />
-    <lila-video-partial class="background" v-if="video" v-bind="video" />
+  <section
+    ref="element"
+    :class="[inviewState, props.variant, { hasImage: background }]"
+    class="lila-module emotion-module fullscreen"
+  >
+    <lila-picture-partial v-if="background" class="background" v-bind="background" />
+    <lila-video-partial v-if="video" class="background" v-bind="video" />
 
     <div class="position-container">
-
-      <lila-picture-partial class="picture" v-if="picture" v-bind="picture" />
+      <lila-picture-partial v-if="picture" class="picture" v-bind="picture" />
       <lila-textblock-partial v-if="textblock" v-bind="textblock" :variant="variant" />
 
       <ul v-if="filteredLinks" class="list-links">
         <li v-for="(single, index) in filteredLinks" :key="`emotion-link-${index}`">
-
           <lila-action-partial v-bind="single" />
-
         </li>
       </ul>
 
       <slot />
-
     </div>
-
   </section>
 </template>
 <style lang="less" scoped>

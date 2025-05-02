@@ -1,15 +1,16 @@
 <template>
-    <section class="lila-menu-navigation">
+  <section class="lila-menu-navigation">
+    <nav class="naviagtion-container">
+      <template v-for="(single, index) in categorieTitles" :key="`single-category-item-${index}`">
+        <lila-link-partial :link="`#${single.anchor}`" :attributes="['static']">
+          {{ single.title }}
+        </lila-link-partial>
+      </template>
+    </nav>
 
-        <nav class="naviagtion-container">
-          <template v-for="(single, index) in categorieTitles" :key="`single-category-item-${index}`">
-            <lila-link-partial :link="`#${single.anchor}`" :attributes="['static']">{{ single.title }}</lila-link-partial>
-          </template>
-        </nav>
-
-      <slot></slot>
-    </section>
-  </template>
+    <slot />
+  </section>
+</template>
 <script setup lang="ts">
 import type MenuCategoryElement from '@interfaces/MenuCategory.interface';
 import getAnchor from '@/mixins/getAnchor';

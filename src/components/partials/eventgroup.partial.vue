@@ -52,67 +52,68 @@ function setElements () {
 
 <template>
   <section class="lila-eventgroup-partial" :class="[variant]">
-
-      <time class="time-container">
-        <div class="date">
-          {{ $helpers.date(date, 'DD') }}
-        </div>
-        <div class="month">
-          {{ $helpers.date(date, 'MM') }}
-        </div>
-        <div class="year">
-          {{ $helpers.date(date, 'YY') }}
-        </div>
-      </time>
+    <time class="time-container">
+      <div class="date">
+        {{ $helpers.date(date, 'DD') }}
+      </div>
+      <div class="month">
+        {{ $helpers.date(date, 'MM') }}
+      </div>
+      <div class="year">
+        {{ $helpers.date(date, 'YY') }}
+      </div>
+    </time>
 
     <section class="events-container">
-
-        <section class="single-event" v-for="(single, index) in useElements" :class="{hasPicture: single.picture?.src.length}" :key="`events-${index}`">
+      <section v-for="(single, index) in useElements" :key="`events-${index}`" class="single-event" :class="{hasPicture: single.picture?.src.length}">
+        <lila-picture-partial v-if="single.picture?.src.length" v-bind="single.picture" fit class="picture-container" />
   
-          <lila-picture-partial v-if="single.picture?.src.length" v-bind="single.picture" fit class="picture-container" />
-  
-          <section class="event-info">
-
-            <section class="date-location">
-              <section class="date">
-                <div class="day">
-                  <template v-if="!single.dateString">
-                    <template v-if="single.start">{{ $helpers.date(single.start) }}</template> 
-                    <template v-if="single.end">- {{ $helpers.date(single.end) }}</template> 
-                  </template>
-                  {{ single.dateString }}
-                </div>
-              </section>
-              <div v-if="single.location" class="location"><lila-icons-partial type="location" size="large" class="icon green" /> {{ single.location }}</div>
+        <section class="event-info">
+          <section class="date-location">
+            <section class="date">
+              <div class="day">
+                <template v-if="!single.dateString">
+                  <template v-if="single.start">
+                    {{ $helpers.date(single.start) }}
+                  </template> 
+                  <template v-if="single.end">
+                    - {{ $helpers.date(single.end) }}
+                  </template> 
+                </template>
+                {{ single.dateString }}
+              </div>
             </section>
+            <div v-if="single.location" class="location">
+              <lila-icons-partial type="location" size="large" class="icon green" /> {{ single.location }}
+            </div>
+          </section>
 
-            <section class="title">
-              
-              <lila-action-partial v-bind="single.link">
-                <h2 v-if="single.artist && single.name" class="artist">{{ single.artist }}</h2>
-                <h1 class="name">
-                  <template v-if="single.name && single.artist || single.name && !single.artist">
-                    {{ single.name }}
-                  </template>
-                  <template v-if="!single.name && single.artist">
-                    {{ single.artist }}
-                  </template>
-                </h1>
-              </lila-action-partial>
+          <section class="title">
+            <lila-action-partial v-bind="single.link">
+              <h2 v-if="single.artist && single.name" class="artist">
+                {{ single.artist }}
+              </h2>
+              <h1 class="name">
+                <template v-if="single.name && single.artist || single.name && !single.artist">
+                  {{ single.name }}
+                </template>
+                <template v-if="!single.name && single.artist">
+                  {{ single.artist }}
+                </template>
+              </h1>
+            </lila-action-partial>
 
-              <p v-if="single.description || single.textblock?.intro">{{ single.description || single.textblock?.intro }}</p>
-            </section>
+            <p v-if="single.description || single.textblock?.intro">
+              {{ single.description || single.textblock?.intro }}
+            </p>
+          </section>
 
-            <section class="callToAction" v-if="single.callToAction">
-              <lila-action-partial callToAction v-bind="single.callToAction" />
-            </section>
-
+          <section v-if="single.callToAction" class="callToAction">
+            <lila-action-partial call-to-action v-bind="single.callToAction" />
+          </section>
         </section>
-
       </section>
-
     </section>
-
   </section>
 </template>
 <style lang="less" scoped>

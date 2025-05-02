@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 <template>
   <section :class="[variant, {gap: props.gap}]" class="lila-link-group">
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <style lang="less" scoped>

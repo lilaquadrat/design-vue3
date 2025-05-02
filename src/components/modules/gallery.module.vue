@@ -196,17 +196,16 @@ function indicatorchange (index: number): void {
   <section :id="props.index?.anchor || props.id" ref="element" class="gallery-module lila-module" :class="[variant, inviewState, { hasDescription: textblock, hasElementDescription: elementDescription, fullscreenOverlay, fullscreenOverlayEnabled }]">
     <section ref="contentContainer" class="content-container">
       <section ref="elementsContainer" class="elements">
-        <div ref="scrollContainer" :style="cssElementsLength" :class="{ transition: !dragging }" v-if="elements.length > 0" class="scroll-container">
+        <div v-if="elements.length > 0" ref="scrollContainer" :style="cssElementsLength" :class="{ transition: !dragging }" class="scroll-container">
           <template v-for="(element, elementIndex) in elements" :key="`gallery-element-${elementIndex}`">
             <div class="element" :style="cssWidth" :class="{ hasImage: element.picture || element.pictures, hasDescription: element.textblock }">
-             
-              <div class="picture-container" v-if="element && element.picture">
+              <div v-if="element && element.picture" class="picture-container">
                 <lila-picture-partial :key="`gallery-placeholder-${elementIndex}`" class="placeholder" fit v-bind="element.picture" />
-                <lila-picture-partial :key="`gallery-picture-${elementIndex}`" @loaded="pictureLoaded" fit class="active picture" v-bind="element.picture" />
+                <lila-picture-partial :key="`gallery-picture-${elementIndex}`" fit class="active picture" v-bind="element.picture" @loaded="pictureLoaded" />
               </div>
 
               <div v-if="element.pictures && firstLoad" :style="indicatorsTop" class="picture-indicators">
-                <span class="indicator" v-for="(picture, index) in element.pictures" :class="{ active: imageIndex === index }" :key="`picture-indicator-${index}`"></span>
+                <span v-for="(picture, index) in element.pictures" :key="`picture-indicator-${index}`" class="indicator" :class="{ active: imageIndex === index }" />
               </div>
               <lila-textblock-partial v-if="element.textblock && !variant2" v-bind="element.textblock" class="picture-description" />
             </div>
@@ -215,11 +214,11 @@ function indicatorchange (index: number): void {
       </section>
 
       <div v-if="simpleIndicator" class="carousel-indicators carousel-indicators-numbers">
-        <lila-button-partial class="indicator" v-for="(element, index) in elements" :key="`indicator-${index}`" colorScheme="transparent" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
+        <lila-button-partial v-for="(element, index) in elements" :key="`indicator-${index}`" class="indicator" color-scheme="transparent" :class="{ active: currentOptionIndex === index }" @click="indicatorchange(index)" />
       </div>
 
       <div class="indexIndicator">
-        <lila-button-partial v-if="fullscreenOverlayEnabled" colorScheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
+        <lila-button-partial v-if="fullscreenOverlayEnabled" color-scheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
         <template v-if="!simpleIndicator">
           <span class="currentIndex">{{ $helpers.leadingZero(currentOptionIndex + 1, 2) }}</span>
           <span class="seperator" />
@@ -228,10 +227,9 @@ function indicatorchange (index: number): void {
       </div>
 
       <div v-if="firstLoad && !disableControls" :style="controlsTop" class="gallery-controls">
-        <lila-button-partial icon="arrow-left" colorScheme="colorScheme1" :class="{ active: currentOptionIndex > 0 }" @click="change('less')" />
-        <lila-button-partial icon="arrow-right" colorScheme="colorScheme1" :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')" />
+        <lila-button-partial icon="arrow-left" color-scheme="colorScheme1" :class="{ active: currentOptionIndex > 0 }" @click="change('less')" />
+        <lila-button-partial icon="arrow-right" color-scheme="colorScheme1" :class="{ active: currentOptionIndex + 1 < elements.length }" @click="change('more')" />
       </div>
-
     </section>
   </section>
 </template>

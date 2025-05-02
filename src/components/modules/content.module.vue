@@ -30,22 +30,20 @@ function handleEvents (event: string) {
 </script>
 
 <template>
-  <section class="lila-content-module" v-if="content" :class="{sub}">
-
-    <article class="top container" :class="{inline, sub}"  v-if="!!content.top.length">
-      <component v-for="single in content.top" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" @event="handleEvents($event)" />
+  <section v-if="content" class="lila-content-module" :class="{sub}">
+    <article v-if="!!content.top.length" class="top container" :class="{inline, sub}">
+      <component :is="`${single.type}`" v-for="single in content.top" :key="single.uuid" :class="[single.classes, {sub}]" v-bind="single" :additional="content.additional" position="top" @event="handleEvents($event)" />
     </article>
 
-    <article class="container" :class="[mode, {inline, sub}]" :inline="inline" v-if="!!content.content.length">
+    <article v-if="!!content.content.length" class="container" :class="[mode, {inline, sub}]" :inline="inline">
       <template v-for="single in content.content" :key="single.uuid">
-        <component :class="[single.classes, {sub}]" :is="`${single.type}`" v-bind="single" :parentId="content.id" :sub="sub" :additional="content.additional" position="content" @event="handleEvents($event)" />
+        <component :is="`${single.type}`" :class="[single.classes, {sub}]" v-bind="single" :parent-id="content.id" :sub="sub" :additional="content.additional" position="content" @event="handleEvents($event)" />
       </template>
     </article>
 
-    <article class="bottom container" :class="{inline, sub}" v-if="!!content.bottom.length">
-      <component v-for="single in content.bottom" :class="[single.classes, {sub}]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="bottom" @event="handleEvents($event)" />
+    <article v-if="!!content.bottom.length" class="bottom container" :class="{inline, sub}">
+      <component :is="`${single.type}`" v-for="single in content.bottom" :key="single.uuid" :class="[single.classes, {sub}]" v-bind="single" :additional="content.additional" position="bottom" @event="handleEvents($event)" />
     </article>
-
   </section>
 </template>
 

@@ -32,5 +32,5 @@ const useModule = computed(() => {
 
 </script>
 <template>
-    <component v-if="useModule?.module" :is="useModule.module" :hint="useModule.hint" :additionalData="additionalData" />
+  <component :is="useModule.module" v-if="useModule?.module" :hint="useModule.hint" :additional-data="additionalData" />
 </template>

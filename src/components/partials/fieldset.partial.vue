@@ -8,14 +8,16 @@ defineProps<{
 
 </script>
 <template>
-    <fieldset class="lila-fieldset"
-    :class="{extendedGap}">
+  <fieldset
+    class="lila-fieldset"
+    :class="{extendedGap}"
+  >
     <legend v-if="legend">
-        <span class="text">{{ $translate(legend)}}</span>
-        <hr />
+      <span class="text">{{ $translate(legend) }}</span>
+      <hr>
     </legend>
-        <slot />
-    </fieldset>
+    <slot />
+  </fieldset>
 </template>
 
 <style scoped lang="less">

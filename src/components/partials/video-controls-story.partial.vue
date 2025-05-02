@@ -30,12 +30,14 @@ function mute () {
 
 </script>
 <template>
-    <section class="video-controls-story">
-
-        <lila-button-partial class="mute" color-scheme="transparent" @click="mute"><lila-icons-partial color-scheme="white" size="large" :type="muted ? 'muted' : 'unmuted'"/></lila-button-partial>
-        <lila-button-partial class="pause" color-scheme="transparent" @click="playPause"><lila-icons-partial color-scheme="white" size="large" :type="playing ? 'pause' : 'play'"/></lila-button-partial>
-    
-    </section>
+  <section class="video-controls-story">
+    <lila-button-partial class="mute" color-scheme="transparent" @click="mute">
+      <lila-icons-partial color-scheme="white" size="large" :type="muted ? 'muted' : 'unmuted'" />
+    </lila-button-partial>
+    <lila-button-partial class="pause" color-scheme="transparent" @click="playPause">
+      <lila-icons-partial color-scheme="white" size="large" :type="playing ? 'pause' : 'play'" />
+    </lila-button-partial>
+  </section>
 </template>
 <style lang="less">
 .video-controls-story {

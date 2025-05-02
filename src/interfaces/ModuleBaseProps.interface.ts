@@ -3,6 +3,6 @@ export default interface ModuleBaseProps {
     id?: string
     parentId: string
     uuid: string
-    variant: string[]
+    variant?: string[]
     index?: {title?: string, anchor?: string}
 }

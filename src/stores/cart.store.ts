@@ -10,18 +10,19 @@ export const useCartStore = defineStore('cart', () => {
   const costSummary = ref<number>(0);
   const itemsQuantity = ref<number>(0);
   const mainStore = useMainStore();
-  const paymentProvider = PaymentProviderFactory(mainStore.config?.payment?.type as 'internal' | 'shopify', mainStore.config?.payment?.options);
+  const paymentProvider = PaymentProviderFactory(mainStore.config?.payment?.type as 'internal' | 'shopify' | 'stripe', mainStore.config?.payment?.options);
   const cartCache = ref();
 
-  async function getCart (attributes?: {key: string, value: string}[]) {
+  async function getCart (attributes?: Record<string, string>) {
 
     if(cartCache.value) return Promise.resolve(cartCache.value);
+    if(!attributes) return Promise.reject('ATTRIBUTES_MISSING');
 
-    const list = attributes?.find((single) => single.key === 'list');
+    const list = attributes.list;
 
     if(!list) return Promise.reject('NO_LIST_GIVEN');
 
-    const cartId = `lila-cart-${list.value}`;
+    const cartId = `lila-cart-${list}`;
     const storedCart = localStorage.getItem(cartId);
 
     if(storedCart) {
@@ -56,6 +57,12 @@ export const useCartStore = defineStore('cart', () => {
 
   }
 
+  function getFinishedCart (cartId: string) {
+
+    return paymentProvider.getFinishedCart(cartId);
+
+  }
+
   function importCart (cart: any[]) {
 
     console.log(cart);
@@ -72,7 +79,7 @@ export const useCartStore = defineStore('cart', () => {
 
     products.value.forEach((single) => {
 
-      costs += single.price * single.quantity;
+      costs += ((single.price.amount || 0) / 100) * single.quantity;
       quantity += single.quantity;
 
     });
@@ -84,21 +91,11 @@ export const useCartStore = defineStore('cart', () => {
 
   function updateAgreements (acceptedAgreements: Agreement[]) {
 
-    const attributes = [];
-
-    cartCache.value.attributes.forEach((single) => {
-
-      if(!single.key.startsWith('agreement')) {
-
-        attributes.push(single);
-
-      }
-
-    });
+    const attributes: Record<string, string> = {...cartCache.value.attributes};
 
     acceptedAgreements.forEach((single, index) => {
       
-      attributes.push({key: `agreement_${index}`, value: single.contentId});
+      attributes[`agreement_${index}`] = single.contentId;
       
     });
 
@@ -109,6 +106,7 @@ export const useCartStore = defineStore('cart', () => {
 
   function getProductInCart (productId: string) {
 
+    if(!productId) return null;
     return products.value.find((single) => single.id === productId);
 
   }
@@ -117,16 +115,13 @@ export const useCartStore = defineStore('cart', () => {
 
     const product = await paymentProvider.getProduct(productId);
     const cart = await getCart();
-
-    console.log(cart, product);
-
     const existingProduct = getProductInCart(product.id);
 
     if(!existingProduct) {
 
-      const lineId = await paymentProvider.addToCart(cart.id, product, 1);
+      const updatedProduct = await paymentProvider.addToCart(cart.id, product, 1);
 
-      products.value.push({...product, quantity: 1, lineId});
+      products.value.push({...updatedProduct, quantity: 1});
       updateSummary();
 
     } else {
@@ -139,8 +134,6 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   async function updateQuantity (productId: string, quantity: number) {
-
-    console.log(productId, quantity);
 
     const existingProduct = getProductInCart(productId);
     const cart = await getCart();
@@ -166,6 +159,12 @@ export const useCartStore = defineStore('cart', () => {
 
   }
 
+  function finalize () {
+
+    return paymentProvider.finalize(cartCache.value.id);
+
+  }
+
   return { 
     addProduct, 
     updateQuantity,
@@ -177,6 +176,8 @@ export const useCartStore = defineStore('cart', () => {
     costSummary,
     itemsQuantity,
     getCart,
+    finalize,
+    getFinishedCart,
     cart: cartCache
   }
 

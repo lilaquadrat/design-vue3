@@ -1,5 +1,5 @@
 <template>
-  <section :id="props.index?.anchor || props.id" v-if="props.picture" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]" class="lila-picture-module lila-module">
+  <section v-if="props.picture" :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState, { fullscreenOverlay, fullscreenOverlayEnabled }]" class="lila-picture-module lila-module">
     <lila-picture-partial v-bind="picture" />
 
     <div v-if="showText" class="position-container">
@@ -7,7 +7,7 @@
     </div>
 
     <section v-if="fullscreenOverlayEnabled" class="controls-container">
-      <lila-button-partial colorScheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
+      <lila-button-partial color-scheme="colorScheme2" :icon="fullscreenOverlay ? 'zoom-out' : 'zoom-in'" @click="toggleFullscreenOverlay" />
     </section>
   </section>
 </template>

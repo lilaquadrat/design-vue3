@@ -53,18 +53,21 @@ async function handleForm () {
 
 </script>
 <template>
-    <article ref="element" :class="[inviewState]" class="lila-module lila-confirm-email-module">
+  <article ref="element" :class="[inviewState]" class="lila-module lila-confirm-email-module">
+    <form>
+      <lila-fieldset-partial>
+        <lila-input-partial v-model="confirmationCode" :error="errorsObject?.confirmationCode" required>
+          {{ $translate('confirmationCode') }}
+        </lila-input-partial>
+      </lila-fieldset-partial>
 
-        <form>
-            <lila-fieldset-partial>
-                <lila-input-partial v-model="confirmationCode" :error="errorsObject?.confirmationCode" required>{{ $translate('confirmationCode') }}</lila-input-partial>
-            </lila-fieldset-partial>
-
-            <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
-                <lila-button-partial save :callId="traceId" colorScheme="colorScheme1" type="submit" @click="handleForm">{{$translate('confirm-email')}}</lila-button-partial>
-            </lila-action-notice-partial>
-        </form>
-    </article>
+      <lila-action-notice-partial :state="state" :translation-pre="translationPre" :errors="errors" @update="updateErrors">
+        <lila-button-partial save :call-id="traceId" color-scheme="colorScheme1" type="submit" @click="handleForm">
+          {{ $translate('confirm-email') }}
+        </lila-button-partial>
+      </lila-action-notice-partial>
+    </form>
+  </article>
 </template>
 <style lang="less" scoped>
 .lila-confirm-email-module {

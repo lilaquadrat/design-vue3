@@ -10,11 +10,11 @@ import type ModuleBaseProps from '../../interfaces/ModuleBaseProps.interface';
 defineOptions({ inheritAttrs: false });
 
 type blogIntroProps = ModuleBaseProps & {
-  textblock: Textblock;
-  picture?: Picture;
-  link?: Link;
-  author: string;
-  date: string;
+  textblock: Textblock
+  picture?: Picture
+  link?: Link
+  author: string
+  date: string
 }
 
 const props = withDefaults(defineProps<blogIntroProps>(), { variant: () => [] })
@@ -31,9 +31,12 @@ const textBottom = computed(() => ({
 
 </script>
 <template>
-  <article ref="element" :id="props.index?.anchor || props.id" :class="[inviewState, { hasImage: picture, sub }]"
-    class="lila-blog-intro-module lila-module">
-
+  <article
+    :id="props.index?.anchor || props.id"
+    ref="element"
+    :class="[inviewState, { hasImage: picture, sub }]"
+    class="lila-blog-intro-module lila-module"
+  >
     <header>
       <lila-action-partial v-bind="link">
         <time v-if="date">{{ date }}</time>
@@ -41,16 +44,17 @@ const textBottom = computed(() => ({
       </lila-action-partial>
     </header>
 
-    <lila-action-partial v-bind="link" v-if="picture">
+    <lila-action-partial v-if="picture" v-bind="link">
       <lila-picture-partial v-bind="picture" />
     </lila-action-partial>
 
     <lila-textblock-partial class="bottom" v-bind="textBottom" />
 
-    <address v-if="author">{{ $translate('blog-intro-author', [author]) }}</address>
+    <address v-if="author">
+      {{ $translate('blog-intro-author', [author]) }}
+    </address>
 
     <slot />
-
   </article>
 </template>
 <style lang="less" scoped>

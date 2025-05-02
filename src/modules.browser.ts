@@ -30,6 +30,7 @@ import EventModule from '@/components/modules/event.module.vue';
 import StoryModule from '@/components/modules/story.module.vue';
 import LocationModule from '@/components/modules/location.module.vue';
 import ShoppingCartModule from '@/components/modules/shopping-cart.module.vue';
+import OrderSuccessModule from './components/modules/order-success.module.vue';
 // import QuellcodeModule from './components/modules/quellcode.module.vue';
 
 export default
@@ -59,6 +60,12 @@ export default
       variants         : [],
       availableInEditor: false,
       component        : ConfirmEmailModule
+    },
+    {
+      name             : 'order-success',
+      variants         : [],
+      availableInEditor: false,
+      component        : OrderSuccessModule
     },
     {
       name    : 'blog-intro',
@@ -120,9 +127,20 @@ export default
     },
     {
       name    : 'contact',
-      variants: [],
-      target  : ['browser'],
-      editor  : {
+      variants: [
+        {
+          key        : 'show-single-category',
+          name       : 'Einzelne Kategorie wird angezeigt',
+          description: 'Die Auswahl der Kategorien wird angezeit, auch wenn nur eine Kategorie vorhanden ist'
+        },
+        {
+          key        : 'hide-free-notice',
+          name       : 'Kostenlos ausblenden',
+          description: 'Der Hinweis kostenlos wird bei den Kategorien nicht angezeigt'
+        },
+      ],
+      target: ['browser'],
+      editor: {
         modes: [
           {
             key : 'feedback',

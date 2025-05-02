@@ -1,5 +1,5 @@
 <template>
-  <section ref="element" class="lila-highlight" :class="[variant]" v-if="notEmpty">
+  <section v-if="notEmpty" ref="element" class="lila-highlight" :class="[variant]">
     <pre :key="keyhelper">
       <div class="codeContainer">
         <lila-button-partial class="copyCode transparent" @click="copyCode()">Copy</lila-button-partial>

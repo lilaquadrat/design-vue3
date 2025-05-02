@@ -106,11 +106,16 @@ async function getCart () {
 
   if(!list.value || !list.value._id) return;
 
-  await cartStore.getCart([
-    {key: 'company', value: mainStore.apiConfig.company as string},
-    {key: 'project', value: mainStore.apiConfig.project as string},
-    {key: 'list', value: list.value._id?.toString()},
-  ]);
+  // Create clean base URL without query parameters
+  const url = new URL(window.location.href);
+
+  await cartStore.getCart({
+    successUrl: `${url.origin}/order-success`,
+    cancelUrl : `${window.location.href}?checkout_cancel=true`,
+    company   : mainStore.apiConfig.company as string,
+    project   : mainStore.apiConfig.project as string,
+    list      : list.value._id?.toString()
+  });
 
   cartIsReady.value = true;
   
@@ -178,21 +183,39 @@ function close () {
 
 }
 
-async function updateAgreementsAndCheckout (event: MouseEvent) {
+async function updateAgreementsAndCheckout (event: Event | unknown) {
 
-  event.preventDefault();
+  if (event instanceof Event) {
+    event.preventDefault();
+  }
+  
   await cartStore.updateAgreements(agreementsExtended.value.filter((single) => single.value));
+
+  if (!cartStore.cart.checkoutUrl) {
+
+    const finalizeResponse = await cartStore.finalize();
+
+    window.location.href = finalizeResponse.checkoutUrl;
+
+    return;
+
+  } 
+
   window.location.href = cartStore.cart.checkoutUrl;
-  console.log('updateAgreements');
 
 }
 
 </script>
 <template>
   <article class="lila-shopping-cart-module" :class="[viewMode]">
-
-    <lila-overlay-background-partial ref="overlay" v-if="viewMode === 'full'" transition background="none"
-      @close="switchMode" @mounted="showContent = true">
+    <lila-overlay-background-partial
+      v-if="viewMode === 'full'"
+      ref="overlay"
+      transition
+      background="none"
+      @close="switchMode"
+      @mounted="showContent = true"
+    >
       <article class="lila-shopping-cart-full" :class="{showAgreements}">
         <header class="cart-header">
           <h1>
@@ -201,40 +224,53 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
           <lila-button-partial color-scheme="colorScheme2" icon="close" @click="close" />
         </header>
         <section v-if="showAgreements" class="agreements">
-
-          <lila-agreement-partial v-for="(single, index) in agreementsExtended" :key="`agreement-${index}`" 
+          <lila-agreement-partial
+            v-for="(single, index) in agreementsExtended"
+            :key="`agreement-${index}`" 
             v-model="single.value" 
             compact
             :required="single.required" 
             :predefined="single.predefined"
-            :contentId="single.contentId">
-            {{$translate(single.text)}}
+            :content-id="single.contentId"
+          >
+            {{ $translate(single.text) }}
           </lila-agreement-partial>
-
         </section>
         <section v-if="!showAgreements" class="products-container">
-          <p v-if="!cartStore.products.length" class="no-products-note">{{ $translate('shopping-cart-no-products') }} </p>
-          <article class="product" v-for="(product, index) in cartStore.products" :class="{ hasImage: product.image }"
-            :key="`single-product-${index}`">
-
+          <p v-if="!cartStore.products.length" class="no-products-note">
+            {{ $translate('shopping-cart-no-products') }}
+          </p>
+          <article
+            v-for="(product, index) in cartStore.products"
+            :key="`single-product-${index}`"
+            class="product"
+            :class="{ hasImage: product.image }"
+          >
             <lila-picture-partial v-if="product.image" fit :src="product.image" />
 
             <header>
+              <h1>{{ product.name }} - <span class="price">{{ $currency(product.price.amount / 100 || 0) }}</span></h1>
 
-              <h1>{{ product.name }} - <span class="price">{{ $currency(product.price) }}</span></h1>
-
-              <p v-if="product.description">{{ product.description }}</p>
+              <p v-if="product.description">
+                {{ product.description }}
+              </p>
 
               <div class="quantity-controls">
-                <lila-button-partial color-scheme="white"
-                  @click="updateQuantity(product.id, 'decrease')">-</lila-button-partial>
+                <lila-button-partial
+                  color-scheme="white"
+                  @click="updateQuantity(product.id, 'decrease')"
+                >
+                  -
+                </lila-button-partial>
                 <span class="quantity">{{ product.quantity }}</span>
-                <lila-button-partial color-scheme="white"
-                  @click="updateQuantity(product.id, 'increase')">+</lila-button-partial>
+                <lila-button-partial
+                  color-scheme="white"
+                  @click="updateQuantity(product.id, 'increase')"
+                >
+                  +
+                </lila-button-partial>
               </div>
-
             </header>
-
           </article>
         </section>
         <section class="costs-summary">
@@ -243,17 +279,17 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
           <span class="costs-summary-amount">{{ $currency(cartStore.costSummary) }}</span>
         </section>
         <footer class="cart-footer">
-
           <lila-button-group-partial>
-            <lila-button-partial v-if="!showAgreements" icon="arrow-right-long" icon-size="medium" @click="toggleAgreements">{{ $translate('shopping-cart-checkout') }} </lila-button-partial>
+            <lila-button-partial v-if="!showAgreements" icon="arrow-right-long" icon-size="medium" @click="toggleAgreements">
+              {{ $translate('shopping-cart-checkout') }}
+            </lila-button-partial>
             <lila-button-partial v-if="showAgreements" color-scheme="transparent" @click="toggleAgreements">
               {{ $translate('shopping-cart-show-items') }} 
             </lila-button-partial>
-            <lila-action-partial v-if="showAgreements" call-to-action icon="arrow-right-long" :disabled="!agreementsAccepted" :link="cartStore.cart.checkoutUrl" @click="updateAgreementsAndCheckout">
-              {{ $translate('shopping-cart-checkout') }} 
-            </lila-action-partial>
+            <lila-button-partial v-if="showAgreements" call-to-action icon="arrow-right-long" :disabled="!agreementsAccepted" bubble-click-events @click="updateAgreementsAndCheckout">
+              {{ $translate('shopping-cart-checkout') }}
+            </lila-button-partial>
           </lila-button-group-partial>
-
         </footer>
       </article>
     </lila-overlay-background-partial>
@@ -263,8 +299,9 @@ async function updateAgreementsAndCheckout (event: MouseEvent) {
       <span class="items-amount">{{ cartStore.itemsQuantity }}</span>
     </button>
 
-    <lila-content-container-partial v-if="showSuccess && list?.content?.paid" auto-visible :internalId="list?.content?.paid" overlay>{{$translate('show content')}}</lila-content-container-partial>
-
+    <lila-content-container-partial v-if="showSuccess && list?.content?.paid" auto-visible :internal-id="list?.content?.paid" overlay>
+      {{ $translate('show content') }}
+    </lila-content-container-partial>
   </article>
 </template>
 <style lang="less" scoped>

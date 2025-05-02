@@ -22,40 +22,41 @@ const hideFreeSlots = computed(() => props.variant?.includes('hide-free-slots'))
 </script>
 <template>
   <section class="lila-select-category-partial">
-
-    <label class="single-category" 
-      :class="[variant, {'not-selected': single.id !== modelValue, disabled: single.disabled || single.percentAvailable && single.percentAvailable <= 0, free: !single.price?.amount, limited: single.amount}, hideFreeSlots]" 
+    <label
       v-for="(single, index) in categories" 
       :key="`select-${index}`" 
+      class="single-category" 
+      :class="[variant, {'not-selected': single.id !== modelValue, disabled: single.disabled || single.percentAvailable && single.percentAvailable <= 0, free: !single.price?.amount, limited: single.amount}, hideFreeSlots]" 
       :value="single.id"
     >
      
       <div class="indicator">
-        <span class="active"></span>
+        <span class="active" />
       </div>
       <h1>{{ single.name }}</h1>
       <h4 v-if="(single.amount && !hideFreeSlots) || (single.disabled || single.percentAvailable && single.percentAvailable <= 0)" class="available">
         <span v-if="single.amount && !hideFreeSlots">{{ $translateWithDiff('LIST_CATEGORY_LIMITED_AVAILABILITY', single.amount) }}</span>
-        <span v-if="single.disabled" class="highlight notAvailable">{{$translate('not available')}}</span>
-        <span class="highlight sold-out" v-if="single.percentAvailable && single.percentAvailable <= 0">{{$translate('LIST_CATEGORY_SOLD_OUT')}}</span>
-        <span class="highlight" v-if="highlight && single.percentAvailable && single.percentAvailable > 0 && single.percentAvailable <= 20 && usePercent && single.percentUsed && !hideFreeSlots">
-          {{$translate('LIST_CATEGORY_LAST_CHANCE_PERCENT', [single.percentUsed.toString()])}}
+        <span v-if="single.disabled" class="highlight notAvailable">{{ $translate('not available') }}</span>
+        <span v-if="single.percentAvailable && single.percentAvailable <= 0" class="highlight sold-out">{{ $translate('LIST_CATEGORY_SOLD_OUT') }}</span>
+        <span v-if="highlight && single.percentAvailable && single.percentAvailable > 0 && single.percentAvailable <= 20 && usePercent && single.percentUsed && !hideFreeSlots" class="highlight">
+          {{ $translate('LIST_CATEGORY_LAST_CHANCE_PERCENT', [single.percentUsed.toString()]) }}
         </span>
-        <span class="highlight" v-if="highlight && single.percentAvailable && single.percentAvailable > 0 && single.percentAvailable <= 20 && !usePercent && single.available && !hideFreeSlots">
-          {{$translateWithDiff('LIST_CATEGORY_LAST_CHANCE', single.available).toString()}}
+        <span v-if="highlight && single.percentAvailable && single.percentAvailable > 0 && single.percentAvailable <= 20 && !usePercent && single.available && !hideFreeSlots" class="highlight">
+          {{ $translateWithDiff('LIST_CATEGORY_LAST_CHANCE', single.available).toString() }}
         </span>
       </h4>
       <h3>
         <template v-if="single.price?.amount">{{ single.price.amount }} {{ $translate(single.price.currency) }}</template>
         <template v-if="!single.price?.amount">{{ $translate('no charge') }}</template>
       </h3>
-      <h4 v-if="single.price?.amount && single.price.tax" class="tax">{{$translate('price_with_tax', [single.price.tax.toString()])}}</h4>
+      <h4 v-if="single.price?.amount && single.price.tax" class="tax">{{ $translate('price_with_tax', [single.price.tax.toString()]) }}</h4>
       <p class="description">{{ single.description }}</p>
       <input name="category" :value="single.id" type="radio" @change="changeHandler(single.id)">
     </label>
 
-    <lila-input-labels-partial :error="hasError" :required="required"><slot/></lila-input-labels-partial>
-
+    <lila-input-labels-partial :error="hasError" :required="required">
+      <slot />
+    </lila-input-labels-partial>
   </section>
 </template>
 <style lang="less" scoped>

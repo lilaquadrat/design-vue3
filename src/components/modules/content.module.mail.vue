@@ -26,26 +26,24 @@ provide('linkBase', props.linkBase);
             <tbody>
               <tr>
                 <td>
-                  <article class="top container" :class="{ inline, sub }" v-if="!!content.top.length">
-                    <component v-for="single in content.top" :class="[single.classes, { sub }]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="top" />
+                  <article v-if="!!content.top.length" class="top container" :class="{ inline, sub }">
+                    <component :is="`${single.type}`" v-for="single in content.top" :key="single.uuid" :class="[single.classes, { sub }]" v-bind="single" :additional="content.additional" position="top" />
                   </article>
     
-                  <table class="container" border="0" cellspacing="0" cellpadding="0" :inline="inline" v-if="!!content.content.length">
+                  <table v-if="!!content.content.length" class="container" border="0" cellspacing="0" cellpadding="0" :inline="inline">
                     <tbody>
                       <tr>
                         <td>
-      
                           <template v-for="single in content.content" :key="single.uuid">
-                            <component :class="[single.classes, { sub }]" :is="`${single.type}`" v-bind="single" :sub="sub" :additional="content.additional" position="content" />
+                            <component :is="`${single.type}`" :class="[single.classes, { sub }]" v-bind="single" :sub="sub" :additional="content.additional" position="content" />
                           </template>
-      
                         </td>
                       </tr>
                     </tbody>
                   </table>
     
-                  <article class="bottom container" :class="{ inline, sub }" v-if="!!content.bottom.length">
-                    <component v-for="single in content.bottom" :class="[single.classes, { sub }]" :is="`${single.type}`" :key="single.uuid" v-bind="single" :additional="content.additional" position="bottom" />
+                  <article v-if="!!content.bottom.length" class="bottom container" :class="{ inline, sub }">
+                    <component :is="`${single.type}`" v-for="single in content.bottom" :key="single.uuid" :class="[single.classes, { sub }]" v-bind="single" :additional="content.additional" position="bottom" />
                   </article>
                 </td>
               </tr>

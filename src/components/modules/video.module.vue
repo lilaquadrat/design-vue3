@@ -55,7 +55,7 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
 
 </script>
 <template>
-  <section ref="element" :id="props.index?.anchor || props.id" @click="start" @keypress="start" :class="[variant, inviewState, { started, controls }]" class="lila-video-module lila-module">
+  <section :id="props.index?.anchor || props.id" ref="element" :class="[variant, inviewState, { started, controls }]" class="lila-video-module lila-module" @click="start" @keypress="start">
     <section class="video-container">
       <lila-video-partial :trigger="trigger" v-bind="video" @playing="toggle" @loading="updateLoading" @ended="ended" />
 
@@ -64,7 +64,7 @@ const controls = computed(() => props.video?.attributes?.includes('controls'));
         <lila-indicator-partial v-if="loading" :variant="variant" />
       </section>
 
-      <lila-picture-partial class="posterExt" v-if="hasPoster" :class="{ visible: !playing }" v-bind="poster" />
+      <lila-picture-partial v-if="hasPoster" class="posterExt" :class="{ visible: !playing }" v-bind="poster" />
     </section>
   </section>
 </template>
