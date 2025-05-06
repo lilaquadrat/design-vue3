@@ -120,16 +120,6 @@ const sourceMedia = computed((): PictureMedia[] => {
 </template>
 <style lang="less" scoped>
 
-.lila-link, .lila-button {
-  &:hover {
-    .lila-figure {
-      img {
-        opacity: .5;
-      }
-    }
-  }
-}
-
 .lila-figure {
 
   position: relative;
@@ -359,6 +349,16 @@ const sourceMedia = computed((): PictureMedia[] => {
 
   }
 
+}
+
+.lila-link, .lila-button {
+  &:hover {
+    .lila-figure {
+      img {
+        opacity: .5;
+      }
+    }
+  }
 }
 
 </style>

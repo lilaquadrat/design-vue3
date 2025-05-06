@@ -208,27 +208,14 @@ const calculateOptionsStyle = () => {
     return;
   }
 
-  const bounds = overlayElement.getBoundingClientRect();
   const targetBounds = useTriggerMenu.value ? linksContainer.value?.getBoundingClientRect() : attachTo.value?.getBoundingClientRect();
 
   if (!targetBounds) return;
 
   let left = targetBounds.left;
   const top = targetBounds.top + targetBounds.height;
-  const body = document.querySelector('body') as HTMLBodyElement;
-  const positionLeft = targetBounds.left + bounds.width + 50 > body.offsetWidth;
 
-  if (positionLeft) {
-
-    left = targetBounds.left - bounds.width + targetBounds.width;
-    if (!useTriggerMenu.value) left += 10;
-
-  } else {
-
-    //match the padding of the attachTo element and the links inside the overlay
-    if (!useTriggerMenu.value) left -= 10;
-
-  }
+  if (!useTriggerMenu.value) left -= 10;
 
   if (media.value === 'wide' && useTriggerMenu.value) {
     left -= 20;
@@ -255,8 +242,8 @@ const calculateOptionsStyle = () => {
       <section ref="linksContainer" class="links-container">
         <section ref="logoContainer" class="logo-container">
           <a class="logo lila-link" href="/">
-            <lila-picture-partial v-if="picture?.src.length" v-bind="picture" />
-            <template v-if="name">{{ name }}</template>
+            <lila-picture-partial v-if="picture?.src?.length" v-bind="picture" />
+            <template v-if="name && !picture?.src?.length">{{ name }}</template>
           </a>
         </section>
 
@@ -363,6 +350,9 @@ const calculateOptionsStyle = () => {
   </nav>
 </template>
 <style lang="less" scoped>
+
+@height: 40px;
+
 .lila-navigation-module-overlay,
 .lila-navigation-module {
 
@@ -372,9 +362,9 @@ const calculateOptionsStyle = () => {
 
     display: grid;
     width: 100%;
-    height: 40px;
-    min-height: 40px;
-    line-height: 40px;
+    height: @height;
+    min-height: @height;
+    line-height: @height;
 
     border: none;
     background: transparent;
@@ -387,7 +377,8 @@ const calculateOptionsStyle = () => {
     text-transform: none;
     cursor: pointer;
 
-    &.isActive, &.router-link-active {
+    &.isActive,
+    &.router-link-active {
       color: @color3;
     }
 
@@ -405,18 +396,28 @@ const calculateOptionsStyle = () => {
   background-color: transparent;
   transition-delay: 0s;
 
-  // :deep(a),
-  // :deep(.lila-button.icon.iconText) {
-  //   .multi(padding, 0, 2);
-  // }
+  :deep(a),
+  :deep(.lila-button.icon.iconText) {
+    .multi(padding, 0);
+  }
 
   .logo,
   .trigger {
     padding: 0;
   }
 
+  .logo {
+    align-content: center;
+    :deep(.lila-figure) {
+      img {
+        height: calc(@height - 10px);
+        width: auto;
+      }
+    }
+  }
+
   .placeholder {
-    height: 40px;
+    height: @height;
 
   }
 
@@ -442,7 +443,7 @@ const calculateOptionsStyle = () => {
     }
 
     .placeholder {
-      width: 40px;
+      width: @height;
     }
 
     .trigger-container {
@@ -458,11 +459,11 @@ const calculateOptionsStyle = () => {
       align-self: center;
       justify-self: end;
       width: 25px;
-      height: 40px;
+      height: @height;
     }
 
     span {
-    
+
       display: grid;
 
       width: 20px;
@@ -543,7 +544,7 @@ const calculateOptionsStyle = () => {
 
     .trans(transform);
 
-    height: 40px;
+    height: @height;
 
     width: 100%;
 
@@ -553,7 +554,7 @@ const calculateOptionsStyle = () => {
     background-color: @white;
 
     @media @desktop {
-       background-color: @white;
+      background-color: @white;
     }
   }
 
@@ -578,7 +579,7 @@ const calculateOptionsStyle = () => {
     overflow: hidden;
     .multi(padding, 0, 4);
 
-    height: 40px;
+    height: @height;
 
     @media @desktop {
       max-width: 100%;
@@ -617,12 +618,6 @@ const calculateOptionsStyle = () => {
   display: grid;
   gap: 5px;
 
-  :deep(.lila-button) {
-    &.icon.iconText {
-      .multi(padding, 0, 4);
-    }
-  }
-
   &.useTriggerMenu {
     width: 100%;
     .multi(padding, 2, 4);
@@ -632,19 +627,48 @@ const calculateOptionsStyle = () => {
     }
 
     @media @wide {
-      max-width: calc(@desktopWidthExt + 40px);
-      padding: 0;
+      max-width: calc(@desktopWidthExt + 20px);
+      .multi(padding, 2, 0);
     }
 
-    :deep(.lila-link), :deep(.lila-button) {
+    :deep(.lila-link),
+    :deep(.lila-button) {
       display: grid;
-      max-width: fit-content;
+    }
+
+    :deep(.lila-button.icon.iconText),
+    :deep(.lila-link) {
+      .multi(padding, 0);
+
+      @media @wide {
+        .multi(padding, 0, 4);
+      }
+    }
+
+    .link-group {
+      .link-list {
+        display: grid;
+        gap: 5px;
+
+        :deep(.lila-link) {
+          .multi(padding, 0, 4);
+
+          @media @wide {
+            .multi(padding, 0, 8);
+          }
+        }
+
+      }
     }
 
     &.left {
+      .multi(padding, 0);
+      align-content: start;
+      gap: 0;
 
       :deep(a),
-      :deep(.lila-button) {
+      :deep(.lila-button),
+      :deep(.lila-button.icon.iconText) {
         .multi(padding, 0, 4);
         border-bottom: solid 1px @color3;
         color: @white;
@@ -660,16 +684,17 @@ const calculateOptionsStyle = () => {
           opacity: 1;
         }
       }
-    }
 
-    .link-group {
-      .link-list {
-        display: grid;
-        gap: 5px;
-        :deep(.lila-link) {
-          .multi(padding, 0, 8);
+      .link-group {
+        .link-list {
+          display: grid;
+          gap: 5px;
+
+          :deep(.lila-link) {
+            .multi(padding, 0, 8);
+          }
+
         }
-
       }
     }
 
