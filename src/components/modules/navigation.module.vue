@@ -221,6 +221,12 @@ const calculateOptionsStyle = () => {
     left -= 20;
   }
 
+  if(props.variant?.includes('overlay')) {
+
+    left = 0;
+
+  }
+
   style.value = {
     top : `${top}px`,
     left: `${left}px`,
@@ -317,31 +323,33 @@ const calculateOptionsStyle = () => {
               :class="[variant, { open }]"
               :style="style"
             >
-              <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
-                <lila-action-partial
-                  v-if="!element.links"
-                  :key="`link-${index}`"
-                  :class="{ isActive: element.active }"
-                  v-bind="element"
-                />
-
-                <section v-if="element.links" :key="`group-${index}`" class="link-group main">
-                  <lila-button-partial
+              <section class="overlay-scroll-container">
+                <template v-for="(element, index) in elementsArray" :key="`button-${index}`">
+                  <lila-action-partial
+                    v-if="!element.links"
+                    :key="`link-${index}`"
+                    :class="{ isActive: element.active }"
                     v-bind="element"
-                    icon="arrow-right"
-                    color-scheme="navigation"
-                    @click="toggleTriggerElement($event as Event, element)"
-                  >
-                    {{ element.text }}
-                  </lila-button-partial>
+                  />
 
-                  <ul v-show="element.links && element.active" class="link-list">
-                    <li v-for="(single, index) in element.links" :key="`sublinks-${index}`">
-                      <lila-action-partial v-if="single.text" v-bind="single" />
-                    </li>
-                  </ul>
-                </section>
-              </template>
+                  <section v-if="element.links" :key="`group-${index}`" class="link-group main">
+                    <lila-button-partial
+                      v-bind="element"
+                      icon="arrow-right"
+                      color-scheme="navigation"
+                      @click="toggleTriggerElement($event as Event, element)"
+                    >
+                      {{ element.text }}
+                    </lila-button-partial>
+
+                    <ul v-show="element.links && element.active" class="link-list">
+                      <li v-for="(single, index) in element.links" :key="`sublinks-${index}`">
+                        <lila-action-partial v-if="single.text" v-bind="single" />
+                      </li>
+                    </ul>
+                  </section>
+                </template>
+              </section>
             </section>
           </lila-overlay-background-partial>
         </transition>
@@ -672,6 +680,9 @@ const calculateOptionsStyle = () => {
         .multi(padding, 0, 4);
         border-bottom: solid 1px @color3;
         color: @white;
+        white-space: normal;
+        height: auto;
+        min-height: 40px;
 
         svg {
           stroke: @white;
@@ -688,13 +699,88 @@ const calculateOptionsStyle = () => {
       .link-group {
         .link-list {
           display: grid;
-          gap: 5px;
+          gap: 0;
 
           :deep(.lila-link) {
             .multi(padding, 0, 8);
           }
 
         }
+      }
+    }
+
+    &.overlay {
+      width: 100%;
+      height: calc(100% - @height);
+      max-width: 100%;
+      padding: 0;
+      align-content: center;
+
+      .overlay-scroll-container {
+        display: grid;
+        overflow-y: scroll;
+        width: 100%;
+        .multi(padding, 8, 4);
+        justify-items: center;
+        gap: 10px;
+
+      }
+
+      .multi(margin, 0, 0);
+
+      :deep(a),
+      :deep(.lila-button),
+      :deep(.lila-button.icon.iconText) {
+
+        max-width: fit-content;
+        .font-bold;
+
+        font-size: @headline_XS;
+        line-height: @headlineLineHeight_XS;
+        min-height: 40px;
+
+        @media @tablet, @desktop {
+          font-size: @headline_S;
+          line-height: @headlineLineHeight_S;
+          min-height: 60px;
+        }
+
+        height: auto;
+        align-content: center;
+        white-space: normal;
+        
+        text-align: center;
+        .multi(padding, 0);
+        .trans(background);
+
+      }
+
+      .link-group {
+        width: 100%;
+        display: grid;
+        justify-content: center;
+        justify-items: center;
+        gap: 0;
+
+        .link-list {
+          display: grid;
+          gap: 5px;
+          justify-items: center;
+          .multi(padding, 2);
+
+          :deep(.lila-link) {
+            .font-normal;
+            .multi(padding, 0);
+            height: auto;
+            min-height: 40px;
+            @media @tablet, @desktop {
+              min-height: 60px;
+            }
+        
+          }
+
+        }
+
       }
     }
 
