@@ -10,15 +10,13 @@ defineProps<ModuleBaseProps & {
 
 </script>
 <template>
-  <section v-if="modules" ref="element" class="lila-partial-container lila-module">
-    <component
-      :is="single.type"
-      v-for="(single, i) in modules"
-      :key="`module-${i}`"
-      :class="single.classes"
-      v-bind="single"
-    />
-  </section>
+  <component
+    :is="single.type"
+    v-for="(single, i) in modules"
+    :key="`module-${i}`"
+    :class="single.classes"
+    v-bind="single"
+  />
 </template>
 <style lang="less" scoped>
 .lila-partial-container {

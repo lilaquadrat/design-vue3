@@ -26,6 +26,10 @@ export default defineConfig((settings) => {
     server: {
       host: '0.0.0.0', // This allows access from other devices on the network
     },
+    optimizeDeps: {
+    // Exclude the package from pre-bundling so it stays in source form
+      exclude: ['@lilaquadrat/studio']
+    },
     build: {
       cssCodeSplit : false,
       cssMinify    : isProduction,
