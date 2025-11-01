@@ -715,10 +715,17 @@
     open "^8.4.2"
     typescript "^5.0.4"
 
-"@lilaquadrat/interfaces@^1.13.0", "@lilaquadrat/interfaces@^1.18.1", "@lilaquadrat/interfaces@^1.28.1", "@lilaquadrat/interfaces@^1.3.1", "@lilaquadrat/interfaces@^1.8.0":
+"@lilaquadrat/interfaces@^1.13.0", "@lilaquadrat/interfaces@^1.18.1", "@lilaquadrat/interfaces@^1.3.1", "@lilaquadrat/interfaces@^1.8.0":
   version "1.30.0"
   resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.30.0.tgz#7cbbcf81a1957146654553738476c0315a35bd34"
   integrity sha512-eosaKJOyfWL6Q1k6sUgQKq9jdyOY/2ffkb1Fr5wsHEOk2+QTfQ6hyu7flGukkQD4ZkSl+sR1OE3PXdO7gBrpjg==
+  dependencies:
+    typescript "^5.3.3"
+
+"@lilaquadrat/interfaces@^1.31.0":
+  version "1.31.0"
+  resolved "https://registry.yarnpkg.com/@lilaquadrat/interfaces/-/interfaces-1.31.0.tgz#0be71fd4278ad2238723ae62e1aec93b3f1865a1"
+  integrity sha512-bPhNwuN6bAforoSiX0PpznMuxrAK17E7zEGOomz8qmTPgMQfpMUcXjlI+I9Gl/xwSLytlFhT7TFuhQAPqvDz0w==
   dependencies:
     typescript "^5.3.3"
 

@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "rm -rf dist/app && vite build",
-    "build-all": "rm -rf dist/ && pnpm build && pnpm build-ssr",
-    "build-next-all": "rm -rf dist/ && pnpm build-next && pnpm build-next-ssr",
+    "build-all": "rm -rf dist/ && yarn build && yarn build-ssr",
+    "build-next-all": "rm -rf dist/ && yarn build-next && yarn build-next-ssr",
     "build-next": "rm -rf dist/app && vite build --mode next",
     "build-ssr": "rm -rf dist/server && vite build --ssr --mode production",
     "build-next-ssr": "rm -rf dist/server && vite build --ssr --mode next",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.1.3",
-    "@lilaquadrat/interfaces": "^1.28.1",
+    "@lilaquadrat/interfaces": "^1.31.0",
     "@lilaquadrat/sdk": "^0.0.10",
     "@lilaquadrat/studio": "^9.14.3",
     "@types/qrcode": "^1.5.5",

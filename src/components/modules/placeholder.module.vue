@@ -6,7 +6,7 @@ import { computed } from 'vue';
 defineOptions({ inheritAttrs: false });
 
 const mainStore = useMainStore();
-const props = defineProps<ModuleBaseProps & {hint: string, additionalData?: any}>();
+const props = defineProps<ModuleBaseProps & {hint: string, additionalData?: any, inputData?: Record<string, unknown>}>();
 const useModule = computed(() => {
 
   const modules = mainStore.target === 'browser'
@@ -32,5 +32,5 @@ const useModule = computed(() => {
 
 </script>
 <template>
-  <component :is="useModule.module" v-if="useModule?.module" :hint="useModule.hint" :additional-data="additionalData" />
+  <component :is="useModule.module" v-if="useModule?.module" :hint="useModule.hint" :additional-data="additionalData" v-bind="inputData" />
 </template>
