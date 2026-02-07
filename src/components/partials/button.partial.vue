@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import type IconsPartial from '@/interfaces/IconsPartial';
 import { hasSlotContent } from '@/mixins/hasSlotContent';
-import triggerEvent from '@/plugins/events';
+import { useEvents } from '@/plugins/events';
 import useCallStore from '@/stores/calls.store';
-import { computed, ref, useSlots } from 'vue';
+import { computed, onUnmounted, ref, useSlots } from 'vue';
 
 defineOptions({
   inheritAttrs: false
 })
 
 type buttonProps = {
-  doublecheck?: string
+  doublecheck?: boolean
   disabled?: boolean
   text?: string
   icon?: IconsPartial['type']
@@ -26,6 +26,10 @@ type buttonProps = {
   variant?: string[]
 } 
 
+const { triggerEvent, eventDeclarations} = useEvents();
+const traceId = ref<string>();
+const showDoublecheckConfirmation = ref<boolean>(false);
+const timeout = ref<ReturnType<typeof setTimeout> | undefined>();
 const callStore = useCallStore();
 const props = withDefaults(defineProps<buttonProps>(),
   {
@@ -33,15 +37,23 @@ const props = withDefaults(defineProps<buttonProps>(),
     colorScheme: 'colorScheme1'
   }
 );
-const confirmed = ref(false);
-// eslint-disable-next-line no-unused-vars
-const emit = defineEmits<{(e: string, event?: Event): void}>();
+const emit = defineEmits<{
+  click: [event?: Event]
+  submit: [event?: Event]
+}>();
+const attachedEvent = computed(() => {
+  if (!props.event) return undefined;
+
+  return eventDeclarations.find((single) => single.id === props.event);
+});
+const useCallId = computed(() => traceId.value || props.callId);
+const useDoublecheck = computed(() => props.doublecheck || attachedEvent.value?.confirmRequired || false);
+const useSave = computed(() => props.save || attachedEvent.value?.operation || false);
 const iconColorScheme = computed(() => {
-
   if(props.variant?.includes('callToAction')) return 'bright';
-  return ['colorScheme1', 'colorScheme3', 'error', 'success', 'error'].includes(props.colorScheme) ? 'bright' : 'dark'
 
-})
+  return ['colorScheme1', 'colorScheme3', 'error', 'success'].includes(props.colorScheme) ? 'bright' : 'dark'
+});
 const slotUsed = computed(() => hasSlotContent(useSlots().default));
 const iconSize = computed(() => {
 
@@ -50,35 +62,74 @@ const iconSize = computed(() => {
   return props.icon ? 'smaller' : 'medium'
 
 });
-const state = computed(() => {
+const textStateAware = computed(() => {
+  if (state.value && attachedEvent.value?.feedback?.[state.value]) {
+    return attachedEvent.value.feedback[state.value];
+  }
 
-  if(props.callId) return callStore.calls[props.callId];
+  return props.text;
+});
+const state = computed(() => (useCallId.value ? callStore.calls[useCallId.value] : null));
+const ariaLabel = computed(() => {
+  if (props.text) return undefined;
+  if (props.icon) return `Button with ${props.icon} icon`;
 
-  return null
+  return 'Button';
+});
 
-})
+onUnmounted(() => {
+  clearTimeout(timeout.value);
+});
 
 function triggerEventOnClick (event: MouseEvent) {
 
-  triggerEvent(props.event as string, props.additionalData, event);
+  triggerEvent(props.event as string, props.additionalData, event, traceId);
 
 }
 
-function confirm (event: MouseEvent): void {
+function triggerTimeout () {
 
+  timeout.value = setTimeout(() => {
+
+    showDoublecheckConfirmation.value = false;
+
+  }, 3000);
+
+}
+
+function clearTimeoutAndResetStates () {
+
+  traceId.value = undefined;
+
+  clearTimeout(timeout.value);
+  showDoublecheckConfirmation.value = false;
+
+}
+
+async function confirm (event: MouseEvent): Promise<void> {
   event.preventDefault();
 
-  if(props.event) {
-
-    triggerEventOnClick(event);
-
-  } else {
-
-    emit('click', event);
-    if(props.type === 'submit') emit('submit', event);
-  
+  // Handle doublecheck confirmation flow
+  if (useDoublecheck.value && !showDoublecheckConfirmation.value) {
+    clearTimeoutAndResetStates();
+    showDoublecheckConfirmation.value = true;
+    triggerTimeout();
+    return;
   }
 
+  // Clear doublecheck state if it was shown
+  if (useDoublecheck.value && showDoublecheckConfirmation.value) {
+    showDoublecheckConfirmation.value = false;
+    clearTimeoutAndResetStates();
+  }
+
+  // Trigger event or emit to parent
+  if (props.event) {
+    triggerEventOnClick(event);
+  } else {
+    emit('click', event);
+    if (props.type === 'submit') emit('submit', event);
+  }
 }
 
 </script>
@@ -86,30 +137,40 @@ function confirm (event: MouseEvent): void {
   <button
     class="lila-button"
     :disabled="disabled"
-    :type="props.type" 
+    :type="props.type"
+    :aria-label="ariaLabel"
+    :aria-busy="state === 'pending'"
+    :aria-pressed="active ? 'true' : undefined"
     :class="[
       colorScheme, 
       state, 
       variant, 
       {
-        confirmed, 
         icon, 
         noPadding, 
         active, 
         iconText: icon && slotUsed, 
         iconWithoutText: icon && !text,
         eventWithSlot: event && !text,
-        save 
+        save: useSave 
       }, 
       $attrs.class
     ]"
     @click.stop="confirm"
   >
-    <span v-if="save" />
-    <template v-if="text">
-      {{ $replacer(text) }}
+    <span v-if="useSave" />
+
+    <template v-if="!showDoublecheckConfirmation">
+      <template v-if="textStateAware">
+        {{ $replacer(textStateAware) }}
+      </template>
+      <slot v-if="!text" />
     </template>
-    <slot v-if="!text" />
+
+    <template v-if="showDoublecheckConfirmation">
+      {{ $translate('CONFIRM_BUTTON') }}
+    </template>
+
     <lila-icons-partial v-if="icon" :color-scheme="iconColorScheme" :size="iconSize" :type="icon" animate :class="{rotate90: active}" />
   </button>
 </template>
@@ -183,11 +244,11 @@ function confirm (event: MouseEvent): void {
   }
 
   &.colorScheme1 {
-    background-color: @color3;
+    background-color: @textColor;
     color: @white;
 
     &:hover {
-      background-color: @color1;
+      background-color: @color4;
     }
 
   }

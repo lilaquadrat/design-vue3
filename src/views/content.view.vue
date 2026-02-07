@@ -61,7 +61,7 @@ function getStoreContent (filename: string) {
   *  if the current data matches the required filename or the target is mail, because emails dont have filenames
   *  we can use the store data
   */
-  if(storeContent && storeContent.settings?.filename?.includes(filename) || storeContent.target === 'mail') {
+  if(storeContent && (storeContent.settings?.filename?.includes(filename) || storeContent.target === 'mail' || filename === '__pdf')) {
     
     dataMerged.value = mergeContent(storeContent, storeLayout);
     loading.value = 200;

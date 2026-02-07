@@ -99,7 +99,7 @@ export default defineConfig((settings) => {
     viteConfig.ssr = {
       target    : 'webworker',
       noExternal: true,
-      external  : ['node:stream', 'axios', 'http', 'https', 'crypto', 'path', 'highlight.js'],
+      external  : ['node:stream', 'http', 'https', 'crypto', 'path', 'highlight.js'],
     }
   
   }
