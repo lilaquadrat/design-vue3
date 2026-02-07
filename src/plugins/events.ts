@@ -1,9 +1,15 @@
 import type GenericEvents from '@/interfaces/GenericEvents.interface';
+import type EventDeclaration from '@/interfaces/EventDeclaration.interface';
 import { auth } from './auth';
 import useUserStore from '@/stores/user.store';
 import useCartStore from '@/stores/cart.store';
+import { useTraceable } from './traceable';
+import StudioSDK from '@lilaquadrat/sdk';
+import useMainStore from '@/stores/main.store';
+import logger from '@/mixins/logger';
+import type { Ref } from 'vue';
 
-const eventDeclaration = [
+const eventDeclarations: EventDeclaration[] = [
   {
     id         : 'login',
     name       : 'Anmelden',
@@ -18,6 +24,18 @@ const eventDeclaration = [
     id         : 'register',
     name       : 'Registrieren',
     description: 'erstellt ein neues Benutzerkonto',
+  },
+  {
+    id             : 'resendConfirmationMail',
+    name           : 'Bestätigungscode erneut senden',
+    description    : 'Eingeloggte Nutzer',
+    confirmRequired: true,
+    operation      : true,
+    feedback       : {
+      resolved: 'Bestätigungscode wurde versendet',
+      rejected: 'Bestätigungscode konnte nicht gesendet werden',
+      pending : 'Bestätigungscode wird versendet'
+    }
   },
   {
     id         : 'refresh_token',
@@ -95,13 +113,22 @@ const events: GenericEvents = {
 
     }
 
+  },
+  resendConfirmationMail: async (additionalData: string | undefined, mouseEvent: MouseEvent, traceId: Ref<string|undefined>) => {
+
+    const { apiConfig } = useMainStore();
+    const { traceable } = useTraceable();
+    const sdk = new StudioSDK(apiConfig)
+
+    await traceable(sdk.members.me.confirmEmail('ssad'), traceId);
+
   }
 }
 
 /**
  * triggers a predefined event
  */
-function triggerEvent (type: keyof typeof events | string, additionalData: string | undefined, mouseEvent: MouseEvent) {
+function triggerEvent (type: keyof typeof events | string, additionalData: string | undefined, mouseEvent: MouseEvent, traceId: Ref<string|undefined>) {
 
   const event = events[type as keyof typeof events];
 
@@ -112,12 +139,18 @@ function triggerEvent (type: keyof typeof events | string, additionalData: strin
 
   }
 
-  return event(additionalData, mouseEvent);
+  return event(additionalData, mouseEvent, traceId);
 
 } 
 
-export default triggerEvent;
+const useEvents = () => ({triggerEvent, eventDeclarations, events})
+const plugin = {
+  install: () => {
+    logger.plugins('events installed');
+  },
+};
+
+export default plugin;
 export {
-  eventDeclaration,
-  events,
+  useEvents
 }

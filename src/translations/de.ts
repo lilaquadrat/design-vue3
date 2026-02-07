@@ -157,5 +157,8 @@ export default {
   'INVOICE_DOWNLOAD'                                                                                      : 'Rechnung herunterladen',
   'ORDER_ERROR_TITLE'                                                                                     : 'Ein Fehler ist aufgetreten',
   'ORDER_ERROR_DESCRIPTION'                                                                               : 'Deine Bestellung konnte leider nicht gefunden werden. Bitte versuche es später erneut.',
-  'location_module_show_map'                                                                              : 'Karte anzeigen'
+  'location_module_show_map'                                                                              : 'Karte anzeigen',
+  'EMAIL_CONFIRMATION_FAILED'                                                                             : 'E-Mail Adresse konnte nicht bestaetigt werden.',
+  'validation-error-EMAIL_CONFIRMATION_FAILED'                                                            : 'E-Mail Adresse konnte nicht bestaetigt werden.',
+  'CONFIRM_BUTTON'                                                                                        : 'Aktion bestätigen'
 };
